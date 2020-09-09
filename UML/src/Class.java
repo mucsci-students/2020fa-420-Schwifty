@@ -55,6 +55,13 @@ public class Class {
         return true;
     }
 
+    public boolean addRelationship(RelationshipType relation, Class theClass) {
+        return true;
+    }
+
+    public boolean deleteRelationship(RelationshipType relation, Class theClass) {
+        return true;
+    }
 
     public boolean equals(Object other) {
         boolean result = false;
