@@ -1,5 +1,5 @@
 import java.util.Set;
-import java.util.Map;
+import java.util.MultiMap;
 
 public class Class {
     enum RelationshipType 
@@ -9,8 +9,8 @@ public class Class {
     private String name;
     //Use sets and maps so we don't have to deal with duplicates.
     private Set<Attribute> attributes;
-    private Map<RelationshipType, Class> relationshipsToOther;
-    private Map<RelationshipType, Class> relationshipsFromOther;
+    private MultiMap<RelationshipType, Class> relationshipsToOther;
+    private MultiMap<RelationshipType, Class> relationshipsFromOther;
 
 
 
