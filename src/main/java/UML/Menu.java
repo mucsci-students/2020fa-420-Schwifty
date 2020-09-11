@@ -132,21 +132,25 @@ public class Menu
        JMenuItem aggregation = new JMenuItem("Aggregation");
        JMenuItem composition = new JMenuItem("Composition");
        JMenuItem generalization = new JMenuItem("Generalization");
+       JMenuItem deleteRelate = new JMenuItem("Delete Relationship");
 
        relate.add(association);
        relate.add(aggregation);
        relate.add(composition);
        relate.add(generalization);
+       relate.add(deleteRelate);
 
        association.setToolTipText("Creates selected relationship between two classes");
        aggregation.setToolTipText("Creates selected relationship between two classes");
        composition.setToolTipText("Creates selected relationship between two classes");
        generalization.setToolTipText("Creates selected relationship between two classes");
+       generalization.setToolTipText("Deletes selected relationship between two classes");
 
        association.setActionCommand("Association");
        aggregation.setActionCommand("Aggregation");
        aggregation.setActionCommand("Composition");
        generalization.setActionCommand("Generalization");
+       deleteRelate.setActionCommand("DeleteRelate");
 
        mb.add(relate);
    }
@@ -245,6 +249,11 @@ public class Menu
               {
                   //create a dialog box with two dropdowns of available classes
                   //Create relationship between chosen two
+              }
+              else if(cmd.equals("DeleteRelate"))
+              {
+                  //create a dialog box with two dropdowns of available classes
+                  //delete relationship between chosen two
               }
            }
        }
