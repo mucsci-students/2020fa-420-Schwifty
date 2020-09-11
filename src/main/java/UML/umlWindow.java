@@ -1,11 +1,11 @@
 
 import javax.swing.JOptionPane;
 import javax.swing.*;
-public class umlWindow 
+public class UMLWindow 
 {
    private JFrame window;
    private Menu menu;
-   public umlWindow()
+   public UMLWindow()
    {
        window = new JFrame("UML");
        menu = new Menu();
