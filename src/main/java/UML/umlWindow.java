@@ -3,17 +3,22 @@ import javax.swing.JOptionPane;
 import javax.swing.*;
 public class umlWindow 
 {
+   private JFrame window;
+   private Menu menu;
    public umlWindow()
    {
-      window();
+       window = new JFrame("UML");
+       menu = new Menu();
+       window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       window.setSize(800,750);
+       menu.createMenu(window);
+       window.setJMenuBar(menu.getMenuBar());
+       window.setVisible(true);
    }
-   public void window() 
+   
+   public JFrame getMainWindow()
    {
-        JFrame window = new JFrame("UML");
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setSize(800,750);
-        window.setVisible(true);
-        Menu menu = new Menu(window);
+      return window;
    }
 
 }

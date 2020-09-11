@@ -15,23 +15,23 @@ import java.awt.event.*;
 public class Menu 
 {
     //TODO: This class must be updated when class, attribute, and the main window are complete. 
-   public Menu(JFrame window)
+   private JMenuBar mb;
+   public void createMenu(JFrame window)
    {
-       //Menu Bar//
-       createMenu(window);  
-   }
-
-   private static void createMenu(JFrame window)
-   {
-       JMenuBar mb = new JMenuBar();
+       mb = new JMenuBar();
        createFileMenu(mb);
        createClassMenu(mb);
        createAtrributeMenu(mb);
        createRelationshipMenu(mb);
        window.add(mb);
    }
-
-   private static void createFileMenu(JMenuBar mb)
+   
+   public JMenuBar getMenuBar()
+   {
+      return mb;
+   }
+   
+   private void createFileMenu(JMenuBar mb)
    {
        JMenu file = new JMenu("File");
 
@@ -67,7 +67,7 @@ public class Menu
        mb.add(file);
    }
 
-   private static void createClassMenu(JMenuBar mb)
+   private void createClassMenu(JMenuBar mb)
    {
        JMenu classes = new JMenu("Class");
        
@@ -98,7 +98,7 @@ public class Menu
        mb.add(classes);
    }
 
-   private static void createAtrributeMenu(JMenuBar mb)
+   private void createAtrributeMenu(JMenuBar mb)
    {
        JMenu attributes = new JMenu("Attribute");
 
@@ -124,7 +124,7 @@ public class Menu
        mb.add(attributes);
    }
 
-   private static void createRelationshipMenu(JMenuBar mb)
+   private void createRelationshipMenu(JMenuBar mb)
    {
        JMenu relate = new JMenu("Relate");
 
