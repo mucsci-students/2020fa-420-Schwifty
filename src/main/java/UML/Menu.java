@@ -1,5 +1,5 @@
 /*
-    Author: Chris and Dominic 
+    Author: Chris and Dominic and Drew
     Date: 09/10/2020
     Purpose: To create the menu system for our GUI UML editor. The menu will have the option to 
     save and load your work under the file menu option. You can create or delete a class by clicking on the class and create or delete. 
@@ -113,9 +113,9 @@ public class Menu
        attributes.add(rnAttr);
 
        //Hover text & events//
-       crtClass.setToolTipText("Create new class");
-       deleteClass.setToolTipText("Delete a named class");
-       rnAttr.setToolTipText("Rename a selected class");
+       crtAttr.setToolTipText("Create new attribute");
+       deleteAttr.setToolTipText("Delete a named attribute");
+       rnAttr.setToolTipText("Rename a selected attribute");
 
        crtAttr.setActionCommand("Create");
        deleteAttr.setActionCommand("Delete");
