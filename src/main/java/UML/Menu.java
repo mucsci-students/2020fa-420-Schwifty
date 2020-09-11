@@ -50,8 +50,8 @@ public class Menu
        //hover tasks and events//
        save.setToolTipText("Save edited file");
        saveAs.setToolTipText("Save newly created file");
+       load.setToolTipText("Load saved file");
        exit.setToolTipText("Exit application");
-       exit.addActionListener((event) -> System.exit(0));
 
        //Add action commands
        save.setActionCommand("Save");
@@ -62,6 +62,7 @@ public class Menu
        save.addActionListener(new FileButtonClickListener());
        saveAs.addActionListener(new FileButtonClickListener());
        load.addActionListener(new FileButtonClickListener());
+       exit.addActionListener((event) -> System.exit(0));
 
        mb.add(file);
    }
