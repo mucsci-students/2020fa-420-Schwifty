@@ -50,6 +50,7 @@ public class Menu
        //hover tasks and events//
        save.setToolTipText("Save edited file");
        saveAs.setToolTipText("Save newly created file");
+       load.setToolTipText("Load selected project");
        exit.setToolTipText("Exit application");
        exit.addActionListener((event) -> System.exit(0));
 
