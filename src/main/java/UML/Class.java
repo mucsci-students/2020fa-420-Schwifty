@@ -6,6 +6,7 @@ public class Class {
     {
         ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
     }
+       
     private String name;
     //Use sets and maps so we don't have to deal with duplicates.
     private Set<Attribute> attributes;
@@ -13,7 +14,7 @@ public class Class {
     private Map<RelationshipType, Class> relationshipsFromOther;
 
 
-
+    //TODO: Add class constructor
 
 
     public String getName() {
