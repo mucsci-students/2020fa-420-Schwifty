@@ -4,31 +4,50 @@
     Purpose: 
 */
 public class Attribute {
-
+    //The name of the attribute object.
     private String name;
+    //The type of the attribute object.
     private String type;
 
+    /**
+     * Constructs an attribute object.
+     */
     public Attribute(String name, String type) {
         this.name = name;
         this.type = type;
     }
 
+    /**
+     * Returns the name of the attribute object.
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Returns the type of the attribute object.
+     */
     public String getType() {
         return this.type;
     }
 
+    /**
+     * Changes the name of the attribute object.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Changes the name of the attribute object.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Returns true if two attribute object are equal and false otehrwise.
+     */
     public boolean equals(Object other) {
         boolean result = false;
         if(this == other) {
