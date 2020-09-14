@@ -26,24 +26,27 @@ public class Class {
     /**
      * Constructs a class object that takes in a parameter for the name of the class.
      */
-     public Class(String name) {
+     public Class(String name) 
+     {
          this.name = name;
-         this.attributes = null;
-         this.relationshipsToOther = null;
-         this.relationshipsFromOther = null;
+         this.attributes = new Set<Attribute>();
+         this.relationshipsToOther = new ArrayList<Pair <RelationshipType, Class> >();
+         this.relationshipsFromOther = new ArrayList<Pair <RelationshipType, Class> >();
      }
 
     /**
      * Returns the name of the class object.
      */
-    public String getName() {
+    public String getName() 
+    {
         return this.name;
     }
 
     /**
      * Returns a set of the attributes of the class object.
      */
-    public Set<Attribute> getAttributes() {
+    public Set<Attribute> getAttributes() 
+    {
         return this.attributes;
     }
 
@@ -66,33 +69,63 @@ public class Class {
     /**
      * Changes the name of the class object.
      */
-    public void setName(String name) {
+    public void setName(String name) 
+    {
         this.name = name;
     }
 
     /**
      * Adds an attribute the the class object.
      */
-    public boolean addAttrubute(Attribute theAttribute) {
-        //TODO:
+    public boolean addAttribute(String type, String name) 
+    {
+        //If name is found, return false...atrribute already created
+        for (Atrribute a : attributes)
+        {
+            if a.getName().equals(name)
+            {
+                return false;
+            }
+        }
+        Atrribute newAttr = new Attribute(name, type);
+        attributes.add(name, type);
         return true;
     }
 
     /**
      * Deletes an attribute from the class object.
      */
-    public boolean deleteAttribute(Attribute theAttribute) {
+    public boolean deleteAttribute(String name) 
+    {
         //TODO:
-        return true;
+        for (Attribute a : attributes)
+        {
+            if a.getName().equals(name)
+            {
+                attributes.remove(a);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Renames an attribute of the class object.
      */
-    public boolean renameAttribute(Attribute theAttribute, String newName, String newType) {
+    public boolean renameAttribute(String oldName, String newName, String newType) 
+    {
         //TODO:
-        return true;
+        for (Attribute a : attributes)
+        {
+            if a.getName().equals(oldName)
+            {
+                a.setName(newName);
+                return true;
+            }
+        }
+        return false;
     }
+    //TODO: Add ability to change the type of an atrribute...also add that to GUI.
 
     /**
      * Adds a relationship from this class object to another.
@@ -150,5 +183,10 @@ public class Class {
              }
         }
         return result;
+    }
+
+    public String toString()
+    {
+
     }
 }
