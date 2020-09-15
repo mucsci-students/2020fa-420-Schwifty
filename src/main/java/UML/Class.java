@@ -1,10 +1,13 @@
 /*
-    Author: 
+    Author: Tyler, Cory, Dominic, Drew, 
     Date: 09/08/2020
     Purpose: 
 */
+import java.util.HashSet;
 import java.util.Set;
-import javafx.util.Pair;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Class {
     //Holds the options for relationships between classes.
@@ -17,9 +20,9 @@ public class Class {
     //A set containing the attributes of a class object.
     private Set<Attribute> attributes;
     //The relationships from this class object to another.
-    private ArrayList<Pair <RelationshipType, Class>> relationshipsToOther;
+    private Map<String, RelationshipType> relationshipsToOther;
     //The relationships from another class object to this one.
-    private ArrayList<Pair <RelationshipType, Class>> relationshipsFromOther;
+    private Map<String, RelationshipType> relationshipsFromOther;
 
 
 
@@ -28,10 +31,10 @@ public class Class {
      */
      public Class(String name) 
      {
-         this.name = name;
-         this.attributes = new Set<Attribute>();
-         this.relationshipsToOther = new ArrayList<Pair <RelationshipType, Class> >();
-         this.relationshipsFromOther = new ArrayList<Pair <RelationshipType, Class> >();
+        this.name = name;
+        this.attributes = new HashSet<Attribute>();
+        this.relationshipsToOther = new HashMap<String, RelationshipType>();
+        this.relationshipsFromOther = new HashMap<String, RelationshipType>();
      }
 
     /**
@@ -50,19 +53,19 @@ public class Class {
         return this.attributes;
     }
 
-
-
     /**
      * Returns the relationships from this class object to another.
      */
-    public ArrayList<Pair <RelationshipType, Class>> getRelationshipsToOther() {
+    public Map<String, RelationshipType> getRelationshipsToOther() 
+    {
         return this.relationshipsToOther;
     }
 
     /**
      * Returns the relationships from another class object to this one.
      */
-    public ArrayList<Pair <RelationshipType, Class>> getRelationshipsFromOther() {
+    public Map<String, RelationshipType> getRelationshipsFromOther() 
+    {
         return this.relationshipsFromOther;
     }
 
@@ -80,15 +83,15 @@ public class Class {
     public boolean addAttribute(String type, String name) 
     {
         //If name is found, return false...atrribute already created
-        for (Atrribute a : attributes)
+        for (Attribute a : attributes)
         {
-            if a.getName().equals(name)
+            if (a.getName().equals(name))
             {
                 return false;
             }
         }
-        Atrribute newAttr = new Attribute(name, type);
-        attributes.add(name, type);
+        Attribute newAttr = new Attribute(name, type);
+        attributes.add(newAttr);
         return true;
     }
 
@@ -100,7 +103,7 @@ public class Class {
         //TODO:
         for (Attribute a : attributes)
         {
-            if a.getName().equals(name)
+            if (a.getName().equals(name))
             {
                 attributes.remove(a);
                 return true;
@@ -117,7 +120,7 @@ public class Class {
         //TODO:
         for (Attribute a : attributes)
         {
-            if a.getName().equals(oldName)
+            if (a.getName().equals(oldName))
             {
                 a.setName(newName);
                 return true;
@@ -130,39 +133,52 @@ public class Class {
     /**
      * Adds a relationship from this class object to another.
      */
-    public boolean addRelationshipToOther(RelationshipType relation, Class theClass) {
+    public boolean addRelationshipToOther(RelationshipType relation, Class aClass) 
+    {
         //Remember to add the relationship for the other class too.
+        relationshipsToOther.put(aClass.name, relation);
+        aClass.relationshipsFromOther.put(this.name, relation);
         return true;
     }
 
     /**
      * Adds a relationship from another class object to this one.
      */
-    public boolean addRelationshipFromOther(RelationshipType relation, Class theClass) {
+    public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) 
+    {
         //Remember to add the relatinship for the other class too.
+        relationshipsFromOther.put(aClass.name, relation);
+        aClass.relationshipsToOther.put(this.name, relation);
         return true;
     }
 
     /**
      * Deletes a relationship from this class object to another.
      */
-    public boolean deleteRelationshipToOther(RelationshipType relation, Class theClass) {
+    public boolean deleteRelationshipToOther(RelationshipType relation, Class aClass) 
+    {
+        boolean removedToOther = relationshipsToOther.remove(aClass.name, relation);
+        boolean removedFromOther = aClass.relationshipsFromOther.remove(this.name, relation);
         //Remember to delete the relatinship for the other class too.
-        return true;
+        return removedToOther && removedFromOther;
     }
 
     /**
      * Deletes a relationship from another class object to this one.
      */
-    public boolean deleteRelationshipFromOther(RelationshipType relation, Class theClass) {
+    public boolean deleteRelationshipFromOther(RelationshipType relation, Class aClass) 
+    {
+        boolean removedFromOther = relationshipsFromOther.remove(aClass.name, relation);
+        boolean removedToOther = aClass.relationshipsToOther.remove(this.name, relation);
         //Remember to delete the relatinship for the other class too.
-        return true;
+        return removedFromOther && removedToOther;
     }
 
     /**
      * Returns true if two class object are equal and false otehrwise.
      */
-    public boolean equals(Object other) {
+    public boolean equals(Object other) 
+    {
         boolean result = false;
         if(this == other) {
             result = true;
@@ -176,17 +192,27 @@ public class Class {
         else {
             Class object = (Class) other;
             if(object.getName().equals(this.name) &&
-             object.getAttributes().equals(this.attributes) &&
-             object.getRelationshipsToOther().equals(this.relationshipsToOther) &&
-             object.getRelationshipsFromOther().equals(this.relationshipsFromOther)) {
+             object.attributes.equals(this.attributes) &&
+             object.relationshipsToOther.equals(this.relationshipsToOther) &&
+             object.relationshipsFromOther.equals(this.relationshipsFromOther)) {
                 result = true;
              }
         }
         return result;
     }
 
+    /**
+     * Returns a string representation of a class object.    
+     */
     public String toString()
     {
-
+        String result = "";
+        result += "Class name: " + this.name + "\n";
+        result += "------------------------------";
+        result += "Attribute Names: " + attributes.toString() + "\n";
+        result += "------------------------------";
+        result += "Relationships To Others: \n" + relationshipsToOther.toString() + "\n";
+        result += "Relationships From Others: \n" + relationshipsFromOther.toString() + "\n";
+        return result;
     }
 }
