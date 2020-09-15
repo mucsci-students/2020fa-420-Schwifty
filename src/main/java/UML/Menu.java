@@ -1,5 +1,5 @@
 /*
-    Author: Chris and Dominic and Drew
+    Author: Chris, Dominic and Drew
     Date: 09/10/2020
     Purpose: To create the menu system for our GUI UML editor. The menu will have the option to 
     save and load your work under the file menu option. You can create or delete a class by clicking on the class and create or delete. 
@@ -8,16 +8,27 @@
     acheive the same thing. 
     GUI done using Java Swing.
 */
-import javax.swing.*;
-import java.awt.*;
+
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JComboBox;
+import javax.swing.JMenuBar;
+import javax.swing.JFrame;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class Menu 
 {
     //TODO: This class must be updated when class, attribute, and the main window are complete. 
    private JMenuBar mb;
+   private JFrame parentWindow;
+   private ArrayList<Class> classStore;
+   
    public void createMenu(JFrame window)
    {
+       classStore = null;
+       parentWindow = window;
        mb = new JMenuBar();
        createFileMenu(mb);
        createClassMenu(mb);
@@ -30,7 +41,15 @@ public class Menu
    {
       return mb;
    }
-   
+   /**
+    * Sets the array list sent in from main. Where all created classes are stored. 
+    * @param storage
+    */
+   public void SetClassStore(ArrayList<Class> storage)
+   {
+       this.classStore = storage;
+   }
+
    private void createFileMenu(JMenuBar mb)
    {
        JMenu file = new JMenu("File");
@@ -155,7 +174,16 @@ public class Menu
        mb.add(relate);
    }
 
-   
+   /** 
+    * Makes and returns a combo box fill with the created classes
+   */
+   private JComboBox makeClassComboBox()
+   {
+       JComboBox classBox = new JComboBox(classStore.toArray());
+       classBox.setSelectedItem(1);
+       return classBox;
+   }
+
    private class FileButtonClickListener implements ActionListener
    {
        public void actionPerformed(ActionEvent e)
@@ -184,19 +212,24 @@ public class Menu
            if(cmd.equals("Create"))
            {
                //Load text input box to get the name of the new class to be created.
-               String className = JOptionPane.showInputDialog("Enter a name for the class you would like to create:");
+               String className = JOptionPane.showInputDialog("Class name: ");
                //Create the class. 
+               Class newClass = new Class(className);
+               classStore.add(newClass);
            }
            else if(cmd.equals("Delete"))
            {
                //Load dropdown of available classes to delete
-               //Get string of users choice
-               //Create the class. 
+               JComboBox classBox = makeClassComboBox();
+               String toBeDeleted = JOptionPane.showInputDialog(parentWindow, classBox, "Delete this class", JOptionPane.QUESTION_MESSAGE);
+               //Delete the class. 
            }
            else if(cmd.equals("Rename"))
            {
-               //Load dropdown of created classes 
-               //Get string of the users choice
+               //Load dropdown of created classes
+               JComboBox classBox = makeClassComboBox();
+               String toBeRenamed = JOptionPane.showInputDialog(parentWindow, classBox, "Rename this class", JOptionPane.QUESTION_MESSAGE); 
+               //Open text dialog to get the new class name. 
                //rename that class. 
            }
         }
@@ -209,13 +242,27 @@ public class Menu
              String cmd = e.getActionCommand();
              if(cmd.equals("Create"))
              {
+                 //TODO: Consider making a custom window for this? It would make it look cleaner in the future.
+
                  //Create a drop down list of created classes
-                 //Will need text box for the type and name of an attribute
+                 JComboBox classBox = makeClassComboBox();
+                 String classToAddAttrTo = JOptionPane.showInputDialog(parentWindow, classBox, "Rename this class", JOptionPane.QUESTION_MESSAGE); 
+                 //Get Type from user
+                 String type = JOptionPane.showInputDialog("Type: ");
+                 //Get name from user
+                 String name = JOptionPane.showInputDialog("Name: ");
+
+                 //Find the class in the storage and add an attribute to it
+
              }
              else if(cmd.equals("Delete"))
              {
                  //Create a dropdown list of created classes
-                 //Load text box to type in the class to be deleted
+                 JComboBox classBox = makeClassComboBox();
+                 String classToAddAttrTo = JOptionPane.showInputDialog(parentWindow, classBox, "Select a class: ", JOptionPane.QUESTION_MESSAGE); 
+
+                 //open combo box to list attributes
+                 //Delete the selected attribute from the class.
              }
              else if(cmd.equals("Rename"))
              {
