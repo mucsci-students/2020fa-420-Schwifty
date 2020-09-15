@@ -1,4 +1,4 @@
-/*
+    /*
     Author: Chris, Dominic and Drew
     Date: 09/10/2020
     Purpose: To create the menu system for our GUI UML editor. The menu will have the option to 
@@ -17,6 +17,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JFrame;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Map;
+import Class.RelationshipType;
 
 public class Menu 
 {
@@ -183,6 +185,29 @@ public class Menu
        classBox.setSelectedItem(1);
        return classBox;
    }
+   
+   private void removeRelationships(Class aClass)
+   {
+       Map<String, RelationshipType> tempTo = aClass.getRelationshipToOther();
+       Map<String, RelationshipType> tempFrom = aClass.getRelationshipFromOther();
+       
+   }
+
+   /**
+    * Finds an element in the storage and returns it. Returns null if nothing found.
+    */
+   private Class findClass(String name)
+   {
+       for (Class aClass : classStore) 
+       {
+           if(aClass.getName().equals(name))
+           {
+               return aClass;
+           }
+       }
+
+       return null;
+   }
 
    private class FileButtonClickListener implements ActionListener
    {
@@ -223,6 +248,11 @@ public class Menu
                JComboBox classBox = makeClassComboBox();
                String toBeDeleted = JOptionPane.showInputDialog(parentWindow, classBox, "Delete this class", JOptionPane.QUESTION_MESSAGE);
                //Delete the class. 
+               //find it in storage array
+               Class temp = findClass(toBeDeleted);
+               
+               classStore.remove(temp);
+
            }
            else if(cmd.equals("Rename"))
            {
@@ -262,12 +292,17 @@ public class Menu
                  String classToAddAttrTo = JOptionPane.showInputDialog(parentWindow, classBox, "Select a class: ", JOptionPane.QUESTION_MESSAGE); 
 
                  //open combo box to list attributes
+                 
                  //Delete the selected attribute from the class.
              }
              else if(cmd.equals("Rename"))
              {
-                 //Load text box to type in the class to be renamed
-                 //Load a second text input to get the new name
+                 //Load combo box to get the class to be renamed
+                 JComboBox classBox = makeClassComboBox();
+                 String classToAddAttrTo = JOptionPane.showInputDialog(parentWindow, classBox, "Select a class: ", JOptionPane.QUESTION_MESSAGE); 
+                 //open combo box to list attributes
+                 //Open text input for new name.
+                 String className = JOptionPane.showInputDialog("Atrribute name: ");
              }
           }
       }

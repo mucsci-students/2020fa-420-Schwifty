@@ -1,8 +1,11 @@
 import java.awt.*;
+import java.util.ArrayList;
 public class UMLEditor 
 {
     public static void main(String[] args)
     {
-        UMLWindow uml = new UMLWindow();
+        ArrayList<Class> storage = new ArrayList<Class>();
+
+        UMLWindow uml = new UMLWindow(storage);
     }
 }
