@@ -1,7 +1,10 @@
 /*
-    Author: Tyler, Cory, Dominic, Drew, 
+    Author: Tyler, Cory, Dominic, Drew, Chris. 
     Date: 09/08/2020
-    Purpose: 
+    Purpose: This class defines how classes the user creates will function. A class 
+    needs at least a name to be created and allows for the addition of attributes that are
+    stored in a set. Relationships to the this class, as well as relationships to other classes
+    are stored in maps. 
 */
 import java.util.HashSet;
 import java.util.Set;
@@ -100,7 +103,6 @@ public class Class {
      */
     public boolean deleteAttribute(String name) 
     {
-        //TODO:
         for (Attribute a : attributes)
         {
             if (a.getName().equals(name))
@@ -117,7 +119,6 @@ public class Class {
      */
     public boolean renameAttribute(String oldName, String newName, String newType) 
     {
-        //TODO:
         for (Attribute a : attributes)
         {
             if (a.getName().equals(oldName))
@@ -135,7 +136,7 @@ public class Class {
      */
     public boolean addRelationshipToOther(RelationshipType relation, Class aClass) 
     {
-        //Remember to add the relationship for the other class too.
+
         relationshipsToOther.put(aClass.name, relation);
         aClass.relationshipsFromOther.put(this.name, relation);
         return true;
@@ -146,7 +147,6 @@ public class Class {
      */
     public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) 
     {
-        //Remember to add the relatinship for the other class too.
         relationshipsFromOther.put(aClass.name, relation);
         aClass.relationshipsToOther.put(this.name, relation);
         return true;
@@ -159,7 +159,7 @@ public class Class {
     {
         boolean removedToOther = relationshipsToOther.remove(aClass.name, relation);
         boolean removedFromOther = aClass.relationshipsFromOther.remove(this.name, relation);
-        //Remember to delete the relatinship for the other class too.
+
         return removedToOther && removedFromOther;
     }
 
@@ -170,7 +170,7 @@ public class Class {
     {
         boolean removedFromOther = relationshipsFromOther.remove(aClass.name, relation);
         boolean removedToOther = aClass.relationshipsToOther.remove(this.name, relation);
-        //Remember to delete the relatinship for the other class too.
+
         return removedFromOther && removedToOther;
     }
 

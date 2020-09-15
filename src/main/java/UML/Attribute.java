@@ -1,7 +1,8 @@
 /*
-    Author: 
+    Author: Tyler, Cory, Dominic, Drew, Chris. 
     Date: 09/08/2020
-    Purpose: 
+    Purpose: To define an attribute that consist of a name and type. Added 
+    classes as requested by the user. To construct an attribute a name and type must be provided. 
 */
 public class Attribute {
     //The name of the attribute object.
