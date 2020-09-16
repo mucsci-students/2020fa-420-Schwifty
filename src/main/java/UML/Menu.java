@@ -15,9 +15,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JFrame;
+import javax.swing.JButton;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Map;
+import javax.swing.JTextField;
 import Class.RelationshipType;
 
 public class Menu 
@@ -188,11 +190,46 @@ public class Menu
    
    private void removeRelationships(Class aClass)
    {
+       //Find the classes that the class in question has a relationship with
        Map<String, RelationshipType> tempTo = aClass.getRelationshipToOther();
        Map<String, RelationshipType> tempFrom = aClass.getRelationshipFromOther();
+
+       for(Map.Entry<String,String> entry : tempTo.entrySet()) 
+       {
+            //Go to those classes and get rid of relationships to and from the class in question
+            Class temp = findClass(entry.getKey());
+            temp.deleteRelationshipFromOther(entry.getValue(), aClass);
+            temp.deleteRelationshipToOther(entry.getValue(), aClass);
+       }
+       
+       for(Map.Entry<String,String> entry : tempFrom.entrySet()) 
+       {
+            //Go to those classes and get rid of relationships to and from the class in question
+            Class temp = findClass(entry.getKey());
+            temp.deleteRelationshipFromOther(entry.getValue(), aClass);
+            temp.deleteRelationshipToOther(entry.getValue(), aClass);
+       }
        
    }
 
+   private String[] makeAttributeWindow()
+   {
+       String[] atrributeInfo = new String[3];
+        
+       JFrame attributeWindow = new JFrame("Atrribute");
+       JComboBox classDropdown = makeClassComboBox();
+       JTextField type;
+       JTextField name;
+       JButton createButton = new JButton("Create");
+       attributeWindow.add(type);
+       attributeWindow.add(name);
+       attributeWindow.add(classDropdown);
+       attributeWindow.add(createButton);
+       //When the user clicks the button....
+       //make a new atrribute
+       //Add to the class
+
+   }
    /**
     * Finds an element in the storage and returns it. Returns null if nothing found.
     */
@@ -205,7 +242,6 @@ public class Menu
                return aClass;
            }
        }
-
        return null;
    }
 
@@ -239,8 +275,12 @@ public class Menu
                //Load text input box to get the name of the new class to be created.
                String className = JOptionPane.showInputDialog("Class name: ");
                //Create the class. 
-               Class newClass = new Class(className);
-               classStore.add(newClass);
+               Class temp = findClass(className);
+               if(temp == null) 
+               {
+                Class newClass = new Class(className);
+                classStore.add(newClass);
+               }
            }
            else if(cmd.equals("Delete"))
            {
@@ -250,9 +290,9 @@ public class Menu
                //Delete the class. 
                //find it in storage array
                Class temp = findClass(toBeDeleted);
-               
+               //delete relationships before deleting class
+               removeRelationships(temp);
                classStore.remove(temp);
-
            }
            else if(cmd.equals("Rename"))
            {
@@ -260,7 +300,15 @@ public class Menu
                JComboBox classBox = makeClassComboBox();
                String toBeRenamed = JOptionPane.showInputDialog(parentWindow, classBox, "Rename this class", JOptionPane.QUESTION_MESSAGE); 
                //Open text dialog to get the new class name. 
-               //rename that class. 
+               
+               String newClassName = JOptionPane.showInputDialog(parentWindow, "New Class Name", JOptionPane.QUESTION_MESSAGE);
+               //rename that class.
+               //This is done so that we don't give a class a name that is already taken
+               if(findClass(newClassName) == null)
+               {
+                   Class temp = findClass(toBeRenamed);
+                   temp.setName(toBeRenamed);
+               }
            }
         }
     }
@@ -278,7 +326,7 @@ public class Menu
                  JComboBox classBox = makeClassComboBox();
                  String classToAddAttrTo = JOptionPane.showInputDialog(parentWindow, classBox, "Rename this class", JOptionPane.QUESTION_MESSAGE); 
                  //Get Type from user
-                 String type = JOptionPane.showInputDialog("Type: ");
+                 String type = JOptionPane.showInputDialog(parentWindow, "Type: ", JOptionPane.QUESTION_MESSAGE);
                  //Get name from user
                  String name = JOptionPane.showInputDialog("Name: ");
 
