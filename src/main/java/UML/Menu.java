@@ -191,10 +191,10 @@ public class Menu
    private void removeRelationships(Class aClass)
    {
        //Find the classes that the class in question has a relationship with
-       Map<String, RelationshipType> tempTo = aClass.getRelationshipToOther();
-       Map<String, RelationshipType> tempFrom = aClass.getRelationshipFromOther();
+       Map<String, RelationshipType> tempTo = aClass.getRelationshipsToOther();
+       Map<String, RelationshipType> tempFrom = aClass.getRelationshipsFromOther();
 
-       for(Map.Entry<String,String> entry : tempTo.entrySet()) 
+       for(Map.Entry<String, RelationshipType> entry : tempTo.entrySet()) 
        {
             //Go to those classes and get rid of relationships to and from the class in question
             Class temp = findClass(entry.getKey());
@@ -202,7 +202,7 @@ public class Menu
             temp.deleteRelationshipToOther(entry.getValue(), aClass);
        }
        
-       for(Map.Entry<String,String> entry : tempFrom.entrySet()) 
+       for(Map.Entry<String, RelationshipType> entry : tempFrom.entrySet()) 
        {
             //Go to those classes and get rid of relationships to and from the class in question
             Class temp = findClass(entry.getKey());
@@ -328,7 +328,7 @@ public class Menu
                  //Get Type from user
                  String type = JOptionPane.showInputDialog(parentWindow, "Type: ", JOptionPane.QUESTION_MESSAGE);
                  //Get name from user
-                 String name = JOptionPane.showInputDialog("Name: ");
+                 String name = JOptionPane.showInputDialog("Name: ", JOptionPane.QUESTION_MESSAGE);
 
                  //Find the class in the storage and add an attribute to it
 
