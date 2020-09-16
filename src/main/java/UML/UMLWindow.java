@@ -1,16 +1,15 @@
 
+
 import javax.swing.JOptionPane;
-import java.util.ArrayList;
 import javax.swing.*;
 public class UMLWindow 
 {
    private JFrame window;
    private Menu menu;
-   public umlWindow(ArrayList<Class> storage)
+   public UMLWindow()
    {
        window = new JFrame("UML");
        menu = new Menu();
-       menu.SetClassStore(storage);
        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        window.setSize(800,750);
        menu.createMenu(window);

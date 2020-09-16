@@ -1,3 +1,4 @@
+
 /*
     Author: Tyler, Cory, Dominic, Drew, Chris. 
     Date: 09/08/2020
@@ -12,12 +13,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+//Holds the options for relationships between classes.
+enum RelationshipType 
+{
+    ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
+}
+
 public class Class {
-    //Holds the options for relationships between classes.
-    enum RelationshipType 
-    {
-        ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
-    }
+
     //The name of the class object.
     private String name;
     //A set containing the attributes of a class object.
@@ -117,7 +120,7 @@ public class Class {
     /**
      * Renames an attribute of the class object.
      */
-    public boolean renameAttribute(String oldName, String newName, String newType) 
+    public boolean renameAttribute(String oldName, String newName) 
     {
         for (Attribute a : attributes)
         {
