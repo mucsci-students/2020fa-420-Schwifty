@@ -1,4 +1,5 @@
-import java.awt.*;
+package UML;
+
 import java.util.ArrayList;
 public class UMLEditor 
 {

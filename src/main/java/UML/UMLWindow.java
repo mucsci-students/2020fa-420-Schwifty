@@ -1,3 +1,4 @@
+package UML;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
@@ -6,7 +7,7 @@ public class UMLWindow
 {
    private JFrame window;
    private Menu menu;
-   public umlWindow(ArrayList<Class> storage)
+   public UMLWindow(ArrayList<Class> storage)
    {
        window = new JFrame("UML");
        menu = new Menu();

@@ -1,4 +1,5 @@
-    /*
+package UML;
+/*
     Author: Chris, Dominic and Drew
     Date: 09/10/2020
     Purpose: To create the menu system for our GUI UML editor. The menu will have the option to 
@@ -18,7 +19,7 @@ import javax.swing.JFrame;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Map;
-import Class.RelationshipType;
+import UML.Class.RelationshipType;
 
 public class Menu 
 {
