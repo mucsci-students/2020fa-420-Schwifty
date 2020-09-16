@@ -164,21 +164,27 @@ public class Menu
        aggregation.setToolTipText("Creates selected relationship between two classes");
        composition.setToolTipText("Creates selected relationship between two classes");
        generalization.setToolTipText("Creates selected relationship between two classes");
-       generalization.setToolTipText("Deletes selected relationship between two classes");
+       deleteRelate.setToolTipText("Deletes selected relationship between two classes");
 
        association.setActionCommand("Association");
        aggregation.setActionCommand("Aggregation");
-       aggregation.setActionCommand("Composition");
+       composition.setActionCommand("Composition");
        generalization.setActionCommand("Generalization");
        deleteRelate.setActionCommand("DeleteRelate");
 
+       association.addActionListener(new RelationshipButtonClickListener());
+       aggregation.addActionListener(new RelationshipButtonClickListener());
+       composition.addActionListener(new RelationshipButtonClickListener());
+       generalization.addActionListener(new RelationshipButtonClickListener());
+       deleteRelate.addActionListener(new RelationshipButtonClickListener());
+ 
        mb.add(relate);
    }
 
    /** 
     * Makes and returns a combo box fill with the created classes
    */
-   private ArrayList<String> getCLassList()
+   private ArrayList<String> getClassList()
    {
        ArrayList<String> names = new ArrayList<String>();
 
@@ -284,7 +290,7 @@ public class Menu
            else if(cmd.equals("Delete"))
            {
                //Load dropdown of available classes to delete
-               ArrayList<String> classArrayList = getCLassList();
+               ArrayList<String> classArrayList = getClassList();
                Object[] classList = classArrayList.toArray();
                String toBeDeleted = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                 "Delete this class", 
@@ -302,7 +308,7 @@ public class Menu
            else if(cmd.equals("Rename"))
            {
                //Load dropdown of created classes
-               ArrayList<String> classArrayList = getCLassList();
+               ArrayList<String> classArrayList = getClassList();
                Object[] classList = classArrayList.toArray();
                String toBeRenamed = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                         "Rename this class", 
@@ -312,13 +318,13 @@ public class Menu
                                                                         classList, null);
                //Open text dialog to get the new class name. 
                
-               String newClassName = JOptionPane.showInputDialog(parentWindow, "New Class Name", JOptionPane.QUESTION_MESSAGE);
+               String newClassName = (String)JOptionPane.showInputDialog("New Class Name");
                //rename that class.
                //This is done so that we don't give a class a name that is already taken
                if(findClass(newClassName) == null)
                {
                    Class temp = findClass(toBeRenamed);
-                   temp.setName(toBeRenamed);
+                   temp.setName(newClassName);
                }
            }
         }
@@ -334,7 +340,7 @@ public class Menu
                  //TODO: Consider making a custom window for this? It would make it look cleaner in the future.
 
                  //Create a drop down list of created classes
-                 ArrayList<String> classArrayList = getCLassList();
+                 ArrayList<String> classArrayList = getClassList();
                  Object[] classList = classArrayList.toArray();
                  String className = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                         "Create Attribute for this class", 
@@ -354,7 +360,7 @@ public class Menu
              }
              else if(cmd.equals("Delete"))
              {
-                ArrayList<String>classArrayList = getCLassList();
+                ArrayList<String> classArrayList = getClassList();
                 Object[] classList = classArrayList.toArray();
                 String className = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                        "Create Attribute for this class", 
@@ -383,7 +389,7 @@ public class Menu
              else if(cmd.equals("Rename"))
              {
                  //Load combo box to get the class to be renamed
-                 ArrayList<String>classArrayList = getCLassList();
+                 ArrayList<String> classArrayList = getClassList();
                  Object[] classList = classArrayList.toArray();
                  String className = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                         "Rename Attribute for this class", 
@@ -414,7 +420,7 @@ public class Menu
       }
 
       private class RelationshipButtonClickListener implements ActionListener
-      {
+      {             
           public void actionPerformed(ActionEvent e)
           {
               //Prevent class from having a relationship to itself BIG SCARY
@@ -422,7 +428,7 @@ public class Menu
               if(cmd.equals("Association"))
               {
                   //create a dialog box with two dropdowns of available classes
-                  ArrayList<String>classArrayList = getCLassList();
+                  ArrayList<String> classArrayList = getClassList();
                   Object[] classList = classArrayList.toArray();
                   String buildRelateOne = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                          "Choose first class", 
@@ -449,7 +455,7 @@ public class Menu
               }
               else if(cmd.equals("Aggregation"))
               {
-                  ArrayList<String>classArrayList = getCLassList();
+                  ArrayList<String> classArrayList = getClassList();
                   Object[] classList = classArrayList.toArray();
                   String buildRelateOne = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                               "Choose first class", 
@@ -476,7 +482,7 @@ public class Menu
               {
                   //create a dialog box with two dropdowns of available classes
                  //create a dialog box with two dropdowns of available classes
-                 ArrayList<String>classArrayList = getCLassList();
+                 ArrayList<String> classArrayList = getClassList();
                  Object[] classList = classArrayList.toArray();
                  String buildRelateOne = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                         "Choose first class", 
@@ -501,7 +507,7 @@ public class Menu
               else if(cmd.equals("Generalization"))
               {
                  //create a dialog box with two dropdowns of available classes
-                 ArrayList<String>classArrayList = getCLassList();
+                 ArrayList<String> classArrayList = getClassList();
                  Object[] classList = classArrayList.toArray();
                  String buildRelateOne = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                         "Choose first class", 
@@ -521,20 +527,33 @@ public class Menu
                  //Add the relationship between the classes.
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
-                  addRelationship(class1, class2, RelationshipType.GENERALIZATION);
+                 Class.addRelationship(class1, class2, RelationshipType.GENERALIZATION);
               }
               else if(cmd.equals("DeleteRelate"))
               {
                   //TODO: Not working correctly, add ability to choose relationship and fix inputDiag
                   //create a dialog box with two dropdowns of available classes
-                  JComboBox classBox1 = getCLassList();
-                  String buildRelate1 = JOptionPane.showInputDialog(parentWindow, classBox1, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
-                  JComboBox classBox2 = getCLassList();
-                  String buildRelate2 = JOptionPane.showInputDialog(parentWindow, classBox2, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
+                  ArrayList<String> classArrayList = getClassList();
+                  Object[] classList = classArrayList.toArray();
+                  String buildRelateOne = (String)JOptionPane.showInputDialog(parentWindow, 
+                                                                         "Choose first class", 
+                                                                         "Association", 
+                                                                         JOptionPane.PLAIN_MESSAGE,
+                                                                         null,
+                                                                         classList, 
+                                                                         null); 
+        
+                  String buildRelateTwo = (String)JOptionPane.showInputDialog(parentWindow, 
+                                                                            "Choose second class", 
+                                                                            "Association", 
+                                                                            JOptionPane.PLAIN_MESSAGE,
+                                                                            null,
+                                                                            classList, 
+                                                                            null); 
                   //Delete relationship between chosen two
-                  Class class1 = findClass(buildRelate1);
-                  Class class2 = findClass(buildRelate2);
-                  RelationshipType relation = class1.getRelationshipsToOther.get(buildRelate2);
+                  Class class1 = findClass(buildRelateOne);
+                  Class class2 = findClass(buildRelateTwo);
+                  RelationshipType relation = class1.getRelationshipsToOther().get(buildRelateTwo);
                   Class.deleteRelationship(class1, class2, relation);
                   //add a try catch if false is returned
                 }
