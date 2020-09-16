@@ -442,7 +442,7 @@ public class Menu
                   //Add the relationship between the classes.
                   Class class1 = findClass(buildRelateOne);
                   Class class2 = findClass(buildRelateTwo);
-                  addRelationship(class1, class2, RelationshipType.ASSOCIATION);
+                  Class.addRelationship(class1, class2, RelationshipType.ASSOCIATION);
                   
                   //Create relationship between chosen two, a relationship from and to must be made
                   
@@ -470,7 +470,7 @@ public class Menu
                 Class class1 = findClass(buildRelateOne);
                 Class class2 = findClass(buildRelateTwo);
 
-                  addRelationship(class1, class2, RelationshipType.AGGREGATION);
+                  Class.addRelationship(class1, class2, RelationshipType.AGGREGATION);
               }
               else if(cmd.equals("Composition"))
               {
@@ -496,7 +496,7 @@ public class Menu
                  //Add the relationship between the classes.
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
-                  addRelationship(class1, class2, RelationshipType.COMPOSITION);
+                 Class.addRelationship(class1, class2, RelationshipType.COMPOSITION);
               }
               else if(cmd.equals("Generalization"))
               {
@@ -535,7 +535,7 @@ public class Menu
                   Class class1 = findClass(buildRelate1);
                   Class class2 = findClass(buildRelate2);
                   RelationshipType relation = class1.getRelationshipsToOther.get(buildRelate2);
-                  deleteRelationship(class1, class2, relation);
+                  Class.deleteRelationship(class1, class2, relation);
                   //add a try catch if false is returned
                 }
                 //delete relationship between chosen two
