@@ -131,6 +131,11 @@ public class Class {
     }
     //TODO: Add ability to change the type of an atrribute...also add that to GUI.
 
+    public boolean addRelationship(Class class1, Class class2, RelationshipType relation) 
+    {
+        return class1.addRelationshipToOther(relation, class2) && class2.addRelationshipToOther(relation, class1);
+    }
+
     /**
      * Adds a relationship from this class object to another.
      */
@@ -150,6 +155,11 @@ public class Class {
         relationshipsFromOther.put(aClass.name, relation);
         aClass.relationshipsToOther.put(this.name, relation);
         return true;
+    }
+
+    public boolean deleteRelationship(Class class1, Class class2, RelationshipType relation)
+    {
+        return class1.deleteRelationshipToOther(relation, class2) && class2.deleteRelationshipToOther(relation, class1);
     }
 
     /**

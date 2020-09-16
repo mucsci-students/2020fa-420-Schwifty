@@ -183,11 +183,34 @@ public class Menu
    */
    private JComboBox makeClassComboBox()
    {
-       JComboBox classBox = new JComboBox(classStore.toArray());
+       ArrayList<String> names = new ArrayList<String>;
+
+       for(Class aClass : classStore)
+       {
+           names.add(aClass.getName());
+       }
+
+       JComboBox classBox = new JComboBox(names);
        classBox.setSelectedItem(1);
        return classBox;
    }
    
+   private JComboBox makeAttributeBox(Set<String> attributesFromClass)
+   {
+    ArrayList<String> attributes = new ArrayList<String>;
+    
+    for(Attribute attr : attributesFromClass)
+    {
+        String type = attr.getType();
+        String name = attr.getName();
+        attributes.add(type + " " + name)
+    }
+
+    JComboBox attributeBox = new JComboBox(attributes);
+    attributeBox.setSelectedItem(1);
+    return attributeBox;
+   }
+
    private void removeRelationships(Class aClass)
    {
        //Find the classes that the class in question has a relationship with
@@ -212,24 +235,6 @@ public class Menu
        
    }
 
-   private String[] makeAttributeWindow()
-   {
-       String[] atrributeInfo = new String[3];
-        
-       JFrame attributeWindow = new JFrame("Atrribute");
-       JComboBox classDropdown = makeClassComboBox();
-       JTextField type;
-       JTextField name;
-       JButton createButton = new JButton("Create");
-       attributeWindow.add(type);
-       attributeWindow.add(name);
-       attributeWindow.add(classDropdown);
-       attributeWindow.add(createButton);
-       //When the user clicks the button....
-       //make a new atrribute
-       //Add to the class
-
-   }
    /**
     * Finds an element in the storage and returns it. Returns null if nothing found.
     */
@@ -244,6 +249,7 @@ public class Menu
        }
        return null;
    }
+   
 
    private class FileButtonClickListener implements ActionListener
    {
@@ -324,33 +330,51 @@ public class Menu
 
                  //Create a drop down list of created classes
                  JComboBox classBox = makeClassComboBox();
-                 String classToAddAttrTo = JOptionPane.showInputDialog(parentWindow, classBox, "Rename this class", JOptionPane.QUESTION_MESSAGE); 
+                 String className = JOptionPane.showInputDialog(parentWindow, classBox, "Rename this class", JOptionPane.QUESTION_MESSAGE); 
                  //Get Type from user
                  String type = JOptionPane.showInputDialog(parentWindow, "Type: ", JOptionPane.QUESTION_MESSAGE);
                  //Get name from user
-                 String name = JOptionPane.showInputDialog("Name: ", JOptionPane.QUESTION_MESSAGE);
+                 String name = JOptionPane.showInputDialog(parentWindow,"Name: ", JOptionPane.QUESTION_MESSAGE);
 
                  //Find the class in the storage and add an attribute to it
+                 Class classToAddAttrTo = findClass(className);
+                 Atrribute newAtrr = new Atrribute(name,type);
+                 classToAddAttrTo.addAtrribute(newAttr);
 
              }
              else if(cmd.equals("Delete"))
              {
                  //Create a dropdown list of created classes
                  JComboBox classBox = makeClassComboBox();
-                 String classToAddAttrTo = JOptionPane.showInputDialog(parentWindow, classBox, "Select a class: ", JOptionPane.QUESTION_MESSAGE); 
-
-                 //open combo box to list attributes
-                 
-                 //Delete the selected attribute from the class.
+                 String className = JOptionPane.showInputDialog(parentWindow, classBox, "Select a class: ", JOptionPane.QUESTION_MESSAGE); 
+                 //Get class from storage
+                 Class classToDeleteFrom = findClass(className);
+                 //Get atrributes from the class. 
+                 Set<String> atrributes = classToDeleteFrom.getAttributes();
+                 //Get the atrributes in a combo box
+                 JComboBox attributeBox = makeAttributeBox(attributes);
+                 //Get attribute to delete
+                 String attribute = JOptionPane.showInputDialog(parentWindow, attributeBox, "Select an attribute: ", JOptionPane.QUESTION_MESSAGE);
+                 String[] att = attribute.split(" ");
+                 classToDeleteFrom.deleteAttribute(att[1]);
+                 //Delete the attribute
              }
              else if(cmd.equals("Rename"))
              {
                  //Load combo box to get the class to be renamed
                  JComboBox classBox = makeClassComboBox();
                  String classToAddAttrTo = JOptionPane.showInputDialog(parentWindow, classBox, "Select a class: ", JOptionPane.QUESTION_MESSAGE); 
-                 //open combo box to list attributes
+                 //Get class from storage
+                 Class classToRenameFrom = findClass(className);
+                 //Get atrributes from the class. 
+                 JComboBox attributeBox = makeAttributeBox(attributes);
+                 //Get attribute to rename
+                 String attribute = JOptionPane.showInputDialog(parentWindow, attributeBox, "Select an attribute: ", JOptionPane.QUESTION_MESSAGE);
+                 String newAttribute = JOptionPane.showInputDialog(parentWindow, "Enter new attribute name: ", JOptionPane.QUESTION_MESSAGE);
+                 String[] att = attribute.split(" ");
+                 classToRenameFrom.renameAttribute(att[1], newAttribute);
                  //Open text input for new name.
-                 String className = JOptionPane.showInputDialog("Atrribute name: ");
+                 
              }
           }
       }
@@ -359,32 +383,74 @@ public class Menu
       {
           public void actionPerformed(ActionEvent e)
           {
+              //Prevent class from having a relationship to itself BIG SCARY
               String cmd = e.getActionCommand();
               if(cmd.equals("Association"))
               {
                   //create a dialog box with two dropdowns of available classes
-                  //Create relationship between chosen two
+                  JComboBox classBox1 = makeClassComboBox();
+                  String buildRelate1 = JOptionPane.showInputDialog(parentWindow, classBox1, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
+                  JComboBox classBox2 = makeClassComboBox();
+                  String buildRelate2 = JOptionPane.showInputDialog(parentWindow, classBox2, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
+                  //Add the relationship between the classes.
+                  Class class1 = findClass(buildRelate1);
+                  Class class2 = findClass(buildRelate2);
+                  addRelationship(class1, class2, RelationshipType.ASSOCIATION);
+                  
+                  //Create relationship between chosen two, a relationship from and to must be made
+                  
               }
               else if(cmd.equals("Aggregation"))
               {
                   //create a dialog box with two dropdowns of available classes
+                  JComboBox classBox1 = makeClassComboBox();
+                  String buildRelate1 = JOptionPane.showInputDialog(parentWindow, classBox1, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
+                  JComboBox classBox2 = makeClassComboBox();
+                  String buildRelate2 = JOptionPane.showInputDialog(parentWindow, classBox2, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
                   //Create relationship between chosen two
+                  Class class1 = findClass(buildRelate1);
+                  Class class2 = findClass(buildRelate2);
+                  addRelationship(class1, class2, RelationshipType.AGGREGATION);
               }
               else if(cmd.equals("Composition"))
               {
                   //create a dialog box with two dropdowns of available classes
+                  JComboBox classBox1 = makeClassComboBox();
+                  String buildRelate1 = JOptionPane.showInputDialog(parentWindow, classBox1, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
+                  JComboBox classBox2 = makeClassComboBox();
+                  String buildRelate2 = JOptionPane.showInputDialog(parentWindow, classBox2, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
                   //Create relationship between chosen two
+                  Class class1 = findClass(buildRelate1);
+                  Class class2 = findClass(buildRelate2);
+                  addRelationship(class1, class2, RelationshipType.COMPOSITION);
               }
               else if(cmd.equals("Generalization"))
               {
                   //create a dialog box with two dropdowns of available classes
+                  JComboBox classBox1 = makeClassComboBox();
+                  String buildRelate1 = JOptionPane.showInputDialog(parentWindow, classBox1, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
+                  JComboBox classBox2 = makeClassComboBox();
+                  String buildRelate2 = JOptionPane.showInputDialog(parentWindow, classBox2, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
                   //Create relationship between chosen two
+                  Class class1 = findClass(buildRelate1);
+                  Class class2 = findClass(buildRelate2);
+                  addRelationship(class1, class2, RelationshipType.GENERALIZATION);
               }
               else if(cmd.equals("DeleteRelate"))
               {
                   //create a dialog box with two dropdowns of available classes
-                  //delete relationship between chosen two
+                  JComboBox classBox1 = makeClassComboBox();
+                  String buildRelate1 = JOptionPane.showInputDialog(parentWindow, classBox1, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
+                  JComboBox classBox2 = makeClassComboBox();
+                  String buildRelate2 = JOptionPane.showInputDialog(parentWindow, classBox2, "Select a class: ", JOptionPane.QUESTION_MESSAGE);
+                  //Delete relationship between chosen two
+                  Class class1 = findClass(buildRelate1);
+                  Class class2 = findClass(buildRelate2);
+                  RelationshipType relation = class1.getRelationshipsToOther.get(buildRelate2);
+                  deleteRelationship(class1, class2, relation);
+                  //add a try catch if false is returned
+                }
+                //delete relationship between chosen two
               }
            }
-       }
 }
