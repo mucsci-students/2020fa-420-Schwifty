@@ -9,7 +9,7 @@
     acheive the same thing. 
     GUI done using Java Swing.
 */
-
+import javax.swing.JTextArea;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -20,10 +20,20 @@ import javax.swing.JButton;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import javax.swing.JTextField;
-import java.swing.JPanel;
-import javax.swing.JLable;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
+import javax.swing.border.Border;
+import javax.swing.BorderFactory;
+import java.awt.GridLayout;
+
+
+
 
 public class Menu 
 {
@@ -31,13 +41,14 @@ public class Menu
    private JMenuBar mb;
    private JFrame parentWindow;
    private ArrayList<Class> classStore;
-   private ArrayList<JPanel> classPanels;
+   private Map<String, JPanel> classPanels;
    
    public void createMenu(JFrame window)
    {
        classStore = new ArrayList<Class>();
-       classPanels = new ArrayList<JPanel>();
+       classPanels = new HashMap<String, JPanel>();
        parentWindow = window;
+       parentWindow.setLayout(new GridLayout(5,5));
        mb = new JMenuBar();
        createFileMenu(mb);
        createClassMenu(mb);
@@ -188,15 +199,18 @@ public class Menu
    private void makeNewClassPanel(Class aClass)
    {
        JPanel classPanel = new JPanel();
-       JTextField classText = new JTextField();
-
-       classText.setEditable(false);
-       classText.setText(aClass.toString());
-       classPanel.add(classText);
-
-       classPanels.add(classPanel);
-       parentWindow.add(classPanel);
+       classPanel.setSize(20,200);
        classPanel.setVisible(true);
+       parentWindow.add(classPanel);
+
+
+       JTextArea classText = new JTextArea(aClass.toString());
+       classText.setEditable(false);
+       //classText.append(aClass.toString());
+       classPanel.add(classText);
+       classPanels.put(aClass.getName(), classPanel);
+       Border blackline = BorderFactory.createLineBorder(Color.black);
+       classText.setBorder(blackline);
 
    }
 
@@ -304,7 +318,7 @@ public class Menu
                {
                 Class newClass = new Class(className);
                 classStore.add(newClass);
-                makeNewClassPanel(aClass);
+                makeNewClassPanel(newClass);
                }
            }
            else if(cmd.equals("Delete"))
@@ -320,10 +334,24 @@ public class Menu
                                                                 classList, null);
                //Delete the class. 
                //find it in storage array
+               
                Class temp = findClass(toBeDeleted);
+               if(findClass(toBeDeleted) != null)
+               {
+                    JPanel panel = classPanels.get(toBeDeleted);
+                    parentWindow.remove(panel);
+                    
+                    removeRelationships(temp);
+                    classStore.remove(temp);
+                    classPanels.remove(temp.getName());
+                    parentWindow.revalidate();
+                    parentWindow.repaint();
+                    
+
+               }
                //delete relationships before deleting class
-               removeRelationships(temp);
-               classStore.remove(temp);
+
+               
            }
            else if(cmd.equals("Rename"))
            {
