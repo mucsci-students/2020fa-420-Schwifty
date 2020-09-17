@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.JTextField;
+import java.swing.JPanel;
+import javax.swing.JLable;
 
 public class Menu 
 {
@@ -29,10 +31,12 @@ public class Menu
    private JMenuBar mb;
    private JFrame parentWindow;
    private ArrayList<Class> classStore;
+   private ArrayList<JPanel> classPanels;
    
    public void createMenu(JFrame window)
    {
        classStore = new ArrayList<Class>();
+       classPanels = new ArrayList<JPanel>();
        parentWindow = window;
        mb = new JMenuBar();
        createFileMenu(mb);
@@ -181,6 +185,21 @@ public class Menu
        mb.add(relate);
    }
 
+   private void makeNewClassPanel(Class aClass)
+   {
+       JPanel classPanel = new JPanel();
+       JTextField classText = new JTextField();
+
+       classText.setEditable(false);
+       classText.setText(aClass.toString());
+       classPanel.add(classText);
+
+       classPanels.add(classPanel);
+       parentWindow.add(classPanel);
+       classPanel.setVisible(true);
+
+   }
+
    /** 
     * Makes and returns a combo box fill with the created classes
    */
@@ -285,6 +304,7 @@ public class Menu
                {
                 Class newClass = new Class(className);
                 classStore.add(newClass);
+                makeNewClassPanel(aClass);
                }
            }
            else if(cmd.equals("Delete"))
