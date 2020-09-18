@@ -340,7 +340,7 @@ public class Menu
                {
                     JPanel panel = classPanels.get(toBeDeleted);
                     parentWindow.remove(panel);
-                    
+                    //delete relationships before deleting class
                     removeRelationships(temp);
                     classStore.remove(temp);
                     classPanels.remove(temp.getName());
@@ -349,7 +349,7 @@ public class Menu
                     
 
                }
-               //delete relationships before deleting class
+               
 
                
            }
@@ -373,6 +373,13 @@ public class Menu
                {
                    Class temp = findClass(toBeRenamed);
                    temp.setName(newClassName);
+                   JPanel panel = classPanels.get(toBeRenamed);
+                   JTextArea textArea = (JTextArea)panel.getComponents()[0];
+                   textArea.setText(temp.toString());
+                   classPanels.put(newClassName, panel);
+                   classPanels.remove(toBeRenamed);
+                   parentWindow.revalidate();
+                   parentWindow.repaint();
                }
            }
         }
@@ -405,14 +412,23 @@ public class Menu
                  Class classToAddAttrTo = findClass(className);
                  classToAddAttrTo.addAttribute(name, type);
 
+                 JPanel panel = classPanels.get(className);
+                 JTextArea textArea = (JTextArea)panel.getComponents()[0];
+                 textArea.setText(classToAddAttrTo.toString());
+                 classPanels.remove(className);
+                 classPanels.put(className, panel);
+                 parentWindow.revalidate();
+                 parentWindow.repaint();
+                 
+
              }
              else if(cmd.equals("Delete"))
              {
                 ArrayList<String> classArrayList = getClassList();
                 Object[] classList = classArrayList.toArray();
                 String className = (String)JOptionPane.showInputDialog(parentWindow, 
-                                                                       "Create Attribute for this class", 
-                                                                       "Create atrribute", 
+                                                                       "Delete Attribute for this class", 
+                                                                       "Delete atrribute", 
                                                                        JOptionPane.PLAIN_MESSAGE,
                                                                        null,
                                                                        classList, null);  
@@ -425,8 +441,8 @@ public class Menu
                  Object[] attributeList = attributeArrayList.toArray();
                  //Get attribute to delete
                  String attribute = (String)JOptionPane.showInputDialog(parentWindow, 
-                                                                        "Rename Attribute for this class", 
-                                                                        "Rename atrribute", 
+                                                                        "Delete this atrribute", 
+                                                                        "Delete atrribute", 
                                                                         JOptionPane.PLAIN_MESSAGE,
                                                                         null,
                                                                         attributeList, null); 
