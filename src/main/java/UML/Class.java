@@ -37,6 +37,7 @@ public class Class {
      */
      public Class(String name) 
      {
+        //Don't allow empty string/only whitespace
         this.name = name;
         this.attributes = new HashSet<Attribute>();
         this.relationshipsToOther = new HashMap<String, RelationshipType>();

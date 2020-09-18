@@ -51,31 +51,59 @@ public class ClassTest {
     @Test
     public void testSetName() 
     {
-        
+        Class test = new Class("name");
+        test.setName("newName");
+        assertEquals("newName", test.getName());
+        //Throw exception for setting name to white space or empty?
+        Class empty = new Class("empty");
+        //Expect exception
+        empty.setName("");
     }
     
     @Test
     public void testAddAttribute() 
     {
-
+        Class test = new Class("name");
+        test.addAttribute("int", "att");
+        test.addAttribute("String", "att2");
+        assertTrue(set.getAttributes().contains(new Attribute("att", "int")));
+        assertTrue(set.getAttributes().contains(new Attribute("att2", "String")));
+        //Don't allow adding empty attribute (should do this in attribute to not allow creating or setting)
+        //Expect exception when calling test.addAttribute("", "  ")
     }
 
     @Test
     public void testDeleteAttribute() 
     {
-
+        Class test = new Class("name");
+        //When attribute doesn't exist
+        assertFalse(test.deleteAttribute("name", "type"));
+        test.addAttribute("int", "att");
+        test.addAttribute("String", "att2");
+        assertTrue(test.deleteAttribute("att"));
+        assertFalse(set.getAttributes().contains(new Attribute("att", "int")));
+        assertTrue(set.getAttributes().contains(new Attribute("att2", "String")));
     }
 
     @Test
     public void testRenameAttribute() 
     {
-
+        Class test = new Class("name");
+        test.addAttribute("int", "att");
+        test.renameAttribute("att", "newAtt");
+        assertTrue(set.getAttributes().contains(new Attribute("newAtt", "int")));
+        //Name that doesn't exist
+        assertFalse(test.renameAttribute("att", "att2"));
+        //Rename to empty ecpect exception
+        test.renameAttribute("newAtt", " ");
     }
 
     @Test
     public void testAddRelationship() 
     {
-
+        Class test = new Class("name");
+        Class test2 = new Class("name2");
+        
     }
 
     @Test
