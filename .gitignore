@@ -4,6 +4,7 @@
 .classpath
 .project 
 .settings
+.vscode
 ### Java ###
 *.class
 
@@ -40,3 +41,6 @@ gradle-app.setting
 
 # End of https://www.gitignore.io/api/java,gradle
 /bin/
+
+# Ignore Gradle build output directory
+build
