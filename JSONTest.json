@@ -1,1 +1,2 @@
-{"ClassName":"TestTwo","Attributes":"int num"}
+{"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"Test","Attributes":["type name","int num"]}
+{"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"TestTwo","Attributes":[]}

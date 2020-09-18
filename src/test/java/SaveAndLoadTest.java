@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 public class SaveAndLoadTest
 {
-    Class testClass = new Class("Test");
 
     @Test
     /**
@@ -14,6 +13,7 @@ public class SaveAndLoadTest
      */
     public void testSave()
     {
+        Class testClass = new Class("Test");
         testClass.addAttribute("int", "num");
 
         Class testClassTwo = new Class("TestTwo");
