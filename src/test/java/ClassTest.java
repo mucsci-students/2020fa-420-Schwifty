@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
@@ -87,8 +88,8 @@ public class ClassTest {
         Class test = new Class("name");
         test.addAttribute("int", "att");
         test.addAttribute("String", "att2");
-        assertTrue(set.getAttributes().contains(new Attribute("att", "int")));
-        assertTrue(set.getAttributes().contains(new Attribute("att2", "String")));
+        assertTrue(test.getAttributes().contains(new Attribute("att", "int")));
+        assertTrue(test.getAttributes().contains(new Attribute("att2", "String")));
         //Don't allow adding empty attribute (should do this in attribute to not allow creating or setting)
         //Expect exception when calling test.addAttribute("", "  ")
     }
@@ -98,12 +99,12 @@ public class ClassTest {
     {
         Class test = new Class("name");
         //When attribute doesn't exist
-        assertFalse(test.deleteAttribute("name", "type"));
+        assertFalse(test.deleteAttribute("name"));
         test.addAttribute("int", "att");
         test.addAttribute("String", "att2");
         assertTrue(test.deleteAttribute("att"));
-        assertFalse(set.getAttributes().contains(new Attribute("att", "int")));
-        assertTrue(set.getAttributes().contains(new Attribute("att2", "String")));
+        assertFalse(test.getAttributes().contains(new Attribute("att", "int")));
+        assertTrue(test.getAttributes().contains(new Attribute("att2", "String")));
     }
 
     @Test
@@ -112,7 +113,7 @@ public class ClassTest {
         Class test = new Class("name");
         test.addAttribute("int", "att");
         test.renameAttribute("att", "newAtt");
-        assertTrue(set.getAttributes().contains(new Attribute("newAtt", "int")));
+        assertTrue(test.getAttributes().contains(new Attribute("newAtt", "int")));
         //Name that doesn't exist
         assertFalse(test.renameAttribute("att", "att2"));
         //Rename to empty ecpect exception
@@ -130,15 +131,14 @@ public class ClassTest {
     @Test
     public void testDeleteRelationship() 
     {
-        Class test = new Class("test");
+        Class test1 = new Class("test");
         Class test2 = new Class("test2");
-        Class.addRelationship(test, test2, RelationshipType.ASSOCIATION);
+        Class.addRelationship(test1, test2, RelationshipType.ASSOCIATION);
         Map map = new HashMap<String, RelationshipType>();
         map.put("test2", RelationshipType.ASSOCIATION);
         map.remove("class2");
-        Class.deleteRelationship(test1, test2, ASSOCIATION);
-        assertEquals(map, class2.getRelationshipsFromOther());
-    }
+        Class.deleteRelationship(test1, test2, RelationshipType.ASSOCIATION);
+        assertEquals(map, test2.getRelationshipsFromOther());
     }
 
     @Test
