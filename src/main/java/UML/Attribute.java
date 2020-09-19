@@ -13,7 +13,13 @@ public class Attribute {
     /**
      * Constructs an attribute object.
      */
-    public Attribute(String name, String type) {
+    public Attribute(String name, String type) throws IllegalArgumentException{
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("The attribute name cannot be blank.");
+        }
+        if(type.trim().isEmpty()) {
+            throw new IllegalArgumentException("The attribute type cannot be blank.");
+        }
         this.name = name;
         this.type = type;
     }
@@ -35,14 +41,20 @@ public class Attribute {
     /**
      * Changes the name of the attribute object.
      */
-    public void setName(String name) {
+    public void setName (String name) throws IllegalArgumentException{
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("The name type cannot be blank.");
+        }
         this.name = name;
     }
 
     /**
      * Changes the name of the attribute object.
      */
-    public void setType(String type) {
+    public void setType(String type) throws IllegalArgumentException{
+        if(type.trim().isEmpty()) {
+            throw new IllegalArgumentException("The attribute type cannot be blank.");
+        }
         this.type = type;
     }
 

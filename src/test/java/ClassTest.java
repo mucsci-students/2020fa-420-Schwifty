@@ -123,17 +123,28 @@ public class ClassTest {
         //Name that doesn't exist
         assertFalse(test.renameAttribute("att", "att2"));
         //Rename to empty ecpect exception
-        test.renameAttribute("newAtt", " ");
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.renameAttribute("newAtt", " ");
+        });
     }
 
     @Test
-    public void testAddRelationship() 
+    public void testAddRelationshipToOther() 
     {
         Class test = new Class("name");
         Class test2 = new Class("name2");
         
     }
 
+    @Test
+    public void testAddRelationshipFromOther() 
+    {
+        Class test = new Class("name");
+        Class test2 = new Class("name2");
+        
+    }
+
+    //Replace with versions of to and from
     @Test
     public void testDeleteRelationship() 
     {
@@ -142,10 +153,27 @@ public class ClassTest {
         Class.addRelationship(test1, test2, RelationshipType.ASSOCIATION);
         Map map = new HashMap<String, RelationshipType>();
         map.put("test2", RelationshipType.ASSOCIATION);
+        //Line below
         map.remove("class2");
-        Class.deleteRelationship(test1, test2, RelationshipType.ASSOCIATION);
-        assertEquals(map, test2.getRelationshipsFromOther());
+        Class.deleteRelationship(test, test2, ASSOCIATION);
+        assertEquals(map, class2.getRelationshipsFromOther());
     }
+    
+    @Test
+    public void testDeleteRelationshipToOther() 
+    {
+        Class test = new Class("name");
+        Class test2 = new Class("name2");
+    }
+
+
+    @Test
+     public void testDeleteRelationshipFromOther() 
+    {
+        Class test = new Class("name");
+        Class test2 = new Class("name2");
+    }
+
 
     @Test
     public void testEquals() 
