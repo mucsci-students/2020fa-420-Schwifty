@@ -90,8 +90,8 @@ public class ClassTest {
         Class test = new Class("name");
         test.addAttribute("int", "att");
         test.addAttribute("String", "att2");
-        assertTrue(set.getAttributes().contains(new Attribute("att", "int")));
-        assertTrue(set.getAttributes().contains(new Attribute("att2", "String")));
+        assertTrue(test.getAttributes().contains(new Attribute("att", "int")));
+        assertTrue(test.getAttributes().contains(new Attribute("att2", "String")));
         //Don't allow adding empty attribute (should do this in attribute to not allow creating or setting)
         //Expect exception when calling test.addAttribute("", "  ")
         assertThrows(IllegalArgumentException.class, () -> {
@@ -133,7 +133,16 @@ public class ClassTest {
     {
         Class test = new Class("name");
         Class test2 = new Class("name2");
-        
+        Map map = new HashMap<String, RelationshipType>();
+        Map map2 = new HashMap<String, RelationshipType>();
+        test.addRelationshipToOther(RelationshipType.ASSOCIATION, test2);
+        map.put("name2", RelationshipType.ASSOCIATION);
+        map2.put("name", RelationshipType.ASSOCIATION);
+        assertEquals(map, test.getRelationshipsToOther());
+        assertEquals(map2, test2.getRelationshipsFromOther());
+        assertTrue(test.getRelationshipsFromOther().isEmpty());
+        assertTrue(test2.getRelationshipsToOther().isEmpty());
+        //Add case for adding one to the same class
     }
 
     @Test
@@ -141,7 +150,16 @@ public class ClassTest {
     {
         Class test = new Class("name");
         Class test2 = new Class("name2");
-        
+        Map map = new HashMap<String, RelationshipType>();
+        Map map2 = new HashMap<String, RelationshipType>();
+        test.addRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
+        map.put("name2", RelationshipType.ASSOCIATION);
+        map2.put("name", RelationshipType.ASSOCIATION);
+        assertEquals(map, test.getRelationshipsFromOther());
+        assertEquals(map2, test2.getRelationshipsToOther());
+        assertTrue(test.getRelationshipsToOther().isEmpty());
+        assertTrue(test2.getRelationshipsFromOther().isEmpty());
+        //Add case for adding one to the same class
     }
 
     //Replace with versions of to and from
@@ -164,6 +182,11 @@ public class ClassTest {
     {
         Class test = new Class("name");
         Class test2 = new Class("name2");
+        assertFalse(test.deleteRelationshipToOther(RelationshipType.ASSOCIATION, test2));
+        test.addRelationshipToOther(RelationshipType.ASSOCIATION, test2);
+        test.deleteRelationshipToOther();
+        assertTrue(test.getRelationshipsToOther().isEmpty());
+        assertTrue(test2.getRelationshipsFromOther().isEmpty());
     }
 
 
@@ -172,6 +195,11 @@ public class ClassTest {
     {
         Class test = new Class("name");
         Class test2 = new Class("name2");
+        assertFalse(test.deleteRelationshipFromOther(RelationshipType.ASSOCIATION, test2));
+        test.addRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
+        test.deleteRelationshipFromOther();
+        assertTrue(test.getRelationshipsFromOther().isEmpty());
+        assertTrue(test2.getRelationshipsToOther().isEmpty());
     }
 
 
