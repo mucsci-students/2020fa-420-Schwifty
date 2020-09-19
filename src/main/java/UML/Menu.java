@@ -28,8 +28,14 @@ public class Menu
     //TODO: This class must be updated when class, attribute, and the main window are complete. 
    private JMenuBar mb;
    private JFrame parentWindow;
+   private String currentLoadedFile;
+
    private ArrayList<Class> classStore;
    
+   public String getLoadedFilename()
+   {
+       return this.currentLoadedFile;
+   }
    public void createMenu(JFrame window)
    {
        classStore = new ArrayList<Class>();
@@ -258,15 +264,34 @@ public class Menu
            if(cmd.equals("Save"))
            {
                //Save contents to file...will require JSON save
+               //TODO: Make me a save screen
+               //If there is a currently loaded file
+               if (!currentLoadedFile.equals(""))
+               {
+                   SaveAndLoad.save(currentLoadedFile, classStore);
+               }
+               else
+               {
+                   //TODO: Make me a save as screen.
+                   //Bring up file panel for the user to save as(automatically will choose file type though)
+                   String fileName = JOptionPane.showInputDialog("Filename: ");
+                   SaveAndLoad.save(fileName +".json", classStore);
+                   //TODO: Consider what to do should the file creation fail. 
+               }
            }
            else if(cmd.equals("SaveAs"))
            {
                //Bring up file panel for the user to save as(automatically will choose file type though)
-               
+               String fileName = JOptionPane.showInputDialog("Filename: ");
+               SaveAndLoad.save(fileName + ".json", classStore);
+               //TODO: Consider what to do should the file creation fail. 
            }
            else if(cmd.equals("Load"))
            {
                //Bring up file panel to load a UML design from JSON
+               //TODO: Make me a filechooser
+               String fileName = JOptionPane.showInputDialog("Filename: ");
+               SaveAndLoad.load(fileName, classStore);
            }
         }
     }
