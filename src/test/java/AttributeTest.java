@@ -18,7 +18,7 @@ public class AttributeTest {
         assertEquals("type", test.getType());
     }
 
-     @Test
+    @Test
     public void testSetName() 
     {
         //Simple name change
@@ -27,12 +27,14 @@ public class AttributeTest {
         assertEquals("newName", test.getName());
         //Change to empty string/white spaces
         Attribute test2 = new Attribute("name", "type");
-        test2.setName(" ");
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.setName(" ");
+        });
         //Assert that and exception is thrown here (nned to add IllegalArgumentException in Attribute class)
 
     }
 
-     @Test
+    @Test
     public void testSetType() 
     {
         //Simple type change
@@ -41,7 +43,9 @@ public class AttributeTest {
         assertEquals("newType", test.getType());
         //Change to empty string/white spaces
         Attribute test2 = new Attribute("name", "type");
-        test2.setType(" ");
+        assertThrows(IllegalArgumentException.class, () -> {
+            test2.setType(" ");
+        });
         //Assert that and exception is thrown here (need to add IllegalArgumentException in Attribute class)
     }
 

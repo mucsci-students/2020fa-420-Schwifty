@@ -79,7 +79,9 @@ public class ClassTest {
         //Throw exception for setting name to white space or empty?
         Class empty = new Class("empty");
         //Expect exception
-        empty.setName("");
+        assertThrows(IllegalArgumentException.class, () -> {
+            empty.setName("");
+        });
     }
     
     @Test
@@ -88,11 +90,15 @@ public class ClassTest {
         Class test = new Class("name");
         test.addAttribute("int", "att");
         test.addAttribute("String", "att2");
-        assertTrue(test.getAttributes().contains(new Attribute("att", "int")));
-        assertTrue(test.getAttributes().contains(new Attribute("att2", "String")));
+        assertTrue(set.getAttributes().contains(new Attribute("att", "int")));
+        assertTrue(set.getAttributes().contains(new Attribute("att2", "String")));
         //Don't allow adding empty attribute (should do this in attribute to not allow creating or setting)
         //Expect exception when calling test.addAttribute("", "  ")
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.addAttribute("", "   ");
+        });
     }
+    
 
     @Test
     public void testDeleteAttribute() 
