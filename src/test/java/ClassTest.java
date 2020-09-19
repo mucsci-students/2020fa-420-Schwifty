@@ -174,8 +174,8 @@ public class ClassTest {
         map.put("test2", RelationshipType.ASSOCIATION);
         //Line below
         map.remove("class2");
-        Class.deleteRelationship(test, test2, ASSOCIATION);
-        assertEquals(map, class2.getRelationshipsFromOther());
+        Class.deleteRelationship(test1, test2, RelationshipType.ASSOCIATION);
+        assertEquals(map, test2.getRelationshipsFromOther());
     }
     
     @Test
