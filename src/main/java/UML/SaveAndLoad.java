@@ -4,6 +4,22 @@
     Date: 09/17/2020
     Purpose: This is a static class with static methods. Handles the saving and 
     loading of user created classes using simple JSON. 
+    JSON files will be saved in the following format which is a JSONObject that is an array
+    of jsonobjects representing classes and there values.
+    * {Classes: [
+    *      {
+    *          ClassName: name
+    *          attributes[]
+    *          relationTo []
+    *          relationFrom []
+    *      }
+    *      {
+    *          ClassName: name
+    *          attributes[]
+    *          relationTo []
+    *          relationFrom []
+    *      }
+    * ]} 
 */
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -147,6 +163,7 @@ public class SaveAndLoad
                     String[] attr = it.next().split(" ");
                     aClass.addAttribute(attr[0], attr[1]);
                 }
+                
                 //Get the relationships to other class and add it to the correct class
                 JSONArray jsonRelationToOthers = (JSONArray)jobct.get("RelationshipToOthers");
                 it = jsonRelationToOthers.iterator();

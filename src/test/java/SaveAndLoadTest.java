@@ -16,8 +16,8 @@ public class SaveAndLoadTest
     /**
      * Test file: JSONTest.json
      * Output to file: 
-     * {"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"Test","Attributes":["int num","type name"]}
-     * {"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"TestTwo","Attributes":[]}
+     * {"Classes":[{"RelationshipToOthers":["ASSOCIATION TestTwo"],"RelationshipFromOthers":["ASSOCIATION TestTwo"],"ClassName":"Test","Attributes":["int num"]},
+     * {"RelationshipToOthers":["ASSOCIATION Test"],"RelationshipFromOthers":["ASSOCIATION Test"],"ClassName":"TestTwo","Attributes":["string aStr"]}]}
      */
     public void testSave()
     {
@@ -27,7 +27,6 @@ public class SaveAndLoadTest
         Class testClassTwo = new Class("TestTwo");
         testClassTwo.addAttribute("string", "aStr");
         Class.addRelationship(testClass, testClassTwo, RelationshipType.ASSOCIATION);
-
 
         ArrayList<Class> arrList = new ArrayList<Class>();
         arrList.add(testClass);
@@ -39,7 +38,8 @@ public class SaveAndLoadTest
 
     //Test that the JSON data being saved correctly
     /**
-     * Expected: {"ClassName":"TestTwo","Attributes":"type name"}
+     * Expected: {"Classes":[{"RelationshipToOthers":["ASSOCIATION TestTwo"],"RelationshipFromOthers":["ASSOCIATION TestTwo"],"ClassName":"Test","Attributes":["int num"]},
+     * {"RelationshipToOthers":["ASSOCIATION Test"],"RelationshipFromOthers":["ASSOCIATION Test"],"ClassName":"TestTwo","Attributes":["string aStr"]}]}
      */
     @Test
     public void testLoadedData()
