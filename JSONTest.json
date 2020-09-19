@@ -1,2 +1,1 @@
-{"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"Test","Attributes":["type name","int num"]}
-{"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"TestTwo","Attributes":[]}
+{"Classes":[{"RelationshipToOthers":["ASSOCIATION TestTwo"],"RelationshipFromOthers":["ASSOCIATION TestTwo"],"ClassName":"Test","Attributes":["int num"]},{"RelationshipToOthers":["ASSOCIATION Test"],"RelationshipFromOthers":["ASSOCIATION Test"],"ClassName":"TestTwo","Attributes":["string aStr"]}]}
