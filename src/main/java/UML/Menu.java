@@ -213,6 +213,32 @@ public class Menu
        classText.setBorder(blackline);
 
    }
+   
+   /**
+    * Updates the relationships visually in the window 
+    *
+    * Bug! - when adding a relationship the relationship shows
+    *        up in relateTo and relateFrom for both classes 
+    * @param classOne 
+    * @param classTwo
+    */
+   private void updateDisplayRelationship (Class classOne , Class classTwo)
+   {
+       JPanel panelOne = classPanels.get(classOne.getName());
+       JTextArea textArea = (JTextArea) panelOne.getComponents()[0];
+       textArea.setText(classOne.toString());
+       classPanels.remove(classOne.getName());
+       classPanels.put(classOne.getName(), panelOne);
+
+       JPanel panelTwo = classPanels.get(classTwo.getName());
+       JTextArea textAreaTwo = (JTextArea) panelTwo.getComponents()[0];
+       textAreaTwo.setText(classTwo.toString());
+       classPanels.remove(classTwo.getName());
+       classPanels.put(classTwo.getName(), panelTwo);
+
+       parentWindow.revalidate();
+       parentWindow.repaint();   
+   } 
 
    /** 
     * Makes and returns a combo box fill with the created classes
@@ -410,8 +436,13 @@ public class Menu
 
                  //Find the class in the storage and add an attribute to it
                  Class classToAddAttrTo = findClass(className);
-                 classToAddAttrTo.addAttribute(name, type);
+                 classToAddAttrTo.addAttribute(type, name);
 
+                 /*      Bugs
+                 * when a space is placed after the type or name 
+                 * when adding attr delete and rename no longer 
+                 * works for that attr.  
+                 */
                  JPanel panel = classPanels.get(className);
                  JTextArea textArea = (JTextArea)panel.getComponents()[0];
                  textArea.setText(classToAddAttrTo.toString());
@@ -449,6 +480,16 @@ public class Menu
                  String[] att = attribute.split(" ");
                  classToDeleteFrom.deleteAttribute(att[1]);
                  //Delete the attribute
+
+                 //delete attr in window
+                 JPanel panel = classPanels.get(className); 
+                 JTextArea textArea = (JTextArea)panel.getComponents()[0];
+                 textArea.setText(classToDeleteFrom.toString());
+                 classPanels.remove(className);
+                 classPanels.put(className, panel);
+                 parentWindow.revalidate();
+                 parentWindow.repaint();
+
              }
              else if(cmd.equals("Rename"))
              {
@@ -478,7 +519,15 @@ public class Menu
                  String[] att = attribute.split(" ");
                  classToRenameFrom.renameAttribute(att[1], newAttribute);
                  //Open text input for new name.
-                 
+                
+                 //rename attr in window
+                 JPanel panel = classPanels.get(className); 
+                 JTextArea textArea = (JTextArea)panel.getComponents()[0];
+                 textArea.setText(classToRenameFrom.toString());
+                 classPanels.remove(className);
+                 classPanels.put(className, panel);
+                 parentWindow.revalidate();
+                 parentWindow.repaint();
              }
           }
       }
@@ -513,9 +562,12 @@ public class Menu
                   Class class1 = findClass(buildRelateOne);
                   Class class2 = findClass(buildRelateTwo);
                   Class.addRelationship(class1, class2, RelationshipType.ASSOCIATION);
+
                   
                   //Create relationship between chosen two, a relationship from and to must be made
-                  
+              
+                  updateDisplayRelationship(class1, class2);
+
               }
               else if(cmd.equals("Aggregation"))
               {
@@ -541,6 +593,10 @@ public class Menu
                 Class class2 = findClass(buildRelateTwo);
 
                   Class.addRelationship(class1, class2, RelationshipType.AGGREGATION);
+
+                 //dispaly relationship 
+                 updateDisplayRelationship(class1, class2);
+
               }
               else if(cmd.equals("Composition"))
               {
@@ -567,6 +623,9 @@ public class Menu
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
                  Class.addRelationship(class1, class2, RelationshipType.COMPOSITION);
+
+                 //display relationship 
+                 updateDisplayRelationship(class1, class2);
               }
               else if(cmd.equals("Generalization"))
               {
@@ -592,6 +651,9 @@ public class Menu
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
                  Class.addRelationship(class1, class2, RelationshipType.GENERALIZATION);
+                
+                 //display relationship
+                 updateDisplayRelationship(class1, class2);
               }
               else if(cmd.equals("DeleteRelate"))
               {
@@ -620,8 +682,13 @@ public class Menu
                   RelationshipType relation = class1.getRelationshipsToOther().get(buildRelateTwo);
                   Class.deleteRelationship(class1, class2, relation);
                   //add a try catch if false is returned
+                  
+                  //delete relationship from display
+                  updateDisplayRelationship(class1, class2);
+
                 }
                 //delete relationship between chosen two
+
               }
            }
 }
