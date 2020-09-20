@@ -88,4 +88,13 @@ public class Attribute {
     {
         return this.type + " : " + this.name;
     }
+
+    /**
+     * Overrides the hashcode.
+     */
+    @Override
+    public int hashCode() 
+    { 
+          return this.name.hashCode() + this.type.hashCode();
+    } 
 }

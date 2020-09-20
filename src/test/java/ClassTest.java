@@ -37,8 +37,19 @@ public class ClassTest {
         Class class2 = new Class("class2");
         class1.addRelationshipFromOther(RelationshipType.ASSOCIATION, class2);
         Map map = new HashMap<String, RelationshipType>();
-        map.put("class1", RelationshipType.ASSOCIATION);
-        assertEquals(map, class2.getRelationshipsFromOther());
+        map.put("class2", RelationshipType.ASSOCIATION);
+        assertEquals(map, class1.getRelationshipsFromOther());
+    }
+
+    @Test
+    public void testGetRelationshipsToOther() 
+    {
+        Class class1 = new Class("class1");
+        Class class2 = new Class("class2");
+        class1.addRelationshipToOther(RelationshipType.ASSOCIATION, class2);
+        Map map = new HashMap<String, RelationshipType>();
+        map.put("class2", RelationshipType.ASSOCIATION);
+        assertEquals(map, class1.getRelationshipsToOther());
     }
 
     @Test
@@ -63,15 +74,8 @@ public class ClassTest {
         Set<Attribute> testSet = test.getAttributes();
         Attribute attrTest = new Attribute("att", "int");
         Attribute attrTestTwo = new Attribute("att2", "String");
-
-        //checks attributes in set in backwards order of insert for some reason.
-        Attribute[] testAttribute = {attrTestTwo,attrTest};
-        int counter = 0;
-        for(Attribute attr : testSet)
-        {
-            assertEquals(testAttribute[counter], attr);
-            counter++;
-        }
+        assertTrue(test.getAttributes().contains(attrTest));
+        assertTrue(test.getAttributes().contains(attrTestTwo));
         assertThrows(IllegalArgumentException.class, () -> {
             test.addAttribute("", "   ");
         });
@@ -100,7 +104,8 @@ public class ClassTest {
         Class test = new Class("name");
         test.addAttribute("int", "att"); 
         test.renameAttribute("att", "newAtt");
-        assertTrue(test.getAttributes().contains(new Attribute("newAtt", "int")));
+        Attribute newAtt = new Attribute("newAtt", "int");
+        assertTrue(test.getAttributes().contains(newAtt));
         //Renaming an attribute name that doesn't exist should return false
         assertFalse(test.renameAttribute("att", "att2"));
         //Rename to empty ecpect exception
@@ -190,17 +195,16 @@ public class ClassTest {
         test1.addAttribute("int", "5");
         Class test2 = new Class("name");
         test2.addAttribute("int", "5");
-        //Class extra = new Class("extra");
-        //Rewrite the two below
-        //test1.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
-        //test2.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
-        //Class extra1 = new Class("extra1");
-        //Class extra2 = new Class("extra1");
-        //Rewrite the two below
-        //extra1.addRelationshipToOther(RelationshipType.AGGREGATION, test1);
-        //extra1.addRelationshipToOther(RelationshipType.AGGREGATION, test2);
+        Class extra = new Class("extra");
+        test1.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
+        test2.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
+        Class extra1 = new Class("extra1");
+        test1.addRelationshipFromOther(RelationshipType.AGGREGATION, extra1);
+        test2.addRelationshipFromOther(RelationshipType.AGGREGATION, extra1);
+        assertTrue(test1.equals(test2));
+        assertTrue(extra1.getRelationshipsToOther().containsKey("name"));
+        assertTrue(extra.getRelationshipsFromOther().containsKey("name"));
 
-        assertEquals(test1,test2);
     }
 
     //Fix this to the new version of toString
