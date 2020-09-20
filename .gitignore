@@ -3,9 +3,9 @@
 ###misc##
 .classpath
 .project 
-.settings
-.vscode
-.DS_store
+*.settings
+*.vscode
+*.DS_store
 ### Java ###
 *.class
 
@@ -26,6 +26,7 @@ hs_err_pid*
 
 ### Gradle ###
 .gradle
+*gradlew
 /build/
 /build
 

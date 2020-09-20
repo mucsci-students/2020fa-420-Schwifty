@@ -1,1 +1,0 @@
-{"Classes":[{"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"TestClass","Attributes":[]},{"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"HelloTest","Attributes":["words string"]},{"RelationshipToOthers":[],"RelationshipFromOthers":[],"ClassName":"GoodbyeTest","Attributes":["heartFeltGoodbye string"]}]}
