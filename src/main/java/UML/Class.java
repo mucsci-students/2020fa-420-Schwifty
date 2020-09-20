@@ -30,8 +30,6 @@ public class Class {
     //The relationships from another class object to this one.
     private Map<String, RelationshipType> relationshipsFromOther;
 
-
-
     /**
      * Constructs a class object that takes in a parameter for the name of the class.
      */
@@ -133,7 +131,11 @@ public class Class {
         {
             if (a.getName().equals(oldName))
             {
-                a.setName(newName);
+                //Must remove and add so that the Attribute has correct hashcode
+                String type = a.getType();
+                this.attributes.remove(a);
+                Attribute toAdd = new Attribute(newName, type);
+                this.attributes.add(toAdd);
                 return true;
             }
         }
@@ -141,12 +143,12 @@ public class Class {
     }
     //TODO: Add ability to change the type of an atrribute...also add that to GUI.
 
-    
     /**
      * Adds a relationship from this class object to another.
      */
     public boolean addRelationshipToOther(RelationshipType relation, Class aClass) 
     {
+        //If relationship already exists between the two classes, don't overwrite.
         if(!relationshipsToOther.containsKey(aClass.name))
         {
             relationshipsToOther.put(aClass.name, relation);
@@ -161,6 +163,7 @@ public class Class {
      */
     public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) 
     {
+        //If relationship already exists between the two classes, don't overwrite.
         if(!relationshipsFromOther.containsKey(aClass.name))
         {
             relationshipsFromOther.put(aClass.name, relation);
@@ -177,7 +180,6 @@ public class Class {
     {
         boolean removedToOther = relationshipsToOther.remove(aClass.name, relation);
         boolean removedFromOther = aClass.relationshipsFromOther.remove(this.name, relation);
-
         return removedToOther && removedFromOther;
     }
 
@@ -188,7 +190,6 @@ public class Class {
     {
         boolean removedFromOther = relationshipsFromOther.remove(aClass.name, relation);
         boolean removedToOther = aClass.relationshipsToOther.remove(this.name, relation);
-
         return removedFromOther && removedToOther;
     }
 
@@ -209,8 +210,20 @@ public class Class {
         }
         else {
             Class object = (Class) other;
-            if(object.getName().equals(this.name) &&
-             object.attributes.equals(this.attributes) &&
+            boolean attEqual = true;
+            //Check if both sets contain the same objects since equals() won't work
+            for(Attribute att : this.attributes) {
+                if(!object.attributes.contains(att)) {
+                    attEqual = false;
+                }
+            }
+            for(Attribute att : object.attributes) {
+                if(!this.attributes.contains(att)) {
+                    attEqual = false;
+                }
+            }
+            if(object.name.equals(this.name) &&
+             attEqual &&
              object.relationshipsToOther.equals(this.relationshipsToOther) &&
              object.relationshipsFromOther.equals(this.relationshipsFromOther)) {
                 result = true;
@@ -226,11 +239,10 @@ public class Class {
     {
         String result = "";
         result += "Class name: " + this.name + "\n";
-        result += "------------------------------";
-        result += "Attribute Names: "; // + attributes.get(0).getName() + "\n";
+        result += "------------------------------\n";
+        result += "Attribute Names: \n"; // + attributes.get(0).getName() + "\n";
         if(!attributes.isEmpty())
         {
-            
             for (Attribute attribute : attributes) 
             {
                 result += attribute.toString();
@@ -238,9 +250,8 @@ public class Class {
             }
         }
         result += "\n------------------------------";
-        result += "Relationships To Others: \n" + relationshipsToOther.toString() + "\n";
-        result += "Relationships From Others: \n" + relationshipsFromOther.toString() + "\n";
+        result += "Relationships To Others: \n" + relationshipsToOther.toString();
+        result += "Relationships From Others: \n" + relationshipsFromOther.toString();
         return result;
     }
 }
-

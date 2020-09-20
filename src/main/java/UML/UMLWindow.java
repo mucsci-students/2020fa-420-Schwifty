@@ -1,4 +1,8 @@
-
+/*
+    Author: Dominic
+    Date: 09/10/2020
+    Purpose: Creates the main window for the GUI.
+ */
 
 import javax.swing.JOptionPane;
 import javax.swing.*;
@@ -8,6 +12,10 @@ public class UMLWindow
 {
    private JFrame window;
    private Menu menu;
+
+   /**
+    * Constructrs a UMLWindow object.
+    */
    public UMLWindow()
    {
        window = new JFrame("UML");
