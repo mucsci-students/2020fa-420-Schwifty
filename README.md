@@ -39,3 +39,10 @@ Selecting class and clicking the okay button will open a prompt to rename the cl
 **Delete Relationship:** Select from two drop-boxes of created classes to delete the relationship between two classes
 
 *Each of the following operations will result in the display updating concurrently to changes made.
+
+## Developers
+* Dominic D
+* Tyler B
+* Chris S
+* Drew W
+* Cory J
