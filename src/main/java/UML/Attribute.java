@@ -50,5 +50,13 @@ public class Attribute {
         }
         return result;
     }
+
+    /**
+     * Returns a string representation of an attribute.
+     */
+    public String toString() 
+    {
+        return this.type + " : " + this.name;
+    }
 }
 
