@@ -6,6 +6,7 @@
 *.settings
 *.vscode
 *.DS_store
+*.json
 ### Java ###
 *.class
 
