@@ -18,7 +18,6 @@ public class UMLWindow
        menu.createMenu(window);
        window.setJMenuBar(menu.getMenuBar());
        window.setVisible(true);
-       
    }
    
    public JFrame getMainWindow()

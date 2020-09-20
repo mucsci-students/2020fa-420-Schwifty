@@ -9,6 +9,7 @@
     acheive the same thing. 
     GUI done using Java Swing.
 */
+
 import javax.swing.JTextArea;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -31,9 +32,6 @@ import java.awt.LayoutManager;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
-
-
-
 
 public class Menu 
 {
@@ -375,9 +373,10 @@ public class Menu
                     
 
                }
-               
-
-               
+               Class temp = findClass(toBeDeleted);
+               //delete relationships before deleting class
+               removeRelationships(temp);
+               classStore.remove(temp);
            }
            else if(cmd.equals("Rename"))
            {
@@ -450,7 +449,7 @@ public class Menu
                  classPanels.put(className, panel);
                  parentWindow.revalidate();
                  parentWindow.repaint();
-                 
+                 classToAddAttrTo.addAttribute(name, type);
 
              }
              else if(cmd.equals("Delete"))
@@ -458,8 +457,11 @@ public class Menu
                 ArrayList<String> classArrayList = getClassList();
                 Object[] classList = classArrayList.toArray();
                 String className = (String)JOptionPane.showInputDialog(parentWindow, 
+
                                                                        "Delete Attribute for this class", 
                                                                        "Delete atrribute", 
+                                                                       "Create Attribute for this class", 
+                                                                       "Create atrribute", 
                                                                        JOptionPane.PLAIN_MESSAGE,
                                                                        null,
                                                                        classList, null);  
@@ -474,13 +476,14 @@ public class Menu
                  String attribute = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                         "Delete this atrribute", 
                                                                         "Delete atrribute", 
+                                                                        "Rename Attribute for this class", 
+                                                                        "Rename atrribute", 
                                                                         JOptionPane.PLAIN_MESSAGE,
                                                                         null,
                                                                         attributeList, null); 
                  String[] att = attribute.split(" ");
                  classToDeleteFrom.deleteAttribute(att[1]);
                  //Delete the attribute
-
                  //delete attr in window
                  JPanel panel = classPanels.get(className); 
                  JTextArea textArea = (JTextArea)panel.getComponents()[0];
@@ -489,7 +492,6 @@ public class Menu
                  classPanels.put(className, panel);
                  parentWindow.revalidate();
                  parentWindow.repaint();
-
              }
              else if(cmd.equals("Rename"))
              {
@@ -519,7 +521,6 @@ public class Menu
                  String[] att = attribute.split(" ");
                  classToRenameFrom.renameAttribute(att[1], newAttribute);
                  //Open text input for new name.
-                
                  //rename attr in window
                  JPanel panel = classPanels.get(className); 
                  JTextArea textArea = (JTextArea)panel.getComponents()[0];
@@ -562,12 +563,10 @@ public class Menu
                   Class class1 = findClass(buildRelateOne);
                   Class class2 = findClass(buildRelateTwo);
                   Class.addRelationship(class1, class2, RelationshipType.ASSOCIATION);
-
-                  
                   //Create relationship between chosen two, a relationship from and to must be made
               
                   updateDisplayRelationship(class1, class2);
-
+                  //Create relationship between chosen two, a relationship from and to must be made
               }
               else if(cmd.equals("Aggregation"))
               {
@@ -593,10 +592,8 @@ public class Menu
                 Class class2 = findClass(buildRelateTwo);
 
                   Class.addRelationship(class1, class2, RelationshipType.AGGREGATION);
-
                  //dispaly relationship 
                  updateDisplayRelationship(class1, class2);
-
               }
               else if(cmd.equals("Composition"))
               {
@@ -623,7 +620,6 @@ public class Menu
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
                  Class.addRelationship(class1, class2, RelationshipType.COMPOSITION);
-
                  //display relationship 
                  updateDisplayRelationship(class1, class2);
               }
@@ -651,7 +647,6 @@ public class Menu
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
                  Class.addRelationship(class1, class2, RelationshipType.GENERALIZATION);
-                
                  //display relationship
                  updateDisplayRelationship(class1, class2);
               }
@@ -682,13 +677,15 @@ public class Menu
                   RelationshipType relation = class1.getRelationshipsToOther().get(buildRelateTwo);
                   Class.deleteRelationship(class1, class2, relation);
                   //add a try catch if false is returned
-                  
+
                   //delete relationship from display
                   updateDisplayRelationship(class1, class2);
 
                 }
                 //delete relationship between chosen two
 
+                }
+                //delete relationship between chosen two
               }
            }
 }
