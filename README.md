@@ -35,14 +35,16 @@ Selecting class and clicking the okay button will open a prompt to rename the cl
 
 **Rename attribute:** Select from a drop-box of created classes. Selecting class and clicking the okay button will open a drop-box of attributes under that class. Clicking okay after selecting an attribute will open a prompt to rename the attribute.
 
-*Each of the following operations will result in the display updating concurrently to changes made.
+*Each of the above operations will result in the display updating concurrently to changes made.
 
 ## Relate
 **Association - Aggregation - Composition - Generalization:** Select from two drop-boxes of created classes to create the selected relation ship type.  
 
 **Delete Relationship:** Select from two drop-boxes of created classes to delete the relationship between two classes
 
-*Each of the following operations will result in the display updating concurrently to changes made.
+*Each of the above operations will result in the display updating concurrently to changes made.
+
+
 
 ## Developers
 * Dominic D
