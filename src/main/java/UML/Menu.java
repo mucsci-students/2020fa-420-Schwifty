@@ -38,14 +38,21 @@ public class Menu
     //TODO: This class must be updated when class, attribute, and the main window are complete. 
    private JMenuBar mb;
    private JFrame parentWindow;
+   private String currentLoadedFile;
+
    private ArrayList<Class> classStore;
    private Map<String, JPanel> classPanels;
    
+   public String getLoadedFilename()
+   {
+       return this.currentLoadedFile;
+   }
    public void createMenu(JFrame window)
    {
        classStore = new ArrayList<Class>();
        classPanels = new HashMap<String, JPanel>();
        parentWindow = window;
+       currentLoadedFile = "";
        parentWindow.setLayout(new GridLayout(5,5));
        mb = new JMenuBar();
        createFileMenu(mb);
@@ -315,14 +322,34 @@ public class Menu
            if(cmd.equals("Save"))
            {
                //Save contents to file...will require JSON save
+               //TODO: Make me a save screen
+               //If there is a currently loaded file
+               if (!currentLoadedFile.equals(""))
+               {
+                   SaveAndLoad.save(currentLoadedFile, classStore);
+               }
+               else
+               {
+                   //TODO: Make me a save as screen.
+                   //Bring up file panel for the user to save as(automatically will choose file type though)
+                   String fileName = JOptionPane.showInputDialog("Filename: ");
+                   SaveAndLoad.save(fileName +".json", classStore);
+                   //TODO: Consider what to do should the file creation fail. 
+               }
            }
            else if(cmd.equals("SaveAs"))
            {
                //Bring up file panel for the user to save as(automatically will choose file type though)
+               String fileName = JOptionPane.showInputDialog("Filename: ");
+               SaveAndLoad.save(fileName + ".json", classStore);
+               //TODO: Consider what to do should the file creation fail. 
            }
            else if(cmd.equals("Load"))
            {
                //Bring up file panel to load a UML design from JSON
+               //TODO: Make me a filechooser
+               String fileName = JOptionPane.showInputDialog("Filename: ");
+               SaveAndLoad.load(fileName, classStore);
            }
         }
     }
@@ -562,7 +589,9 @@ public class Menu
                   //Add the relationship between the classes.
                   Class class1 = findClass(buildRelateOne);
                   Class class2 = findClass(buildRelateTwo);
-                  Class.addRelationship(class1, class2, RelationshipType.ASSOCIATION);
+                  //Change add relationship
+                  class1.addRelationshipToOther(RelationshipType.ASSOCIATION, class2);
+
                   //Create relationship between chosen two, a relationship from and to must be made
               
                   updateDisplayRelationship(class1, class2);
@@ -590,10 +619,9 @@ public class Menu
                 //Add the relationship between the classes.
                 Class class1 = findClass(buildRelateOne);
                 Class class2 = findClass(buildRelateTwo);
-
-                  Class.addRelationship(class1, class2, RelationshipType.AGGREGATION);
-                 //dispaly relationship 
-                 updateDisplayRelationship(class1, class2);
+                //Change add relationship  
+                class1.addRelationshipToOther(RelationshipType.AGGREGATION, class2);
+                updateDisplayRelationship(class1, class2);
               }
               else if(cmd.equals("Composition"))
               {
@@ -619,7 +647,8 @@ public class Menu
                  //Add the relationship between the classes.
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
-                 Class.addRelationship(class1, class2, RelationshipType.COMPOSITION);
+                 //Chnage add relationship
+                 class1.addRelationshipToOther(RelationshipType.COMPOSITION, class2);
                  //display relationship 
                  updateDisplayRelationship(class1, class2);
               }
@@ -646,7 +675,8 @@ public class Menu
                  //Add the relationship between the classes.
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
-                 Class.addRelationship(class1, class2, RelationshipType.GENERALIZATION);
+                 //Change add relationship
+                 class1.addRelationshipToOther(RelationshipType.GENERALIZATION, class2);
                  //display relationship
                  updateDisplayRelationship(class1, class2);
               }
@@ -675,7 +705,9 @@ public class Menu
                   Class class1 = findClass(buildRelateOne);
                   Class class2 = findClass(buildRelateTwo);
                   RelationshipType relation = class1.getRelationshipsToOther().get(buildRelateTwo);
-                  Class.deleteRelationship(class1, class2, relation);
+                  //Change deleteRelationship
+                  class1.deleteRelationshipToOther(relation, class2);
+                  class2.deleteRelationshipToOther(relation, class1);
                   //add a try catch if false is returned
 
                   //delete relationship from display

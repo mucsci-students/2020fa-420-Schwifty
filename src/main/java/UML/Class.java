@@ -17,7 +17,7 @@ import java.util.Map;
 enum RelationshipType 
 {
     ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
-}
+} 
 
 public class Class {
 
@@ -35,8 +35,12 @@ public class Class {
     /**
      * Constructs a class object that takes in a parameter for the name of the class.
      */
-     public Class(String name) 
+     public Class(String name) throws IllegalArgumentException
      {
+        //Don't allow empty string/only whitespace
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("The class name cannot be blank.");
+        }
         this.name = name;
         this.attributes = new HashSet<Attribute>();
         this.relationshipsToOther = new HashMap<String, RelationshipType>();
@@ -78,15 +82,18 @@ public class Class {
     /**
      * Changes the name of the class object.
      */
-    public void setName(String name) 
+    public void setName(String name) throws IllegalArgumentException
     {
+        if(name.trim().isEmpty()) {
+            throw new IllegalArgumentException("The class name cannot be blank.");
+        }
         this.name = name;
     }
 
     /**
      * Adds an attribute the the class object.
      */
-    public boolean addAttribute(String type, String name) 
+    public boolean addAttribute(String type, String name) throws IllegalArgumentException
     {
         //If name is found, return false...atrribute already created
         for (Attribute a : attributes)
@@ -120,7 +127,7 @@ public class Class {
     /**
      * Renames an attribute of the class object.
      */
-    public boolean renameAttribute(String oldName, String newName) 
+    public boolean renameAttribute(String oldName, String newName) throws IllegalArgumentException
     {
         for (Attribute a : attributes)
         {
@@ -134,20 +141,19 @@ public class Class {
     }
     //TODO: Add ability to change the type of an atrribute...also add that to GUI.
 
-    public static boolean addRelationship(Class class1, Class class2, RelationshipType relation) 
-    {
-        return class1.addRelationshipToOther(relation, class2) && class2.addRelationshipToOther(relation, class1);
-    }
-
+    
     /**
      * Adds a relationship from this class object to another.
      */
     public boolean addRelationshipToOther(RelationshipType relation, Class aClass) 
     {
-
-        relationshipsToOther.put(aClass.name, relation);
-        aClass.relationshipsFromOther.put(this.name, relation);
-        return true;
+        if(!relationshipsToOther.containsKey(aClass.name))
+        {
+            relationshipsToOther.put(aClass.name, relation);
+            aClass.relationshipsFromOther.put(this.name, relation);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -155,14 +161,13 @@ public class Class {
      */
     public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) 
     {
-        relationshipsFromOther.put(aClass.name, relation);
-        aClass.relationshipsToOther.put(this.name, relation);
-        return true;
-    }
-
-    public static boolean deleteRelationship(Class class1, Class class2, RelationshipType relation)
-    {
-        return class1.deleteRelationshipToOther(relation, class2) && class2.deleteRelationshipToOther(relation, class1);
+        if(!relationshipsFromOther.containsKey(aClass.name))
+        {
+            relationshipsFromOther.put(aClass.name, relation);
+            aClass.relationshipsToOther.put(this.name, relation);
+            return true;
+        }
+        return false;
     }
 
     /**
