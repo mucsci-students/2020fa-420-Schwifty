@@ -18,6 +18,7 @@ public class ClassTest {
         assertEquals("Test", test.getName());
     }
 
+    //Get rid of this
     @Test
     public void testBlankName() 
     {
@@ -36,6 +37,7 @@ public class ClassTest {
         assertEquals(set, test.getAttributes());
     }
 
+    //Get rid of this
     @Test
     public void testBlankAttr() 
     {
@@ -77,9 +79,8 @@ public class ClassTest {
         Class test = new Class("name");
         test.setName("newName");
         assertEquals("newName", test.getName());
-        //Throw exception for setting name to white space or empty?
+        //Setting name to whitespace should thorw exception
         Class empty = new Class("empty");
-        //Expect exception
         assertThrows(IllegalArgumentException.class, () -> {
             empty.setName("");
         });
@@ -93,8 +94,7 @@ public class ClassTest {
         test.addAttribute("String", "att2");
         assertTrue(test.getAttributes().contains(new Attribute("att", "int")));
         assertTrue(test.getAttributes().contains(new Attribute("att2", "String")));
-        //Don't allow adding empty attribute (should do this in attribute to not allow creating or setting)
-        //Expect exception when calling test.addAttribute("", "  ")
+        //Adding attribute with whitespace name or type should throw exception
         assertThrows(IllegalArgumentException.class, () -> {
             test.addAttribute("", "   ");
         });
@@ -110,6 +110,7 @@ public class ClassTest {
         test.addAttribute("int", "att");
         test.addAttribute("String", "att2");
         assertTrue(test.deleteAttribute("att"));
+        //Should have "att2" but not "att"
         assertFalse(test.getAttributes().contains(new Attribute("att", "int")));
         assertTrue(test.getAttributes().contains(new Attribute("att2", "String")));
     }
@@ -121,7 +122,7 @@ public class ClassTest {
         test.addAttribute("int", "att");
         test.renameAttribute("att", "newAtt");
         assertTrue(test.getAttributes().contains(new Attribute("newAtt", "int")));
-        //Name that doesn't exist
+        //Renaming an attribute name that doesn't exist should return false
         assertFalse(test.renameAttribute("att", "att2"));
         //Rename to empty ecpect exception
         assertThrows(IllegalArgumentException.class, () -> {
@@ -139,11 +140,16 @@ public class ClassTest {
         test.addRelationshipToOther(RelationshipType.ASSOCIATION, test2);
         map.put("name2", RelationshipType.ASSOCIATION);
         map2.put("name", RelationshipType.ASSOCIATION);
+        //Should have the correctly oriented relationship in both classes
         assertEquals(map, test.getRelationshipsToOther());
         assertEquals(map2, test2.getRelationshipsFromOther());
+        //Should not have incorrectly oriented relationships in either class
         assertTrue(test.getRelationshipsFromOther().isEmpty());
         assertTrue(test2.getRelationshipsToOther().isEmpty());
-        //Add case for adding one to the same class
+        //Don't allow replacing the key's value
+        assertFalse(test.addRelationshipToOther(RelationshipType.AGGREGATION, test2));
+        
+
     }
 
     @Test
@@ -156,11 +162,15 @@ public class ClassTest {
         test.addRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
         map.put("name2", RelationshipType.ASSOCIATION);
         map2.put("name", RelationshipType.ASSOCIATION);
+        //Should have the correctly oriented relationship in both classes
         assertEquals(map, test.getRelationshipsFromOther());
         assertEquals(map2, test2.getRelationshipsToOther());
+        //Should not have incorrectly oriented relationships in either class
         assertTrue(test.getRelationshipsToOther().isEmpty());
         assertTrue(test2.getRelationshipsFromOther().isEmpty());
-        //Add case for adding one to the same class
+        //Don't allow replacing the key's value
+        assertFalse(test.addRelationshipFromOther(RelationshipType.AGGREGATION, test2));
+        
     }
 
     //Replace with versions of to and from
@@ -172,7 +182,6 @@ public class ClassTest {
         Class.addRelationship(test1, test2, RelationshipType.ASSOCIATION);
         Map map = new HashMap<String, RelationshipType>();
         map.put("test2", RelationshipType.ASSOCIATION);
-        //Line below
         map.remove("class2");
         Class.deleteRelationship(test1, test2, RelationshipType.ASSOCIATION);
         assertEquals(map, test2.getRelationshipsFromOther());
@@ -183,9 +192,11 @@ public class ClassTest {
     {
         Class test = new Class("name");
         Class test2 = new Class("name2");
+        //Deleting from empty should return false
         assertFalse(test.deleteRelationshipToOther(RelationshipType.ASSOCIATION, test2));
         test.addRelationshipToOther(RelationshipType.ASSOCIATION, test2);
         test.deleteRelationshipToOther();
+        //Should be gone from both classes
         assertTrue(test.getRelationshipsToOther().isEmpty());
         assertTrue(test2.getRelationshipsFromOther().isEmpty());
     }
@@ -196,9 +207,11 @@ public class ClassTest {
     {
         Class test = new Class("name");
         Class test2 = new Class("name2");
+        //Deleting from empty should return false
         assertFalse(test.deleteRelationshipFromOther(RelationshipType.ASSOCIATION, test2));
         test.addRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
         test.deleteRelationshipFromOther();
+        //Should be gone from both classes
         assertTrue(test.getRelationshipsFromOther().isEmpty());
         assertTrue(test2.getRelationshipsToOther().isEmpty());
     }
@@ -212,14 +225,17 @@ public class ClassTest {
         Class test2 = new Class("name");
         test2.addAttribute("attribute", "type");
         Class extra = new Class("extra");
+        //Rewrite the two below
         Class.addRelationship(test1, extra, RelationshipType.ASSOCIATION);
         Class.addRelationship(test2, extra, RelationshipType.ASSOCIATION);
         Class extra1 = new Class("extra1");
+        //Rewrite the two below
         Class.addRelationship(extra1, test1, RelationshipType.AGGREGATION);
         Class.addRelationship(extra1, test2, RelationshipType.AGGREGATION);
         assertTrue(test1.equals(test2));
     }
 
+    //Fix this to the new version of toString
     @Test
     public void testToString() 
     {
