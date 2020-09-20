@@ -1,7 +1,7 @@
 /*
-    Author: Chris
+    Author: Chris, Dominic, Tyler, Cory and Drew
     Date: 09/17/2020
-    Purpose: Test the saving and loading of a class from 
+    Purpose: Test the saving and loading of a class.
     * {Classes: [
     *      {
     *          ClassName: name

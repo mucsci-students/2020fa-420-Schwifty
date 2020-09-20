@@ -1,5 +1,5 @@
 /*
-    Author: Chris, Dominic and Drew
+    Author: Chris, Dominic, Tyler, Cory and Drew
     Date: 09/10/2020
     Purpose: To create the menu system for our GUI UML editor. The menu will have the option to 
     save and load your work under the file menu option. You can create or delete a class by clicking on the class and create or delete. 

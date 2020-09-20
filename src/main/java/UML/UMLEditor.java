@@ -7,6 +7,7 @@ public class UMLEditor
 {
     public static void main(String[] args)
     {
+        //Creates UMLWindow object to begin the GUI program.
         UMLWindow uml = new UMLWindow();
     }
 }
