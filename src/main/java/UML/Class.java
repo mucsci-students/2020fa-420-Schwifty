@@ -151,10 +151,13 @@ public class Class {
      */
     public boolean addRelationshipToOther(RelationshipType relation, Class aClass) 
     {
-
-        relationshipsToOther.put(aClass.name, relation);
-        aClass.relationshipsFromOther.put(this.name, relation);
-        return true;
+        if(!relationshipsToOther.contains(aClass.name))
+        {
+            relationshipsToOther.put(aClass.name, relation);
+            aClass.relationshipsFromOther.put(this.name, relation);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -162,9 +165,13 @@ public class Class {
      */
     public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) 
     {
-        relationshipsFromOther.put(aClass.name, relation);
-        aClass.relationshipsToOther.put(this.name, relation);
-        return true;
+        if(!relationshipsFromOther.contains(aClass.name))
+        {
+            relationshipsFromOther.put(aClass.name, relation);
+            aClass.relationshipsToOther.put(this.name, relation);
+            return true;
+        }
+        return false;
     }
 
     public static boolean deleteRelationship(Class class1, Class class2, RelationshipType relation)
