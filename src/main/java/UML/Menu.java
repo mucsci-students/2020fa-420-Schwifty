@@ -396,14 +396,8 @@ public class Menu
                     classStore.remove(temp);
                     classPanels.remove(temp.getName());
                     parentWindow.revalidate();
-                    parentWindow.repaint();
-                    
-
+                    parentWindow.repaint(); 
                }
-               Class temp = findClass(toBeDeleted);
-               //delete relationships before deleting class
-               removeRelationships(temp);
-               classStore.remove(temp);
            }
            else if(cmd.equals("Rename"))
            {
@@ -476,7 +470,6 @@ public class Menu
                  classPanels.put(className, panel);
                  parentWindow.revalidate();
                  parentWindow.repaint();
-                 classToAddAttrTo.addAttribute(name, type);
 
              }
              else if(cmd.equals("Delete"))
@@ -484,11 +477,8 @@ public class Menu
                 ArrayList<String> classArrayList = getClassList();
                 Object[] classList = classArrayList.toArray();
                 String className = (String)JOptionPane.showInputDialog(parentWindow, 
-
                                                                        "Delete Attribute for this class", 
                                                                        "Delete atrribute", 
-                                                                       "Create Attribute for this class", 
-                                                                       "Create atrribute", 
                                                                        JOptionPane.PLAIN_MESSAGE,
                                                                        null,
                                                                        classList, null);  
@@ -503,8 +493,6 @@ public class Menu
                  String attribute = (String)JOptionPane.showInputDialog(parentWindow, 
                                                                         "Delete this atrribute", 
                                                                         "Delete atrribute", 
-                                                                        "Rename Attribute for this class", 
-                                                                        "Rename atrribute", 
                                                                         JOptionPane.PLAIN_MESSAGE,
                                                                         null,
                                                                         attributeList, null); 
@@ -515,8 +503,8 @@ public class Menu
                  JPanel panel = classPanels.get(className); 
                  JTextArea textArea = (JTextArea)panel.getComponents()[0];
                  textArea.setText(classToDeleteFrom.toString());
-                 classPanels.remove(className);
                  classPanels.put(className, panel);
+                 classPanels.remove(className);
                  parentWindow.revalidate();
                  parentWindow.repaint();
              }
@@ -544,16 +532,17 @@ public class Menu
                                                                         JOptionPane.PLAIN_MESSAGE,
                                                                         null,
                                                                         attributeList, null); 
-                 String newAttribute = JOptionPane.showInputDialog(parentWindow, "Enter new attribute name: ", JOptionPane.QUESTION_MESSAGE);
+                 
+                 //Open text input for new name
+                 String newAttribute = (String)JOptionPane.showInputDialog(parentWindow, "Enter new attribute name: ", JOptionPane.QUESTION_MESSAGE);
                  String[] att = attribute.split(" ");
                  classToRenameFrom.renameAttribute(att[1], newAttribute);
-                 //Open text input for new name.
-                 //rename attr in window
+
                  JPanel panel = classPanels.get(className); 
                  JTextArea textArea = (JTextArea)panel.getComponents()[0];
                  textArea.setText(classToRenameFrom.toString());
-                 classPanels.remove(className);
                  classPanels.put(className, panel);
+                 classPanels.remove(className);
                  parentWindow.revalidate();
                  parentWindow.repaint();
              }
@@ -716,8 +705,7 @@ public class Menu
                 }
                 //delete relationship between chosen two
 
-                }
-                //delete relationship between chosen two
+                
               }
            }
 }

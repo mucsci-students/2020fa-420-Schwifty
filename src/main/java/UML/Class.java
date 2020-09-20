@@ -227,7 +227,7 @@ public class Class {
         String result = "";
         result += "Class name: " + this.name + "\n";
         result += "------------------------------";
-        result += "Attribute Names: "; // + attributes.get(0).getName() + "\n";
+        result += "Attribute Names: \n"; // + attributes.get(0).getName() + "\n";
         if(!attributes.isEmpty())
         {
             
@@ -238,9 +238,8 @@ public class Class {
             }
         }
         result += "\n------------------------------";
-        result += "Relationships To Others: \n" + relationshipsToOther.toString() + "\n";
-        result += "Relationships From Others: \n" + relationshipsFromOther.toString() + "\n";
+        result += "Relationships To Others: \n" + relationshipsToOther.toString();
+        result += "Relationships From Others: \n" + relationshipsFromOther.toString();
         return result;
     }
 }
-

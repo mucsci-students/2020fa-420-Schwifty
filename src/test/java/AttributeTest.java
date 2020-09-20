@@ -73,6 +73,11 @@ public class AttributeTest {
     public void testToString() 
     {
         Attribute test = new Attribute("name", "type");
-        assertEquals("type : name", test.toString().equals("type : name"));
+
+        //assertEquals("type : name", test.toString().equals("type : name"));
+        assertEquals("type : name", test.toString());
     }
+    
+    
+    
 }

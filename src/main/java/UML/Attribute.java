@@ -86,6 +86,6 @@ public class Attribute {
      */
     public String toString()
     {
-        return this.type + " : " + this.name + "\n";
+        return this.type + " : " + this.name;
     }
 }
