@@ -226,7 +226,7 @@ public class Class {
     {
         String result = "";
         result += "Class name: " + this.name + "\n";
-        result += "------------------------------";
+        result += "------------------------------\n";
         result += "Attribute Names: \n"; // + attributes.get(0).getName() + "\n";
         if(!attributes.isEmpty())
         {
