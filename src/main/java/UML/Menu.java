@@ -704,8 +704,6 @@ public class Menu
 
                 }
                 //delete relationship between chosen two
-
-                
               }
            }
 }
