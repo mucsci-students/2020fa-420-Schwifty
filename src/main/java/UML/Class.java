@@ -227,8 +227,17 @@ public class Class {
         String result = "";
         result += "Class name: " + this.name + "\n";
         result += "------------------------------";
-        result += "Attribute Names: " + attributes.toString() + "\n";
-        result += "------------------------------";
+        result += "Attribute Names: "; // + attributes.get(0).getName() + "\n";
+        if(!attributes.isEmpty())
+        {
+            
+            for (Attribute attribute : attributes) 
+            {
+                result += attribute.toString();
+                result += "\n";
+            }
+        }
+        result += "\n------------------------------";
         result += "Relationships To Others: \n" + relationshipsToOther.toString() + "\n";
         result += "Relationships From Others: \n" + relationshipsFromOther.toString() + "\n";
         return result;
