@@ -3,6 +3,10 @@
 ## Running the UML Editor
 To run the application, navigate to the project directory. Using Gradle, run the command **gradle clean run** to start the application. This should bring up the application GUI.
 
+## Requirements
+* Java 8
+* Gradle
+
 ## How to use the UML Editor
 Once the application is brought up, There will be be a blank window with a menubar showing all current operations of the UML.
 **File** ,**Class** ,**Attribute** , and **Relate**. 
