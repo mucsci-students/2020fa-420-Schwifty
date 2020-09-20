@@ -40,6 +40,7 @@ public class Menu
    {
        classStore = new ArrayList<Class>();
        parentWindow = window;
+       currentLoadedFile = "";
        mb = new JMenuBar();
        createFileMenu(mb);
        createClassMenu(mb);
