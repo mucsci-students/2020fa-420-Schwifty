@@ -26,7 +26,10 @@ public class SaveAndLoadTest
 
         Class testClassTwo = new Class("TestTwo");
         testClassTwo.addAttribute("string", "aStr");
-        Class.addRelationship(testClass, testClassTwo, RelationshipType.ASSOCIATION);
+        testClass.addRelationshipToOther(RelationshipType.ASSOCIATION, testClassTwo);
+        testClass.addRelationshipFromOther(RelationshipType.ASSOCIATION, testClassTwo);
+        testClassTwo.addRelationshipToOther(RelationshipType.ASSOCIATION, testClass);
+        testClassTwo.addRelationshipFromOther(RelationshipType.ASSOCIATION, testClass);
 
         ArrayList<Class> arrList = new ArrayList<Class>();
         arrList.add(testClass);

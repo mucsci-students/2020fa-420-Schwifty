@@ -17,7 +17,7 @@ import java.util.Map;
 enum RelationshipType 
 {
     ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
-}
+} 
 
 public class Class {
 
@@ -141,17 +141,13 @@ public class Class {
     }
     //TODO: Add ability to change the type of an atrribute...also add that to GUI.
 
-    public static boolean addRelationship(Class class1, Class class2, RelationshipType relation) 
-    {
-        return class1.addRelationshipToOther(relation, class2) && class2.addRelationshipToOther(relation, class1);
-    }
-
+    
     /**
      * Adds a relationship from this class object to another.
      */
     public boolean addRelationshipToOther(RelationshipType relation, Class aClass) 
     {
-        if(!relationshipsToOther.contains(aClass.name))
+        if(!relationshipsToOther.containsKey(aClass.name))
         {
             relationshipsToOther.put(aClass.name, relation);
             aClass.relationshipsFromOther.put(this.name, relation);
@@ -165,18 +161,13 @@ public class Class {
      */
     public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) 
     {
-        if(!relationshipsFromOther.contains(aClass.name))
+        if(!relationshipsFromOther.containsKey(aClass.name))
         {
             relationshipsFromOther.put(aClass.name, relation);
             aClass.relationshipsToOther.put(this.name, relation);
             return true;
         }
         return false;
-    }
-
-    public static boolean deleteRelationship(Class class1, Class class2, RelationshipType relation)
-    {
-        return class1.deleteRelationshipToOther(relation, class2) && class2.deleteRelationshipToOther(relation, class1);
     }
 
     /**

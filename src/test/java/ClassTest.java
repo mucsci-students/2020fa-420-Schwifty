@@ -36,7 +36,7 @@ public class ClassTest {
         set.add(new Attribute("attribute", "int"));
         assertEquals(set, test.getAttributes());
     }
-
+ 
     //Get rid of this
     @Test
     public void testBlankAttr() 
@@ -56,7 +56,10 @@ public class ClassTest {
     {
         Class class1 = new Class("class1");
         Class class2 = new Class("class2");
-        Class.addRelationship(class1, class2, RelationshipType.ASSOCIATION);
+        //Rewrite
+        //Rewrite
+      
+        class1.addRelationshipToOther(RelationshipType.ASSOCIATION, class2);
         Map map = new HashMap<String, RelationshipType>();
         map.put("class2", RelationshipType.ASSOCIATION);
         assertEquals(map, class1.getRelationshipsToOther());
@@ -67,7 +70,7 @@ public class ClassTest {
     {
         Class class1 = new Class("class1");
         Class class2 = new Class("class2");
-        Class.addRelationship(class1, class2, RelationshipType.ASSOCIATION);
+        class1.addRelationshipFromOther(RelationshipType.ASSOCIATION, class2);
         Map map = new HashMap<String, RelationshipType>();
         map.put("class1", RelationshipType.ASSOCIATION);
         assertEquals(map, class2.getRelationshipsFromOther());
@@ -173,20 +176,7 @@ public class ClassTest {
         
     }
 
-    //Replace with versions of to and from
-    @Test
-    public void testDeleteRelationship() 
-    {
-        Class test1 = new Class("test");
-        Class test2 = new Class("test2");
-        Class.addRelationship(test1, test2, RelationshipType.ASSOCIATION);
-        Map map = new HashMap<String, RelationshipType>();
-        map.put("test2", RelationshipType.ASSOCIATION);
-        map.remove("class2");
-        Class.deleteRelationship(test1, test2, RelationshipType.ASSOCIATION);
-        assertEquals(map, test2.getRelationshipsFromOther());
-    }
-    
+
     @Test
     public void testDeleteRelationshipToOther() 
     {
@@ -195,7 +185,7 @@ public class ClassTest {
         //Deleting from empty should return false
         assertFalse(test.deleteRelationshipToOther(RelationshipType.ASSOCIATION, test2));
         test.addRelationshipToOther(RelationshipType.ASSOCIATION, test2);
-        test.deleteRelationshipToOther();
+        test.deleteRelationshipToOther(RelationshipType.ASSOCIATION, test2);
         //Should be gone from both classes
         assertTrue(test.getRelationshipsToOther().isEmpty());
         assertTrue(test2.getRelationshipsFromOther().isEmpty());
@@ -210,7 +200,7 @@ public class ClassTest {
         //Deleting from empty should return false
         assertFalse(test.deleteRelationshipFromOther(RelationshipType.ASSOCIATION, test2));
         test.addRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
-        test.deleteRelationshipFromOther();
+        test.deleteRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
         //Should be gone from both classes
         assertTrue(test.getRelationshipsFromOther().isEmpty());
         assertTrue(test2.getRelationshipsToOther().isEmpty());
@@ -226,12 +216,12 @@ public class ClassTest {
         test2.addAttribute("attribute", "type");
         Class extra = new Class("extra");
         //Rewrite the two below
-        Class.addRelationship(test1, extra, RelationshipType.ASSOCIATION);
-        Class.addRelationship(test2, extra, RelationshipType.ASSOCIATION);
+        test1.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
+        test2.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
         Class extra1 = new Class("extra1");
         //Rewrite the two below
-        Class.addRelationship(extra1, test1, RelationshipType.AGGREGATION);
-        Class.addRelationship(extra1, test2, RelationshipType.AGGREGATION);
+        extra1.addRelationshipToOther(RelationshipType.AGGREGATION, test1);
+        extra1.addRelationshipToOther(RelationshipType.AGGREGATION, test2);
         assertTrue(test1.equals(test2));
     }
 
@@ -243,9 +233,9 @@ public class ClassTest {
         test1.addAttribute("attribute", "type");
         Class extra = new Class("extra");
         Class extra2 = new Class("extra2");
-        Class.addRelationship(test1, extra, RelationshipType.ASSOCIATION);
-        Class.addRelationship(extra2, test1, RelationshipType.ASSOCIATION);
-        assertEquals("Class Name: name\n------------------------------\nAttribute Names: attribute : type\n"
+        test1.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
+        extra2.addRelationshipFromOther(RelationshipType.ASSOCIATION, test1);
+        assertEquals("Class Name: name\n------------------------------Attribute Names: attribute : type\n"
         + "------------------------------\nRelationships To Others: {extra=ASSOCIATION}\n"
         + "Relationships From Others: {extra2=ASSOCIATION}\n",test1.toString());
     }

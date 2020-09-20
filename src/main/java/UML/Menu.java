@@ -476,7 +476,7 @@ public class Menu
                   Class class1 = findClass(buildRelateOne);
                   Class class2 = findClass(buildRelateTwo);
                   //Change add relationship
-                  Class.addRelationship(class1, class2, RelationshipType.ASSOCIATION);
+                  class1.addRelationshipToOther(RelationshipType.ASSOCIATION, class2);
                   
                   //Create relationship between chosen two, a relationship from and to must be made
                   
@@ -504,7 +504,7 @@ public class Menu
                 Class class1 = findClass(buildRelateOne);
                 Class class2 = findClass(buildRelateTwo);
                 //Change add relationship  
-                Class.addRelationship(class1, class2, RelationshipType.AGGREGATION);
+                class1.addRelationshipToOther(RelationshipType.AGGREGATION, class2);
               }
               else if(cmd.equals("Composition"))
               {
@@ -531,7 +531,7 @@ public class Menu
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
                  //Chnage add relationship
-                 Class.addRelationship(class1, class2, RelationshipType.COMPOSITION);
+                 class1.addRelationshipToOther(RelationshipType.COMPOSITION, class2);
               }
               else if(cmd.equals("Generalization"))
               {
@@ -557,7 +557,7 @@ public class Menu
                  Class class1 = findClass(buildRelateOne);
                  Class class2 = findClass(buildRelateTwo);
                  //Change add relationship
-                 Class.addRelationship(class1, class2, RelationshipType.GENERALIZATION);
+                 class1.addRelationshipToOther(RelationshipType.GENERALIZATION, class2);
               }
               else if(cmd.equals("DeleteRelate"))
               {
@@ -585,7 +585,8 @@ public class Menu
                   Class class2 = findClass(buildRelateTwo);
                   RelationshipType relation = class1.getRelationshipsToOther().get(buildRelateTwo);
                   //Change deleteRelationship
-                  Class.deleteRelationship(class1, class2, relation);
+                  class1.deleteRelationshipToOther(relation, class2);
+                  class2.deleteRelationshipToOther(relation, class1);
                   //add a try catch if false is returned
                 }
                 //delete relationship between chosen two
