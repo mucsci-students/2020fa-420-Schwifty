@@ -1,3 +1,22 @@
+/*
+    Author: Chris
+    Date: 09/17/2020
+    Purpose: Test the saving and loading of a class from 
+    * {Classes: [
+    *      {
+    *          ClassName: name
+    *          attributes[]
+    *          relationTo []
+    *          relationFrom []
+    *      }
+    *      {
+    *          ClassName: name
+    *          attributes[]
+    *          relationTo []
+    *          relationFrom []
+    *      }
+    * ]} 
+*/
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
@@ -11,7 +30,6 @@ import static org.junit.Assert.assertTrue;
 
 public class SaveAndLoadTest
 {
-
     @Test
     /**
      * Test file: JSONTest.json
