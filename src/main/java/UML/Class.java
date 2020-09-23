@@ -19,7 +19,8 @@ enum RelationshipType
     ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
 } 
 
-public class Class {
+public class Class 
+{
 
     //The name of the class object.
     private String name;
@@ -36,8 +37,13 @@ public class Class {
      public Class(String name) throws IllegalArgumentException
      {
         //Don't allow empty string/only whitespace
-        if(name.trim().isEmpty()) {
+        if(name.trim().isEmpty()) 
+        {
             throw new IllegalArgumentException("The class name cannot be blank.");
+        }
+        if(name.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The class name cannot cantain a space.");
         }
         this.name = name;
         this.attributes = new HashSet<Attribute>();
@@ -82,8 +88,13 @@ public class Class {
      */
     public void setName(String name) throws IllegalArgumentException
     {
-        if(name.trim().isEmpty()) {
+        if(name.trim().isEmpty()) 
+        {
             throw new IllegalArgumentException("The class name cannot be blank.");
+        }
+        if(name.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The class name cannot contains spaces.");
         }
         this.name = name;
     }
@@ -146,8 +157,14 @@ public class Class {
     /**
      * Adds a relationship from this class object to another.
      */
-    public boolean addRelationshipToOther(RelationshipType relation, Class aClass) 
+    public boolean addRelationshipToOther(RelationshipType relation, Class aClass) throws IllegalArgumentException
     {
+        //If relationship with a class and itself, throw exception.
+        if (this.equals(aClass)) 
+        {
+            throw new IllegalArgumentException("A class cannot have a relationship with itself.");
+        
+        }
         //If relationship already exists between the two classes, don't overwrite.
         if(!relationshipsToOther.containsKey(aClass.name))
         {
@@ -161,8 +178,13 @@ public class Class {
     /**
      * Adds a relationship from another class object to this one.
      */
-    public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) 
+    public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) throws IllegalArgumentException
     {
+        if (this.equals(aClass)) 
+        {
+            throw new IllegalArgumentException("A class cannot have a relationship with itself.");
+        
+        }
         //If relationship already exists between the two classes, don't overwrite.
         if(!relationshipsFromOther.containsKey(aClass.name))
         {
@@ -199,35 +221,43 @@ public class Class {
     public boolean equals(Object other) 
     {
         boolean result = false;
-        if(this == other) {
+        if(this == other) 
+        {
             result = true;
         }
-        else if (other == null) {
+        else if (other == null) 
+        {
             result = false;
         }
-        else if(!(other instanceof Class)) { 
+        else if(!(other instanceof Class)) 
+        { 
             result = false; 
         }
         else {
             Class object = (Class) other;
             boolean attEqual = true;
             //Check if both sets contain the same objects since equals() won't work
-            for(Attribute att : this.attributes) {
-                if(!object.attributes.contains(att)) {
+            for(Attribute att : this.attributes) 
+            {
+                if(!object.attributes.contains(att)) 
+                {
                     attEqual = false;
                 }
             }
-            for(Attribute att : object.attributes) {
-                if(!this.attributes.contains(att)) {
+            for(Attribute att : object.attributes) 
+            {
+                if(!this.attributes.contains(att)) 
+                {
                     attEqual = false;
                 }
             }
             if(object.name.equals(this.name) &&
              attEqual &&
              object.relationshipsToOther.equals(this.relationshipsToOther) &&
-             object.relationshipsFromOther.equals(this.relationshipsFromOther)) {
+             object.relationshipsFromOther.equals(this.relationshipsFromOther)) 
+            {
                 result = true;
-             }
+            }
         }
         return result;
     }
