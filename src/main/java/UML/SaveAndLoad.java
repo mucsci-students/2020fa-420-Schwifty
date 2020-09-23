@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
+import javax.swing.JFrame;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -64,7 +65,7 @@ public class SaveAndLoad
      *      }
      * ]} 
     */
-    public static void save(File fileName, ArrayList<Class> classesToSave)
+    public static void save(JFrame parentWindow, File fileName, ArrayList<Class> classesToSave)
     {
         JSONObject toBeSaved = new JSONObject();
 
@@ -137,7 +138,7 @@ public class SaveAndLoad
         }
     }
     
-    public static void load(File fileName, ArrayList<Class> classStore)
+    public static void load(JFrame parentWindow, File fileName, ArrayList<Class> classStore)
     {
         JSONParser parser = new JSONParser();
         

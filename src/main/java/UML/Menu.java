@@ -360,7 +360,7 @@ public class Menu
 				//If there is a currently loaded file.
 				if (currentLoadedFile != null)
 				{
-					SaveAndLoad.save(currentLoadedFile, classStore);
+					SaveAndLoad.save(parentWindow, currentLoadedFile, classStore);
 				}
 				else
 				{
@@ -371,7 +371,7 @@ public class Menu
 
 					if(returnValue == JFileChooser.APPROVE_OPTION)
 					{
-						SaveAndLoad.load(fc.getSelectedFile(), classStore);
+						SaveAndLoad.load(parentWindow, fc.getSelectedFile(), classStore);
 						currentLoadedFile = fc.getSelectedFile();
 					}
 				}
@@ -387,7 +387,7 @@ public class Menu
 				
 				if(returnValue == JFileChooser.APPROVE_OPTION)
 				{
-					SaveAndLoad.load(fc.getSelectedFile(), classStore);
+					SaveAndLoad.load(parentWindow, fc.getSelectedFile(), classStore);
 					currentLoadedFile = fc.getSelectedFile();
 				}
 				
@@ -403,12 +403,14 @@ public class Menu
 				if(returnValue == JFileChooser.APPROVE_OPTION)
 				{
 					File fileToOpen = fc.getSelectedFile();
-					SaveAndLoad.load(fileToOpen, classStore);
+					SaveAndLoad.load(parentWindow, fileToOpen, classStore);
 					currentLoadedFile = fileToOpen;
+
 					for(Class aClass : classStore)
 					{
 						makeNewClassPanel(aClass);
 					}
+
 					parentWindow.revalidate();
 					parentWindow.repaint();
 				}
