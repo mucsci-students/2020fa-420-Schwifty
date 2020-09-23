@@ -24,6 +24,14 @@ public class Attribute
         {
             throw new IllegalArgumentException("The attribute type cannot be blank.");
         }
+        if(name.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The attribute name cannot conatin a space.");
+        }
+        if(type.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The attribute type cannot contain a space.");
+        }
         this.name = name;
         this.type = type;
     }
@@ -50,7 +58,11 @@ public class Attribute
     public void setName (String name) throws IllegalArgumentException{
         if(name.trim().isEmpty()) 
         {
-            throw new IllegalArgumentException("The name type cannot be blank.");
+            throw new IllegalArgumentException("The attribute name cannot be blank.");
+        }
+        if(name.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The attribute name cannot contain a space.");
         }
         this.name = name;
     }
@@ -63,6 +75,11 @@ public class Attribute
         {
             throw new IllegalArgumentException("The attribute type cannot be blank.");
         }
+        if(type.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The attribute type cannot contain a space.");
+        }
+
         this.type = type;
     }
 
@@ -72,7 +89,8 @@ public class Attribute
     public boolean equals(Object other) 
     {
         boolean result = false;
-        if(this == other) {
+        if(this == other) 
+        {
             result = true;
         }
         else if (other == null) {
@@ -84,7 +102,8 @@ public class Attribute
         }
         else {
             Attribute object = (Attribute) other;
-            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) {
+            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) 
+            {
                 result = true;
             }
         }
