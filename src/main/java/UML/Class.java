@@ -29,6 +29,10 @@ public class Class {
     private Map<String, RelationshipType> relationshipsToOther;
     //The relationships from another class object to this one.
     private Map<String, RelationshipType> relationshipsFromOther;
+    //A set containing the class's methods.
+    private Set<Method> methods; 
+        
+
 
     /**
      * Constructs a class object that takes in a parameter for the name of the class.
@@ -43,6 +47,7 @@ public class Class {
         this.attributes = new HashSet<Attribute>();
         this.relationshipsToOther = new HashMap<String, RelationshipType>();
         this.relationshipsFromOther = new HashMap<String, RelationshipType>();
+        this.methods = new HashSet<Method>();
      }
 
     /**
@@ -59,6 +64,11 @@ public class Class {
     public Set<Attribute> getAttributes() 
     {
         return this.attributes;
+    }
+
+    public Set<Method> getMethods() 
+    {
+        return this.methods;
     }
 
     /**
@@ -104,6 +114,40 @@ public class Class {
         Attribute newAttr = new Attribute(name, type);
         attributes.add(newAttr);
         return true;
+    }
+
+    /**
+     * Add parameter for parameters??
+     */
+    public boolean addMethod(String type, String name) throws IllegalArgumentException
+    {
+        //If name is found, return false...atrribute already created
+        for (Method m : methods)
+        {
+            if (m.getName().equals(name))
+            {
+                return false;
+            }
+        }
+        Method newMethod = new Method(name, type);
+        methods.add(newMethod);
+        return true;
+    }
+ 
+    /**
+     * Add params and type to determine which to delete?
+     */
+    public boolean deleteMethod(String name) 
+    {
+        for (Method m : methods)
+        {
+            if (m.getName().equals(name))
+            {
+                methods.remove(m);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
