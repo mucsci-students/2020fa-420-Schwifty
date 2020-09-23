@@ -4,7 +4,8 @@
     Purpose: To define an attribute that consist of a name and type. Added 
     classes as requested by the user. To construct an attribute a name and type must be provided. 
 */
-public class Attribute {
+public class Attribute 
+{
     //The name of the attribute object.
     private String name;
     //The type of the attribute object.
@@ -13,12 +14,23 @@ public class Attribute {
     /**
      * Constructs an attribute object.
      */
-    public Attribute(String name, String type) throws IllegalArgumentException{
-        if(name.trim().isEmpty()) {
+    public Attribute(String name, String type) throws IllegalArgumentException
+    {
+        if(name.trim().isEmpty()) 
+        {
             throw new IllegalArgumentException("The attribute name cannot be blank.");
         }
-        if(type.trim().isEmpty()) {
+        if(type.trim().isEmpty()) 
+        {
             throw new IllegalArgumentException("The attribute type cannot be blank.");
+        }
+        if(name.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The attribute name cannot conatin a space.");
+        }
+        if(type.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The attribute type cannot contain a space.");
         }
         this.name = name;
         this.type = type;
@@ -27,14 +39,16 @@ public class Attribute {
     /**
      * Returns the name of the attribute object.
      */
-    public String getName() {
+    public String getName() 
+    {
         return this.name;
     }
 
     /**
      * Returns the type of the attribute object.
      */
-    public String getType() {
+    public String getType() 
+    {
         return this.type;
     }
 
@@ -42,8 +56,13 @@ public class Attribute {
      * Changes the name of the attribute object.
      */
     public void setName (String name) throws IllegalArgumentException{
-        if(name.trim().isEmpty()) {
-            throw new IllegalArgumentException("The name type cannot be blank.");
+        if(name.trim().isEmpty()) 
+        {
+            throw new IllegalArgumentException("The attribute name cannot be blank.");
+        }
+        if(name.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The attribute name cannot contain a space.");
         }
         this.name = name;
     }
@@ -52,18 +71,26 @@ public class Attribute {
      * Changes the name of the attribute object.
      */
     public void setType(String type) throws IllegalArgumentException{
-        if(type.trim().isEmpty()) {
+        if(type.trim().isEmpty()) 
+        {
             throw new IllegalArgumentException("The attribute type cannot be blank.");
         }
+        if(type.contains(" ")) 
+        {
+            throw new IllegalArgumentException("The attribute type cannot contain a space.");
+        }
+
         this.type = type;
     }
 
     /**
      * Returns true if two attribute object are equal and false otehrwise.
      */
-    public boolean equals(Object other) {
+    public boolean equals(Object other) 
+    {
         boolean result = false;
-        if(this == other) {
+        if(this == other) 
+        {
             result = true;
         }
         else if (other == null) {
@@ -74,7 +101,8 @@ public class Attribute {
         }
         else {
             Attribute object = (Attribute) other;
-            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) {
+            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) 
+            {
                 result = true;
             }
         }
