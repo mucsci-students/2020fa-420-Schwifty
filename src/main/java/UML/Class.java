@@ -157,8 +157,14 @@ public class Class
     /**
      * Adds a relationship from this class object to another.
      */
-    public boolean addRelationshipToOther(RelationshipType relation, Class aClass) 
+    public boolean addRelationshipToOther(RelationshipType relation, Class aClass) throws IllegalArgumentException
     {
+        //If relationship with a class and itself, throw exception.
+        if (this.equals(aClass)) 
+        {
+            throw new IllegalArgumentException("A class cannot have a relationship with itself.");
+        
+        }
         //If relationship already exists between the two classes, don't overwrite.
         if(!relationshipsToOther.containsKey(aClass.name))
         {
@@ -172,8 +178,13 @@ public class Class
     /**
      * Adds a relationship from another class object to this one.
      */
-    public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) 
+    public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) throws IllegalArgumentException
     {
+        if (this.equals(aClass)) 
+        {
+            throw new IllegalArgumentException("A class cannot have a relationship with itself.");
+        
+        }
         //If relationship already exists between the two classes, don't overwrite.
         if(!relationshipsFromOther.containsKey(aClass.name))
         {

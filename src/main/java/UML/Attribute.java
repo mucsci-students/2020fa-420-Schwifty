@@ -96,7 +96,8 @@ public class Attribute
         else if (other == null) {
             result = false;
         }
-        else if(!(other instanceof Attribute)) { 
+        else if(!(other instanceof Attribute)) 
+        { 
             result = false; 
         }
         else {
