@@ -405,6 +405,12 @@ public class Menu
 					File fileToOpen = fc.getSelectedFile();
 					SaveAndLoad.load(fileToOpen, classStore);
 					currentLoadedFile = fileToOpen;
+					for(Class aClass : classStore)
+					{
+						makeNewClassPanel(aClass);
+					}
+					parentWindow.revalidate();
+					parentWindow.repaint();
 				}
 			}
 		}
