@@ -29,6 +29,7 @@ import org.json.simple.parser.ParseException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -42,27 +43,26 @@ import java.util.Iterator;
 
 public class SaveAndLoad
 {
-    public static void save(String fileName, ArrayList<Class> classesToSave)
+    //To save a file with proper format
+    //A single JSONObject should be written to file..i.e the object should look like the following:
+    /*
+     * {Classes: [
+     *      {
+     *          ClassName: name
+     *          attributes[]
+     *          relationTo []
+     *          relationFrom []
+     *      }
+     *      {
+     *          ClassName: name
+     *          attributes[]
+     *          relationTo []
+     *          relationFrom []
+     *      }
+     * ]} 
+    */
+    public static void save(File fileName, ArrayList<Class> classesToSave)
     {
-
-        //To save a file with proper format
-        //A single JSONObject should be written to file..i.e the object should look like the following:
-        /*
-         * {Classes: [
-         *      {
-         *          ClassName: name
-         *          attributes[]
-         *          relationTo []
-         *          relationFrom []
-         *      }
-         *      {
-         *          ClassName: name
-         *          attributes[]
-         *          relationTo []
-         *          relationFrom []
-         *      }
-         * ]} 
-         */
         JSONObject toBeSaved = new JSONObject();
 
         //Store an arraylist of JSONObjects to be written to the file
@@ -119,7 +119,9 @@ public class SaveAndLoad
         }
         toBeSaved.put("Classes",classesToBeSaved);
         //Attempt to write the json data to passed in file name. IOExcetion on failure. 
-        try (FileWriter fw = new FileWriter(fileName))
+        //Append the .json format to name
+        String jsonFileName = fileName.getName() + ".json";
+        try (FileWriter fw = new FileWriter(jsonFileName))
         {
             fw.write(toBeSaved.toJSONString());
             fw.flush();
@@ -131,11 +133,11 @@ public class SaveAndLoad
         }
     }
     
-    public static void load(String fileName, ArrayList<Class> classStore)
+    public static void load(File fileName, ArrayList<Class> classStore)
     {
         JSONParser parser = new JSONParser();
         
-        try (FileReader fr = new FileReader(fileName))
+        try (FileReader fr = new FileReader(fileName.getName()))
         {
             //Get the json object from the parser
             JSONObject obj = (JSONObject)parser.parse(fr);
