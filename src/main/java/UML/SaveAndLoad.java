@@ -37,6 +37,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
+
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -130,6 +133,7 @@ public class SaveAndLoad
         catch (IOException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(parentWindow, "Failed to save " + jsonFileName, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -193,14 +197,17 @@ public class SaveAndLoad
         catch (FileNotFoundException e)
         {  
             e.printStackTrace();
+            JOptionPane.showMessageDialog(parentWindow, "File " + fileName.getName() + " not found!", "Error", JOptionPane.ERROR_MESSAGE);
         }
         catch (IOException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(parentWindow, "File " + fileName.getName() + " failed to load. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
         catch(ParseException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(parentWindow, "Could not parse JSON file! Please ensure you selected the correct file.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
        /**
