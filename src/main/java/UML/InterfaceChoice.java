@@ -1,7 +1,8 @@
 /*
-    Author: Chris, Tyler, Drew, Dominic, Cory. 
+    Author: Chris, Cory, Dominic, Drew, Tyler.
     Date: 09/24/2020
-    Purpose: 
+    Purpose: Provide the user a way to select between using the command line view
+    or through the graphical interface. 
  */
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -25,20 +26,21 @@ public class InterfaceChoice
 
     public InterfaceChoice()
     {
+        //Setup the window. 
         windowSetup();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(200, 300);
         window.setLayout(new FlowLayout());
 
-        //add radios to panel
+        //add radios to panel.
         radioPanel.add(cliChoice);
         radioPanel.add(guiChoice);
 
-        //add buttons to panel
+        //add buttons to panel.
         buttonPanel.add(okButton);
         buttonPanel.add(closeButton);
 
-        //Add panels to main window
+        //Add panels to main window.
         window.add(radioPanel);
         window.add(buttonPanel);
         window.pack();
@@ -48,7 +50,7 @@ public class InterfaceChoice
 
     private void windowSetup()
     {
-        //add the action commands where needed
+        //add the action commands where needed.
         okButton.setActionCommand("OK");
         okButton.addActionListener(new ButtonClickListener());
         closeButton.setActionCommand("Close");

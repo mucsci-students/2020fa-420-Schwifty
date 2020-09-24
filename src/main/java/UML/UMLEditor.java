@@ -1,5 +1,5 @@
 /*
-    Author: Chris
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
     Date: 09/10/2020
     Purpose: To start the program.
  */

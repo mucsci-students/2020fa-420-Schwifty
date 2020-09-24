@@ -1,3 +1,8 @@
+/*
+    Author: Chris, Tyler, Drew, Dominic, Cory. 
+    Date: 09/24/2020
+    Purpose: 
+ */
 import java.io.Console;
 import java.util.Scanner;
 
@@ -19,6 +24,6 @@ public class CLI {
        System.out.println(" /\\__/ / (__| | | \\ V  V /| | | | |_| |_| |");
        System.out.println(" \\____/ \\___|_| |_|\\_/\\_/ |_|_|  \\__|\\__, |");
        System.out.println("                                      __/ |");
-       System.out.println("                                     |___/"); 
+       System.out.println("                                     |___ /"); 
     }
 }
