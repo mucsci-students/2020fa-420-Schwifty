@@ -124,7 +124,15 @@ public class SaveAndLoad
         toBeSaved.put("Classes",classesToBeSaved);
         //Attempt to write the json data to passed in file name. IOExcetion on failure. 
         //Append the .json format to name
+        
         String jsonFileName = fileName.getName() + ".json";
+
+        //ensures we are not adding it if we don't need to
+        if(!jsonFileName.contains(".json"))
+        {
+            jsonFileName += ".json";
+        }
+        
         try (FileWriter fw = new FileWriter(jsonFileName))
         {
             fw.write(toBeSaved.toJSONString());

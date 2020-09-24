@@ -364,56 +364,92 @@ public class Menu
 				}
 				else
 				{
-					JFileChooser fc = new JFileChooser();
-					//Bring up file panel for the user to save as(automatically will choose file type though in saveandload).
-					int returnValue = fc.showSaveDialog(parentWindow);
-					//Based on the user imput, save the file. 
-
-					if(returnValue == JFileChooser.APPROVE_OPTION)
-					{
-						SaveAndLoad.load(parentWindow, fc.getSelectedFile(), classStore);
-						currentLoadedFile = fc.getSelectedFile();
-					}
+					performSaveAs();
 				}
 			}
 			else if(cmd.equals("SaveAs"))
 			{
-				JFileChooser fc = new JFileChooser();
-				//If there is a currently loaded file.
-
-				//Bring up file panel for the user to save as(automatically will choose file type though in saveandload).
-				int returnValue = fc.showSaveDialog(parentWindow);
-				//Based on the user imput, save the file. 
-				
-				if(returnValue == JFileChooser.APPROVE_OPTION)
-				{
-					SaveAndLoad.load(parentWindow, fc.getSelectedFile(), classStore);
-					currentLoadedFile = fc.getSelectedFile();
-				}
-				
+				performSaveAs();
 			}
 			else if(cmd.equals("Load"))
 			{
-				//Bring up file panel to load a UML design from JSON.
-				//Make a filechooser
-				JFileChooser fc = new JFileChooser();
-				int returnValue = fc.showOpenDialog(parentWindow);
-				//If the user selected to open this file, open it.
-				//TODO: Consider filtering this information to only inlcude JSON filetypes
-				if(returnValue == JFileChooser.APPROVE_OPTION)
+				//before clearing the current data, ask if the user wishes to save?
+				if(checkForSave())
 				{
-					File fileToOpen = fc.getSelectedFile();
-					SaveAndLoad.load(parentWindow, fileToOpen, classStore);
-					currentLoadedFile = fileToOpen;
-
-					for(Class aClass : classStore)
+					performSaveAs();
+				}
+				else
+				{
+					//Clear old data.
+					for(Map.Entry<String, JPanel> panel : classPanels.entrySet())
 					{
-						makeNewClassPanel(aClass);
+						parentWindow.remove(panel.getValue());
 					}
-
+					classStore.clear();
+					classPanels.clear();
+					
 					parentWindow.revalidate();
 					parentWindow.repaint();
+					//Load the new data from file.
+					loadData();
 				}
+
+			}
+		}
+		/**
+		 * Brings up a box for the user to provide a name for their file.
+		 */
+		private void performSaveAs()
+		{
+			JFileChooser fc = new JFileChooser();
+			//If there is a currently loaded file.
+
+			//Bring up file panel for the user to save as(automatically will choose file type though in saveandload).
+			int returnValue = fc.showSaveDialog(parentWindow);
+			//Based on the user imput, save the file. 
+			
+			if(returnValue == JFileChooser.APPROVE_OPTION)
+			{
+				SaveAndLoad.save(parentWindow, fc.getSelectedFile(), classStore);
+				currentLoadedFile = fc.getSelectedFile();
+				JOptionPane.showMessageDialog(parentWindow,"File " + currentLoadedFile.getName() + " was saved.", "File Saved", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+
+		private boolean checkForSave()
+		{
+			boolean save = false;
+			int rtnValue = JOptionPane.showConfirmDialog(parentWindow, "Do you want to save first?");
+
+			if(rtnValue == JOptionPane.OK_OPTION)
+			{
+				save = true;
+			}
+
+			return save;
+		}
+
+		private void loadData()
+		{
+			//Bring up file panel to load a UML design from JSON.
+			//Make a filechooser
+			JFileChooser fc = new JFileChooser();
+			int returnValue = fc.showOpenDialog(parentWindow);
+			//If the user selected to open this file, open it.
+			//TODO: Consider filtering this information to only inlcude JSON filetypes
+			if(returnValue == JFileChooser.APPROVE_OPTION)
+			{
+				File fileToOpen = fc.getSelectedFile();
+				SaveAndLoad.load(parentWindow, fileToOpen, classStore);
+				currentLoadedFile = fileToOpen;
+
+				for(Class aClass : classStore)
+				{
+					makeNewClassPanel(aClass);
+				}
+
+				parentWindow.revalidate();
+				parentWindow.repaint();
 			}
 		}
 	}
