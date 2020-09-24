@@ -17,7 +17,9 @@ import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import java.awt.event.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -43,9 +45,9 @@ public class Menu
      */
     private JFrame parentWindow;
     /**
-     * Tracks if user has inputted a save name for the current content and stores files.
+     * Tracks if user has file loaded or not to determine what to do on exit and when save is pressed.
      */
-    private String currentLoadedFile;
+    private File currentLoadedFile;
     /**
      * Stores the classes being used in the UML editor.
      */
@@ -58,7 +60,7 @@ public class Menu
     /**
      * Returns the currently loaded file.
      */
-	public String getLoadedFilename()
+	public File getLoadedFilename()
 	{
 		return this.currentLoadedFile;
     }
@@ -73,7 +75,7 @@ public class Menu
 		classPanels = new HashMap<String, JPanel>();
 		parentWindow = window;
 		//By default, this should be an empty string.
-		currentLoadedFile = "";
+		currentLoadedFile = null;
 		//Set up the menu with helpers and add them to the main window.
 		parentWindow.setLayout(new GridLayout(5,5));
 		mb = new JMenuBar();
@@ -355,34 +357,99 @@ public class Menu
 			if(cmd.equals("Save"))
 			{
 				//Save contents to file...will require JSON save.
-				//TODO: Make me a save screen.
 				//If there is a currently loaded file.
-				if (!currentLoadedFile.equals(""))
+				if (currentLoadedFile != null)
 				{
-					SaveAndLoad.save(currentLoadedFile, classStore);
+					SaveAndLoad.save(parentWindow, currentLoadedFile, classStore);
 				}
 				else
 				{
-					//TODO: Make me a save as screen.
-					//Bring up file panel for the user to save as(automatically will choose file type though).
-					String fileName = JOptionPane.showInputDialog("Filename: ");
-					SaveAndLoad.save(fileName +".json", classStore);
-					//TODO: Consider what to do should the file creation fail. 
+					performSaveAs();
 				}
 			}
 			else if(cmd.equals("SaveAs"))
 			{
-				//Bring up file panel for the user to save as(automatically will choose file type though)
-				String fileName = JOptionPane.showInputDialog("Filename: ");
-				SaveAndLoad.save(fileName + ".json", classStore);
-				//TODO: Consider what to do should the file creation fail. 
+				performSaveAs();
 			}
 			else if(cmd.equals("Load"))
 			{
-				//Bring up file panel to load a UML design from JSON.
-				//TODO: Make me a filechooser.
-				String fileName = JOptionPane.showInputDialog("Filename: ");
-				SaveAndLoad.load(fileName, classStore);
+				//before clearing the current data, ask if the user wishes to save?
+				if(checkForSave())
+				{
+					performSaveAs();
+				}
+				else
+				{
+					//Clear old data.
+					for(Map.Entry<String, JPanel> panel : classPanels.entrySet())
+					{
+						parentWindow.remove(panel.getValue());
+					}
+					classStore.clear();
+					classPanels.clear();
+					
+					parentWindow.revalidate();
+					parentWindow.repaint();
+					//Load the new data from file.
+					loadData();
+				}
+
+			}
+		}
+		/**
+		 * Brings up a box for the user to provide a name for their file.
+		 */
+		private void performSaveAs()
+		{
+			JFileChooser fc = new JFileChooser();
+			//If there is a currently loaded file.
+
+			//Bring up file panel for the user to save as(automatically will choose file type though in saveandload).
+			int returnValue = fc.showSaveDialog(parentWindow);
+			//Based on the user imput, save the file. 
+			
+			if(returnValue == JFileChooser.APPROVE_OPTION)
+			{
+				SaveAndLoad.save(parentWindow, fc.getSelectedFile(), classStore);
+				currentLoadedFile = fc.getSelectedFile();
+				JOptionPane.showMessageDialog(parentWindow,"File " + currentLoadedFile.getName() + " was saved.", "File Saved", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+
+		private boolean checkForSave()
+		{
+			boolean save = false;
+			int rtnValue = JOptionPane.showConfirmDialog(parentWindow, "Do you want to save first?");
+
+			if(rtnValue == JOptionPane.OK_OPTION)
+			{
+				save = true;
+			}
+
+			return save;
+		}
+
+		private void loadData()
+		{
+			//Bring up file panel to load a UML design from JSON.
+			//Make a filechooser
+			JFileChooser fc = new JFileChooser();
+			int returnValue = fc.showOpenDialog(parentWindow);
+			//If the user selected to open this file, open it.
+			//TODO: Consider filtering this information to only inlcude JSON filetypes
+			if(returnValue == JFileChooser.APPROVE_OPTION)
+			{
+				File fileToOpen = fc.getSelectedFile();
+				SaveAndLoad.load(parentWindow, fileToOpen, classStore);
+				currentLoadedFile = fileToOpen;
+
+				for(Class aClass : classStore)
+				{
+					makeNewClassPanel(aClass);
+				}
+
+				parentWindow.revalidate();
+				parentWindow.repaint();
 			}
 		}
 	}

@@ -52,8 +52,8 @@ public class SaveAndLoadTest
         ArrayList<Class> arrList = new ArrayList<Class>();
         arrList.add(testClass);
         arrList.add(testClassTwo);
-        SaveAndLoad.save("JSONTest.json", arrList);
-        File testFile = new File("JSONTest.json");
+        File testFile = new File("JSONTest");
+        SaveAndLoad.save(testFile, arrList);
         assertTrue(testFile.exists());
     }
 
@@ -66,7 +66,8 @@ public class SaveAndLoadTest
     public void testLoadedData()
     {
         ArrayList<Class> classStore = new ArrayList<Class>();
-        SaveAndLoad.load("JSONTest.json", classStore);
+        File testFile = new File("JSONTest");
+        SaveAndLoad.load(testFile, classStore);
         String[] classNameTests = {"Test","TestTwo"};
 
         //Create the test attributes
