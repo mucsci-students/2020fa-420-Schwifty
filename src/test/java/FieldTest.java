@@ -1,20 +1,15 @@
-/*
-    Author: Chris, Dominic, Tyler, Cory, and Drew
-    Date: 09/16/2020
-    Purpose: Tests the public methods from the attribute class.
- */
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
-public class AttributeTest {
+
+public class FieldTest {
 
     @Test
     public void testGetName() 
     {
-        Attribute test = new Attribute("name", "type");
+        Field test = new Field("type", "name");
         //Test attribute's name should equal "name".
         assertEquals("name", test.getName());
     }
@@ -22,7 +17,7 @@ public class AttributeTest {
     @Test
     public void testGetType() 
     {
-        Attribute test = new Attribute("name", "type");
+        Field test = new Field("type", "name");
         //Test attribute's type should equal "type".
         assertEquals("type", test.getType());
     }
@@ -31,11 +26,11 @@ public class AttributeTest {
     public void testSetName() 
     {
         //Simple name change.
-        Attribute test = new Attribute("name", "type");
+        Field test = new Field("type", "name");
         test.setName("newName");
         assertEquals("newName", test.getName());
         //Change to empty string/white spaces.
-        Attribute test2 = new Attribute("name", "type");
+        Field test2 = new Field("type", "name");
         //Don't allow empty/whitespace name.
         assertThrows(IllegalArgumentException.class, () -> {
             test.setName(" ");
@@ -46,11 +41,11 @@ public class AttributeTest {
     public void testSetType() 
     {
         //Simple type change.
-        Attribute test = new Attribute("name", "type");
+        Field test = new Field("type", "name");
         test.setType("newType");
         assertEquals("newType", test.getType());
         //Change to empty string/white spaces.
-        Attribute test2 = new Attribute("name", "type");
+        Field test2 = new Field("type", "name");
         //Don't allow empty/whitespace type.
         assertThrows(IllegalArgumentException.class, () -> {
             test2.setType(" ");
@@ -61,24 +56,24 @@ public class AttributeTest {
     public void testEquals() 
     {
         //Equals method works for equal attributes.
-        Attribute test1 = new Attribute("name", "type");
-        Attribute test2 = new Attribute("name", "type");
+        Field test1 = new Field("type", "name");
+        Field test2 = new Field("type", "name");
         assertTrue(test1.equals(test2));
         //Equals method does not work for unequal attributes.
         //Deiffrent names.
-        Attribute test3 = new Attribute("name", "type");
-        Attribute test4 = new Attribute("name1", "type");
+        Field test3 = new Field("type", "name");
+        Field test4 = new Field("type", "name1");
         assertFalse(test3.equals(test4));
         //Different types.
-        Attribute test5 = new Attribute("name", "type");
-        Attribute test6 = new Attribute("name", "type1");
+        Field test5 = new Field("type", "name");
+        Field test6 = new Field("type1", "name");
         assertFalse(test5.equals(test6));
     }
 
      @Test
     public void testToString() 
     {
-        Attribute test = new Attribute("name", "type");
+        Field test = new Field("type", "name");
         //assertEquals("type : name", test.toString().equals("type : name"));
         assertEquals("type : name", test.toString());
     }
