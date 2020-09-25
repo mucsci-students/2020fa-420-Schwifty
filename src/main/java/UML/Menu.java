@@ -358,7 +358,7 @@ public class Menu
 				//If there is a currently loaded file.
 				if (currentLoadedFile != null)
 				{
-					SaveAndLoad.save(parentWindow, currentLoadedFile, classStore);
+					SaveAndLoad.save(currentLoadedFile, classStore);
 				}
 				else
 				{
@@ -408,7 +408,7 @@ public class Menu
 			
 			if(returnValue == JFileChooser.APPROVE_OPTION)
 			{
-				SaveAndLoad.save(parentWindow, fc.getSelectedFile(), classStore);
+				SaveAndLoad.save(fc.getSelectedFile(), classStore);
 				currentLoadedFile = fc.getSelectedFile();
 				JOptionPane.showMessageDialog(parentWindow,"File " + currentLoadedFile.getName() + " was saved.", "File Saved", JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -438,7 +438,7 @@ public class Menu
 			if(returnValue == JFileChooser.APPROVE_OPTION)
 			{
 				File fileToOpen = fc.getSelectedFile();
-				SaveAndLoad.load(parentWindow, fileToOpen, classStore);
+				SaveAndLoad.load(fileToOpen, classStore);
 				currentLoadedFile = fileToOpen;
 
 				for(Class aClass : classStore)

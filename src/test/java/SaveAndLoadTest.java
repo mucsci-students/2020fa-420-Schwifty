@@ -52,7 +52,7 @@ public class SaveAndLoadTest
         ArrayList<Class> arrList = new ArrayList<Class>();
         arrList.add(testClass);
         arrList.add(testClassTwo);
-        File testFile = new File("JSONTest");
+        File testFile = new File("JSONTest.json");
         SaveAndLoad.save(testFile, arrList);
         assertTrue(testFile.exists());
     }
@@ -66,15 +66,16 @@ public class SaveAndLoadTest
     public void testLoadedData()
     {
         ArrayList<Class> classStore = new ArrayList<Class>();
-        File testFile = new File("JSONTest");
+        File testFile = new File("JSONTest.json");
         SaveAndLoad.load(testFile, classStore);
         String[] classNameTests = {"Test","TestTwo"};
 
         //Create the test fields
-        Field attrTest = new Field("num", "int");
-        Field attrTestTwo = new Field("aStr", "string");
+        Field attrTest = new Field("int", "num");
+        Field attrTestTwo = new Field("string", "aStr");
         Field[] attrTestArray = {attrTest, attrTestTwo};
         String[] relationName = {"TestTwo", "Test"};
+
         RelationshipType[] rType = {RelationshipType.ASSOCIATION, RelationshipType.ASSOCIATION};
         int counter = 0;
         for(Class aClass : classStore)

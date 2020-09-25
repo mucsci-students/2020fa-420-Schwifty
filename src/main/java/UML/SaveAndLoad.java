@@ -65,7 +65,7 @@ public class SaveAndLoad
      *      }
      * ]} 
     */
-    public static void save(JFrame parentWindow, File fileName, ArrayList<Class> classesToSave)
+    public static void save(File fileName, ArrayList<Class> classesToSave)
     {
         JSONObject toBeSaved = new JSONObject();
 
@@ -126,7 +126,7 @@ public class SaveAndLoad
         //Attempt to write the json data to passed in file name. IOExcetion on failure. 
         //Append the .json format to name
         
-        String jsonFileName = fileName.getName() + ".json";
+        String jsonFileName = fileName.getName();
 
         //ensures we are not adding it if we don't need to
         if(!jsonFileName.contains(".json"))
@@ -143,11 +143,11 @@ public class SaveAndLoad
         catch (IOException e)
         {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(parentWindow, "Failed to save " + jsonFileName, "Error", JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(null, "Failed to save " + jsonFileName, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    public static void load(JFrame parentWindow, File fileName, ArrayList<Class> classStore)
+    public static void load(File fileName, ArrayList<Class> classStore)
     {
         JSONParser parser = new JSONParser();
         
@@ -204,20 +204,15 @@ public class SaveAndLoad
                 index++;
             }
         }
-        catch (FileNotFoundException e)
-        {  
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(parentWindow, "File " + fileName.getName() + " not found!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
         catch (IOException e)
         {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(parentWindow, "File " + fileName.getName() + " failed to load. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(null, "File " + fileName.getName() + " failed to load. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
         catch(ParseException e)
         {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(parentWindow, "Could not parse JSON file! Please ensure you selected the correct file.", "Error", JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(null, "Could not parse JSON file! Please ensure you selected the correct file.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
        /**
