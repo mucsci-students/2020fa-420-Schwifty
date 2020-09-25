@@ -147,7 +147,7 @@ public class Class {
     /**
      * Changes the type of a field of the class object.
      */
-    public boolean changeFieldType(String oldType, String newType, String name) throws IllegalArgumentException 
+    public boolean changeFieldType(String newType, String name) throws IllegalArgumentException 
     {
         for (Field a : fields) {
             if (a.getName().equals(name)) {
@@ -166,13 +166,13 @@ public class Class {
      */
     public boolean addMethod(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException 
     {
-        // If name is found, return false...atrribute already created
+        // If method is found, return false...atrribute already created
+        Method newMethod = new Method(type, name, params);
         for (Method m : methods) {
-            if (m.getName().equals(name)) {
+            if (m.equals(newMethod)) {
                 return false;
             }
         }
-        Method newMethod = new Method(type, name, params);
         methods.add(newMethod);
         return true;
     }

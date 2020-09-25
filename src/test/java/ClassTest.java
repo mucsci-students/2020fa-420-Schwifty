@@ -126,6 +126,22 @@ public class ClassTest {
     }
 
     @Test
+    public void testChangeFieldType()
+    {
+        Class test = new Class("name");
+        test.addField("int", "att"); 
+        test.changeFieldType("String", "att");
+        Field newAtt = new Field("String", "att");
+        assertTrue(test.getFields().contains(newAtt));
+        //Changing a field type that doesn't exist should return false.
+        assertFalse(test.changeFieldType("double", "att2"));
+        //Rename to empty or whitespace expects exception.
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.changeFieldType("", "att");
+        });
+    }
+
+    @Test
     public void testAddRelationshipToOther() 
     {
         Class test = new Class("name");
@@ -232,25 +248,71 @@ public class ClassTest {
     @Test
     public void testGetMethods()
     {
-
+        Class test = new Class("Test");
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        test.addMethod("int", "attribute", params);
+        //The class's call to get methods is nonempty.
+        assertTrue(!test.getMethods().isEmpty());
+        Method att1 = new Method("attribute", "int", params);
+        params.add(new Parameter("Type", "Name"));
+        Method att2 = new Method("attribute", "int", params);
+        //The class's call to get methods should comtain the added methods.
+        assertTrue(test.getMethods().contains(att1));
+        assertTrue(test.getMethods().contains(att2));
     }
 
     @Test
     public void testAddMethod()
     {
-        
+        Class test = new Class("Test");
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        params.add(new Parameter("Type", "Name"));
+        test.addMethod("int", "attribute", params);
+        assertTrue(test.getMethods().size() == 1);
+        test.addMethod("int", "attribute", params);
+        assertTrue(test.getMethods().size() == 1);
+        ArrayList<Parameter> params2 = new ArrayList<Parameter>();
+        test.addMethod("int", "attribute", params2);
+        assertTrue(test.getMethods().size() == 2);
+        //Shouldn't allow adding method with name containing space.
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.addMethod("int", "new method", params);
+        });
     }
 
     @Test
     public void testDeleteMethod()
     {
-        
+        Class test = new Class("Test");
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        params.add(new Parameter("Type", "Name"));
+        //Deleting from empty set should return false.
+        assertFalse(test.deleteMethod(new Method("int", "attribute", params)));
+        test.addMethod("int", "attribute", params);
+        ArrayList<Parameter> params2 = new ArrayList<Parameter>();
+        test.deleteMethod("int", "attribute", params2);
+        //Call to delete method with wrong params shouldn't change methods set.
+        assertTrue(test.getMethods().size() == 1);
+        test.deleteMethod("int", "attribute", params);
+        //Call to delete methods with correct params should delete the method.
+        assertTrue(test.getMethods().size() == 0);
     }
 
     @Test
     public void testRenameMethod()
     {
-        
+        Class test = new Class("Test");
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        test.addMethod("int", "attribute", params);
+        test.renameMethod("int", "attribute", params, "newName");
+        Method method = new Method("int", "newName", params);
+        assertTrue(test.getMethods().contains(method));
+        //Renaming using old name shouldn't work.
+        assertFalse(test.renameMethod("int", "attribute", params, "newName2"));
+        //Shouldn't allow names containg space.
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.renameMethod("int", "newName", params, " ");
+        });
     }
         
 }

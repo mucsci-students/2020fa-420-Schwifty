@@ -119,10 +119,10 @@ public class Store {
 	/**
 	 * Changes the type of a field of a class in the store.
 	 */
-	public void changeFieldType(String className, String oldType, String newType, String name) throws IllegalArgumentException
+	public void changeFieldType(String className, String newType, String name) throws IllegalArgumentException
 	{
 		Class toChange = findClass(className);
-		toChange.changeFieldType(oldType, newType, name);
+		toChange.changeFieldType(newType, name);
 	}
 
 
