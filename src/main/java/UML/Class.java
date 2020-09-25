@@ -169,7 +169,7 @@ public class Class {
     
     public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException
     {
-        if(newName.conatins(" "))
+        if(newName.contains(" "))
             throw new IllegalArgumentException("A method name cannot contain a space.");
         if(newName.trim().isEmpty())
             throw new IllegalArgumentException("A method name cannot be empty.");
