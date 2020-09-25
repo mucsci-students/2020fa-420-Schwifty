@@ -168,8 +168,7 @@ public class Store {
 	 */
 	public void deleteParam(String className, String methodType, String methodName, ArrayList<Parameter> params, String paramType, String paramName)
 	{
-		Class theClass = findClass(className);
-		Method theMethod = findMethod(theClass, methodType, methodName, params);
+		Method theMethod = findMethod(className, methodType, methodName, params);
 		theMethod.deleteParam(new Parameter(paramType, paramName));
 	}
 	
@@ -234,10 +233,10 @@ public class Store {
 	/**
 	 * Finds a method in a class in the storage and returns it. Returns null if nothing found.
 	 */
-	public Method findMethod(Class theClass, String methodType, String methodName, ArrayList<Parameter> params)
+	public Method findMethod(String className, String methodType, String methodName, ArrayList<Parameter> params)
 	{
 		Method newMethod = new Method(methodType, methodName, params);
-		Class foundClass = findClass(theClass.getName());
+		Class foundClass = findClass(className);
 		for(Method method : foundClass.getMethods())
 		{
 			if(method.equals(newMethod))
