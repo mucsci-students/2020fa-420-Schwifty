@@ -8,13 +8,7 @@ public class Method extends Formal
     /**
      * Contructs a method object.
      */
-    public Method(String type, String name) throws IllegalArgumentException 
-    {
-        super(type, name);
-        this.params = new ArrayList<Parameter>();
-    }
-    
-    public Method(String type, String name, ArrayList<Parameter> params)
+    public Method(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException
     {
         super(type, name);
         this.params = params;

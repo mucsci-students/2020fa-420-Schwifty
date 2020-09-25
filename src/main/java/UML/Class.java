@@ -64,6 +64,9 @@ public class Class {
         return this.fields;
     }
 
+    /**
+     * Returns a set of the methods of the class object.
+     */
     public Set<Method> getMethods() {
         return this.methods;
     }
@@ -140,12 +143,28 @@ public class Class {
         }
         return false;
     }
-    // TODO: Add ability to change the type of an atrribute...also add that to GUI.
+ 
+    /**
+     * Changes the type of a field of the class object.
+     */
+    public boolean changeFieldType(String oldType, String newType, String name) throws IllegalArgumentException 
+    {
+        for (Field a : fields) {
+            if (a.getName().equals(name)) {
+                // Must remove and add so that the Field has correct hashcode
+                this.fields.remove(a);
+                Field toAdd = new Field(newType, name);
+                this.fields.add(toAdd);
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
-     * Add parameter for parameters??
+     * Adds method with parameters.
      */
-    public boolean addMethod(String type, String name) throws IllegalArgumentException 
+    public boolean addMethod(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException 
     {
         // If name is found, return false...atrribute already created
         for (Method m : methods) {
@@ -153,7 +172,7 @@ public class Class {
                 return false;
             }
         }
-        Method newMethod = new Method(type, name);
+        Method newMethod = new Method(type, name, params);
         methods.add(newMethod);
         return true;
     }
@@ -166,7 +185,11 @@ public class Class {
         Method method = new Method(type, name, params);
         return methods.remove(method);
     }
-    
+
+
+    /**
+     * Renames method with parameters.
+     */
     public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException
     {
         if(newName.contains(" "))
@@ -182,7 +205,7 @@ public class Class {
             methods.add(newMethod);
         }
         return deleted;
-    }//package parameter
+    }
 
     /**
      * Adds a relationship from this class object to another.

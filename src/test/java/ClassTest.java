@@ -28,15 +28,15 @@ public class ClassTest {
     }
 
     @Test
-    public void testGetAttributes() 
+    public void testGetFields() 
     {
         Class test = new Class("Test");
-        test.addAttribute("int", "attribute");
-        //The class's call to get attributes is nonempty.
-        assertTrue(!test.getAttributes().isEmpty());
-        Attribute att = new Attribute("attribute", "int");
-        //The class's call to get attributes should comtain the added attribute.
-        assertTrue(test.getAttributes().contains(att));
+        test.addField("int", "attribute");
+        //The class's call to get fields is nonempty.
+        assertTrue(!test.getFields().isEmpty());
+        Field att = new Field("attribute", "int");
+        //The class's call to get fields should comtain the added field.
+        assertTrue(test.getFields().contains(att));
     }
 
     @Test
@@ -77,51 +77,51 @@ public class ClassTest {
     }
     
     @Test
-    public void testAddAttribute() 
+    public void testAddField() 
     {
         Class test = new Class("aName");
-        test.addAttribute("int", "att");
-        test.addAttribute("String", "att2");
-        Set<Attribute> testSet = test.getAttributes();
-        Attribute attrTest = new Attribute("att", "int");
-        Attribute attrTestTwo = new Attribute("att2", "String");
-        //The class should contain the added attributes.
-        assertTrue(test.getAttributes().contains(attrTest));
-        assertTrue(test.getAttributes().contains(attrTestTwo));
+        test.addField("int", "att");
+        test.addField("String", "att2");
+        Set<Field> testSet = test.getFields();
+        Field attrTest = new Field("att", "int");
+        Field attrTestTwo = new Field("att2", "String");
+        //The class should contain the added fields.
+        assertTrue(test.getFields().contains(attrTest));
+        assertTrue(test.getFields().contains(attrTestTwo));
         //Don't allow adding whitespace/empty strings.
         assertThrows(IllegalArgumentException.class, () -> {
-            test.addAttribute("", "   ");
+            test.addField("", "   ");
         });
     }
     
 
     @Test
-    public void testDeleteAttribute() 
+    public void testDeleteField() 
     {
         Class test = new Class("name");
-        //When attribute doesn't exist.
-        assertFalse(test.deleteAttribute("name"));
-        test.addAttribute("int", "att");
-        test.addAttribute("String", "att2");
-        test.deleteAttribute("att");
-        test.deleteAttribute("att2");
+        //When field doesn't exist.
+        assertFalse(test.deleteField("name"));
+        test.addField("int", "att");
+        test.addField("String", "att2");
+        test.deleteField("att");
+        test.deleteField("att2");
         //Set should be empty.
-        assertTrue(test.getAttributes().isEmpty());
+        assertTrue(test.getFields().isEmpty());
     }
 
     @Test
-    public void testRenameAttribute() 
+    public void testRenameField() 
     {
         Class test = new Class("name");
-        test.addAttribute("int", "att"); 
-        test.renameAttribute("att", "newAtt");
-        Attribute newAtt = new Attribute("newAtt", "int");
-        assertTrue(test.getAttributes().contains(newAtt));
-        //Renaming an attribute name that doesn't exist should return false.
-        assertFalse(test.renameAttribute("att", "att2"));
+        test.addField("int", "att"); 
+        test.renameField("att", "newAtt");
+        Field newAtt = new Field("newAtt", "int");
+        assertTrue(test.getFields().contains(newAtt));
+        //Renaming an field name that doesn't exist should return false.
+        assertFalse(test.renameField("att", "att2"));
         //Rename to empty or whitespace expects exception.
         assertThrows(IllegalArgumentException.class, () -> {
-            test.renameAttribute("newAtt", " ");
+            test.renameField("newAtt", " ");
         });
     }
 
@@ -200,9 +200,9 @@ public class ClassTest {
     public void testEquals() 
     {
         Class test1 = new Class("name");
-        test1.addAttribute("int", "5");
+        test1.addField("int", "5");
         Class test2 = new Class("name");
-        test2.addAttribute("int", "5");
+        test2.addField("int", "5");
         Class extra = new Class("extra");
         test1.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
         test2.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
@@ -217,15 +217,40 @@ public class ClassTest {
     public void testToString() 
     {
         Class test1 = new Class("name");
-        test1.addAttribute("attribute", "type");
+        test1.addField("attribute", "type");
         Class extra = new Class("extra");
         Class extra2 = new Class("extra2");
         Class test2 = test1;
         test1.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
         extra2.addRelationshipFromOther(RelationshipType.ASSOCIATION, test1);
-        Set<Attribute> testSet = test1.getAttributes();
+        Set<Field> testSet = test1.getFields();
         String result = "";
         //Tests that the strings are equal.
         assertEquals(test1.toString(), test2.toString());
     }
+
+    @Test
+    public void testGetMethods()
+    {
+
+    }
+
+    @Test
+    public void testAddMethod()
+    {
+        
+    }
+
+    @Test
+    public void testDeleteMethod()
+    {
+        
+    }
+
+    @Test
+    public void testRenameMethod()
+    {
+        
+    }
+        
 }
