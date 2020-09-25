@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -33,20 +34,20 @@ public class Store {
     }
     
     /**
-	 * Takes in a set of attributes that are contained in a 
+	 * Takes in a set of fields that are contained in a 
 	 * class and returns them as an array list of strings.
 	 */
-	public ArrayList<String> getAttributeList(Set<Attribute> attributesFromClass)
+	public ArrayList<String> getFieldList(Set<Field> fieldsFromClass)
 	{
-		ArrayList<String> attributes = new ArrayList<String>();
+		ArrayList<String> fields = new ArrayList<String>();
 
-		for(Attribute attr : attributesFromClass)
+		for(Field field : fieldsFromClass)
 		{
-			String type = attr.getType();
-			String name = attr.getName();
-			attributes.add(type + " " + name);
+			String type = field.getType();
+			String name = field.getName();
+			fields.add(type + " " + name);
 		}
-		return attributes;
+		return fields;
     }
     
     /**

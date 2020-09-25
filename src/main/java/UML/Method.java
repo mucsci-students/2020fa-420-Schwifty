@@ -14,6 +14,12 @@ public class Method extends Formal
         this.params = new ArrayList<Parameter>();
     }
     
+    public Method(String type, String name, ArrayList<Parameter> params)
+    {
+        super(type, name);
+        this.params = params;
+    }
+
     /**
      * Returns an ArrayList of the method's parameters.
      */

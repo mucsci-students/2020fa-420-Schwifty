@@ -39,7 +39,7 @@ public class Menu
 	/**
 	 * The model part of the GUI.
 	 */
-	private Store store;
+	//private Store store;
 	/**
      * Holds menu bar used to navigate program.
      */
@@ -125,34 +125,8 @@ public class Menu
 			}
 			else
 				arr[count].addActionListener((event) -> System.exit(0));
-		}		/*
-		/*
-		JMenu file = new JMenu("File");
-		//Sub-Menus.
-		JMenuItem save = new JMenuItem("Save");
-		JMenuItem saveAs = new JMenuItem("Save as...");
-		JMenuItem load = new JMenuItem("Load...");
-		JMenuItem exit = new JMenuItem("Exit");
-		//Add sub-menus.
-		file.add(save);
-		file.add(saveAs);
-		file.add(load);
-		file.add(exit);
-		//hover tasks and events.
-		save.setToolTipText("Save edited file");
-		saveAs.setToolTipText("Save newly created file");
-		load.setToolTipText("Load selected project");
-		exit.setToolTipText("Exit application");
-		exit.addActionListener((event) -> System.exit(0));
-		//Add action commands.
-		save.setActionCommand("Save");
-		saveAs.setActionCommand("SaveAs");
-		load.setActionCommand("Load");
-		//Add action listener.
-		save.addActionListener(new FileButtonClickListener());
-		saveAs.addActionListener(new FileButtonClickListener());
-		load.addActionListener(new FileButtonClickListener());
-		*/
+		}		
+		
 		mb.add(file);
 	}
 
@@ -184,29 +158,29 @@ public class Menu
 	}
 
 	/**
-	 * Creates the attribute menu options by taking in the menu bar and adding them to it. 
+	 * Creates the field menu options by taking in the menu bar and adding them to it. 
 	 */
 	private void createAtrributeMenu(JMenuBar mb)
 	{
-		JMenu attributes = new JMenu("Attribute");
+		JMenu fields = new JMenu("Field");
 		
-		//Create attribute sub-menu.
-		JMenuItem crtAttr = new JMenuItem("Create attribute");
-		JMenuItem deleteAttr = new JMenuItem("Delete attribute");
-		JMenuItem rnAttr = new JMenuItem("Rename attribute");
+		//Create field sub-menu.
+		JMenuItem crtField = new JMenuItem("Create field");
+		JMenuItem deleteField = new JMenuItem("Delete field");
+		JMenuItem rnField = new JMenuItem("Rename field");
 
-		JMenuItem[] arr = {crtAttr, deleteAttr, rnAttr};
-		String[] text = {"Create new attribute", "Delete a named attribute", "Rename a selected attribute"};
+		JMenuItem[] arr = {crtField, deleteField, rnField};
+		String[] text = {"Create new field", "Delete a named field", "Rename a selected field"};
 		String[] command = {"Create", "Delete", "Rename"};
 
 		for(int count = 0; count < 3; ++count)
 		{
-			attributes.add(arr[count]);
+			fields.add(arr[count]);
 			arr[count].setToolTipText(text[count]);
 			arr[count].setActionCommand(command[count]);
-			arr[count].addActionListener(new AttributeButtonClickListener());		
+			arr[count].addActionListener(new FieldButtonClickListener());		
 		}
-		mb.add(attributes);
+		mb.add(fields);
 	}
 
     /**
@@ -294,21 +268,21 @@ public class Menu
 		return names;
 	}
 	/**
-	 * Takes in a set of attributes that are contained in a 
+	 * Takes in a set of fields that are contained in a 
 	 * class and returns them as an array list of strings.
 	 */
-	private ArrayList<String> getAttributeList(Set<Attribute> attributesFromClass)
+	private ArrayList<String> getFieldList(Set<Field> fieldsFromClass)
 	{
-		ArrayList<String> attributes = new ArrayList<String>();
+		ArrayList<String> fields = new ArrayList<String>();
 
-		for(Attribute attr : attributesFromClass)
+		for(Field field : fieldsFromClass)
 		{
-			String type = attr.getType();
-			String name = attr.getName();
-			attributes.add(type + " " + name);
+			String type = field.getType();
+			String name = field.getName();
+			fields.add(type + " " + name);
 		}
 
-		return attributes;
+		return fields;
 	}
 
     /**
@@ -547,9 +521,9 @@ public class Menu
 		}
 	}
 	/**
-	 * Private class that handles all button clicks on the Attribute menu option.
+	 * Private class that handles all button clicks on the Field menu option.
 	 */
-	private class AttributeButtonClickListener implements ActionListener
+	private class FieldButtonClickListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -560,14 +534,14 @@ public class Menu
 				//Create a drop down list of created classes.
 				ArrayList<String> classArrayList = getClassList();
 				Object[] classList = classArrayList.toArray();
-				String className = getResultFromComboBox("Create Attribute for this class", "Create atrribute", classList);
+				String className = getResultFromComboBox("Create Field for this class", "Create atrribute", classList);
 				//Get Type from user.
 				String type = getTextFromInput("Type: ");
 				//Get name from user.
 				String name = getTextFromInput("Name: ");
-				//Find the class in the storage and add an attribute to it.
+				//Find the class in the storage and add a field to it.
 				Class classToAddAttrTo = findClass(className);
-				classToAddAttrTo.addAttribute(type, name);
+				classToAddAttrTo.addField(type, name);
 
 				JPanel panel = classPanels.get(className);
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
@@ -582,24 +556,24 @@ public class Menu
 			{
 				ArrayList<String> classArrayList = getClassList();
 				Object[] classList = classArrayList.toArray();
-				String className = getResultFromComboBox("Delete Attribute for this class", "Delete atrribute", classList);
+				String className = getResultFromComboBox("Delete Field for this class", "Delete atrribute", classList);
 				
 				//Get class from storage.
 				Class classToDeleteFrom = findClass(className);
 				
 				//Get atrributes from the class. 
-				Set<Attribute> attributes = classToDeleteFrom.getAttributes();
+				Set<Field> fields = classToDeleteFrom.getFields();
 				
 				//Get the atrributes in a combo box.
-				ArrayList<String> attributeArrayList = getAttributeList(attributes);
-				Object[] attributeList = attributeArrayList.toArray();
+				ArrayList<String> fieldArrayList = getFieldList(fields);
+				Object[] fieldList = fieldArrayList.toArray();
 				
-				//Get attribute to delete.
-				String attribute = getResultFromComboBox("Delete this atrribute", "Delete atrribute", attributeList);
-				String[] att = attribute.split(" ");
+				//Get field to delete.
+				String field = getResultFromComboBox("Delete this atrribute", "Delete atrribute", fieldList);
+				String[] att = field.split(" ");
 				
-				//Delete the attribute.
-				classToDeleteFrom.deleteAttribute(att[1]);
+				//Delete the field.
+				classToDeleteFrom.deleteField(att[1]);
 				
 				//Delete attr in window and revalidate/repaint.
 				JPanel panel = classPanels.get(className); 
@@ -615,20 +589,20 @@ public class Menu
 				//Load combo box to get the class to be renamed.
 				ArrayList<String> classArrayList = getClassList();
 				Object[] classList = classArrayList.toArray();
-				String className = getResultFromComboBox("Rename Attribute for this class", "Rename atrribute", classList);
+				String className = getResultFromComboBox("Rename Field for this class", "Rename atrribute", classList);
 				//Get class from storage.
 				Class classToRenameFrom = findClass(className);
 				//Get atrributes from the class. 
-				Set<Attribute> attributeSet = classToRenameFrom.getAttributes();
-				ArrayList<String> attributeArrayList = getAttributeList(attributeSet);
-				Object[] attributeList = attributeArrayList.toArray();
-				//Get attribute to rename.
-				String attribute = getResultFromComboBox("Rename this attribute", "Rename atrribute", attributeList);
+				Set<Field> fieldSet = classToRenameFrom.getFields();
+				ArrayList<String> fieldArrayList = getFieldList(fieldSet);
+				Object[] fieldList = fieldArrayList.toArray();
+				//Get field to rename.
+				String field = getResultFromComboBox("Rename this field", "Rename atrribute", fieldList);
 				
 				//Open text input for new name.
-				String newAttribute = getTextFromInput("Enter new attribute name: ");
-				String[] att = attribute.split(" ");
-				classToRenameFrom.renameAttribute(att[1], newAttribute);
+				String newField = getTextFromInput("Enter new field name: ");
+				String[] att = field.split(" ");
+				classToRenameFrom.renameField(att[1], newField);
 				JPanel panel = classPanels.get(className); 
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
 				textArea.setText(classToRenameFrom.toString());

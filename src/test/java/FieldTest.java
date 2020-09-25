@@ -10,7 +10,7 @@ public class FieldTest {
     public void testGetName() 
     {
         Field test = new Field("type", "name");
-        //Test attribute's name should equal "name".
+        //Test field's name should equal "name".
         assertEquals("name", test.getName());
     }
 
@@ -18,7 +18,7 @@ public class FieldTest {
     public void testGetType() 
     {
         Field test = new Field("type", "name");
-        //Test attribute's type should equal "type".
+        //Test field's type should equal "type".
         assertEquals("type", test.getType());
     }
 

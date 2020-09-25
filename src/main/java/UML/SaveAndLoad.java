@@ -9,13 +9,13 @@
     * {Classes: [
     *      {
     *          ClassName: name
-    *          attributes[]
+    *          fields[]
     *          relationTo []
     *          relationFrom []
     *      }
     *      {
     *          ClassName: name
-    *          attributes[]
+    *          fields[]
     *          relationTo []
     *          relationFrom []
     *      }
@@ -53,13 +53,13 @@ public class SaveAndLoad
      * {Classes: [
      *      {
      *          ClassName: name
-     *          attributes[]
+     *          fields[]
      *          relationTo []
      *          relationFrom []
      *      }
      *      {
      *          ClassName: name
-     *          attributes[]
+     *          fields[]
      *          relationTo []
      *          relationFrom []
      *      }
@@ -82,18 +82,19 @@ public class SaveAndLoad
             //Get the current class name and put it in the JSONObject
             String className = aClass.getName();
             classDetails.put("ClassName", className);
+            
                                     
-            Set<Attribute> attributes = aClass.getAttributes();
-            //Create a JSONArray of the attributes to be stored
-            JSONArray attributesToBeAdded = new JSONArray();
+            Set<Field> fields = aClass.getFields();
+            //Create a JSONArray of the fields to be stored
+            JSONArray fieldsToBeAdded = new JSONArray();
 
-            for (Attribute attr : attributes) 
+            for (Field attr : fields) 
             {
-                //Get the current attribute and put in the JSONObject
+                //Get the current fields and put in the JSONObject
                 String nameAndType = attr.getType() + " " + attr.getName();
-                attributesToBeAdded.add(nameAndType);
+                fieldsToBeAdded.add(nameAndType);
             }
-            classDetails.put("Attributes", attributesToBeAdded);
+            classDetails.put("Fields", fieldsToBeAdded);
 
             Map<String,RelationshipType> relationToOthers = aClass.getRelationshipsToOther();
             JSONArray relationsToToBeAdded = new JSONArray();
@@ -171,12 +172,12 @@ public class SaveAndLoad
             {
                 JSONObject jobct = (JSONObject)jsonObject;
                 Class aClass = classStore.get(index);
-                JSONArray jsonAttr = (JSONArray)jobct.get("Attributes");
+                JSONArray jsonAttr = (JSONArray)jobct.get("Fields");
                 Iterator<String> it = jsonAttr.iterator();
                 while(it.hasNext())
                 {
                     String[] attr = it.next().split(" ");
-                    aClass.addAttribute(attr[0], attr[1]);
+                    aClass.addField(attr[0], attr[1]);
                 }
                 
                 //Get the relationships to other class and add it to the correct class
