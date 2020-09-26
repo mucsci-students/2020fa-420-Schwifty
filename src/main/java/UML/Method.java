@@ -107,6 +107,6 @@ public class Method extends Formal
     @Override
     public int hashCode()
     {
-        return this.getName().hashCode() + this.getType().hashCode() + this.params.hashCode();
+        return this.getName().hashCode() + this.getType().hashCode();
     }
 }

@@ -34,7 +34,7 @@ public class ClassTest {
         test.addField("int", "attribute");
         //The class's call to get fields is nonempty.
         assertTrue(!test.getFields().isEmpty());
-        Field att = new Field("attribute", "int");
+        Field att = new Field("int", "attribute");
         //The class's call to get fields should comtain the added field.
         assertTrue(test.getFields().contains(att));
     }
@@ -83,8 +83,8 @@ public class ClassTest {
         test.addField("int", "att");
         test.addField("String", "att2");
         Set<Field> testSet = test.getFields();
-        Field attrTest = new Field("att", "int");
-        Field attrTestTwo = new Field("att2", "String");
+        Field attrTest = new Field("int", "att");
+        Field attrTestTwo = new Field("String", "att2");
         //The class should contain the added fields.
         assertTrue(test.getFields().contains(attrTest));
         assertTrue(test.getFields().contains(attrTestTwo));
@@ -115,7 +115,8 @@ public class ClassTest {
         Class test = new Class("name");
         test.addField("int", "att"); 
         test.renameField("att", "newAtt");
-        Field newAtt = new Field("newAtt", "int");
+        Field newAtt = new Field("int", "newAtt");
+        //Should contain the new field.
         assertTrue(test.getFields().contains(newAtt));
         //Renaming an field name that doesn't exist should return false.
         assertFalse(test.renameField("att", "att2"));
@@ -253,9 +254,10 @@ public class ClassTest {
         test.addMethod("int", "attribute", params);
         //The class's call to get methods is nonempty.
         assertTrue(!test.getMethods().isEmpty());
-        Method att1 = new Method("attribute", "int", params);
+        Method att1 = new Method("int", "attribute", params);
         params.add(new Parameter("Type", "Name"));
-        Method att2 = new Method("attribute", "int", params);
+        Method att2 = new Method("int", "attribute", params);
+        test.addMethod("int", "attribute", params);
         //The class's call to get methods should comtain the added methods.
         assertTrue(test.getMethods().contains(att1));
         assertTrue(test.getMethods().contains(att2));
