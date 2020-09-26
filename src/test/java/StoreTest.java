@@ -3,6 +3,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -254,7 +255,7 @@ public class StoreTest {
         store.addMethod("Test", "int", "testMethod", params);
         
         //Rename that method
-        store.renameMethod("Test", "int", params, "testMethod", "testMethodTwo");
+        store.renameMethod("Test", "int", "testMethod", params, "testMethodTwo");
 
         //Create a test method
         Method m = new Method("int", "testMethodTwo", params);
@@ -283,7 +284,7 @@ public class StoreTest {
         store.addMethod("Test", "int", "testMethod", params);
         
         //change the return type of testMethod.
-        store.changeMethodType("Test", "int", "String", "testMethod", params);
+        store.changeMethodType("Test", "int", "testMethod", params, "String");
         
         //get a set of methods from the test class.
         Set<Method> classMethods = store.findClass("Test").getMethods();
@@ -293,6 +294,11 @@ public class StoreTest {
         
         //check to see if the return type of the method has changed. 
         assertTrue(classMethods.contains(m));
+
+        //Should throw an exception for empty type name.
+        assertThrows(IllegalArgumentException.class, () -> {
+            store.changeMethodType("Test", "String", "testMethod", params, " ");
+        });
     }
 
     @Test
@@ -362,19 +368,66 @@ public class StoreTest {
     @Test
     public void testAddRelationship()
     {
-        
+        //create store.
+        Store store = new Store();
+        Store store1 = new Store();
+        //add a test class to store.
+        store.addClass("Test");
+        store.addClass("Test1");
+        //create ArrayList of parameters for creating a method.
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        //add method to test class.
+        store.addMethod("Test", "int", "testMethod", params);
+        store.addMethod("Test1", "String", "method", params);
+        //Shouldn't allow relationship between class and itself.
+        assertThrows(IllegalArgumentException.class, () -> {
+            store.addRelationship("Test", "Test", RelationshipType.ASSOCIATION);
+        });
+        store.addRelationship("Test", "Test1", RelationshipType.ASSOCIATION);
+        //Should be rtelationships in Test's to, and Test1's from.
+        assertTrue(store.findClass("Test").getRelationshipsToOther().containsKey("Test1"));
+        assertTrue(store.findClass("Test1").getRelationshipsFromOther().containsKey("Test"));
     }
 
     @Test
     public void testDeleteRelationship()
     {
-        
+        //create store.
+        Store store = new Store();
+        Store store1 = new Store();
+        //add a test class to store.
+        store.addClass("Test");
+        store.addClass("Test1");
+        //create ArrayList of parameters for creating a method.
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        //add method to test class.
+        store.addMethod("Test", "int", "testMethod", params);
+        store.addMethod("Test1", "String", "method", params);
+        //Should return false when there is no relationship to delete.
+        assertFalse(store.deleteRelationship("Test", "Test1"));
+        store.addRelationship("Test", "Test1", RelationshipType.ASSOCIATION);
+        store.deleteRelationship("Test", "Test1");
+        //Neither class should contain relationships now.
+        assertTrue(store.getClass("Test").getRelationshipsToOther().isEmpty());
+        assertTrue(store.getClass("Test").getRelationshipsFromOther().isEmpty());
+        assertTrue(store.getClass("Test1").getRelationshipsToOther().isEmpty());
+        assertTrue(store.getClass("Test1").getRelationshipsFromOther().isEmpty());
     }
 
     @Test
     public void testRemoveRelationships()
     {
+        //create store.
+        Store store = new Store();
         
+        //add a test class to store.
+        store.addClass("Test");
+
+        //create ArrayList of parameters for creating a method.
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+
+        //add method to test class.
+        store.addMethod("Test", "int", "testMethod", params);
     }
 
     @Test

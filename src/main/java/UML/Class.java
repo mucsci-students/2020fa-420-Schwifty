@@ -209,6 +209,21 @@ public class Class {
     }
 
     /**
+     * Chnages the return type of a method.
+     */
+	public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String newType) throws IllegalArgumentException
+	{
+        Method method = new Method(oldType, methodName, params);
+        boolean deleted = methods.remove(method);
+        if(deleted) 
+        {
+            Method newMethod = new Method(newType, methodName, params);
+            methods.add(newMethod);
+        }
+        return deleted;
+	}
+
+    /**
      * Adds a relationship from this class object to another.
      */
     public boolean addRelationshipToOther(RelationshipType relation, Class aClass) throws IllegalArgumentException {
@@ -218,7 +233,7 @@ public class Class {
 
         }
         // If relationship already exists between the two classes, don't overwrite.
-        if (!relationshipsToOther.containsKey(aClass.name)) {
+        if (!relationshipsToOther.containsKey(aClass.name) && !relationshipsFromOther.containsKey(aClass.name)) {
             relationshipsToOther.put(aClass.name, relation);
             aClass.relationshipsFromOther.put(this.name, relation);
             return true;
@@ -235,7 +250,7 @@ public class Class {
 
         }
         // If relationship already exists between the two classes, don't overwrite.
-        if (!relationshipsFromOther.containsKey(aClass.name)) {
+        if (!relationshipsFromOther.containsKey(aClass.name) && !relationshipsToOther.containsKey(aClass.name)) {
             relationshipsFromOther.put(aClass.name, relation);
             aClass.relationshipsToOther.put(this.name, relation);
             return true;
