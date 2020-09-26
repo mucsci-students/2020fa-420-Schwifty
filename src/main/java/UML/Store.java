@@ -53,20 +53,22 @@ public class Store {
 	/**
 	 * Adds a class to the store.
 	 */
-	public void addClass(String name) throws IllegalArgumentException
+	public boolean addClass(String name) throws IllegalArgumentException
 	{
 		Class temp = findClass(name);
 			if(temp == null) 
 			{
 				Class newClass = new Class(name);
 				classStore.add(newClass);
+				return true;
 			}
+		return false;
 	}
 
 	/**
 	 * Deletes a class from the store.
 	 */
-	public void deleteClass(String name)
+	public boolean deleteClass(String name)
 	{
 		Class temp = findClass(name);
 		if(findClass(name) != null)
@@ -74,19 +76,23 @@ public class Store {
 			//Delete relationships before deleting class.
 			removeRelationships(temp);
 			classStore.remove(temp);
+			return true;
 		}
+		return false;
 	}
 
 	/**
 	 * Renames a class in the store.
 	 */
-	public void renameClass(String oldName, String newName) throws IllegalArgumentException
+	public boolean renameClass(String oldName, String newName) throws IllegalArgumentException
 	{
 		if(findClass(newName) == null)
 		{
 			Class temp = findClass(oldName);
 			temp.setName(newName);
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -119,10 +125,10 @@ public class Store {
 	/**
 	 * Changes the type of a field of a class in the store.
 	 */
-	public void changeFieldType(String className, String oldType, String newType, String name) throws IllegalArgumentException
+	public void changeFieldType(String className, String newType, String name) throws IllegalArgumentException
 	{
 		Class toChange = findClass(className);
-		toChange.changeFieldType(oldType, newType, name);
+		toChange.changeFieldType(newType, name);
 	}
 
 
@@ -147,19 +153,27 @@ public class Store {
 	/**
      * Renames method of a class in the store.
      */
-	public void renameMethod(String className, String type, ArrayList<Parameter> params, String oldName, String newName) throws IllegalArgumentException
+	public void renameMethod(String className, String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException
 	{
 		Class toRename = findClass(className);
 		toRename.renameMethod(type, oldName, params, newName);
 	}
 
 	/**
+     * Chnages the return type of a method of a class in the store.
+     */
+	public void changeMethodType(String className, String oldType, String methodName, ArrayList<Parameter> params, String newType)
+	{
+		Class aClass = findClass(className);
+		aClass.changeMethodType(oldType, methodName, params, newType);
+	}
+	/**
 	 * Add parameter to a method of a class in the store.
 	 */
 	public void addParam(String className, String methodType, String methodName, ArrayList<Parameter> params, String paramType, String paramName) throws IllegalArgumentException
 	{
 		Class theClass = findClass(className);
-		Method theMethod = findMethod(theClass, methodType, methodName, params);
+		Method theMethod = findMethod(theClass.getName(), methodType, methodName, params);
 		theMethod.addParam(new Parameter(paramType, paramName));
 	}
 
@@ -168,8 +182,7 @@ public class Store {
 	 */
 	public void deleteParam(String className, String methodType, String methodName, ArrayList<Parameter> params, String paramType, String paramName)
 	{
-		Class theClass = findClass(className);
-		Method theMethod = findMethod(theClass, methodType, methodName, params);
+		Method theMethod = findMethod(className, methodType, methodName, params);
 		theMethod.deleteParam(new Parameter(paramType, paramName));
 	}
 	
@@ -234,10 +247,10 @@ public class Store {
 	/**
 	 * Finds a method in a class in the storage and returns it. Returns null if nothing found.
 	 */
-	public Method findMethod(Class theClass, String methodType, String methodName, ArrayList<Parameter> params)
+	public Method findMethod(String className, String methodType, String methodName, ArrayList<Parameter> params)
 	{
 		Method newMethod = new Method(methodType, methodName, params);
-		Class foundClass = findClass(theClass.getName());
+		Class foundClass = findClass(className);
 		for(Method method : foundClass.getMethods())
 		{
 			if(method.equals(newMethod))
