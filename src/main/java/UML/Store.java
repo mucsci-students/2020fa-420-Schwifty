@@ -159,7 +159,7 @@ public class Store {
 	public void addParam(String className, String methodType, String methodName, ArrayList<Parameter> params, String paramType, String paramName) throws IllegalArgumentException
 	{
 		Class theClass = findClass(className);
-		Method theMethod = findMethod(theClass, methodType, methodName, params);
+		Method theMethod = findMethod(theClass.getName(), methodType, methodName, params);
 		theMethod.addParam(new Parameter(paramType, paramName));
 	}
 

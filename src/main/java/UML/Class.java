@@ -18,6 +18,7 @@ enum RelationshipType {
     ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
 }
 
+
 public class Class {
 
     // The name of the class object.

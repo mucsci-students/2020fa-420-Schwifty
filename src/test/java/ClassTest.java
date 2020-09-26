@@ -287,7 +287,7 @@ public class ClassTest {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
         params.add(new Parameter("Type", "Name"));
         //Deleting from empty set should return false.
-        assertFalse(test.deleteMethod(new Method("int", "attribute", params)));
+        assertFalse(test.deleteMethod("int", "attribute", params));
         test.addMethod("int", "attribute", params);
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         test.deleteMethod("int", "attribute", params2);
