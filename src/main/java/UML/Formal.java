@@ -15,6 +15,12 @@ abstract class Formal {
         if(type.trim().isEmpty()) {
             throw new IllegalArgumentException("The attribute type cannot be blank.");
         }
+        if(name.contains(" ")) {
+            throw new IllegalArgumentException("The attribute name cannot contain a space.");
+        }
+        if(type.contains(" ")) {
+            throw new IllegalArgumentException("The attribute type cannot contain a space.");
+        }
         this.type = type;
         this.name = name;
     }

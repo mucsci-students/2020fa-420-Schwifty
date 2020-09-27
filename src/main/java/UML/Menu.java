@@ -49,10 +49,6 @@ public class Menu
      */
     private JFrame parentWindow;
     /**
-     * Tracks if user has file loaded or not to determine what to do on exit and when save is pressed.
-     */
-    private File currentLoadedFile;
-    /**
      * Stores the classes being used in the UML editor.
      */
     private ArrayList<Class> classStore;
@@ -62,24 +58,15 @@ public class Menu
 	private Map<String, JPanel> classPanels;
 
     /**
-     * Returns the currently loaded file.
-     */
-	public File getLoadedFilename()
-	{
-		return this.currentLoadedFile;
-    }
-    
-    /**
      * Acts as contructor(due to timing with creating the gui elements) of the display as well as assembles menu.
      */
 	public void createMenu(JFrame window)
 	{
+		store = new Store();
 		//sets up the class store and panels
 		classStore = new ArrayList<Class>();
 		classPanels = new HashMap<String, JPanel>();
 		parentWindow = window;
-		//By default, this should be an empty string.
-		currentLoadedFile = null;
 		//Set up the menu with helpers and add them to the main window.
 		parentWindow.setLayout(new GridLayout(5,5));
 		mb = new JMenuBar();
@@ -125,34 +112,8 @@ public class Menu
 			}
 			else
 				arr[count].addActionListener((event) -> System.exit(0));
-		}		/*
-		/*
-		JMenu file = new JMenu("File");
-		//Sub-Menus.
-		JMenuItem save = new JMenuItem("Save");
-		JMenuItem saveAs = new JMenuItem("Save as...");
-		JMenuItem load = new JMenuItem("Load...");
-		JMenuItem exit = new JMenuItem("Exit");
-		//Add sub-menus.
-		file.add(save);
-		file.add(saveAs);
-		file.add(load);
-		file.add(exit);
-		//hover tasks and events.
-		save.setToolTipText("Save edited file");
-		saveAs.setToolTipText("Save newly created file");
-		load.setToolTipText("Load selected project");
-		exit.setToolTipText("Exit application");
-		exit.addActionListener((event) -> System.exit(0));
-		//Add action commands.
-		save.setActionCommand("Save");
-		saveAs.setActionCommand("SaveAs");
-		load.setActionCommand("Load");
-		//Add action listener.
-		save.addActionListener(new FileButtonClickListener());
-		saveAs.addActionListener(new FileButtonClickListener());
-		load.addActionListener(new FileButtonClickListener());
-		*/
+		}		
+		
 		mb.add(file);
 	}
 
@@ -184,29 +145,29 @@ public class Menu
 	}
 
 	/**
-	 * Creates the attribute menu options by taking in the menu bar and adding them to it. 
+	 * Creates the field menu options by taking in the menu bar and adding them to it. 
 	 */
 	private void createAtrributeMenu(JMenuBar mb)
 	{
-		JMenu attributes = new JMenu("Attribute");
+		JMenu fields = new JMenu("Field");
 		
-		//Create attribute sub-menu.
-		JMenuItem crtAttr = new JMenuItem("Create attribute");
-		JMenuItem deleteAttr = new JMenuItem("Delete attribute");
-		JMenuItem rnAttr = new JMenuItem("Rename attribute");
+		//Create field sub-menu.
+		JMenuItem crtField = new JMenuItem("Create field");
+		JMenuItem deleteField = new JMenuItem("Delete field");
+		JMenuItem rnField = new JMenuItem("Rename field");
 
-		JMenuItem[] arr = {crtAttr, deleteAttr, rnAttr};
-		String[] text = {"Create new attribute", "Delete a named attribute", "Rename a selected attribute"};
+		JMenuItem[] arr = {crtField, deleteField, rnField};
+		String[] text = {"Create new field", "Delete a named field", "Rename a selected field"};
 		String[] command = {"Create", "Delete", "Rename"};
 
 		for(int count = 0; count < 3; ++count)
 		{
-			attributes.add(arr[count]);
+			fields.add(arr[count]);
 			arr[count].setToolTipText(text[count]);
 			arr[count].setActionCommand(command[count]);
-			arr[count].addActionListener(new AttributeButtonClickListener());		
+			arr[count].addActionListener(new FieldButtonClickListener());		
 		}
-		mb.add(attributes);
+		mb.add(fields);
 	}
 
     /**
@@ -279,41 +240,10 @@ public class Menu
 		parentWindow.repaint();   
 	} 
 
-	/** 
-	 * Makes and returns a combo box fill with the created classes.
-	 */
-	private ArrayList<String> getClassList()
-	{
-		ArrayList<String> names = new ArrayList<String>();
-
-		for(Class aClass : classStore)
-		{
-			names.add(aClass.getName());
-		}
-
-		return names;
-	}
-	/**
-	 * Takes in a set of attributes that are contained in a 
-	 * class and returns them as an array list of strings.
-	 */
-	private ArrayList<String> getAttributeList(Set<Attribute> attributesFromClass)
-	{
-		ArrayList<String> attributes = new ArrayList<String>();
-
-		for(Attribute attr : attributesFromClass)
-		{
-			String type = attr.getType();
-			String name = attr.getName();
-			attributes.add(type + " " + name);
-		}
-
-		return attributes;
-	}
-
     /**
      * Removes relevant relationships when classes are deleted.
      */
+	/*
 	private void removeRelationships(Class aClass)
 	{
 		//Find the classes that the class in question has a relationship with
@@ -322,33 +252,20 @@ public class Menu
 		for(Map.Entry<String, RelationshipType> entry : tempTo.entrySet()) 
 		{
 			//Go to those classes and get rid of relationships to and from the class in question.
-			Class temp = findClass(entry.getKey());
+			Class temp = store.findClass(entry.getKey());
 			temp.deleteRelationshipFromOther(entry.getValue(), aClass);
 			temp.deleteRelationshipToOther(entry.getValue(), aClass);
 		}
 		for(Map.Entry<String, RelationshipType> entry : tempFrom.entrySet()) 
 		{
 			//Go to those classes and get rid of relationships to and from the class in question.
-			Class temp = findClass(entry.getKey());
+			Class temp = store.findClass(entry.getKey());
 			temp.deleteRelationshipFromOther(entry.getValue(), aClass);
 			temp.deleteRelationshipToOther(entry.getValue(), aClass);
 		}
 	}
-
-	/**
-	 * Finds an element in the storage and returns it. Returns null if nothing found.
-	 */
-	private Class findClass(String name)
-	{
-		for (Class aClass : classStore) 
-		{
-			if(aClass.getName().equals(name))
-			{
-				return aClass;
-			}
-		}
-		return null;
-	}
+	*/
+	
 	/**
 	 * Gets text from user input(text box)
 	 */
@@ -380,11 +297,12 @@ public class Menu
 			String cmd = e.getActionCommand();
 			if(cmd.equals("Save"))
 			{
+				File currentLoadedFile = store.getCurrentLoadedFile();
 				//Save contents to file...will require JSON save.
 				//If there is a currently loaded file.
 				if (currentLoadedFile != null)
 				{
-					SaveAndLoad.save(parentWindow, currentLoadedFile, classStore);
+					SaveAndLoad.save(currentLoadedFile, classStore);
 				}
 				else
 				{
@@ -434,9 +352,9 @@ public class Menu
 			
 			if(returnValue == JFileChooser.APPROVE_OPTION)
 			{
-				SaveAndLoad.save(parentWindow, fc.getSelectedFile(), classStore);
-				currentLoadedFile = fc.getSelectedFile();
-				JOptionPane.showMessageDialog(parentWindow,"File " + currentLoadedFile.getName() + " was saved.", "File Saved", JOptionPane.INFORMATION_MESSAGE);
+				SaveAndLoad.save(fc.getSelectedFile(), classStore);
+				store.setCurrentLoadedFile(fc.getSelectedFile() );
+				JOptionPane.showMessageDialog(parentWindow,"File " + store.getCurrentLoadedFile().getName() + " was saved.", "File Saved", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 
@@ -464,8 +382,8 @@ public class Menu
 			if(returnValue == JFileChooser.APPROVE_OPTION)
 			{
 				File fileToOpen = fc.getSelectedFile();
-				SaveAndLoad.load(parentWindow, fileToOpen, classStore);
-				currentLoadedFile = fileToOpen;
+				SaveAndLoad.load(fileToOpen, classStore);
+				store.setCurrentLoadedFile(fileToOpen);
 
 				for(Class aClass : classStore)
 				{
@@ -490,33 +408,27 @@ public class Menu
 				//Load text input box to get the name of the new class to be created.
 				String className = getTextFromInput("Class name: ");
 				//Create the class. 
-				Class temp = findClass(className);
-				if(temp == null) 
-				{
-					Class newClass = new Class(className);
-					classStore.add(newClass);
-					makeNewClassPanel(newClass);
-				}
+				boolean temp = store.addClass(className);
+				if(temp)
+					makeNewClassPanel(store.findClass(className));
 			}
 			else if(cmd.equals("Delete"))
 			{
-				//Load dropdown of available classes to delete.
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
+				//get list of objects to display to user
+				Object[] classList = store.getClassList().toArray();
 				
+				//Get the class to be deleted. 
 				String toBeDeleted = getResultFromComboBox("Delete this class", "Delete a class", classList);
+
 				//Delete the class. 
 				//find it in storage array.
-				Class temp = findClass(toBeDeleted);
-				
-				if(findClass(toBeDeleted) != null)
+				boolean temp = store.deleteClass(toBeDeleted);
+
+				if(temp)
 				{
 					JPanel panel = classPanels.get(toBeDeleted);
 					parentWindow.remove(panel);
-					//Delete relationships before deleting class.
-					removeRelationships(temp);
-					classStore.remove(temp);
-					classPanels.remove(temp.getName());
+					classPanels.remove(toBeDeleted);
 					parentWindow.revalidate();
 					parentWindow.repaint(); 
 				}
@@ -524,20 +436,19 @@ public class Menu
 			else if(cmd.equals("Rename"))
 			{
 				//Load dropdown of created classes.
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
+				Object[] classList = store.getClassList().toArray();
+
 				String toBeRenamed = getResultFromComboBox("Rename this class", "Rename a class", classList);
 				//Open text dialog to get the new class name. 
 				String newClassName = getTextFromInput("New Class Name");
 				//Rename that class.
 				//This is done so that we don't give a class a name that is already taken.
-				if(findClass(newClassName) == null)
+				boolean temp = store.renameClass(toBeRenamed, newClassName);
+				if(temp)
 				{
-					Class temp = findClass(toBeRenamed);
-					temp.setName(newClassName);
 					JPanel panel = classPanels.get(toBeRenamed);
 					JTextArea textArea = (JTextArea)panel.getComponents()[0];
-					textArea.setText(temp.toString());
+					textArea.setText(store.findClass(newClassName).toString());
 					classPanels.remove(toBeRenamed);
 					classPanels.put(newClassName, panel);
 					parentWindow.revalidate();
@@ -547,9 +458,9 @@ public class Menu
 		}
 	}
 	/**
-	 * Private class that handles all button clicks on the Attribute menu option.
+	 * Private class that handles all button clicks on the Field menu option.
 	 */
-	private class AttributeButtonClickListener implements ActionListener
+	private class FieldButtonClickListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
@@ -558,20 +469,19 @@ public class Menu
 			{
 				//TODO: Consider making a custom window for this? It would make it look cleaner in the future.
 				//Create a drop down list of created classes.
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
-				String className = getResultFromComboBox("Create Attribute for this class", "Create atrribute", classList);
+				Object[] classList = store.getClassList().toArray();
+
+				String className = getResultFromComboBox("Create Field for this class", "Create atrribute", classList);
 				//Get Type from user.
 				String type = getTextFromInput("Type: ");
 				//Get name from user.
 				String name = getTextFromInput("Name: ");
-				//Find the class in the storage and add an attribute to it.
-				Class classToAddAttrTo = findClass(className);
-				classToAddAttrTo.addAttribute(type, name);
+				//Add field to the class using received params.
+				store.addField(className, type, name);
 
 				JPanel panel = classPanels.get(className);
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
-				textArea.setText(classToAddAttrTo.toString());
+				textArea.setText(store.findClass(className).toString());
 				classPanels.remove(className);
 				classPanels.put(className, panel);
 				parentWindow.revalidate();
@@ -580,26 +490,22 @@ public class Menu
 			}
 			else if(cmd.equals("Delete"))
 			{
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
-				String className = getResultFromComboBox("Delete Attribute for this class", "Delete atrribute", classList);
+				//Get a list of the classes from the store. 
+				Object[] classList = store.getClassList().toArray();
+				String className = getResultFromComboBox("Delete Field for this class", "Delete atrribute", classList);
 				
 				//Get class from storage.
-				Class classToDeleteFrom = findClass(className);
+				Class classToDeleteFrom = store.findClass(className);
 				
-				//Get atrributes from the class. 
-				Set<Attribute> attributes = classToDeleteFrom.getAttributes();
+				//Get the atrributes to be placed in a combo box.
+				Object[] fieldList = store.getFieldList(classToDeleteFrom.getFields()).toArray();
 				
-				//Get the atrributes in a combo box.
-				ArrayList<String> attributeArrayList = getAttributeList(attributes);
-				Object[] attributeList = attributeArrayList.toArray();
-				
-				//Get attribute to delete.
-				String attribute = getResultFromComboBox("Delete this atrribute", "Delete atrribute", attributeList);
-				String[] att = attribute.split(" ");
-				
-				//Delete the attribute.
-				classToDeleteFrom.deleteAttribute(att[1]);
+				//Get field to delete.
+				String field = getResultFromComboBox("Delete this atrribute", "Delete atrribute", fieldList);
+				String[] att = field.split(" ");
+
+				//Delete the field.
+				store.deleteField(className, att[1]);
 				
 				//Delete attr in window and revalidate/repaint.
 				JPanel panel = classPanels.get(className); 
@@ -613,25 +519,30 @@ public class Menu
 			else if(cmd.equals("Rename"))
 			{
 				//Load combo box to get the class to be renamed.
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
-				String className = getResultFromComboBox("Rename Attribute for this class", "Rename atrribute", classList);
+				Object[] classList = store.getClassList().toArray();
+
+				String className = getResultFromComboBox("Rename Field for this class", "Rename atrribute", classList);
+
 				//Get class from storage.
-				Class classToRenameFrom = findClass(className);
-				//Get atrributes from the class. 
-				Set<Attribute> attributeSet = classToRenameFrom.getAttributes();
-				ArrayList<String> attributeArrayList = getAttributeList(attributeSet);
-				Object[] attributeList = attributeArrayList.toArray();
-				//Get attribute to rename.
-				String attribute = getResultFromComboBox("Rename this attribute", "Rename atrribute", attributeList);
+				Class classToRenameFrom = store.findClass(className);
+
+				//Get a list of atrributes from the class.
+				Object[] fieldList = store.getFieldList(classToRenameFrom.getFields()).toArray();
+
+				//Get field to rename.
+				String field = getResultFromComboBox("Rename this field", "Rename atrribute", fieldList);
 				
 				//Open text input for new name.
-				String newAttribute = getTextFromInput("Enter new attribute name: ");
-				String[] att = attribute.split(" ");
-				classToRenameFrom.renameAttribute(att[1], newAttribute);
+				String newField = getTextFromInput("Enter new field name: ");
+				String[] att = field.split(" ");
+
+				//Rename the field.
+				store.renameField(className, att[1], newField);
+
 				JPanel panel = classPanels.get(className); 
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
-				textArea.setText(classToRenameFrom.toString());
+				textArea.setText(store.findClass(className).toString());
+
 				//Leave remove before put
 				classPanels.remove(className);
 				classPanels.put(className, panel);
@@ -652,24 +563,23 @@ public class Menu
 			if(cmd.equals("Association"))
 			{
 				//Creates two dialog boxes to get the classes to add the relationship to or from.
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
+				Object[] classList = store.getClassList().toArray();
+
 				String buildRelateOne = getResultFromComboBox("Choose first class", "Association", classList);
 
 				String buildRelateTwo = getResultFromComboBox("Choose second class", "Association", classList);
 				
 				//Add the relationship between the classes.
-				Class class1 = findClass(buildRelateOne);
-				Class class2 = findClass(buildRelateTwo);
+				Class class1 = store.findClass(buildRelateOne);
+				Class class2 = store.findClass(buildRelateTwo);
 				//Change add relationship.
-				class1.addRelationshipToOther(RelationshipType.ASSOCIATION, class2);
+				store.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.ASSOCIATION);
 				//Create relationship between chosen two, a relationship from and to must be made.
 				updateDisplayRelationship(class1, class2);
 			}
 			else if(cmd.equals("Aggregation"))
 			{
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
+				Object[] classList = store.getClassList().toArray();
 				
 				//Creates two dialog boxes to get the classes to add the relationship to or from.
 				String buildRelateOne = getResultFromComboBox("Choose first class", "Aggregation", classList);
@@ -677,63 +587,60 @@ public class Menu
 				String buildRelateTwo = getResultFromComboBox("Choose second class", "Aggregation", classList);
 
 				//Add the relationship between the classes.
-				Class class1 = findClass(buildRelateOne);
-				Class class2 = findClass(buildRelateTwo);
+				Class class1 = store.findClass(buildRelateOne);
+				Class class2 = store.findClass(buildRelateTwo);
 				//Change add relationship.
-				class1.addRelationshipToOther(RelationshipType.AGGREGATION, class2);
+				store.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.AGGREGATION);
 				updateDisplayRelationship(class1, class2);
 			}
 			else if(cmd.equals("Composition"))
 			{
 				//creates two dialog boxes to get the classes to add the relationship to or from.
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
+				Object[] classList = store.getClassList().toArray();
 				
 				String buildRelateOne = getResultFromComboBox("Choose first class", "Composition",classList);
 
 				String buildRelateTwo = getResultFromComboBox("Choose second class", "Composition", classList);
 				
 				//Add the relationship between the classes.
-				Class class1 = findClass(buildRelateOne);
-				Class class2 = findClass(buildRelateTwo);
+				Class class1 = store.findClass(buildRelateOne);
+				Class class2 = store.findClass(buildRelateTwo);
 				//Chnage add relationship
-				class1.addRelationshipToOther(RelationshipType.COMPOSITION, class2);
+				store.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.COMPOSITION);
 				//display relationship 
 				updateDisplayRelationship(class1, class2);
 			}
 			else if(cmd.equals("Generalization"))
 			{
 				//Creates two dialog boxes to get the classes to add the relationship to or from.
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
+				Object[] classList = store.getClassList().toArray();
+
 				String buildRelateOne = getResultFromComboBox("Choose first class", "Generalization",classList);
 
 				String buildRelateTwo = getResultFromComboBox("Choose first class", "Generalization",classList);
 				//Add the relationship between the classes.
-				Class class1 = findClass(buildRelateOne);
-				Class class2 = findClass(buildRelateTwo);
+				Class class1 = store.findClass(buildRelateOne);
+				Class class2 = store.findClass(buildRelateTwo);
 				//Change add relationship.
-				class1.addRelationshipToOther(RelationshipType.GENERALIZATION, class2);
+				store.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.GENERALIZATION);
 				//Display relationship.
 				updateDisplayRelationship(class1, class2);
 			}
-			else if(cmd.equals("DeleteRelate"))
+			else if(cmd.equals("Delete Relationship"))
 			{
 				//TODO: Not working correctly, need to display the relationship to the user
 				//Create a dialog box with two dropdowns of available classes.
-				ArrayList<String> classArrayList = getClassList();
-				Object[] classList = classArrayList.toArray();
+				Object[] classList = store.getClassList().toArray();
+
 				String buildRelateOne = getResultFromComboBox("Choose first class", " Class",classList);
 
 				String buildRelateTwo = getResultFromComboBox("Choose Second class", " Class",classList);
 				
 				//Delete relationship between chosen two.
-				Class class1 = findClass(buildRelateOne);
-				Class class2 = findClass(buildRelateTwo);
-				RelationshipType relation = class1.getRelationshipsToOther().get(buildRelateTwo);
+				Class class1 = store.findClass(buildRelateOne);
+				Class class2 = store.findClass(buildRelateTwo);
 				//Change deleteRelationship.
-				class1.deleteRelationshipToOther(relation, class2);
-				class2.deleteRelationshipToOther(relation, class1);
+				store.deleteRelationship(buildRelateOne, buildRelateTwo);
 				//TODO: Add a try catch if false is returned.
 				//Delete relationship from display.
 				updateDisplayRelationship(class1, class2);

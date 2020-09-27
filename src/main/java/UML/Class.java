@@ -14,204 +14,226 @@ import java.util.HashMap;
 import java.util.Map;
 
 //Holds the options for relationships between classes.
-enum RelationshipType 
-{
+enum RelationshipType {
     ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
-} 
+}
 
-public class Class 
-{
 
-    //The name of the class object.
+public class Class {
+
+    // The name of the class object.
     private String name;
-    //A set containing the attributes of a class object.
-    private Set<Attribute> attributes;
-    //The relationships from this class object to another.
+    // A set containing the fields of a class object.
+    private Set<Field> fields;
+    // The relationships from this class object to another.
     private Map<String, RelationshipType> relationshipsToOther;
-    //The relationships from another class object to this one.
+    // The relationships from another class object to this one.
     private Map<String, RelationshipType> relationshipsFromOther;
-    //A set containing the class's methods.
-    private Set<Method> methods; 
-        
-
+    // A set containing the class's methods.
+    private Set<Method> methods;
 
     /**
-     * Constructs a class object that takes in a parameter for the name of the class.
+     * Constructs a class object that takes in a parameter for the name of the
+     * class.
      */
-     public Class(String name) throws IllegalArgumentException
-     {
-        //Don't allow empty string/only whitespace
-        if(name.trim().isEmpty()) 
-        {
+    public Class(String name) throws IllegalArgumentException {
+        // Don't allow empty string/only whitespace
+        if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("The class name cannot be blank.");
         }
-        if(name.contains(" ")) 
-        {
+        if (name.contains(" ")){
             throw new IllegalArgumentException("The class name cannot cantain a space.");
         }
         this.name = name;
-        this.attributes = new HashSet<Attribute>();
+        this.fields = new HashSet<Field>();
         this.relationshipsToOther = new HashMap<String, RelationshipType>();
         this.relationshipsFromOther = new HashMap<String, RelationshipType>();
         this.methods = new HashSet<Method>();
-     }
+    }
 
     /**
      * Returns the name of the class object.
      */
-    public String getName() 
-    {
+    public String getName() {
         return this.name;
     }
 
     /**
-     * Returns a set of the attributes of the class object.
+     * Returns a set of the fields of the class object.
      */
-    public Set<Attribute> getAttributes() 
-    {
-        return this.attributes;
+    public Set<Field> getFields() {
+        return this.fields;
     }
 
-    public Set<Method> getMethods() 
-    {
+    /**
+     * Returns a set of the methods of the class object.
+     */
+    public Set<Method> getMethods() {
         return this.methods;
     }
 
     /**
      * Returns the relationships from this class object to another.
      */
-    public Map<String, RelationshipType> getRelationshipsToOther() 
-    {
+    public Map<String, RelationshipType> getRelationshipsToOther() {
         return this.relationshipsToOther;
     }
 
     /**
      * Returns the relationships from another class object to this one.
      */
-    public Map<String, RelationshipType> getRelationshipsFromOther() 
-    {
+    public Map<String, RelationshipType> getRelationshipsFromOther() {
         return this.relationshipsFromOther;
     }
 
     /**
      * Changes the name of the class object.
      */
-    public void setName(String name) throws IllegalArgumentException
-    {
-        if(name.trim().isEmpty()) 
-        {
+    public void setName(String name) throws IllegalArgumentException {
+        if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("The class name cannot be blank.");
         }
-        if(name.contains(" ")) 
-        {
+        if (name.contains(" ")) {
             throw new IllegalArgumentException("The class name cannot contains spaces.");
         }
         this.name = name;
     }
 
     /**
-     * Adds an attribute the the class object.
+     * Adds a field the the class object.
      */
-    public boolean addAttribute(String type, String name) throws IllegalArgumentException
-    {
-        //If name is found, return false...atrribute already created
-        for (Attribute a : attributes)
-        {
-            if (a.getName().equals(name))
-            {
+    public boolean addField(String type, String name) throws IllegalArgumentException {
+        // If name is found, return false...atrribute already created
+        for (Field f : fields) {
+            if (f.getName().equals(name)) {
                 return false;
             }
         }
-        Attribute newAttr = new Attribute(name, type);
-        attributes.add(newAttr);
+        Field newField = new Field(type, name);
+        fields.add(newField);
         return true;
     }
 
     /**
-     * Add parameter for parameters??
+     * Deletes a field from the class object.
      */
-    public boolean addMethod(String type, String name) throws IllegalArgumentException
-    {
-        //If name is found, return false...atrribute already created
-        for (Method m : methods)
-        {
-            if (m.getName().equals(name))
-            {
-                return false;
+    public boolean deleteField(String name) {
+        for (Field f : fields) {
+            if (f.getName().equals(name)) {
+                fields.remove(f);
+                return true;
             }
         }
-        Method newMethod = new Method(name, type);
-        methods.add(newMethod);
-        return true;
+        return false;
+    }
+
+    /**
+     * Renames a field of the class object.
+     */
+    public boolean renameField(String oldName, String newName) throws IllegalArgumentException 
+    {
+        for (Field a : fields) {
+            if (a.getName().equals(oldName)) {
+                // Must remove and add so that the Field has correct hashcode
+                String type = a.getType();
+                this.fields.remove(a);
+                Field toAdd = new Field(type, newName);
+                this.fields.add(toAdd);
+                return true;
+            }
+        }
+        return false;
     }
  
     /**
+     * Changes the type of a field of the class object.
+     */
+    public boolean changeFieldType(String newType, String name) throws IllegalArgumentException 
+    {
+        for (Field a : fields) {
+            if (a.getName().equals(name)) {
+                // Must remove and add so that the Field has correct hashcode
+                this.fields.remove(a);
+                Field toAdd = new Field(newType, name);
+                this.fields.add(toAdd);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Adds method with parameters.
+     */
+    public boolean addMethod(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException 
+    {
+        // If method is found, return false...atrribute already created
+        Method newMethod = new Method(type, name, params);
+        for (Method m : methods) {
+            if (m.equals(newMethod)) {
+                return false;
+            }
+        }
+        methods.add(newMethod);
+        return true;
+    }
+
+    /**
      * Add params and type to determine which to delete?
      */
-    public boolean deleteMethod(String name) 
+    public boolean deleteMethod(String type, String name, ArrayList<Parameter> params) 
     {
-        for (Method m : methods)
+        Method method = new Method(type, name, params);
+        return methods.remove(method);
+    }
+
+
+    /**
+     * Renames method with parameters.
+     */
+    public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException
+    {
+        if(newName.contains(" "))
+            throw new IllegalArgumentException("A method name cannot contain a space.");
+        if(newName.trim().isEmpty())
+            throw new IllegalArgumentException("A method name cannot be empty.");
+
+        Method method = new Method(type, oldName, params);
+        boolean deleted = methods.remove(method);
+        if(deleted) 
         {
-            if (m.getName().equals(name))
-            {
-                methods.remove(m);
-                return true;
-            }
+            Method newMethod = new Method(type, newName, params);
+            methods.add(newMethod);
         }
-        return false;
+        return deleted;
     }
 
     /**
-     * Deletes an attribute from the class object.
+     * Chnages the return type of a method.
      */
-    public boolean deleteAttribute(String name) 
-    {
-        for (Attribute a : attributes)
+	public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String newType) throws IllegalArgumentException
+	{
+        Method method = new Method(oldType, methodName, params);
+        boolean deleted = methods.remove(method);
+        if(deleted) 
         {
-            if (a.getName().equals(name))
-            {
-                attributes.remove(a);
-                return true;
-            }
+            Method newMethod = new Method(newType, methodName, params);
+            methods.add(newMethod);
         }
-        return false;
-    }
-
-    /**
-     * Renames an attribute of the class object.
-     */
-    public boolean renameAttribute(String oldName, String newName) throws IllegalArgumentException
-    {
-        for (Attribute a : attributes)
-        {
-            if (a.getName().equals(oldName))
-            {
-                //Must remove and add so that the Attribute has correct hashcode
-                String type = a.getType();
-                this.attributes.remove(a);
-                Attribute toAdd = new Attribute(newName, type);
-                this.attributes.add(toAdd);
-                return true;
-            }
-        }
-        return false;
-    }
-    //TODO: Add ability to change the type of an atrribute...also add that to GUI.
+        return deleted;
+	}
 
     /**
      * Adds a relationship from this class object to another.
      */
-    public boolean addRelationshipToOther(RelationshipType relation, Class aClass) throws IllegalArgumentException
-    {
-        //If relationship with a class and itself, throw exception.
-        if (this.equals(aClass)) 
-        {
+    public boolean addRelationshipToOther(RelationshipType relation, Class aClass) throws IllegalArgumentException {
+        // If relationship with a class and itself, throw exception.
+        if (this.equals(aClass)) {
             throw new IllegalArgumentException("A class cannot have a relationship with itself.");
-        
+
         }
-        //If relationship already exists between the two classes, don't overwrite.
-        if(!relationshipsToOther.containsKey(aClass.name))
-        {
+        // If relationship already exists between the two classes, don't overwrite.
+        if (!relationshipsToOther.containsKey(aClass.name) && !relationshipsFromOther.containsKey(aClass.name)) {
             relationshipsToOther.put(aClass.name, relation);
             aClass.relationshipsFromOther.put(this.name, relation);
             return true;
@@ -222,16 +244,13 @@ public class Class
     /**
      * Adds a relationship from another class object to this one.
      */
-    public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) throws IllegalArgumentException
-    {
-        if (this.equals(aClass)) 
-        {
+    public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) throws IllegalArgumentException {
+        if (this.equals(aClass)) {
             throw new IllegalArgumentException("A class cannot have a relationship with itself.");
-        
+
         }
-        //If relationship already exists between the two classes, don't overwrite.
-        if(!relationshipsFromOther.containsKey(aClass.name))
-        {
+        // If relationship already exists between the two classes, don't overwrite.
+        if (!relationshipsFromOther.containsKey(aClass.name) && !relationshipsToOther.containsKey(aClass.name)) {
             relationshipsFromOther.put(aClass.name, relation);
             aClass.relationshipsToOther.put(this.name, relation);
             return true;
@@ -242,8 +261,7 @@ public class Class
     /**
      * Deletes a relationship from this class object to another.
      */
-    public boolean deleteRelationshipToOther(RelationshipType relation, Class aClass) 
-    {
+    public boolean deleteRelationshipToOther(RelationshipType relation, Class aClass) {
         boolean removedToOther = relationshipsToOther.remove(aClass.name, relation);
         boolean removedFromOther = aClass.relationshipsFromOther.remove(this.name, relation);
         return removedToOther && removedFromOther;
@@ -252,8 +270,7 @@ public class Class
     /**
      * Deletes a relationship from another class object to this one.
      */
-    public boolean deleteRelationshipFromOther(RelationshipType relation, Class aClass) 
-    {
+    public boolean deleteRelationshipFromOther(RelationshipType relation, Class aClass) {
         boolean removedFromOther = relationshipsFromOther.remove(aClass.name, relation);
         boolean removedToOther = aClass.relationshipsToOther.remove(this.name, relation);
         return removedFromOther && removedToOther;
@@ -262,44 +279,31 @@ public class Class
     /**
      * Returns true if two class object are equal and false otehrwise.
      */
-    public boolean equals(Object other) 
-    {
+    public boolean equals(Object other) {
         boolean result = false;
-        if(this == other) 
-        {
+        if (this == other) {
             result = true;
-        }
-        else if (other == null) 
-        {
+        } else if (other == null) {
             result = false;
-        }
-        else if(!(other instanceof Class)) 
-        { 
-            result = false; 
-        }
-        else {
+        } else if (!(other instanceof Class)) {
+            result = false;
+        } else {
             Class object = (Class) other;
             boolean attEqual = true;
-            //Check if both sets contain the same objects since equals() won't work
-            for(Attribute att : this.attributes) 
-            {
-                if(!object.attributes.contains(att)) 
-                {
+            // Check if both sets contain the same objects since equals() won't work
+            for (Field att : this.fields) {
+                if (!object.fields.contains(att)) {
                     attEqual = false;
                 }
             }
-            for(Attribute att : object.attributes) 
-            {
-                if(!this.attributes.contains(att)) 
-                {
+            for (Field att : object.fields) {
+                if (!this.fields.contains(att)) {
                     attEqual = false;
                 }
             }
-            if(object.name.equals(this.name) &&
-             attEqual &&
-             object.relationshipsToOther.equals(this.relationshipsToOther) &&
-             object.relationshipsFromOther.equals(this.relationshipsFromOther)) 
-            {
+            if (object.name.equals(this.name) && attEqual
+                    && object.relationshipsToOther.equals(this.relationshipsToOther)
+                    && object.relationshipsFromOther.equals(this.relationshipsFromOther)) {
                 result = true;
             }
         }
@@ -307,23 +311,20 @@ public class Class
     }
 
     /**
-     * Returns a string representation of a class object.    
+     * Returns a string representation of a class object.
      */
-    public String toString()
-    {
+    public String toString() {
         String result = "";
         result += "Class name: " + this.name + "\n";
         result += "------------------------------\n";
-        result += "Attribute Names: \n"; // + attributes.get(0).getName() + "\n";
-        if(!attributes.isEmpty())
-        {
-            for (Attribute attribute : attributes) 
-            {
-                result += attribute.toString();
+        result += "Field Names: \n"; 
+        if (!fields.isEmpty()) {
+            for (Field field : fields) {
+                result += field.toString();
                 result += "\n";
             }
         }
-        result += "\n------------------------------";
+        result += "\n------------------------------\n";
         result += "Relationships To Others: \n" + relationshipsToOther.toString();
         result += "Relationships From Others: \n" + relationshipsFromOther.toString();
         return result;

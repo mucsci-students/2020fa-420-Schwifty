@@ -24,6 +24,7 @@ public class CLI {
        System.out.println(" /\\__/ / (__| | | \\ V  V /| | | | |_| |_| |");
        System.out.println(" \\____/ \\___|_| |_|\\_/\\_/ |_|_|  \\__|\\__, |");
        System.out.println("                                      __/ |");
-       System.out.println("                                     |___ /"); 
+       System.out.println("                                     |___ /");
+       System.out.println("Type in 'Help' for a list of commands.");
     }
 }

@@ -8,12 +8,12 @@ public class Method extends Formal
     /**
      * Contructs a method object.
      */
-    public Method(String type, String name) throws IllegalArgumentException 
+    public Method(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException
     {
         super(type, name);
-        this.params = new ArrayList<Parameter>();
+        this.params = params;
     }
-    
+
     /**
      * Returns an ArrayList of the method's parameters.
      */
@@ -107,6 +107,6 @@ public class Method extends Formal
     @Override
     public int hashCode()
     {
-        return this.getName().hashCode() + this.getType().hashCode() + this.params.hashCode();
+        return this.getName().hashCode() + this.getType().hashCode();
     }
 }
