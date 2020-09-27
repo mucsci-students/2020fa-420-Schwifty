@@ -324,8 +324,19 @@ public class Class {
                 result += "\n";
             }
         }
+        result += "------------------------------\n";
+        
+        result += "Methods:  \n";
+        if(!methods.isEmpty())
+        {
+            for(Method m : methods)
+            {
+                result += m.toString();
+                result += "\n";
+            }
+        }
         result += "\n------------------------------\n";
-        result += "Relationships To Others: \n" + relationshipsToOther.toString();
+        result += "Relationships To Others: \n" + relationshipsToOther.toString() + "\n";
         result += "Relationships From Others: \n" + relationshipsFromOther.toString();
         return result;
     }

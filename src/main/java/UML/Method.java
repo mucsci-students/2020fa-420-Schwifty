@@ -94,13 +94,16 @@ public class Method extends Formal
     @Override
     public String toString() 
     {
-        String result = "Parameters: ";
+        String result = "";
+        result += "Method: ";
+        result += this.getType() + " : " + this.getName();
+        result += " Parameters: (";
+
         for(Parameter p : this.getParams())
         {
-            result += p.toString() + " | ";
+            result += p.toString() + " , ";
         }
-        result += "\nMethod: ";
-        result += this.getType() + " : " + this.getName();
+        result += ")";
         return result;
     }
 
