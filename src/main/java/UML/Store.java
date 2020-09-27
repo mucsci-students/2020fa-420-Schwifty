@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
@@ -31,7 +32,7 @@ public class Store {
 	 */
 	public void setCurrentLoadedFile(File fileToSet)
 	{
-
+		this.currentLoadedFile = fileToSet;
 	}
     /** 
 	 * Makes and returns a combo box fill with the created classes.
@@ -64,6 +65,23 @@ public class Store {
 		}
 		return fields;
     }
+	
+	/**
+	 * Takes in a Set of methods from a class and returns a string of each
+	 * of the classes methods. Returned as a ArrayList<String> to be worked with
+	 * in the view. 
+	 */
+	public ArrayList<String> getMethodList(Set<Method> methods)
+	{
+		ArrayList<String> methodsToReturn = new ArrayList<String>();
+
+		for(Method m : methods)
+		{
+			methodsToReturn.add(m.toString());
+		}
+
+		return methodsToReturn;
+	}
 	
 	/**
 	 * Adds a class to the store.

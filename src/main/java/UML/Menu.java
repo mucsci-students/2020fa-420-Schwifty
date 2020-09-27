@@ -589,6 +589,9 @@ public class Menu
 			}
 			else if(cmd.equals("DeleteMethod"))
 			{
+				//Get a list of methods to show user in a combo box
+				Object[] methods = store.getme
+				//Get their choice
 
 			}
 			else if(cmd.equals("RenameMethod"))
