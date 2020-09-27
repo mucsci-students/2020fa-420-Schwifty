@@ -16,8 +16,23 @@ public class Store {
 	{
         classStore = new ArrayList<Class>();
         currentLoadedFile = null;
-    }
+	}
 
+	/**
+	 * Returns the currently loaded file, if there is one. 
+	 */
+	public File getCurrentLoadedFile()
+	{
+		return this.currentLoadedFile;
+	}
+
+	/**
+	 * Setter for the current loaded file. 
+	 */
+	public void setCurrentLoadedFile(File fileToSet)
+	{
+
+	}
     /** 
 	 * Makes and returns a combo box fill with the created classes.
 	 */
