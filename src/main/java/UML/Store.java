@@ -150,10 +150,20 @@ public class Store {
 	/**
 	 * Adds method to a class in the store.
 	 */
-	public void addMethod(String className, String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException
+	public void addMethod(String className, String type, String name, ArrayList<String> params) throws IllegalArgumentException
 	{
 		Class toAdd = findClass(className);
-		toAdd.addMethod(type, name, params);
+		
+		ArrayList<Parameter> newParams = new ArrayList<Parameter>();
+
+		for(String param : params)
+		{
+			String[] splitStr = param.split(" ");
+			Parameter newParam = new Parameter(splitStr[0], splitStr[1]);
+			newParams.add(newParam);
+		}
+
+		toAdd.addMethod(type, name, newParams);
 	}
 
 	/**

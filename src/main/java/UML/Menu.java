@@ -147,7 +147,7 @@ public class Menu
 	/**
 	 * Creates the field menu options by taking in the menu bar and adding them to it. 
 	 */
-	private void createAtrributeMenu(JMenuBar mb)
+	private void createAtrributeMenu(JMenuBar mb)//change spelling later on
 	{
 		JMenu fields = new JMenu("Field");
 		
@@ -155,12 +155,17 @@ public class Menu
 		JMenuItem crtField = new JMenuItem("Create field");
 		JMenuItem deleteField = new JMenuItem("Delete field");
 		JMenuItem rnField = new JMenuItem("Rename field");
+		
+		//Create method buttons
+		JMenuItem crtMethod = new JMenuItem("Create method");
+		JMenuItem deleteMethod = new JMenuItem("Delete method");
+		JMenuItem rnMethod = new JMenuItem("Rename method");
 
-		JMenuItem[] arr = {crtField, deleteField, rnField};
-		String[] text = {"Create new field", "Delete a named field", "Rename a selected field"};
-		String[] command = {"Create", "Delete", "Rename"};
+		JMenuItem[] arr = {crtField, deleteField, rnField, crtMethod, deleteMethod, rnMethod};
+		String[] text = {"Create new field", "Delete a named field", "Rename a selected field", "Create new method","Delete a named method", "Rename a selected method"};
+		String[] command = {"CreateField", "DeleteField", "RenameField", "CreateMethod", "DeleteMethod", "RenameMethod"};
 
-		for(int count = 0; count < 3; ++count)
+		for(int count = 0; count < 6; ++count)
 		{
 			fields.add(arr[count]);
 			arr[count].setToolTipText(text[count]);
@@ -465,7 +470,7 @@ public class Menu
 		public void actionPerformed(ActionEvent e)
 		{
 			String cmd = e.getActionCommand();
-			if(cmd.equals("Create"))
+			if(cmd.equals("CreateField"))
 			{
 				//TODO: Consider making a custom window for this? It would make it look cleaner in the future.
 				//Create a drop down list of created classes.
@@ -482,13 +487,11 @@ public class Menu
 				JPanel panel = classPanels.get(className);
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
 				textArea.setText(store.findClass(className).toString());
-				classPanels.remove(className);
-				classPanels.put(className, panel);
-				parentWindow.revalidate();
-				parentWindow.repaint();
+
+				windowRefresh(className, panel);
 
 			}
-			else if(cmd.equals("Delete"))
+			else if(cmd.equals("DeleteField"))
 			{
 				//Get a list of the classes from the store. 
 				Object[] classList = store.getClassList().toArray();
@@ -511,12 +514,9 @@ public class Menu
 				JPanel panel = classPanels.get(className); 
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
 				textArea.setText(classToDeleteFrom.toString());
-				classPanels.remove(className);
-				classPanels.put(className, panel);
-				parentWindow.revalidate();
-				parentWindow.repaint();
+				windowRefresh(className, panel);
 			}
-			else if(cmd.equals("Rename"))
+			else if(cmd.equals("RenameField"))
 			{
 				//Load combo box to get the class to be renamed.
 				Object[] classList = store.getClassList().toArray();
@@ -543,14 +543,74 @@ public class Menu
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
 				textArea.setText(store.findClass(className).toString());
 
-				//Leave remove before put
-				classPanels.remove(className);
-				classPanels.put(className, panel);
-				parentWindow.revalidate();
-				parentWindow.repaint();
+				windowRefresh(className, panel);
+			}
+			else if(cmd.equals("CreateMethod"))
+			{
+				//Create a drop down list of created classes.
+				Object[] classList = store.getClassList().toArray();
+
+				String className = getResultFromComboBox("Create Method for this class", "Create Method", classList);
+				//Get Type from user.
+				String returnType = getTextFromInput("Return Type: ");
+				//Get name from user.
+				String name = getTextFromInput("Method Name: ");
+				//Get number of parameters from user.
+				int paramNum = getNumberFromInput();
+
+				ArrayList<String> params = new ArrayList<String>();
+				
+				for(int count = 0; count < paramNum; ++count)
+				{
+					String paramType = getTextFromInput("Parameter Type: ");
+					String paramName = getTextFromInput("Parameter Name: ");
+					params.add(paramType + " " + paramName);
+				}
+				//Add field to the class using received params.
+				store.addMethod(className, returnType, name, params);
+				JPanel panel = classPanels.get(className);
+				JTextArea textArea = (JTextArea)panel.getComponents()[0];
+				textArea.setText(store.findClass(className).toString());
+
+				windowRefresh(className, panel);
+
+			}
+			else if(cmd.equals("DeleteMethod"))
+			{
+				Object[] classList = store.getClassList().toArray();
+			}
+			else if(cmd.equals("RenameMethod"))
+			{
+				Object[] classList = store.getClassList().toArray();
 			}
 		}
+		
+		private void windowRefresh(String className, JPanel panel)
+		{
+			//Leave remove before put
+			classPanels.remove(className);
+			classPanels.put(className, panel);
+			parentWindow.revalidate();
+			parentWindow.repaint();
+		}
+
+		private int getNumberFromInput()
+		{
+			int paramNum;
+			//Ensure we get a number, defaults to zero on bad input.
+			try 
+			{
+				paramNum = Integer.parseInt(getTextFromInput("Number of Parameters: "));
+			}
+			catch(NumberFormatException e)
+			{
+				paramNum = 0;
+			}
+
+			return paramNum;
+		}
 	}
+
 	/**
 	 * Private class that handles all button clicks on the relationship menu option.
 	 */
