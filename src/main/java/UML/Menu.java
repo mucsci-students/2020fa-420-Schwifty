@@ -155,17 +155,19 @@ public class Menu
 		JMenuItem crtField = new JMenuItem("Create field");
 		JMenuItem deleteField = new JMenuItem("Delete field");
 		JMenuItem rnField = new JMenuItem("Rename field");
+		//Add option to change the field's type.
+		JMenuItem chgFieldType = new JMenuItem("Change field type");
 		
 		//Create method buttons
 		JMenuItem crtMethod = new JMenuItem("Create method");
 		JMenuItem deleteMethod = new JMenuItem("Delete method");
 		JMenuItem rnMethod = new JMenuItem("Rename method");
 
-		JMenuItem[] arr = {crtField, deleteField, rnField, crtMethod, deleteMethod, rnMethod};
-		String[] text = {"Create new field", "Delete a named field", "Rename a selected field", "Create new method","Delete a named method", "Rename a selected method"};
-		String[] command = {"CreateField", "DeleteField", "RenameField", "CreateMethod", "DeleteMethod", "RenameMethod"};
+		JMenuItem[] arr = {crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod};
+		String[] text = {"Create new field", "Delete a named field", "Rename a selected field","Changes the field's type", "Create new method","Delete a named method", "Rename a selected method"};
+		String[] command = {"CreateField", "DeleteField", "RenameField", "ChangeFieldType","CreateMethod", "DeleteMethod", "RenameMethod"};
 
-		for(int count = 0; count < 6; ++count)
+		for(int count = 0; count < 7; ++count)
 		{
 			fields.add(arr[count]);
 			arr[count].setToolTipText(text[count]);
@@ -469,14 +471,15 @@ public class Menu
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			//Create a drop down list of created classes.
+			Object[] classList = store.getClassList().toArray();
+
+			String className = getResultFromComboBox("Create Field for this class", "Create atrribute", classList);
+
 			String cmd = e.getActionCommand();
 			if(cmd.equals("CreateField"))
 			{
 				//TODO: Consider making a custom window for this? It would make it look cleaner in the future.
-				//Create a drop down list of created classes.
-				Object[] classList = store.getClassList().toArray();
-
-				String className = getResultFromComboBox("Create Field for this class", "Create atrribute", classList);
 				//Get Type from user.
 				String type = getTextFromInput("Type: ");
 				//Get name from user.
@@ -493,10 +496,6 @@ public class Menu
 			}
 			else if(cmd.equals("DeleteField"))
 			{
-				//Get a list of the classes from the store. 
-				Object[] classList = store.getClassList().toArray();
-				String className = getResultFromComboBox("Delete Field for this class", "Delete atrribute", classList);
-				
 				//Get class from storage.
 				Class classToDeleteFrom = store.findClass(className);
 				
@@ -518,11 +517,6 @@ public class Menu
 			}
 			else if(cmd.equals("RenameField"))
 			{
-				//Load combo box to get the class to be renamed.
-				Object[] classList = store.getClassList().toArray();
-
-				String className = getResultFromComboBox("Rename Field for this class", "Rename atrribute", classList);
-
 				//Get class from storage.
 				Class classToRenameFrom = store.findClass(className);
 
@@ -545,12 +539,30 @@ public class Menu
 
 				windowRefresh(className, panel);
 			}
+			else if(cmd.equals("ChangeFieldType"))
+			{
+				//Get class from storage.
+				Class classToChangeTypeFrom = store.findClass(className);
+
+				//Get a list of atrributes from the class.
+				Object[] fieldList = store.getFieldList(classToChangeTypeFrom.getFields()).toArray();
+				
+				//Get field to change it's type.
+				String field = getResultFromComboBox("Change this field's type", "Change Field Type", fieldList);
+
+				//get the new type from the user and let the store know it can change. 
+				String newType = getTextFromInput("New type: ");
+				String[] att = field.split(" ");
+				store.changeFieldType(className, newType, att[1]);
+
+				JPanel panel = classPanels.get(className); 
+				JTextArea textArea = (JTextArea)panel.getComponents()[0];
+				textArea.setText(store.findClass(className).toString());
+
+				windowRefresh(className, panel);
+			}
 			else if(cmd.equals("CreateMethod"))
 			{
-				//Create a drop down list of created classes.
-				Object[] classList = store.getClassList().toArray();
-
-				String className = getResultFromComboBox("Create Method for this class", "Create Method", classList);
 				//Get Type from user.
 				String returnType = getTextFromInput("Return Type: ");
 				//Get name from user.
@@ -577,11 +589,11 @@ public class Menu
 			}
 			else if(cmd.equals("DeleteMethod"))
 			{
-				Object[] classList = store.getClassList().toArray();
+
 			}
 			else if(cmd.equals("RenameMethod"))
 			{
-				Object[] classList = store.getClassList().toArray();
+
 			}
 		}
 		

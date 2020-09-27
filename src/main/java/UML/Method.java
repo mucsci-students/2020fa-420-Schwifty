@@ -96,12 +96,12 @@ public class Method extends Formal
     {
         String result = "";
         result += "Method: ";
-        result += this.getType() + " : " + this.getName();
-        result += " Parameters: (";
+        result += this.getType() + " " + this.getName();
+        result += " (";
 
         for(Parameter p : this.getParams())
         {
-            result += p.toString() + " , ";
+            result += p.toString() + ", ";
         }
         result += ")";
         return result;
