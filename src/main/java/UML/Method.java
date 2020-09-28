@@ -46,6 +46,11 @@ public class Method extends Formal
 
         if(param.getType().contains(" "))
             throw new IllegalArgumentException("The parameter type cannot contain a space.");
+        for(Parameter p : params)
+        {
+            if(p.getName().equals(param.getName()))
+                throw new IllegalArgumentException("A parameter of this name already exists in this method");
+        }
 
         if(!this.params.contains(param))
             this.params.add(param);
@@ -97,13 +102,13 @@ public class Method extends Formal
         String result = "";
         result += "Method: ";
         result += this.getType() + " " + this.getName();
-        result += " (";
+        result += "( ";
 
         for(Parameter p : this.getParams())
         {
             result += p.toString() + ", ";
         }
-        result += ")";
+        result += " )";
         return result;
     }
 

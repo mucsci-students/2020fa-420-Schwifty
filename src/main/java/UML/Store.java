@@ -1,12 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
-
 
 public class Store {
     
@@ -82,7 +80,6 @@ public class Store {
 
 		return methodsToReturn;
 	}
-	
 	/**
 	 * Adds a class to the store.
 	 */
@@ -304,4 +301,47 @@ public class Store {
 		return null;
 	}
 
+	/**
+	 * Remove a method from a class based on the method string. Takes in a class name 
+	 * from which the method is to be removed and the method toString result. 
+	 * Parse of string is based on toString from Method
+	 *  String result = "";
+        result += "Method: ";
+        result += this.getType() + " " + this.getName();
+        result += "( ";
+
+        for(Parameter p : this.getParams())
+        {
+            result += p.toString() + ", ";
+        }
+        result += " )";
+        return result;
+	 */
+	public void removeMethodByString(Set<Method> methods, String methodToBeDeleted, String className)
+	{
+		for(Method m : methods)
+		{
+			if(m.toString().equals(methodToBeDeleted))
+			{
+				deleteMethod(className, m.getType(), m.getName(), m.getParams());
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Rename a method from a class based on the method string. Takes in a class name 
+	 * from which the method is to be removed and the method toString result. 
+	 */
+	public void renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName)
+	{
+		for(Method m : methods)
+		{
+			if(m.toString().equals(methodToBeRenamed)) 
+			{
+				renameMethod(className, m.getType(), m.getName(), m.getParams(), newName);
+				break;
+			}
+		}
+	}
 }

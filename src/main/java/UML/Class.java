@@ -170,8 +170,17 @@ public class Class {
         // If method is found, return false...atrribute already created
         Method newMethod = new Method(type, name, params);
         for (Method m : methods) {
-            if (m.equals(newMethod)) {
-                return false;
+            if (m.getType().equals(newMethod.getType()) && m.getName().equals(newMethod.getName())) {
+                boolean typesMatch = true;
+                for(Parameter p : params)
+                {
+                    if(!m.getType().equals(p.getType()))
+                    {
+                        typesMatch = false;
+                    }
+                }
+                if(typesMatch)
+                    return false;
             }
         }
         methods.add(newMethod);
@@ -184,6 +193,20 @@ public class Class {
     public boolean deleteMethod(String type, String name, ArrayList<Parameter> params) 
     {
         Method method = new Method(type, name, params);
+        for (Method m : methods) {
+            if (m.getType().equals(type) && m.getName().equals(name)) {
+                boolean typesMatch = true;
+                for(Parameter p : params)
+                {
+                    if(!m.getType().equals(p.getType()))
+                    {
+                        typesMatch = false;
+                    }
+                }
+                if(typesMatch)
+                    return false;
+            }
+        }
         return methods.remove(method);
     }
 
@@ -193,17 +216,12 @@ public class Class {
      */
     public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException
     {
-        if(newName.contains(" "))
-            throw new IllegalArgumentException("A method name cannot contain a space.");
-        if(newName.trim().isEmpty())
-            throw new IllegalArgumentException("A method name cannot be empty.");
-
         Method method = new Method(type, oldName, params);
         boolean deleted = methods.remove(method);
         if(deleted) 
         {
             Method newMethod = new Method(type, newName, params);
-            methods.add(newMethod);
+            addMethod(newMethod);
         }
         return deleted;
     }
@@ -218,7 +236,7 @@ public class Class {
         if(deleted) 
         {
             Method newMethod = new Method(newType, methodName, params);
-            methods.add(newMethod);
+            addMethod(newMethod);
         }
         return deleted;
 	}

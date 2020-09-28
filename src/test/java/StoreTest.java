@@ -453,4 +453,16 @@ public class StoreTest {
         //Should return null when that class isn't found.
         assertEquals(null, store.findMethod("name", "int", "TestMethod", params));
     }
+
+    @Test
+    public void testRemoveMethodByString()
+    {
+
+    }
+
+    @Test
+    public void testRenameMethodByString()
+    {
+        
+    }
 }

@@ -589,14 +589,34 @@ public class Menu
 			}
 			else if(cmd.equals("DeleteMethod"))
 			{
-				//Get a list of methods to show user in a combo box
-				Object[] methods = store.getme
+				//Get a list of methods to show user in a combo box.
+				Object[] methods = store.getMethodList(store.findClass(className).getMethods()).toArray();
 				//Get their choice
+				String methodString = getResultFromComboBox("Delete method", "DeleteMethod", methods);
+
+
+				store.removeMethodByString(store.findClass(className).getMethods(), methodString, className);
+
+				JPanel panel = classPanels.get(className);
+				JTextArea textArea = (JTextArea)panel.getComponents()[0];
+				textArea.setText(store.findClass(className).toString());
+
+				windowRefresh(className, panel);
 
 			}
 			else if(cmd.equals("RenameMethod"))
 			{
+				Object[] methodList = store.getMethodList(store.findClass(className).getMethods()).toArray();
+				String method = getResultFromComboBox("Rename this method", "Rename method", methods);
+				
+				String newMethod = getTextFromInput("Enter new method name: ");
+				store.renameMethodByString(store.findClass(className).getMethods(), method, className, newMethod);
+				
+				JPanel panel = classPanels.get(className);
+				JTextArea textArea = (JTextArea)panel.getComponents()[0];
+				textArea.setText(store.findClass(className).toString());
 
+				windowRefresh(className, panel);
 			}
 		}
 		
