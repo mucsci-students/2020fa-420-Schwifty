@@ -147,7 +147,7 @@ public class Menu
 	/**
 	 * Creates the field menu options by taking in the menu bar and adding them to it. 
 	 */
-	private void createAtrributeMenu(JMenuBar mb)
+	private void createAtrributeMenu(JMenuBar mb)//change spelling later on
 	{
 		JMenu fields = new JMenu("Field");
 		
@@ -155,12 +155,19 @@ public class Menu
 		JMenuItem crtField = new JMenuItem("Create field");
 		JMenuItem deleteField = new JMenuItem("Delete field");
 		JMenuItem rnField = new JMenuItem("Rename field");
+		//Add option to change the field's type.
+		JMenuItem chgFieldType = new JMenuItem("Change field type");
+		
+		//Create method buttons
+		JMenuItem crtMethod = new JMenuItem("Create method");
+		JMenuItem deleteMethod = new JMenuItem("Delete method");
+		JMenuItem rnMethod = new JMenuItem("Rename method");
 
-		JMenuItem[] arr = {crtField, deleteField, rnField};
-		String[] text = {"Create new field", "Delete a named field", "Rename a selected field"};
-		String[] command = {"Create", "Delete", "Rename"};
+		JMenuItem[] arr = {crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod};
+		String[] text = {"Create new field", "Delete a named field", "Rename a selected field","Changes the field's type", "Create new method","Delete a named method", "Rename a selected method"};
+		String[] command = {"CreateField", "DeleteField", "RenameField", "ChangeFieldType","CreateMethod", "DeleteMethod", "RenameMethod"};
 
-		for(int count = 0; count < 3; ++count)
+		for(int count = 0; count < 7; ++count)
 		{
 			fields.add(arr[count]);
 			arr[count].setToolTipText(text[count]);
@@ -464,14 +471,15 @@ public class Menu
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			//Create a drop down list of created classes.
+			Object[] classList = store.getClassList().toArray();
+
+			String className = getResultFromComboBox("Create Field for this class", "Create atrribute", classList);
+
 			String cmd = e.getActionCommand();
-			if(cmd.equals("Create"))
+			if(cmd.equals("CreateField"))
 			{
 				//TODO: Consider making a custom window for this? It would make it look cleaner in the future.
-				//Create a drop down list of created classes.
-				Object[] classList = store.getClassList().toArray();
-
-				String className = getResultFromComboBox("Create Field for this class", "Create atrribute", classList);
 				//Get Type from user.
 				String type = getTextFromInput("Type: ");
 				//Get name from user.
@@ -482,18 +490,12 @@ public class Menu
 				JPanel panel = classPanels.get(className);
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
 				textArea.setText(store.findClass(className).toString());
-				classPanels.remove(className);
-				classPanels.put(className, panel);
-				parentWindow.revalidate();
-				parentWindow.repaint();
+
+				windowRefresh(className, panel);
 
 			}
-			else if(cmd.equals("Delete"))
+			else if(cmd.equals("DeleteField"))
 			{
-				//Get a list of the classes from the store. 
-				Object[] classList = store.getClassList().toArray();
-				String className = getResultFromComboBox("Delete Field for this class", "Delete atrribute", classList);
-				
 				//Get class from storage.
 				Class classToDeleteFrom = store.findClass(className);
 				
@@ -511,18 +513,10 @@ public class Menu
 				JPanel panel = classPanels.get(className); 
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
 				textArea.setText(classToDeleteFrom.toString());
-				classPanels.remove(className);
-				classPanels.put(className, panel);
-				parentWindow.revalidate();
-				parentWindow.repaint();
+				windowRefresh(className, panel);
 			}
-			else if(cmd.equals("Rename"))
+			else if(cmd.equals("RenameField"))
 			{
-				//Load combo box to get the class to be renamed.
-				Object[] classList = store.getClassList().toArray();
-
-				String className = getResultFromComboBox("Rename Field for this class", "Rename atrribute", classList);
-
 				//Get class from storage.
 				Class classToRenameFrom = store.findClass(className);
 
@@ -543,14 +537,115 @@ public class Menu
 				JTextArea textArea = (JTextArea)panel.getComponents()[0];
 				textArea.setText(store.findClass(className).toString());
 
-				//Leave remove before put
-				classPanels.remove(className);
-				classPanels.put(className, panel);
-				parentWindow.revalidate();
-				parentWindow.repaint();
+				windowRefresh(className, panel);
+			}
+			else if(cmd.equals("ChangeFieldType"))
+			{
+				//Get class from storage.
+				Class classToChangeTypeFrom = store.findClass(className);
+
+				//Get a list of atrributes from the class.
+				Object[] fieldList = store.getFieldList(classToChangeTypeFrom.getFields()).toArray();
+				
+				//Get field to change it's type.
+				String field = getResultFromComboBox("Change this field's type", "Change Field Type", fieldList);
+
+				//get the new type from the user and let the store know it can change. 
+				String newType = getTextFromInput("New type: ");
+				String[] att = field.split(" ");
+				store.changeFieldType(className, newType, att[1]);
+
+				JPanel panel = classPanels.get(className); 
+				JTextArea textArea = (JTextArea)panel.getComponents()[0];
+				textArea.setText(store.findClass(className).toString());
+
+				windowRefresh(className, panel);
+			}
+			else if(cmd.equals("CreateMethod"))
+			{
+				//Get Type from user.
+				String returnType = getTextFromInput("Return Type: ");
+				//Get name from user.
+				String name = getTextFromInput("Method Name: ");
+				//Get number of parameters from user.
+				int paramNum = getNumberFromInput();
+
+				ArrayList<String> params = new ArrayList<String>();
+				
+				for(int count = 0; count < paramNum; ++count)
+				{
+					String paramType = getTextFromInput("Parameter Type: ");
+					String paramName = getTextFromInput("Parameter Name: ");
+					params.add(paramType + " " + paramName);
+				}
+				//Add field to the class using received params.
+				store.addMethod(className, returnType, name, params);
+				JPanel panel = classPanels.get(className);
+				JTextArea textArea = (JTextArea)panel.getComponents()[0];
+				textArea.setText(store.findClass(className).toString());
+
+				windowRefresh(className, panel);
+
+			}
+			else if(cmd.equals("DeleteMethod"))
+			{
+				//Get a list of methods to show user in a combo box.
+				Object[] methods = store.getMethodList(store.findClass(className).getMethods()).toArray();
+				//Get their choice
+				String methodString = getResultFromComboBox("Delete method", "DeleteMethod", methods);
+
+
+				store.removeMethodByString(store.findClass(className).getMethods(), methodString, className);
+
+				JPanel panel = classPanels.get(className);
+				JTextArea textArea = (JTextArea)panel.getComponents()[0];
+				textArea.setText(store.findClass(className).toString());
+
+				windowRefresh(className, panel);
+
+			}
+			else if(cmd.equals("RenameMethod"))
+			{
+				Object[] methodList = store.getMethodList(store.findClass(className).getMethods()).toArray();
+				String method = getResultFromComboBox("Rename this method", "Rename method", methods);
+				
+				String newMethod = getTextFromInput("Enter new method name: ");
+				store.renameMethodByString(store.findClass(className).getMethods(), method, className, newMethod);
+				
+				JPanel panel = classPanels.get(className);
+				JTextArea textArea = (JTextArea)panel.getComponents()[0];
+				textArea.setText(store.findClass(className).toString());
+
+				windowRefresh(className, panel);
 			}
 		}
+		
+		private void windowRefresh(String className, JPanel panel)
+		{
+			//Leave remove before put
+			classPanels.remove(className);
+			classPanels.put(className, panel);
+			parentWindow.revalidate();
+			parentWindow.repaint();
+		}
+
+		private int getNumberFromInput()
+		{
+			int paramNum;
+			//Ensure we get a number, defaults to zero on bad input.
+			try 
+			{
+				paramNum = Integer.parseInt(getTextFromInput("Number of Parameters: "));
+			}
+			catch(NumberFormatException e)
+			{
+				paramNum = 0;
+			}
+
+			return paramNum;
+		}
 	}
+
 	/**
 	 * Private class that handles all button clicks on the relationship menu option.
 	 */

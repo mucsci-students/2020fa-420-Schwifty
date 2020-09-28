@@ -97,6 +97,7 @@ public class MethodTest {
         params.add(new Parameter("String", "param"));
         Method test = new Method("type", "name", params);
         test.addParam(new Parameter("int", "num"));
+        //The toString() output should be equal to the string below.
         assertEquals("Parameters: String : param | int : num | \nMethod: type : name", test.toString());
     }
 
@@ -109,6 +110,7 @@ public class MethodTest {
         list.add(new Parameter("String", "hello"));
         list.add(new Parameter("int", "num"));
         test.setParams(list);
+        //The parameter that is gotten should be equal to the created list.
         assertEquals(list, test.getParams());
     }
 
@@ -119,13 +121,20 @@ public class MethodTest {
         Method test = new Method("type", "name", params);
         assertEquals(0, test.getParams().size());
         test.addParam(new Parameter("int", "param"));
+        //The method should contain the added parameter and therefore not be empty.
         assertTrue(!test.getParams().isEmpty());
         assertTrue(test.getParams().contains(new Parameter("int", "param")));
         test.addParam(new Parameter("int", "param"));
+        //The size should be one after adding a parameter.
         assertEquals(1, test.getParams().size());
         test.addParam(new Parameter("String", "test"));
+        //The method should contaim the added parameters.
         assertTrue(test.getParams().contains(new Parameter("int", "param")));
         assertTrue(test.getParams().contains(new Parameter("String", "test")));
+        //Should throw exception for duplicate name parameter.
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.addParam("String", "param");
+        });
     }
 
     @Test
@@ -133,11 +142,14 @@ public class MethodTest {
     {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
         Method test = new Method("type", "name", params);
+        //Disallow deleting a parameter that doesn't exist.
         assertFalse(test.deleteParam(new Parameter("int", "param")));
         test.addParam(new Parameter("int", "param"));
         test.addParam(new Parameter("String", "name"));
         test.deleteParam(new Parameter("int", "param"));
+        //There should exist parameters in the method.
         assertTrue(!test.getParams().isEmpty());
+        //The method should not contain the deleted parameters.
         assertTrue(!test.getParams().contains(new Parameter("int", "param")));
         test.deleteParam(new Parameter("String", "name"));
         assertTrue(test.getParams().isEmpty());

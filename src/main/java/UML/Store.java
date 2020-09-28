@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 
-
 public class Store {
     
     private ArrayList<Class> classStore;
@@ -31,7 +30,7 @@ public class Store {
 	 */
 	public void setCurrentLoadedFile(File fileToSet)
 	{
-
+		this.currentLoadedFile = fileToSet;
 	}
     /** 
 	 * Makes and returns a combo box fill with the created classes.
@@ -65,6 +64,22 @@ public class Store {
 		return fields;
     }
 	
+	/**
+	 * Takes in a Set of methods from a class and returns a string of each
+	 * of the classes methods. Returned as a ArrayList<String> to be worked with
+	 * in the view. 
+	 */
+	public ArrayList<String> getMethodList(Set<Method> methods)
+	{
+		ArrayList<String> methodsToReturn = new ArrayList<String>();
+
+		for(Method m : methods)
+		{
+			methodsToReturn.add(m.toString());
+		}
+
+		return methodsToReturn;
+	}
 	/**
 	 * Adds a class to the store.
 	 */
@@ -150,10 +165,20 @@ public class Store {
 	/**
 	 * Adds method to a class in the store.
 	 */
-	public void addMethod(String className, String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException
+	public void addMethod(String className, String type, String name, ArrayList<String> params) throws IllegalArgumentException
 	{
 		Class toAdd = findClass(className);
-		toAdd.addMethod(type, name, params);
+		
+		ArrayList<Parameter> newParams = new ArrayList<Parameter>();
+
+		for(String param : params)
+		{
+			String[] splitStr = param.split(" ");
+			Parameter newParam = new Parameter(splitStr[0], splitStr[1]);
+			newParams.add(newParam);
+		}
+
+		toAdd.addMethod(type, name, newParams);
 	}
 
 	/**
@@ -276,4 +301,47 @@ public class Store {
 		return null;
 	}
 
+	/**
+	 * Remove a method from a class based on the method string. Takes in a class name 
+	 * from which the method is to be removed and the method toString result. 
+	 * Parse of string is based on toString from Method
+	 *  String result = "";
+        result += "Method: ";
+        result += this.getType() + " " + this.getName();
+        result += "( ";
+
+        for(Parameter p : this.getParams())
+        {
+            result += p.toString() + ", ";
+        }
+        result += " )";
+        return result;
+	 */
+	public void removeMethodByString(Set<Method> methods, String methodToBeDeleted, String className)
+	{
+		for(Method m : methods)
+		{
+			if(m.toString().equals(methodToBeDeleted))
+			{
+				deleteMethod(className, m.getType(), m.getName(), m.getParams());
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Rename a method from a class based on the method string. Takes in a class name 
+	 * from which the method is to be removed and the method toString result. 
+	 */
+	public void renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName)
+	{
+		for(Method m : methods)
+		{
+			if(m.toString().equals(methodToBeRenamed)) 
+			{
+				renameMethod(className, m.getType(), m.getName(), m.getParams(), newName);
+				break;
+			}
+		}
+	}
 }
