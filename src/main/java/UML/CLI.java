@@ -21,7 +21,7 @@ public class CLI {
         cliLoop(args);
         //System.out.print("Schwifty-UML> ");
     }
-    private cliLoop(String[] args) throws ParseException
+    private void cliLoop(String[] args) throws ParseException
     {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);

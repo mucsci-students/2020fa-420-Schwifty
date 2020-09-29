@@ -27,7 +27,7 @@ dependencies {
     testCompileOnly 'junit:junit:4.13'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
-    compile 'commons-cli:commons-cli:1.5-SNAPSHOT'
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
 }
 
 application {
