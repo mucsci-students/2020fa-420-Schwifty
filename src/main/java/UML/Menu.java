@@ -466,6 +466,8 @@ public class Menu
 	}
 	/**
 	 * Private class that handles all button clicks on the Field menu option.
+	 * 
+	 * !!!! Change name to AttributeButtonClickListener? !!!!
 	 */
 	private class FieldButtonClickListener implements ActionListener
 	{
@@ -607,7 +609,7 @@ public class Menu
 			else if(cmd.equals("RenameMethod"))
 			{
 				Object[] methodList = store.getMethodList(store.findClass(className).getMethods()).toArray();
-				String method = getResultFromComboBox("Rename this method", "Rename method", methods);
+				String method = getResultFromComboBox("Rename this method", "Rename method", methodList);
 				
 				String newMethod = getTextFromInput("Enter new method name: ");
 				store.renameMethodByString(store.findClass(className).getMethods(), method, className, newMethod);
