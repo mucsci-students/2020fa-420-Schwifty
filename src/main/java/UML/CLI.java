@@ -149,12 +149,13 @@ public class CLI {
     {
         try
         { 
-            store.addClass(args[0]);
-            
+            boolean temp = store.addClass(args[0]);
+            if(!temp)
+                System.out.println("This class already exists.");
         } 
         catch(Exception e) 
         { 
-            System.out.println(e.getMessage); 
+            System.out.println(e.getMessage()); 
         }
     }
 
@@ -163,47 +164,54 @@ public class CLI {
      */
     private void renameClass(String [] args)
     {
-        if(store.findClass(args[1]) == null)
-        {
-            System.out.println("That class does not exist.");
-        }
         try 
         {
+            store.classExists(args[0]);
             store.renameClass(args[0], args[1]); 
         } 
         catch(Exception e) 
         { 
-            System.out.println(e.getMessage); 
+            System.out.println(e.getMessage()); 
         }
     }
 
     private void deleteClass(String [] args)
     {
-        if(store.deleteCLass(args[0]) == null) {
-            System.out.println("That class does not exist.");
+        try
+        {
+            store.classExists(args[0]);
+            store.deleteClass(args[0]);
         }
-        store.deleteClass(String[0]);
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void addField(String [] args)
     {
         try 
         {
-            store.addField(args[0], args[1], args[2]);
+            boolean temp = store.addField(args[0], args[1], args[2]);
+            if(!temp)
+                System.out.println("This field already exists.");
         } 
         catch (Exception e) {
-            System.out.println(e.getMessage); 
+            System.out.println(e.getMessage()); 
         }
     }
 
     private void renameField(String [] args) 
     {
         try {
-            store.renameField(args[0], args[1], args[2]);
+            store.fieldExists(args[0], args[1]);
+            boolean temp = store.renameField(args[0], args[1], args[2]);
+            if(!temp)
+                System.out.println("The new field name already exists.");
         } 
         catch (Exception e) 
         {
-            System.out.println(e.getMessage); 
+            System.out.println(e.getMessage()); 
         }
 
     }
@@ -212,12 +220,14 @@ public class CLI {
     {
         try
         {
+            store.fieldExists(args[0], args[1]);
             store.deleteField(args[0], args[1]);
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
-            
+            System.out.println(e.getMessage());
         }
+        
     }
 
     private void addMethod(String [] args)
@@ -234,31 +244,38 @@ public class CLI {
                 {
                     params.add(args[counter] + " " + args[counter + 1]);
                 }
-                store.addMethod(args[0], args[1], args[2], params);
+                boolean temp = store.addMethod(args[0], args[1], args[2], params);
+                if(!temp)
+                    System.out.println("This method already exists.");
             }
         } 
         catch(Exception e) {
-            
+            System.out.println(e.getMessage());
         }
     }
 
     private void renameMethod(String [] args)
     {
         try {
+           
             ArrayList<String> params = new ArrayList<String>();
             if((args.length - 4) % 2 != 0)
             {
                 System.out.println("Invalid arguments");
             }
             for(int counter = 3; counter < args.length - 1; counter += 2) 
-                {
-                    params.add(args[counter] + " " + args[counter + 1]);
-                }
-                store.renameMethod(args[0], args[1], args[2], params, args[args.length - 1]);
-        } 
+            {
+                params.add(args[counter] + " " + args[counter + 1]);
+            }
+
+            store.methodExits(args[0], args[1], args[2], params);
+            boolean temp = store.renameMethod(args[0], args[1], args[2], params, args[args.length - 1]);
+            if(!temp)
+                System.out.println("The new method name already exists.");
+        }       
         catch (Exception e) 
         {
-            //TODO: handle exception
+            System.out.println(e.getMessage());
         }
     }
 
@@ -271,28 +288,39 @@ public class CLI {
                 System.out.println("Invalid arguments");
             }
             for(int counter = 3; counter < args.length; counter += 2) 
-                {
-                    params.add(args[counter] + " " + args[counter + 1]);
-                }
-                store.deleteMethod(args[0], args[1], args[2], params);
+            {
+                params.add(args[counter] + " " + args[counter + 1]);
+            }
+            store.methodExits(args[0], args[1], args[2], params);
+            store.deleteMethod(args[0], args[1], args[2], params);
         } 
         catch (Exception e) 
         {
-            //TODO: handle exception
+            System.out.println(e.getMessage());
         }
         
     }
-
+            
     private void addParameter(String [] args)
     {
         try 
         {
-            
-            
+            ArrayList<String> params = new ArrayList<String>();
+            if((args.length - 5) % 2 != 0)
+            {
+                System.out.println("Invalid arguments");
+            }
+            for(int counter = 3; counter < args.length - 2; counter += 2) 
+            {
+                params.add(args[counter] + " " + args[counter + 1]);
+            }
+            boolean temp = store.addParameter(args[0], args[1], args[2], params, args[args.length - 2], args[args.length - 1]);
+            if(!temp)
+                System.out.println("This parameter already exists.");
         } 
         catch (Exception e) 
         {
-            //TODO: handle exception
+            System.out.println(e.getMessage());
         }
     }
 

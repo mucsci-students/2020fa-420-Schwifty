@@ -133,10 +133,15 @@ public class Class {
     public boolean renameField(String oldName, String newName) throws IllegalArgumentException 
     {
         for (Field a : fields) {
-            if (a.getName().equals(oldName)) {
+            if (a.getName().equals(newName)) {
+                return false;
+            }
+        }
+        for (Field f : fields) {
+            if (f.getName().equals(oldName)) {
                 // Must remove and add so that the Field has correct hashcode
-                String type = a.getType();
-                this.fields.remove(a);
+                String type = f.getType();
+                this.fields.remove(f);
                 Field toAdd = new Field(type, newName);
                 this.fields.add(toAdd);
                 return true;
@@ -216,12 +221,18 @@ public class Class {
      */
     public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException
     {
+        Method methodNew = new Method(type, newName, params);
+        for(Method m : methods) 
+        {
+            if(m.equals(methodNew)) {
+                return false;
+            }
+        }
         Method method = new Method(type, oldName, params);
         boolean deleted = methods.remove(method);
         if(deleted) 
         {
-            Method newMethod = new Method(type, newName, params);
-            addMethod(newMethod);
+            addMethod(type, newName, params);
         }
         return deleted;
     }
@@ -231,12 +242,18 @@ public class Class {
      */
 	public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String newType) throws IllegalArgumentException
 	{
+        Method methodNew = new Method(newType, methodName, params);
+        for(Method m : methods) 
+        {
+            if(m.equals(methodNew)) {
+                return false;
+            }
+        }
         Method method = new Method(oldType, methodName, params);
         boolean deleted = methods.remove(method);
         if(deleted) 
         {
-            Method newMethod = new Method(newType, methodName, params);
-            addMethod(newMethod);
+            addMethod(newType, methodName, params);
         }
         return deleted;
 	}

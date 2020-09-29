@@ -33,7 +33,7 @@ public class Method extends Formal
     /**
      * Adds a parameter to the method's ArrayList of parameters.
      */
-    public void addParam(Parameter param) throws IllegalArgumentException
+    public boolean addParam(Parameter param) throws IllegalArgumentException
     {
         if(param.getName().trim().isEmpty())
             throw new IllegalArgumentException("The parameter name cannot be blank.");
@@ -49,11 +49,14 @@ public class Method extends Formal
         for(Parameter p : params)
         {
             if(p.getName().equals(param.getName()))
-                throw new IllegalArgumentException("A parameter of this name already exists in this method");
+                return false;
         }
 
         if(!this.params.contains(param))
+        {
             this.params.add(param);
+            return true;
+        }
     }
     
     /**

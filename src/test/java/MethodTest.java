@@ -131,10 +131,8 @@ public class MethodTest {
         //The method should contaim the added parameters.
         assertTrue(test.getParams().contains(new Parameter("int", "param")));
         assertTrue(test.getParams().contains(new Parameter("String", "test")));
-        //Should throw exception for duplicate name parameter.
-        assertThrows(IllegalArgumentException.class, () -> {
-            test.addParam("String", "param");
-        });
+        //Should return false for duplicate name parameter.
+        assertFalse(test.addParam("String", "param"));
     }
 
     @Test
