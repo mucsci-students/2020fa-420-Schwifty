@@ -57,6 +57,7 @@ public class Method extends Formal
             this.params.add(param);
             return true;
         }
+        return false;
     }
     
     /**

@@ -13,6 +13,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import java.util.ArrayList;
 public class CLI {
     
@@ -27,15 +28,19 @@ public class CLI {
         cliLoop(args);
         //System.out.print("Schwifty-UML> ");
     }
+     /**
+     * As long as the user hasn't typed in exit, continue the app.
+     */
     private void cliLoop(String[] args) throws ParseException
     {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
         
-        while(!cmd.getOptionValue("exit").equals("exit"))
+        while(!cmd.hasOption("exit"))
         {
             parse(cmd);
         }
+        exit();
     }
     /**
      * Add options for all possible commands.
@@ -118,11 +123,8 @@ public class CLI {
             break;
         }
         */
-        if(cmd.hasOption("exit"))
-        {
-            exit();
-        }
-        else if(cmd.hasOption("help"))
+
+        if(cmd.hasOption("help"))
         {
             help();
         }
@@ -211,6 +213,7 @@ public class CLI {
      */
     private void exit()
     {
+        System.out.println("Closing application.");
         System.exit(0);
     }
     
@@ -228,7 +231,7 @@ public class CLI {
      */
     private void display()
     {
-        
+        store.stringOfClasses();
     }
 
     //Displays the GUI for the user. 
@@ -409,7 +412,7 @@ public class CLI {
             {
                 params.add(args[counter] + " " + args[counter + 1]);
             }
-            boolean temp = store.addParameter(args[0], args[1], args[2], params, args[args.length - 2], args[args.length - 1]);
+            boolean temp = store.addParam(args[0], args[1], args[2], params, args[args.length - 2], args[args.length - 1]);
             if(!temp)
                 System.out.println("This parameter already exists.");
         } 
@@ -426,7 +429,12 @@ public class CLI {
 
     private void addRelationship(String [] args)
     {
-        
+        try {
+            store.addRelationship(args[0], args[1], Enum);
+        } catch (Exception e) 
+        {   
+            System.out.println(e.getMessage());
+        }
     }
 
     private void deleteRelationship(String [] args)

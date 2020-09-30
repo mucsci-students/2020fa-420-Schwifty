@@ -192,7 +192,7 @@ public class Store {
 	/**
 	 * Deletes a method from a class in the store.
 	 */
-	public void deleteMethod(String className, String type, String name, ArrayList<String> params)
+	public boolean deleteMethod(String className, String type, String name, ArrayList<String> params)
 	{
 		Class toDelete = findClass(className);
 
@@ -205,13 +205,13 @@ public class Store {
 			newParams.add(newParam);
 		}
 		
-		toDelete.deleteMethod(type, name, newParams);
+		return toDelete.deleteMethod(type, name, newParams);
 	}
 
 	/**
      * Renames method of a class in the store.
      */
-	public void renameMethod(String className, String type, String oldName, ArrayList<String> params, String newName) throws IllegalArgumentException
+	public boolean renameMethod(String className, String type, String oldName, ArrayList<String> params, String newName) throws IllegalArgumentException
 	{
 		Class toRename = findClass(className);
 
@@ -223,7 +223,7 @@ public class Store {
 			Parameter newParam = new Parameter(splitParam[0], splitParam[1]);
 			newParams.add(newParam);
 		}
-		toRename.renameMethod(type, oldName, params, newName);
+		return toRename.renameMethod(type, oldName, newParams, newName);
 	}
 
 	/**
@@ -256,10 +256,10 @@ public class Store {
 	/**
 	 * Deletes parameter of a method of a class in the store.
 	 */
-	public void deleteParam(String className, String methodType, String methodName, ArrayList<Parameter> params, String paramType, String paramName)
+	public boolean deleteParam(String className, String methodType, String methodName, ArrayList<Parameter> params, String paramType, String paramName)
 	{
 		Method theMethod = findMethod(className, methodType, methodName, params);
-		theMethod.deleteParam(new Parameter(paramType, paramName));
+		return theMethod.deleteParam(new Parameter(paramType, paramName));
 	}
 	
 	/**
@@ -423,7 +423,7 @@ public class Store {
         result += " )";
         return result;
 	 */
-	public void removeMethodByString(Set<Method> methods, String methodToBeDeleted, String className)
+	public boolean removeMethodByString(Set<Method> methods, String methodToBeDeleted, String className)
 	{
 		for(Method m : methods)
 		{
@@ -444,7 +444,7 @@ public class Store {
 	 * Rename a method from a class based on the method string. Takes in a class name 
 	 * from which the method is to be removed and the method toString result. 
 	 */
-	public void renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName)
+	public boolean renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName)
 	{
 		//Loop through the returned methods to find the method to be renamed.
 		for(Method m : methods)
@@ -462,6 +462,17 @@ public class Store {
 				renameMethod(className, m.getType(), m.getName(), paramStrings, newName);
 				break;
 			}
+		}
+	}
+
+	public String stringOfClasses()
+	{
+		result = "";
+		for(Class c : classStore)
+		{
+			result += "-------------------------------\n";
+			result += c.toString();
+			result += "\n-------------------------------";
 		}
 	}
 }

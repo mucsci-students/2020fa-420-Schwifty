@@ -18,7 +18,6 @@ enum RelationshipType {
     ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
 }
 
-
 public class Class {
 
     // The name of the class object.
@@ -41,7 +40,7 @@ public class Class {
         if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("The class name cannot be blank.");
         }
-        if (name.contains(" ")){
+        if (name.contains(" ")) {
             throw new IllegalArgumentException("The class name cannot cantain a space.");
         }
         this.name = name;
@@ -130,8 +129,7 @@ public class Class {
     /**
      * Renames a field of the class object.
      */
-    public boolean renameField(String oldName, String newName) throws IllegalArgumentException 
-    {
+    public boolean renameField(String oldName, String newName) throws IllegalArgumentException {
         for (Field a : fields) {
             if (a.getName().equals(newName)) {
                 return false;
@@ -149,12 +147,11 @@ public class Class {
         }
         return false;
     }
- 
+
     /**
      * Changes the type of a field of the class object.
      */
-    public boolean changeFieldType(String newType, String name) throws IllegalArgumentException 
-    {
+    public boolean changeFieldType(String newType, String name) throws IllegalArgumentException {
         for (Field a : fields) {
             if (a.getName().equals(name)) {
                 // Must remove and add so that the Field has correct hashcode
@@ -170,22 +167,22 @@ public class Class {
     /**
      * Adds method with parameters.
      */
-    public boolean addMethod(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException 
-    {
-        // If method is found, return false...atrribute already created
+    public boolean addMethod(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException {
+        // If method is found, return false...atrribute already
+        // If the number of parameters doesn't match, just add.
         Method newMethod = new Method(type, name, params);
         for (Method m : methods) {
-            if (m.getType().equals(newMethod.getType()) && m.getName().equals(newMethod.getName())) {
-                boolean typesMatch = true;
-                for(Parameter p : params)
-                {
-                    if(!m.getType().equals(p.getType()))
-                    {
-                        typesMatch = false;
+            if ((params.size() == m.getParams().size())) {
+                if (m.getType().equals(newMethod.getType()) && m.getName().equals(newMethod.getName())) {
+                    boolean typesMatch = true;
+                    for (int count = 0; count < params.size(); count++) {
+                        if (!params.get(count).getType().equals(m.getParams().get(count).getType())) {
+                            typesMatch = false;
+                        }
                     }
+                    if (typesMatch)
+                        return false;
                 }
-                if(typesMatch)
-                    return false;
             }
         }
         methods.add(newMethod);
@@ -195,43 +192,30 @@ public class Class {
     /**
      * Add params and type to determine which to delete?
      */
-    public boolean deleteMethod(String type, String name, ArrayList<Parameter> params) 
-    {
+    public boolean deleteMethod(String type, String name, ArrayList<Parameter> params) {
         Method method = new Method(type, name, params);
         for (Method m : methods) {
-            if (m.getType().equals(type) && m.getName().equals(name)) {
-                boolean typesMatch = true;
-                for(Parameter p : params)
-                {
-                    if(!m.getType().equals(p.getType()))
-                    {
-                        typesMatch = false;
-                    }
-                }
-                if(typesMatch)
-                    return false;
+            if (m.getType().equals(type) && m.getName().equals(name) && m.getParams().equals(params)) {
+                return methods.remove(method);
             }
         }
-        return methods.remove(method);
+        return false;
     }
-
 
     /**
      * Renames method with parameters.
      */
-    public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException
-    {
+    public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName)
+            throws IllegalArgumentException {
         Method methodNew = new Method(type, newName, params);
-        for(Method m : methods) 
-        {
-            if(m.equals(methodNew)) {
+        for (Method m : methods) {
+            if (m.equals(methodNew)) {
                 return false;
             }
         }
         Method method = new Method(type, oldName, params);
         boolean deleted = methods.remove(method);
-        if(deleted) 
-        {
+        if (deleted) {
             addMethod(type, newName, params);
         }
         return deleted;
@@ -240,23 +224,21 @@ public class Class {
     /**
      * Chnages the return type of a method.
      */
-	public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String newType) throws IllegalArgumentException
-	{
+    public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String newType)
+            throws IllegalArgumentException {
         Method methodNew = new Method(newType, methodName, params);
-        for(Method m : methods) 
-        {
-            if(m.equals(methodNew)) {
+        for (Method m : methods) {
+            if (m.equals(methodNew)) {
                 return false;
             }
         }
         Method method = new Method(oldType, methodName, params);
         boolean deleted = methods.remove(method);
-        if(deleted) 
-        {
+        if (deleted) {
             addMethod(newType, methodName, params);
         }
         return deleted;
-	}
+    }
 
     /**
      * Adds a relationship from this class object to another.
@@ -352,7 +334,7 @@ public class Class {
         String result = "";
         result += "Class name: " + this.name + "\n";
         result += "------------------------------\n";
-        result += "Field Names: \n"; 
+        result += "Field Names: \n";
         if (!fields.isEmpty()) {
             for (Field field : fields) {
                 result += field.toString();
@@ -360,12 +342,10 @@ public class Class {
             }
         }
         result += "------------------------------\n";
-        
+
         result += "Methods:  \n";
-        if(!methods.isEmpty())
-        {
-            for(Method m : methods)
-            {
+        if (!methods.isEmpty()) {
+            for (Method m : methods) {
                 result += m.toString();
                 result += "\n";
             }
