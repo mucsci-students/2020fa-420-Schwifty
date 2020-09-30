@@ -211,10 +211,19 @@ public class Store {
 	/**
      * Renames method of a class in the store.
      */
-	public boolean renameMethod(String className, String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException
+	public void renameMethod(String className, String type, String oldName, ArrayList<String> params, String newName) throws IllegalArgumentException
 	{
 		Class toRename = findClass(className);
-		return toRename.renameMethod(type, oldName, params, newName);
+
+		ArrayList<Parameter> newParams = new ArrayList<Parameter>();
+
+		for(String param : params)
+		{
+			String[] splitParam = param.split(" ");
+			Parameter newParam = new Parameter(splitParam[0], splitParam[1]);
+			newParams.add(newParam);
+		}
+		toRename.renameMethod(type, oldName, params, newName);
 	}
 
 	/**
@@ -437,11 +446,20 @@ public class Store {
 	 */
 	public void renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName)
 	{
+		//Loop through the returned methods to find the method to be renamed.
 		for(Method m : methods)
 		{
 			if(m.toString().equals(methodToBeRenamed)) 
 			{
-				renameMethod(className, m.getType(), m.getName(), m.getParams(), newName);
+				//ArrayList of param strings
+				ArrayList<String> paramStrings = new ArrayList<String>();
+				//Generate an ArrayList of strings to be passed into the rename method. 
+				for(Parameter p : m.getParams())
+				{
+					paramStrings.add(p.getType() + " " + p.getName());
+				}
+				//rename the method and break out. 
+				renameMethod(className, m.getType(), m.getName(), paramStrings, newName);
 				break;
 			}
 		}
