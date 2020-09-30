@@ -6,9 +6,14 @@
 import java.io.Console;
 import java.util.Scanner;
 
+import javax.lang.model.util.ElementScanner6;
+
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.DefaultParser;
+import java.util.ArrayList;
 public class CLI {
     
     private Options options;
@@ -27,14 +32,9 @@ public class CLI {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
         
-        while(!cmd.getOptionValue("exit"))
+        while(!cmd.getOptionValue("exit").equals("exit"))
         {
-            if(!(cmd.getOptionValue() == null)) {
-                parse(cmd);
-            }
-            else {
-                System.out.println("That command does not exist");
-            }
+            parse(cmd);
         }
     }
     /**
@@ -46,6 +46,7 @@ public class CLI {
         options.addOption("exit", false, "Close CLI")
         .addOption("help", false, "Show all options")
         .addOption("display", false, "Display all classes")
+        .addOption("showgui", false, "Displays the GUI")
         .addOption("addc", true, "Create a class: addc [class]")
         .addOption("renamec", true, "Rename a class: renamec [oldName] [newName]")
         .addOption("deletec", true, "Delete a class: delete [class]")        
@@ -70,7 +71,9 @@ public class CLI {
     /**
      * Parses a command line argument in order to call the correct method.
      */
+
     private void parse(CommandLine cmd) {
+        /*
         switch(cmd.nextToken())
         {
             case "exit": exit(cmd.getOptionValues("exit"));
@@ -114,6 +117,91 @@ public class CLI {
             case "load": load(cmd.getOptionValues("load"));
             break;
         }
+        */
+        if(cmd.hasOption("exit"))
+        {
+            exit();
+        }
+        else if(cmd.hasOption("help"))
+        {
+            help();
+        }
+        else if(cmd.hasOption("display"))
+        {
+            display(cmd.getOptionValue("display"));
+        }
+        else if(cmd.hasOption("showgui"))
+        {
+            showGUI();
+        }
+        else if(cmd.hasOption("addc"))
+        {
+            addClass(cmd.getOptionValues("addc"));
+        }
+        else if(cmd.hasOption("renamec"))
+        {
+            renameClass(cmd.getOptionValues("renamec"));
+        }
+        else if(cmd.hasOption("deletec"))
+        {
+            deleteClass(cmd.getOptionValues("deletec"));
+        }
+        else if(cmd.hasOption("addf"))
+        {
+            addField(cmd.getOptionValues("addf"));
+        }
+        else if(cmd.hasOption("renamef"))
+        {
+            renameField(cmd.getOptionValues("renamef"));
+        }
+        else if(cmd.hasOption("deletef"))
+        {
+            deleteField(cmd.getOptionValues("deletef"));
+        }
+        else if(cmd.hasOption("addm"))
+        {
+            addMethod(cmd.getOptionValues("addm"));
+        }
+        else if(cmd.hasOption("renamem"))
+        {
+            renameMethod(cmd.getOptionValues("renamem"));
+        }
+        else if(cmd.hasOption("deletem"))
+        {
+            deleteMethod(cmd.getOptionValues("deletem"));
+        }
+        else if(cmd.hasOption("addp"))
+        {
+            addParameter(cmd.getOptionValues("addp"));
+        }
+        else if(cmd.hasOption("renamep"))
+        {
+            renameParameter(cmd.getOptionValues("renamep"));
+        }
+        else if(cmd.hasOption("deletep"))
+        {
+            deleteParameter(cmd.getOptionValues("deletep"));
+        }
+        else if(cmd.hasOption("deleter"))
+        {
+            deleteRelationship(cmd.getOptionValues("deleter"));
+        }
+        else if(cmd.hasOption("save"))
+        {
+            save(cmd.getOptionValues("save"));
+        }
+        else if(cmd.hasOption("chungus"))
+        {
+            chungus(cmd.getOptionValues("chungus"));
+        }
+        else if(cmd.hasOption("load"))
+        {
+            load(cmd.getOptionValues("load"));
+        }
+        else
+        {
+            System.out.println("That is not a valid command.");
+        }
     }
 //
 //Abstract checking if class exists.******************************************************************************
@@ -141,6 +229,12 @@ public class CLI {
     private void display()
     {
         
+    }
+
+    //Displays the GUI for the user. 
+    private void showGUI()
+    {
+        UMLWindow window = new UMLWindow();
     }
 
     /**

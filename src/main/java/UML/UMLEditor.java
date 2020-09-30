@@ -7,7 +7,6 @@ public class UMLEditor
 {
     public static void main(String[] args)
     {
-        InterfaceChoice interfaceChoice = new InterfaceChoice();
-        
+        CLI cli = new CLI(args);
     }
 }
