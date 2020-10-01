@@ -99,7 +99,7 @@ public class FieldButtonClickController implements ActionListener {
             // Get name from user.
             String name = view.getInputFromUser("Method Name: ");
             // Get number of parameters from user.
-            int paramNum = getNumberFromInput();
+            int paramNum = getNumberFromInput(view.getInputFromUser("Number of Parameters: "));
 
             ArrayList<String> params = new ArrayList<String>();
 
@@ -109,24 +109,47 @@ public class FieldButtonClickController implements ActionListener {
                 params.add(paramType + " " + paramName);
             }
             // Add field to the class using received params.
-            store.addMethod(className, returnType, name, params);
-
-
-        } else if (cmd.equals("DeleteMethod")) {
+            controller.createMethod(className, returnType, name, params);
+        } 
+        else if (cmd.equals("DeleteMethod")) {
             // Get a list of methods to show user in a combo box.
             ArrayList<String> methods = store.getMethodList(store.findClass(className).getMethods());
             // Get their choice
             String methodString = view.getChoiceFromUser("Delete method", "DeleteMethod", methods);
-
-            store.removeMethodByString(store.findClass(className).getMethods(), methodString, className);
-
-        } else if (cmd.equals("RenameMethod")) {
+            //Get the needed componets from the method string
+            String[] splitStr = methodString.split(" ");
+            String returnType = splitStr[1];
+            String methodName = splitStr[2];
+            
+            controller.deleteMethod(className, returnType, methodName, store.getMethodParamString(className, methodString));
+        } 
+        else if (cmd.equals("RenameMethod")) {
             ArrayList<String> methodList = store.getMethodList(store.findClass(className).getMethods());
-            String method = view.getChoiceFromUser("Rename this method", "Rename method", methodList);
+            String methodString = view.getChoiceFromUser("Rename this method", "Rename method", methodList);
 
             String newMethod = view.getInputFromUser("Enter new method name: ");
-            store.renameMethodByString(store.findClass(className).getMethods(), method, className, newMethod);
+            
+            String[] splitStr = methodString.split(" ");
+            String returnType = splitStr[1];
+            String methodName = splitStr[2];
 
+            controller.renameMethod(className, returnType, methodName, store.getMethodParamString(className, methodString), newMethod);
         }
+    }
+
+    private int getNumberFromInput(String input) 
+    {
+        int paramNum;
+        // Ensure we get a number, defaults to zero on bad input.
+        try 
+        {
+            paramNum = Integer.parseInt(getTextFromInput("Number of Parameters: "));
+        }
+        catch (NumberFormatException e) 
+        {
+            paramNum = 0;
+        }
+
+        return paramNum;
     }
 }

@@ -75,22 +75,28 @@ public class Controller
         sendToView(temp, "Field", "re-typed", className, oldClassStr);  
     }
     
-
-    
-    private int getNumberFromInput(String input) 
+    public void createMethod(String className, String returnType, String methodName, ArrayList<String> params)
     {
-        int paramNum;
-        // Ensure we get a number, defaults to zero on bad input.
-        try 
-        {
-            paramNum = Integer.parseInt(getTextFromInput("Number of Parameters: "));
-        }
-        catch (NumberFormatException e) 
-        {
-            paramNum = 0;
-        }
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.addMethod(className, returnType, methodName, params);
+        sendToView(temp, "Method", "added", className, oldClassStr);
+    }
 
-        return paramNum;
+    public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params)
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.deleteMethod(className, returnType, methodName, params);
+        sendToView(temp, "Method", "deleted", className, oldClassStr);
+    }
+
+    public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String newName)
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.renameMethod(className, returnType, methodName, params, newName);
+        sendToView(temp, "Method", "renamed", className, oldClassStr);
     }
 
     /**

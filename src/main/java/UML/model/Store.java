@@ -477,4 +477,21 @@ public class Store {
 			result += "\n-------------------------------";
 		}
 	}
+
+	public ArrayList<String> getMethodParamStrings(String className, String methodString)
+	{
+		Class aClass = findClass(className);
+		Set<Method> methods = aClass.getMethods();
+		ArrayList<String> params;
+		for(Method m : methods)
+		{
+			if(m.toString().equals(methodString))
+				
+				for(Parameter p : m.getParams()) 
+				{
+					params.add(p.getType() + " " + p.getName());
+				}			
+		}
+		return params;
+	}
 }
