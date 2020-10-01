@@ -46,6 +46,11 @@ public class GraphicalView implements View {
     // The window for the GUI.
     private JFrame window;
 
+    private JMenu fileMenu;
+    private JMenu classMenu;
+    private JMenu fieldMenu;
+    private JMenu relationshipMenu;
+
     public GraphicalView() {
         makeWindow();
         createMenu();
@@ -167,7 +172,7 @@ public class GraphicalView implements View {
 
     /* Creates a file menu. */
     private void createFileMenu(JMenuBar mb) {
-        JMenu file = new JMenu("File");
+        fileMenu = new JMenu("File");
         // Sub-Menus.
         JMenuItem save = new JMenuItem("Save");
         JMenuItem saveAs = new JMenuItem("Save as...");
@@ -180,16 +185,15 @@ public class GraphicalView implements View {
         String[] command = { "Save", "SaveAs", "Load" };
 
         for (int count = 0; count < 4; ++count) {
-            file.add(arr[count]);
+            fileMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             if (count < 3) {
                 arr[count].setActionCommand(command[count]);
-                arr[count].addActionListener(new FileClickController(store, this));
             } else
                 arr[count].addActionListener((event) -> System.exit(0));
         }
 
-        mb.add(file);
+        mb.add(fileMenu);
     }
 
     /**
@@ -198,7 +202,7 @@ public class GraphicalView implements View {
      */
     private void createClassMenu(JMenuBar mb) {
 
-        JMenu classes = new JMenu("Class");
+        classMenu = new JMenu("Class");
 
         // Create sub menus.
         JMenuItem crtClass = new JMenuItem("Create class");
@@ -210,12 +214,11 @@ public class GraphicalView implements View {
         String[] command = { "Create", "Delete", "Rename" };
 
         for (int count = 0; count < 3; ++count) {
-            classes.add(arr[count]);
+            classMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
-            arr[count].addActionListener(new ClassButtonClickController());
         }
-        mb.add(classes);
+        mb.add(classMenu);
     }
 
     /**
@@ -224,7 +227,7 @@ public class GraphicalView implements View {
      */
     private void createAtrributeMenu(JMenuBar mb)// change spelling later on
     {
-        JMenu fields = new JMenu("Field");
+        fieldMenu = new JMenu("Field");
 
         // Create field sub-menu.
         JMenuItem crtField = new JMenuItem("Create field");
@@ -245,12 +248,11 @@ public class GraphicalView implements View {
                 "DeleteMethod", "RenameMethod" };
 
         for (int count = 0; count < 7; ++count) {
-            fields.add(arr[count]);
+            fieldMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
-            arr[count].addActionListener(new FieldButtonClickController());
         }
-        mb.add(fields);
+        mb.add(fieldMenu);
     }
 
     /**
@@ -258,7 +260,7 @@ public class GraphicalView implements View {
      * them to it.
      */
     private void createRelationshipMenu(JMenuBar mb) {
-        JMenu relate = new JMenu("Relate");
+        relationshipMenu = new JMenu("Relate");
         // Create JMenuItems for each type of relationship and deleting a relationship.
         JMenuItem association = new JMenuItem("Association");
         JMenuItem aggregation = new JMenuItem("Aggregation");
@@ -278,9 +280,8 @@ public class GraphicalView implements View {
                 arr[count].setToolTipText("Deletes selected relationship between two classes");
 
             arr[count].setActionCommand(names[count]);
-            arr[count].addActionListener(new RelationshipButtonClickController());
         }
-        mb.add(relate);
+        mb.add(relationshipMenu);
     }
 
     /**
@@ -346,6 +347,44 @@ public class GraphicalView implements View {
     public void showError(String error) {
         // TODO Auto-generated method stub
 
+    }
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener, ActionListener relationshipListener)
+    {
+        addFileListeners(fileListener);
+        addClassListeners(classListener);
+        addFieldListeners(fieldListener);
+        addRelationshipListeners(relationshipListener);
+    }
+
+    private void addFileListeners(ActionListener fileListener)
+    {
+        for (JMenuItem item : fileMenu.getMenuComponents()) 
+        {
+            item.addActionListener(fileListener);
+        }
+    }
+
+    private void addClassListeners(ActionListener classListener)
+    {
+        for (JMenuItem item : classMenu.getMenuComponents()) 
+        {
+            item.addActionListener(classListener);
+        }
+    }
+
+    private void addFieldListeners(ActionListener fieldListener)
+    {
+        for (JMenuItem item : fieldMenu.getMenuComponents()) 
+        {
+            item.addActionListener(fieldListener);
+        }
+    }
+    private void addRelationshipListeners(ActionListener relationshipListener)
+    {
+        for (JMenuItem item : relationshipMenu.getMenuComponents()) 
+        {
+            item.addActionListener(relationshipListener);
+        }
     }
 
 }

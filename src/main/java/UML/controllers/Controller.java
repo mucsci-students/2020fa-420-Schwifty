@@ -16,6 +16,7 @@ public class Controller
     {
         this.store = store;
         this.view = view;
+        view.addListeners();
     }
 
     public void createClass(String name) 
@@ -128,5 +129,8 @@ public class Controller
         return aClass;
     }
 
-
+    public void addListeners()
+    {
+        view.addListeners(new FileClickController(store, view), new ClassClickController(store, view), new FieldClickController(store, view), new RelationshipClickController(store, view));
+    }
 }

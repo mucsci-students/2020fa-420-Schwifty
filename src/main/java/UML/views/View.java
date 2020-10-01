@@ -8,9 +8,6 @@ public interface View
     void updateClass(String oldName, String newName);
 	void createClass(String name);
 	void deleteClass(String name);
-	
-	void createField(String className, String type, String name);
-	void deleteField(String className, String name);
 
 	void createRelationship(String name);
 	void deleteRelationship(String name);
@@ -19,6 +16,8 @@ public interface View
 	String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options);
     String getInputFromUser(String prompt);
 	
+	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener, ActionListener relationshipListener);
+
 	void display();
 	void showError(String error);
 	void save(File fileName);
