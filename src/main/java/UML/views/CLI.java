@@ -1,3 +1,4 @@
+
 /*
     Author: Chris, Tyler, Drew, Dominic, Cory. 
     Date: 09/24/2020
@@ -15,6 +16,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import java.util.ArrayList;
+import UML.model.*;
 public class CLI {
     
     private Options options;

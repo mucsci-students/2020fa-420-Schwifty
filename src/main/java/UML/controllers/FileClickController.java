@@ -12,11 +12,11 @@ import UML.model.SaveAndLoad;
 import UML.model.Store;
 import java.io.File;
 
-public class FileButtonClickController implements ActionListener {
+public class FileClickController implements ActionListener {
 	private Store store;
 	private View view;
 
-	public FileButtonClickController(Store store, View v) {
+	public FileClickController(Store store, View v) {
 		this.view = v;
 		this.store = store;
 	}

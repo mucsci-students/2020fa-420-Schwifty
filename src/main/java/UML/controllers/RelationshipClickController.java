@@ -11,11 +11,11 @@ import UML.model.Store;
 
 import UML.views.*;
 
-public class RelationshipButtonClickController implements ActionListener {
+public class RelationshipClickController implements ActionListener {
     private Store store;
     private View view;
 
-    public RelationshipButtonClickController(Store store, View v) {
+    public RelationshipClickController(Store store, View v) {
         this.view = v;
         this.store = store;
     }

@@ -71,11 +71,11 @@ abstract class Formal {
         else if (other == null) {
             result = false;
         }
-        else if(!(other instanceof Attribute)) { 
+        else if(!(other instanceof Formal)) { 
             result = false; 
         }
         else {
-            Attribute object = (Attribute) other;
+            Formal object = (Formal) other;
             if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) {
                 result = true;
             }

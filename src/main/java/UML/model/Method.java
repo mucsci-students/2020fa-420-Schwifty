@@ -1,3 +1,5 @@
+package UML.model;
+
 import java.util.ArrayList;
 
 public class Method extends Formal 

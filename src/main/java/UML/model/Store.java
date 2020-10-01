@@ -468,8 +468,8 @@ public class Store {
 	}
 
 	public String stringOfClasses()
-	{
-		result = "";
+	{	
+		String result = "";
 		for(Class c : classStore)
 		{
 			result += "-------------------------------\n";
@@ -478,7 +478,7 @@ public class Store {
 		}
 	}
 
-	public ArrayList<String> getMethodParamStrings(String className, String methodString)
+	public ArrayList<String> getMethodParamString(String className, String methodString)
 	{
 		Class aClass = findClass(className);
 		Set<Method> methods = aClass.getMethods();

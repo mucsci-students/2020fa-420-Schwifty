@@ -20,12 +20,12 @@ import UML.model.Store;
 
 import UML.views.GraphicalView;
 
-public class FieldButtonClickController implements ActionListener {
+public class FieldClickController implements ActionListener {
     private Store store;
     private View view;
     private Controller controller;
 
-    public FieldButtonClickController(Store store, View v) {
+    public FieldClickController(Store store, View v) {
         this.view = v;
         this.store = store;
         this.controller = new Controller(store, v);

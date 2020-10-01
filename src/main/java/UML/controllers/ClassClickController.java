@@ -1,8 +1,5 @@
 package UML.controllers;
 
-import UML.model.*;
-import UML.views.*;
-
 import java.util.ArrayList;
 
 import java.awt.event.ActionEvent;
@@ -20,13 +17,13 @@ import UML.model.Store;
 
 import UML.views.GraphicalView;
 
-public class ClassButtonClickController implements ActionListener
+public class ClassClickController implements ActionListener
 {
 	private Store store;
 	private GraphicalView view;
 	private Controller controller;
 	
-	public ClassButtonClickController(Store store, GraphicalView v) {
+	public ClassClickController(Store store, GraphicalView v) {
 		this.view = v;
 		this.store = store;
 		this.controller = new Controller(store, v);

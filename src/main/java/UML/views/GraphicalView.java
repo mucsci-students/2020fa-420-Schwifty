@@ -1,5 +1,4 @@
 package UML.views;
-package UML.controllers.*;
 
 import UML.model.Class;
 import javax.swing.JTextArea;
@@ -25,10 +24,10 @@ import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import javax.swing.border.Border;
 
-import UML.controllers.ClassButtonClickController;
-import UML.controllers.FieldButtonClickController;
-import UML.controllers.FileButtonClickController;
-import UML.controllers.RelationshipButtonClickController;
+import UML.controllers.ClassClickController;
+import UML.controllers.FieldClickController;
+import UML.controllers.FileClickController;
+import UML.controllers.RelationshipClickController;
 
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
@@ -47,15 +46,11 @@ public class GraphicalView implements View {
     // The window for the GUI.
     private JFrame window;
 
-    private Menu menu;
-
     public GraphicalView() {
         makeWindow();
         createMenu();
         this.classPanels = new HashMap<String, JPanel>();
     }
-
-
 
     @Override
     public void createClass(String name) {
@@ -147,12 +142,11 @@ public class GraphicalView implements View {
      */
     public void makeWindow() {
         window = new JFrame("UML");
-        menu = new Menu();
         window.setLayout(new GridLayout(5, 5));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(800, 750);
-        menu.createMenu(window);
-        window.setJMenuBar(menu.getMenuBar());
+        createMenu();
+        window.setJMenuBar(mb);
         window.setVisible(true);
     }
 
@@ -190,7 +184,7 @@ public class GraphicalView implements View {
             arr[count].setToolTipText(text[count]);
             if (count < 3) {
                 arr[count].setActionCommand(command[count]);
-                arr[count].addActionListener(new FileButtonClickController());
+                arr[count].addActionListener(new FileClickController(store, this));
             } else
                 arr[count].addActionListener((event) -> System.exit(0));
         }

@@ -3,6 +3,7 @@ package UML.controllers;
 import UML.model.Class;
 import UML.model.Store;
 import UML.views.*;
+import java.util.ArrayList;
 
 public class Controller 
 {
@@ -126,4 +127,6 @@ public class Controller
             throw new IllegalArgumentException("Class does not exist");
         return aClass;
     }
+
+
 }
