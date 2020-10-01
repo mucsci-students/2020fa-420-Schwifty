@@ -1,3 +1,4 @@
+package UML.model;
 
 abstract class Formal {
 

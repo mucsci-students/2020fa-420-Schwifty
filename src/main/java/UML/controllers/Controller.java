@@ -1,20 +1,123 @@
 package UML.controllers;
 
-public class Controller {
-    //Store the model
-    private Store store;
-    //Store the view
-    private View view;
-    //Store all the controllers for the gui
-    private FileButtonClickController fileClickController;
-    private ClassButtonClickController classClickController;
-    private FieldButtonClickController fieldClickController;
-    private FieldButtonClickController relationshipClickController;
+import UML.model.Class;
+import UML.model.Store;
+import UML.views.*;
 
-    public Controller(Store store, View view)
+public class Controller 
+{
+    // Store the model
+    private Store store;
+    // Store the view
+    private View view;
+
+    public Controller(Store store, View view) 
     {
         this.store = store;
         this.view = view;
     }
 
+    public void createClass(String name) 
+    {
+        boolean temp = store.addClass(name);
+        if (temp)
+            view.createClass(name);
+        else
+            view.showError("Class could not be created");
+    }
+
+    public void deleteClass(String name) 
+    {
+        boolean temp = store.deleteClass(name);
+        if (temp)
+            view.deleteClass(name);
+        else
+            view.showError("Class could not be deleted");
+    }
+
+    public void renameClass(String oldName, String newName) throws IllegalArgumentException
+    {
+        Class oldClass = findClass(oldName);
+        String oldClassStr = oldClass.toString();
+        boolean temp = store.renameClass(oldName, newName);
+        sendToView(temp, "Class", "renamed", newName, oldClassStr);
+    }
+
+    public void createField(String className, String type, String name) throws IllegalArgumentException
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.addField(className, type, name);
+        sendToView(temp, "Field", "created", className, oldClassStr);
+    }
+
+    public void deleteField(String className, String name) throws IllegalArgumentException
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.deleteField(className, name);
+        sendToView(temp, "Field", "deleted", className, oldClassStr);
+    }
+
+    public void renameField(String className, String oldName, String newName) throws IllegalArgumentException
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.renameField(className, oldName, newName);
+        sendToView(temp, "Field", "renamed", className, oldClassStr);
+    }
+
+    public void changeFieldType(String className, String fieldName, String newType) throws IllegalArgumentException
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.changeFieldType(className, newType, fieldName);
+        sendToView(temp, "Field", "re-typed", className, oldClassStr);  
+    }
+    
+
+    
+    private int getNumberFromInput(String input) 
+    {
+        int paramNum;
+        // Ensure we get a number, defaults to zero on bad input.
+        try 
+        {
+            paramNum = Integer.parseInt(getTextFromInput("Number of Parameters: "));
+        }
+        catch (NumberFormatException e) 
+        {
+            paramNum = 0;
+        }
+
+        return paramNum;
+    }
+
+    /**
+     * Sends the correct information back to the view.  Can call for updating class or showing error.
+     */
+    private void sendToView(boolean canSend, String objectType, String action, String className, String oldClassStr) 
+    {
+        if (canSend) 
+        {
+            String newClassStr = store.findClass(className).toString();
+            view.updateClass(oldClassStr, newClassStr);
+        } 
+        else
+        {
+            String error = objectType + " could not be " + action;
+            view.showError(error);
+        }
+    }
+
+    /**
+     * Returns class if it exists, otherwise it throws an exception.
+     */
+    private Class findClass(String className)
+    {
+        Class aClass = store.findClass(className);
+        if (aClass == null)
+            throw new IllegalArgumentException("Class does not exist");
+        return aClass;
+    }
 }

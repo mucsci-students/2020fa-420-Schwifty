@@ -1,4 +1,4 @@
-
+package UML.model;
 /*
     Author: Tyler, Cory, Dominic, Drew, Chris. 
     Date: 09/08/2020
@@ -99,7 +99,7 @@ public class Class {
     }
 
     /**
-     * Adds a field the the class object.
+     * Adds a field the the class object.  If the field name is already used, return false.
      */
     public boolean addField(String type, String name) throws IllegalArgumentException {
         // If name is found, return false...atrribute already created
@@ -114,7 +114,7 @@ public class Class {
     }
 
     /**
-     * Deletes a field from the class object.
+     * Deletes a field from the class object.  If the field isn't found, return false.
      */
     public boolean deleteField(String name) {
         for (Field f : fields) {
@@ -127,17 +127,18 @@ public class Class {
     }
 
     /**
-     * Renames a field of the class object.
+     * Renames a field of the class object.  If it cannot be ranmed, return false.
      */
     public boolean renameField(String oldName, String newName) throws IllegalArgumentException {
         for (Field a : fields) {
+            //If the new name name already exists, return false.
             if (a.getName().equals(newName)) {
                 return false;
             }
         }
         for (Field f : fields) {
             if (f.getName().equals(oldName)) {
-                // Must remove and add so that the Field has correct hashcode
+                // Must remove and add so that the Field has correct hashcode.
                 String type = f.getType();
                 this.fields.remove(f);
                 Field toAdd = new Field(type, newName);
@@ -145,18 +146,19 @@ public class Class {
                 return true;
             }
         }
+        //If the field wasn't found, return false.
         return false;
     }
 
     /**
-     * Changes the type of a field of the class object.
+     * Changes the type of a field of the class object.  If the field cannot be found, return false.
      */
     public boolean changeFieldType(String newType, String name) throws IllegalArgumentException {
         for (Field a : fields) {
             if (a.getName().equals(name)) {
                 // Must remove and add so that the Field has correct hashcode
-                this.fields.remove(a);
                 Field toAdd = new Field(newType, name);
+                this.fields.remove(a);
                 this.fields.add(toAdd);
                 return true;
             }
@@ -165,21 +167,23 @@ public class Class {
     }
 
     /**
-     * Adds method with parameters.
+     * Adds method with parameters.  If the method cannot be added, return false.
      */
     public boolean addMethod(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException {
-        // If method is found, return false...atrribute already
-        // If the number of parameters doesn't match, just add.
         Method newMethod = new Method(type, name, params);
         for (Method m : methods) {
+            // If the number of parameters doesn't match, no need to check if the parameters are equal.
             if ((params.size() == m.getParams().size())) {
+                //If the return type and method name are equal, check if parameters are equal.
                 if (m.getType().equals(newMethod.getType()) && m.getName().equals(newMethod.getName())) {
                     boolean typesMatch = true;
+                    //Iterate through parameters to check if they are equal.
                     for (int count = 0; count < params.size(); count++) {
                         if (!params.get(count).getType().equals(m.getParams().get(count).getType())) {
                             typesMatch = false;
                         }
                     }
+                    //If the method to be added is exactly equal to another, don't add and return false.
                     if (typesMatch)
                         return false;
                 }
@@ -190,12 +194,14 @@ public class Class {
     }
 
     /**
-     * Add params and type to determine which to delete?
+     * Deletes a method from the class.  If it is not deleted, return false.
      */
+    //////////Can rewrite in one line as long as method.equals() works correctly.
     public boolean deleteMethod(String type, String name, ArrayList<Parameter> params) {
         Method method = new Method(type, name, params);
         for (Method m : methods) {
             if (m.getType().equals(type) && m.getName().equals(name) && m.getParams().equals(params)) {
+                //This should always be true in this case.
                 return methods.remove(method);
             }
         }
@@ -203,12 +209,12 @@ public class Class {
     }
 
     /**
-     * Renames method with parameters.
+     * Renames method with parameters.  If it cannot be renamed, return false.
      */
-    public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName)
-            throws IllegalArgumentException {
+    public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException {
         Method methodNew = new Method(type, newName, params);
         for (Method m : methods) {
+            //If that exact method already exists, return false.
             if (m.equals(methodNew)) {
                 return false;
             }
@@ -218,16 +224,17 @@ public class Class {
         if (deleted) {
             addMethod(type, newName, params);
         }
+        //Returns false if method wasn't found in methods, true if it was found and renamed.
         return deleted;
     }
 
     /**
-     * Chnages the return type of a method.
+     * Chnages the return type of a method.  If it cannot be changed, return false.
      */
-    public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String newType)
-            throws IllegalArgumentException {
+    public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String newType) throws IllegalArgumentException {
         Method methodNew = new Method(newType, methodName, params);
         for (Method m : methods) {
+            //If that exact method already exists, return false.
             if (m.equals(methodNew)) {
                 return false;
             }
@@ -237,14 +244,15 @@ public class Class {
         if (deleted) {
             addMethod(newType, methodName, params);
         }
+        //Returns false if method wasn't found in methods, true if it was found and retyped.
         return deleted;
     }
 
     /**
-     * Adds a relationship from this class object to another.
+     * Adds a relationship from this class object to another.  Returns false if the relationship couldn't be created.
      */
     public boolean addRelationshipToOther(RelationshipType relation, Class aClass) throws IllegalArgumentException {
-        // If relationship with a class and itself, throw exception.
+        // If trying to create a relationship with a class and itself, throw exception.
         if (this.equals(aClass)) {
             throw new IllegalArgumentException("A class cannot have a relationship with itself.");
 
@@ -255,13 +263,15 @@ public class Class {
             aClass.relationshipsFromOther.put(this.name, relation);
             return true;
         }
+        //This will occur if there is already a relationship between the two classes.
         return false;
     }
 
     /**
-     * Adds a relationship from another class object to this one.
+     * Adds a relationship from another class object to this one.  Returns false if the relationship couldn't be created.
      */
     public boolean addRelationshipFromOther(RelationshipType relation, Class aClass) throws IllegalArgumentException {
+        // If trying to create a relationship with a class and itself, throw exception.
         if (this.equals(aClass)) {
             throw new IllegalArgumentException("A class cannot have a relationship with itself.");
 
@@ -272,24 +282,31 @@ public class Class {
             aClass.relationshipsToOther.put(this.name, relation);
             return true;
         }
+        //This will occur if there is already a relationship between the two classes.
         return false;
     }
 
     /**
-     * Deletes a relationship from this class object to another.
+     * Deletes a relationship from this class object to another.  Returns false if a relationship cannot be deleted.
      */
     public boolean deleteRelationshipToOther(RelationshipType relation, Class aClass) {
+        //Remove relationship this class has to another.
         boolean removedToOther = relationshipsToOther.remove(aClass.name, relation);
+        //Remove a relationship another class has from this one.
         boolean removedFromOther = aClass.relationshipsFromOther.remove(this.name, relation);
+        //True if both cases above were true.
         return removedToOther && removedFromOther;
     }
 
     /**
-     * Deletes a relationship from another class object to this one.
+     * Deletes a relationship from another class object to this one.  Returns false if a relationship cannot be deleted.
      */
     public boolean deleteRelationshipFromOther(RelationshipType relation, Class aClass) {
+        //Remove a relationship this class has from another.
         boolean removedFromOther = relationshipsFromOther.remove(aClass.name, relation);
+        //Remove relationship another class has to this one.
         boolean removedToOther = aClass.relationshipsToOther.remove(this.name, relation);
+        //True if both cases above were true.
         return removedFromOther && removedToOther;
     }
 

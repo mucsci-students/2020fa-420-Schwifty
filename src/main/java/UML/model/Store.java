@@ -1,3 +1,4 @@
+package UML.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -163,10 +164,11 @@ public class Store {
 	/**
 	 * Changes the type of a field of a class in the store.
 	 */
-	public void changeFieldType(String className, String newType, String name) throws IllegalArgumentException
+	public boolean changeFieldType(String className, String newType, String name) throws IllegalArgumentException
 	{
+		//Class always exists if this method is called; guarenteed by controller.
 		Class toChange = findClass(className);
-		toChange.changeFieldType(newType, name);
+		return toChange.changeFieldType(newType, name);
 	}
 
 

@@ -1,12 +1,22 @@
 package UML.controllers;
 
-public class FileButtonClickController implements ActionListener
-{
+import java.awt.event.*;
+
+import UML.views.*;
+
+import UML.model.Class;
+import UML.model.Field;
+import UML.model.Method;
+import UML.model.Parameter;
+import UML.model.SaveAndLoad;
+import UML.model.Store;
+import java.io.File;
+
+public class FileButtonClickController implements ActionListener {
 	private Store store;
 	private View view;
 
-	public FileButtonClickController(Store store, View v) 
-	{
+	public FileButtonClickController(Store store, View v) {
 		this.view = v;
 		this.store = store;
 	}
@@ -20,7 +30,7 @@ public class FileButtonClickController implements ActionListener
 			// Save contents to file...will require JSON save.
 			// If there is a currently loaded file.
 			if (currentLoadedFile != null) {
-				SaveAndLoad.save(currentLoadedFile, classStore);
+				SaveAndLoad.save(currentLoadedFile, store.getClassList());
 			} else 
 			{
 				performSaveAs();

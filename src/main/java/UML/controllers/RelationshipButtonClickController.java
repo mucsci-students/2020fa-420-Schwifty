@@ -1,14 +1,24 @@
 package UML.controllers;
 
-private class RelationshipButtonClickListener implements ActionListener {
-    private Store store;
-	private View view;
+import java.awt.event.*;
 
-	public RelationshipButtonClickController(Store store, View v) 
-	{
-		this.view = v;
-		this.store = store;
-	}
+import UML.model.Class;
+import UML.model.Field;
+import UML.model.Method;
+import UML.model.Parameter;
+import UML.model.SaveAndLoad;
+import UML.model.Store;
+
+import UML.views.*;
+
+public class RelationshipButtonClickController implements ActionListener {
+    private Store store;
+    private View view;
+
+    public RelationshipButtonClickController(Store store, View v) {
+        this.view = v;
+        this.store = store;
+    }
 
     public void actionPerformed(ActionEvent e) {
         // TODO: Prevent class from having a relationship to itself.

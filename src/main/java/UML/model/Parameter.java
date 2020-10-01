@@ -1,4 +1,4 @@
-
+package UML.model;
 
 public class Parameter extends Formal 
 {

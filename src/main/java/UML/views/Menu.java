@@ -242,32 +242,6 @@ public class Menu
 		parentWindow.repaint();   
 	} 
 
-    /**
-     * Removes relevant relationships when classes are deleted.
-     */
-	/*
-	private void removeRelationships(Class aClass)
-	{
-		//Find the classes that the class in question has a relationship with
-		Map<String, RelationshipType> tempTo = aClass.getRelationshipsToOther();
-		Map<String, RelationshipType> tempFrom = aClass.getRelationshipsFromOther();
-		for(Map.Entry<String, RelationshipType> entry : tempTo.entrySet()) 
-		{
-			//Go to those classes and get rid of relationships to and from the class in question.
-			Class temp = store.findClass(entry.getKey());
-			temp.deleteRelationshipFromOther(entry.getValue(), aClass);
-			temp.deleteRelationshipToOther(entry.getValue(), aClass);
-		}
-		for(Map.Entry<String, RelationshipType> entry : tempFrom.entrySet()) 
-		{
-			//Go to those classes and get rid of relationships to and from the class in question.
-			Class temp = store.findClass(entry.getKey());
-			temp.deleteRelationshipFromOther(entry.getValue(), aClass);
-			temp.deleteRelationshipToOther(entry.getValue(), aClass);
-		}
-	}
-	*/
-	
 	/**
 	 * Gets text from user input(text box)
 	 */
