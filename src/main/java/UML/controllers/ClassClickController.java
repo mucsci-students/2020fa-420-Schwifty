@@ -23,10 +23,10 @@ public class ClassClickController implements ActionListener
 	private View view;
 	private Controller controller;
 	
-	public ClassClickController(Store store, View v) {
+	public ClassClickController(Store s, View v, Controller c) {
 		this.view = v;
-		this.store = store;
-		this.controller = new Controller(store, v);
+		this.store = s;
+		this.controller = c;
 	}
 	
 	public void actionPerformed(ActionEvent e)

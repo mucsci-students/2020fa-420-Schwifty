@@ -113,13 +113,27 @@ public class GraphicalView implements View {
     }
 
     @Override
-    public void display() {
-        // TODO Auto-generated method stub
+    public void display(ArrayList<String> toStrings) {
+        
+        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) 
+		{
+			parentWindow.remove(panel.getValue());
+        }
+        
+        classPanels.clear();
+
+        for(String s : toStrings)
+        {
+            makeNewClassPanel(s);
+        }
+
+		refresh();
 
     }
 
     @Override
-    public String save(File fileName) {
+    public String save() 
+    {
         // TODO Auto-generated method stub
         JFileChooser fc = new JFileChooser();
 		// If there is a currently loaded file.
@@ -137,18 +151,24 @@ public class GraphicalView implements View {
     }
 
     @Override
-    public void load(File fileName) 
+    public String load(File fileName) 
     {
+        // Make a filechooser
+		JFileChooser fc = new JFileChooser();
+		int returnValue = fc.showOpenDialog(parentWindow);
+		// If the user selected to open this file, open it.
+		// TODO: Consider filtering this information to only inlcude JSON filetypes
+        if (returnValue == JFileChooser.APPROVE_OPTION) 
+        {
+            return fc.getSelectedFile().getName();
+		}
+        classPanels.clear();
         // Clear old data.
 		for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) 
 		{
 			parentWindow.remove(panel.getValue());
 		}
-
-		classPanels.clear();
-
-		parentWindow.revalidate();
-		parentWindow.repaint();
+		refresh();
 
     }
 

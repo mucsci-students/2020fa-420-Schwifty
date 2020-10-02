@@ -25,10 +25,10 @@ public class FieldClickController implements ActionListener {
     private View view;
     private Controller controller;
 
-    public FieldClickController(Store store, View v) {
+    public FieldClickController(Store s, View v, Controller s) {
         this.view = v;
-        this.store = store;
-        this.controller = new Controller(store, v);
+        this.store = s;
+        this.controller = c;
     }
 
     public void actionPerformed(ActionEvent e) {

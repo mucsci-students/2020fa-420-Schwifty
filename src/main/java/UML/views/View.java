@@ -22,6 +22,6 @@ public interface View
 	void display();
 	void showError(String error);
 	String save();
-	void load(File fileName);
+	String load(File fileName);
 	void exit();
 }

@@ -150,7 +150,7 @@ public class SaveAndLoad
         return jsonFile;
     }
     
-    public static void load(String fileName, ArrayList<Class> classStore)
+    public static String load(String fileName, ArrayList<Class> classStore)
     {
         JSONParser parser = new JSONParser();
         
@@ -206,6 +206,7 @@ public class SaveAndLoad
                 }
                 index++;
             }
+            return fileName;
         }
         catch(FileNotFoundException e)
         {

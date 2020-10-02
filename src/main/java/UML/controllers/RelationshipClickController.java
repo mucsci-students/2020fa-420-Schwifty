@@ -14,23 +14,25 @@ import UML.views.*;
 public class RelationshipClickController implements ActionListener {
     private Store store;
     private View view;
+    private Controller controller;
 
-    public RelationshipClickController(Store store, View v) {
+    public RelationshipClickController(Store store, View v, Controller c) {
         this.view = v;
         this.store = store;
+        this.controller = c;
     }
 
     public void actionPerformed(ActionEvent e) {
-        // TODO: Prevent class from having a relationship to itself.
         String cmd = e.getActionCommand();
         if (cmd.equals("Association")) {
             // Creates two dialog boxes to get the classes to add the relationship to or
             // from.
             Object[] classList = store.getClassList().toArray();
 
-            String buildRelateOne = getResultFromComboBox("Choose first class", "Association", classList);
+            String buildRelateOne = view.getChoiceFromUser("Choose first class", "Association", classList);
 
-            String buildRelateTwo = getResultFromComboBox("Choose second class", "Association", classList);
+            String buildRelateTwo = view.getChoiceFromUser("Choose second class", "Association", classList);
+
 
             // Add the relationship between the classes.
             Class class1 = store.findClass(buildRelateOne);
@@ -55,6 +57,7 @@ public class RelationshipClickController implements ActionListener {
             // Change add relationship.
             store.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.AGGREGATION);
             updateDisplayRelationship(class1, class2);
+
         } else if (cmd.equals("Composition")) {
             // creates two dialog boxes to get the classes to add the relationship to or
             // from.
@@ -71,6 +74,7 @@ public class RelationshipClickController implements ActionListener {
             store.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.COMPOSITION);
             // display relationship
             updateDisplayRelationship(class1, class2);
+
         } else if (cmd.equals("Generalization")) {
             // Creates two dialog boxes to get the classes to add the relationship to or
             // from.
@@ -86,6 +90,7 @@ public class RelationshipClickController implements ActionListener {
             store.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.GENERALIZATION);
             // Display relationship.
             updateDisplayRelationship(class1, class2);
+
         } else if (cmd.equals("Delete Relationship")) {
             // TODO: Not working correctly, need to display the relationship to the user
             // Create a dialog box with two dropdowns of available classes.

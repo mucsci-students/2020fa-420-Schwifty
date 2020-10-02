@@ -272,11 +272,14 @@ public class Store {
 	/**
 	 * Adds a relationship between two classes in the store.
 	 */
-	public void addRelationship(String classFrom, String classTo, RelationshipType relation)
+	public boolean addRelationship(String classFrom, String classTo, RelationshipType relation)
 	{
 		Class class1 = findClass(classFrom);
 		Class class2 = findClass(classTo);
-		class1.addRelationshipToOther(relation, class2);
+		if(class1 == null || class2 == null)
+			return false;
+		else
+			return class1.addRelationshipToOther(relation, class2);
 	}
 
 	/**
