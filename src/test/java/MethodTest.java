@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
 import java.util.ArrayList;
+import UML.model.Method;
+import UML.model.Parameter;
 
 public class MethodTest {
     
@@ -132,7 +134,7 @@ public class MethodTest {
         assertTrue(test.getParams().contains(new Parameter("int", "param")));
         assertTrue(test.getParams().contains(new Parameter("String", "test")));
         //Should return false for duplicate name parameter.
-        assertFalse(test.addParam("String", "param"));
+        assertFalse(test.addParam(new Parameter("String", "param")));
     }
 
     @Test

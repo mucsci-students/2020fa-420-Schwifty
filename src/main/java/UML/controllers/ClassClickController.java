@@ -12,8 +12,8 @@ import UML.model.Class;
 import UML.model.Field;
 import UML.model.Method;
 import UML.model.Parameter;
-import UML.model.SaveAndLoad;
 import UML.model.Store;
+import UML.model.RelationshipType;
 
 import UML.views.View;
 

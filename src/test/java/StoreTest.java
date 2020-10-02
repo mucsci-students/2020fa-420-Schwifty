@@ -6,6 +6,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import UML.model.Store;
+import UML.model.Class;
+import UML.model.Field;
+import UML.model.Method;
+import UML.model.Parameter;
+import UML.model.RelationshipType;
 
 public class StoreTest {
     
@@ -306,7 +312,7 @@ public class StoreTest {
         Store store = new Store();
         store.addClass("Test");
         //Create an ArrayList of Parameters for adding a method.
-        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        ArrayList<String> params = new ArrayList<String>();
         
         //Add a method
         store.addMethod("Test", "int", "testMethod", params);

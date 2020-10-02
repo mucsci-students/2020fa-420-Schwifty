@@ -14,9 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //Holds the options for relationships between classes.
-enum RelationshipType {
-    ASSOCIATION, AGGREGATION, GENERALIZATION, COMPOSITION
-}
+
 
 public class Class {
 

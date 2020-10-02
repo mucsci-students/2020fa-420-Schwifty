@@ -8,10 +8,9 @@ import UML.model.Class;
 import UML.model.Field;
 import UML.model.Method;
 import UML.model.Parameter;
-import UML.model.SaveAndLoad;
 import UML.model.Store;
+import UML.model.RelationshipType;
 import java.io.File;
-import java.lang.ModuleLayer.Controller;
 import java.util.Map;
 import java.util.HashMap;
 import javax.swing.JPanel;
@@ -53,8 +52,7 @@ public class FileClickController implements ActionListener
 		else if (cmd.equals("Load")) 
 		{
 			String fileName = view.load();
-			controller.load(fileName, store.getClassStore());
-			view.display();
+			controller.load(fileName);
 		}
 	}
 }

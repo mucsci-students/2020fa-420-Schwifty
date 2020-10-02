@@ -21,14 +21,10 @@ import javax.swing.JTextField;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import javax.swing.border.Border;
-
-import UML.controllers.ClassClickController;
-import UML.controllers.FieldClickController;
-import UML.controllers.FileClickController;
-import UML.controllers.RelationshipClickController;
 
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
@@ -80,24 +76,6 @@ public class GraphicalView implements View {
     }
 
     @Override
-    public void createRelationship(String name) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void deleteRelationship(String name) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void updateRelationship(String name) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
         Object[] optionsToArray = options.toArray();
         String strToRtn = (String) JOptionPane.showInputDialog(parentWindow, msgOne, msgTwo, JOptionPane.PLAIN_MESSAGE,
@@ -114,61 +92,50 @@ public class GraphicalView implements View {
 
     @Override
     public void display(ArrayList<String> toStrings) {
-        
-        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) 
-		{
-			parentWindow.remove(panel.getValue());
+
+        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
+            parentWindow.remove(panel.getValue());
         }
-        
+
         classPanels.clear();
 
-        for(String s : toStrings)
-        {
+        for (String s : toStrings) {
             makeNewClassPanel(s);
         }
 
-		refresh();
+        refresh();
 
     }
 
     @Override
-    public String save() 
-    {
+    public String save() {
         // TODO Auto-generated method stub
         JFileChooser fc = new JFileChooser();
-		// If there is a currently loaded file.
+        // If there is a currently loaded file.
 
-		// Bring up file panel for the user to save as(automatically will choose file
-		// type though in saveandload).
-		int returnValue = fc.showSaveDialog(parentWindow);
-		// Based on the user imput, save the file.
+        // Bring up file panel for the user to save as(automatically will choose file
+        // type though in saveandload).
+        int returnValue = fc.showSaveDialog(parentWindow);
+        // Based on the user imput, save the file.
 
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
             return fc.getSelectedFile().getName();
-		}
-        //if no filename is found, retrun an empty string
+        }
+        // if no filename is found, retrun an empty string
         return "";
     }
 
     @Override
-    public String load(File fileName) 
-    {
+    public String load() {
         // Make a filechooser
-		JFileChooser fc = new JFileChooser();
-		int returnValue = fc.showOpenDialog(parentWindow);
-		// If the user selected to open this file, open it.
-		// TODO: Consider filtering this information to only inlcude JSON filetypes
-        if (returnValue == JFileChooser.APPROVE_OPTION) 
-        {
+        JFileChooser fc = new JFileChooser();
+        int returnValue = fc.showOpenDialog(parentWindow);
+        // If the user selected to open this file, open it.
+        // TODO: Consider filtering this information to only inlcude JSON filetypes
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
             return fc.getSelectedFile().getName();
-		}
-        classPanels.clear();
-        // Clear old data.
-		for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) 
-		{
-			parentWindow.remove(panel.getValue());
-		}
-		refresh();
+        }
+        return "";
 
     }
 
@@ -177,14 +144,14 @@ public class GraphicalView implements View {
         // TODO Auto-generated method stub
 
     }
-    
-    private void windowUpdateHelper(String classInfo)
-    {
+
+    private void windowUpdateHelper(String classInfo) {
         JPanel panel = classPanels.get(classInfo);
-        JTextArea textArea = (JTextArea)panel.getComponents()[0];
+        JTextArea textArea = (JTextArea) panel.getComponents()[0];
         textArea.setText(classInfo);
         refresh();
     }
+
     /**
      * Constructrs a UMLWindow object.
      */
@@ -313,10 +280,10 @@ public class GraphicalView implements View {
         // Create arrays of JMenuItems and Strings to use for loop for setting up
         // relationship menu.
         JMenuItem[] arr = { association, aggregation, composition, generalization, deleteRelate };
-        String[] names = { "Association", "Aggregation", "Composition", "Generalization", "Delete Relationship" };
+        String[] names = { "Association", "Aggregation", "Composition", "Generalization", "DeleteRelationship" };
 
         for (int count = 0; count < 5; ++count) {
-            relate.add(arr[count]);
+            relationshipMenu.add(arr[count]);
             if (count < 4)
                 arr[count].setToolTipText("Creates selected relationship between two classes");
             else
@@ -343,8 +310,7 @@ public class GraphicalView implements View {
         classText.setBorder(blackline);
     }
 
-    public void deleteClassPanel(String aClass) 
-    {
+    public void deleteClassPanel(String aClass) {
         JPanel panel = classPanels.get(aClass);
         classPanels.remove(aClass);
         parentWindow.remove(panel);
@@ -352,8 +318,7 @@ public class GraphicalView implements View {
 
     }
 
-    public void refresh()
-    {
+    public void refresh() {
         parentWindow.revalidate();
         parentWindow.repaint();
     }
@@ -362,18 +327,18 @@ public class GraphicalView implements View {
      * Updates the relationships visually in the window .
      *
      */
-    public void updateDisplayRelationship(Class classOne, Class classTwo) {
-        JPanel panelOne = classPanels.get(classOne.getName());
+    public void updateDisplayRelationship(String classOne, String classTwo) {
+        JPanel panelOne = classPanels.get(classOne);
         JTextArea textArea = (JTextArea) panelOne.getComponents()[0];
         textArea.setText(classOne.toString());
-        classPanels.remove(classOne.getName());
-        classPanels.put(classOne.getName(), panelOne);
+        classPanels.remove(classOne);
+        classPanels.put(classOne, panelOne);
 
-        JPanel panelTwo = classPanels.get(classTwo.getName());
+        JPanel panelTwo = classPanels.get(classTwo);
         JTextArea textAreaTwo = (JTextArea) panelTwo.getComponents()[0];
         textAreaTwo.setText(classTwo.toString());
-        classPanels.remove(classTwo.getName());
-        classPanels.put(classTwo.getName(), panelTwo);
+        classPanels.remove(classTwo);
+        classPanels.put(classTwo, panelTwo);
         refresh();
     }
 
@@ -391,17 +356,17 @@ public class GraphicalView implements View {
         // TODO Auto-generated method stub
 
     }
-    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener, ActionListener relationshipListener)
-    {
+
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
+            ActionListener relationshipListener) {
         addFileListeners(fileListener);
         addClassListeners(classListener);
         addFieldListeners(fieldListener);
         addRelationshipListeners(relationshipListener);
     }
 
-    private void addFileListeners(ActionListener fileListener)
-    {
-        for (JComponent item : fileMenu.getMenuComponents()) 
+    private void addFileListeners(ActionListener fileListener) {
+        for (Component item : fileMenu.getMenuComponents()) 
         {
             JMenuItem menuItem = (JMenuItem)item;
             menuItem.addActionListener(fileListener);
@@ -410,7 +375,7 @@ public class GraphicalView implements View {
 
     private void addClassListeners(ActionListener classListener)
     {
-        for (JMenuItem item : classMenu.getMenuComponents()) 
+        for (Component item : classMenu.getMenuComponents()) 
         {
             JMenuItem menuItem = (JMenuItem)item;
             menuItem.addActionListener(classListener);
@@ -419,7 +384,7 @@ public class GraphicalView implements View {
 
     private void addFieldListeners(ActionListener fieldListener)
     {
-        for (JMenuItem item : fieldMenu.getMenuComponents()) 
+        for (Component item : fieldMenu.getMenuComponents()) 
         {
             JMenuItem menuItem = (JMenuItem)item;
             menuItem.addActionListener(fieldListener);
@@ -427,7 +392,7 @@ public class GraphicalView implements View {
     }
     private void addRelationshipListeners(ActionListener relationshipListener)
     {
-        for (JMenuItem item : relationshipMenu.getMenuComponents()) 
+        for (Component item : relationshipMenu.getMenuComponents()) 
         {
             JMenuItem menuItem = (JMenuItem)item;
             menuItem.addActionListener(relationshipListener);

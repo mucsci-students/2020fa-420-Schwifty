@@ -27,6 +27,11 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import UML.model.Class;
+import UML.model.Field;
+import UML.model.Method;
+import UML.model.RelationshipType;
+import UML.controllers.SaveAndLoad;
 
 public class SaveAndLoadTest
 {

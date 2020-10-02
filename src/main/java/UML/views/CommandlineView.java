@@ -1,14 +1,11 @@
 package UML.views;
 
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 public class CommandlineView implements View {
 
-    @Override
-    public void updateClass(String name) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void createClass(String name) {
@@ -22,29 +19,7 @@ public class CommandlineView implements View {
 
     }
 
-    @Override
-    public void createRelationship(String name) {
-        // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void deleteRelationship(String name) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void updateRelationship(String name) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public String getChoiceFromUser(String title, String[] options) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     @Override
     public String getInputFromUser(String prompt) {
@@ -52,28 +27,55 @@ public class CommandlineView implements View {
         return null;
     }
 
-    @Override
-    public void display() {
-        // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void save(File fileName) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void load(File fileName) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void exit() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void updateClass(String oldName, String newName) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
+            ActionListener relationshipListener) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void display(ArrayList<String> str) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void showError(String error) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String save() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String load() {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

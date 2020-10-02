@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
+import UML.model.Class;
+import UML.model.Field;
+import UML.model.Method;
+import UML.model.Parameter;
+import UML.model.RelationshipType;
 
 public class ClassTest {
 

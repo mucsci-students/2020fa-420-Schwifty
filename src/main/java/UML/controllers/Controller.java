@@ -1,10 +1,13 @@
 package UML.controllers;
 
+import UML.model.RelationshipType;
 import UML.model.Class;
 import UML.model.Store;
 import UML.views.*;
 import java.util.ArrayList;
 import java.awt.event.*;
+import java.io.File;
+
 
 public class Controller 
 {
@@ -135,9 +138,36 @@ public class Controller
         sendToView(temp, "Method", "renamed", className, oldClassStr);
     }
 
-    public void addRelationship()
-    {
+    public void addRelationship(String from, String to, RelationshipType relation)
+    {   
+        Class fromOld = findClass(from);
+        Class toOld = findClass(to);
+        //Get toStrings from each string.
+        String fromOldStr = fromOld.toString();
+        String toOldStr = toOld.toString();
+        
+        boolean temp = store.addRelationship(from, to, relation);
+        if(!temp || fromOld == null || toOld == null)
+            view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
+        else 
+            sendToView(temp, "Relationship", "added", from, fromOldStr);
+            sendToView(temp, "Relationship", "added", to, toOldStr);
+    }
 
+    public void deleteRelationship(String from, String to)
+    {
+        Class fromOld = findClass(from);
+        Class toOld = findClass(to);
+        //Get toStrings from each string.
+        String fromOldStr = fromOld.toString();
+        String toOldStr = toOld.toString();
+
+        boolean temp = store.deleteRelationship(fromOldStr, toOldStr);
+        if(!temp || fromOld == null || toOld == null)
+            view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
+        else 
+            sendToView(temp, "Relationship", "deleted", from, fromOldStr);
+            sendToView(temp, "Relationship", "deleted", to, toOldStr);
     }
 
     /**
@@ -191,4 +221,10 @@ public class Controller
             throw new IllegalArgumentException("Class does not exist");
         return aClass;
     }
+
+    private void addListeners()
+    {
+        view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new FieldClickController(store, view, this), new RelationshipClickController(store, view, this));
+    }
+
 }

@@ -15,8 +15,8 @@ import UML.model.Class;
 import UML.model.Field;
 import UML.model.Method;
 import UML.model.Parameter;
-import UML.model.SaveAndLoad;
 import UML.model.Store;
+import UML.model.RelationshipType;
 
 import UML.views.GraphicalView;
 
@@ -25,7 +25,7 @@ public class FieldClickController implements ActionListener {
     private View view;
     private Controller controller;
 
-    public FieldClickController(Store s, View v, Controller s) {
+    public FieldClickController(Store s, View v, Controller c) {
         this.view = v;
         this.store = s;
         this.controller = c;

@@ -1,4 +1,5 @@
 package UML.model;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -285,13 +286,17 @@ public class Store {
 	/**
 	 * Deletes a relationship between two classes in the store.
 	 */
-	public void deleteRelationship(String classFrom, String classTo) {
+	public boolean deleteRelationship(String classFrom, String classTo) {
 		Class class1 = findClass(classFrom);
 		Class class2 = findClass(classTo);
-		RelationshipType relation = class1.getRelationshipsToOther().get(classTo);
-		class1.deleteRelationshipToOther(relation, class2);
-		class2.deleteRelationshipToOther(relation, class1);
-	}
+		if(class1 == null || class2 == null)
+			return false;
+		else
+		{
+			RelationshipType relation = class1.getRelationshipsToOther().get(classTo);
+			return class1.deleteRelationshipToOther(relation, class2) && class2.deleteRelationshipToOther(relation, class1);
+		}
+	}	
 
     /**
      * Removes relevant relationships when classes are deleted.
@@ -444,10 +449,10 @@ public class Store {
 				{
 					arr.add(p.getType() + " " + p.getName());
 				}
-				deleteMethod(className, m.getType(), m.getName(), arr);
-				break;
+				return deleteMethod(className, m.getType(), m.getName(), arr);
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -469,10 +474,10 @@ public class Store {
 					paramStrings.add(p.getType() + " " + p.getName());
 				}
 				//rename the method and break out. 
-				renameMethod(className, m.getType(), m.getName(), paramStrings, newName);
-				break;
+				return renameMethod(className, m.getType(), m.getName(), paramStrings, newName);
 			}
 		}
+		return false;
 	}
 
 	public String stringOfClasses()
@@ -484,6 +489,7 @@ public class Store {
 			result += c.toString();
 			result += "\n-------------------------------";
 		}
+		return result;
 	}
 
 	public ArrayList<String> getMethodParamString(String className, String methodString)
