@@ -143,7 +143,7 @@ public class FieldClickController implements ActionListener {
         // Ensure we get a number, defaults to zero on bad input.
         try 
         {
-            paramNum = Integer.parseInt(getTextFromInput("Number of Parameters: "));
+            paramNum = Integer.parseInt(view.getInputFromUser("Number of Parameters: "));
         }
         catch (NumberFormatException e) 
         {

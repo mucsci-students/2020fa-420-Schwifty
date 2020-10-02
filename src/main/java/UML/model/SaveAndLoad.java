@@ -65,13 +65,14 @@ public class SaveAndLoad
      *      }
      * ]} 
     */
-    public static void save(File fileName, ArrayList<Class> classesToSave)
+    public static File save(String fileName, ArrayList<Class> classesToSave)
     {
+        //the json file
+        File jsonFile;
         JSONObject toBeSaved = new JSONObject();
 
         //Store an arraylist of JSONObjects to be written to the file
         ArrayList<JSONObject> classesToBeSaved = new ArrayList<JSONObject>();
-
         
         //Build the JSONObject from the elements of a class
         for(Class aClass : classesToSave)
@@ -125,33 +126,35 @@ public class SaveAndLoad
         toBeSaved.put("Classes",classesToBeSaved);
         //Attempt to write the json data to passed in file name. IOExcetion on failure. 
         //Append the .json format to name
-        
-        String jsonFileName = fileName.getName();
 
         //ensures we are not adding it if we don't need to
-        if(!jsonFileName.contains(".json"))
+        if(!fileName.contains(".json"))
         {
-            jsonFileName += ".json";
+            fileName += ".json";
         }
         
-        try (FileWriter fw = new FileWriter(jsonFileName))
+        try 
         {
+            jsonFile = new File(fileName);
+            FileWriter fw = new FileWriter(fileName);
             fw.write(toBeSaved.toJSONString());
             fw.flush();
             fw.close();
+            
         } 
         catch (IOException e)
         {
-            e.printStackTrace();
-            //JOptionPane.showMessageDialog(null, "Failed to save " + jsonFileName, "Error", JOptionPane.ERROR_MESSAGE);
+            view.showError(e.printStackTrace());
         }
+
+        return jsonFile;
     }
     
-    public static void load(File fileName, ArrayList<Class> classStore)
+    public static void load(String fileName, ArrayList<Class> classStore)
     {
         JSONParser parser = new JSONParser();
         
-        try (FileReader fr = new FileReader(fileName.getName()))
+        try (FileReader fr = new FileReader(fileName))
         {
             //Get the json object from the parser
             JSONObject obj = (JSONObject)parser.parse(fr);
@@ -187,7 +190,7 @@ public class SaveAndLoad
                 {
                     String[] relationship = it.next().split(" ");
                     String className = relationship[1];
-                    Class relatedClass = findClass(className, classStore);
+                    Class relatedClass = store.findClass(className);
                     aClass.addRelationshipToOther(RelationshipType.valueOf(relationship[0]), relatedClass);
                 }
 
@@ -198,35 +201,23 @@ public class SaveAndLoad
                 {
                     String[] relationship = it.next().split(" ");
                     String className = relationship[1];
-                    Class relatedClass = findClass(className, classStore);
+                    Class relatedClass = store.findClass(className);
                     aClass.addRelationshipFromOther(RelationshipType.valueOf(relationship[0]), relatedClass);
                 }
                 index++;
             }
         }
+        catch(FileNotFoundException e)
+        {
+            view.showError(e.printStackTrace());
+        }
         catch (IOException e)
         {
-            e.printStackTrace();
-            //JOptionPane.showMessageDialog(null, "File " + fileName.getName() + " failed to load. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            view.showError(e.printStackTrace());
         }
         catch(ParseException e)
         {
-            e.printStackTrace();
-            //JOptionPane.showMessageDialog(null, "Could not parse JSON file! Please ensure you selected the correct file.", "Error", JOptionPane.ERROR_MESSAGE);
+            view.showError(e.printStackTrace());
         }
     }
-       /**
-    * Finds an element in the storage and returns it. Returns null if nothing found.
-    */
-   private static Class findClass(String name, ArrayList<Class> classStore)
-   {
-       for (Class aClass : classStore) 
-       {
-           if(aClass.getName().equals(name))
-           {
-               return aClass;
-           }
-       }
-       return null;
-   }
 }

@@ -11,14 +11,20 @@ import UML.model.Parameter;
 import UML.model.SaveAndLoad;
 import UML.model.Store;
 import java.io.File;
+import java.lang.ModuleLayer.Controller;
+import java.util.Map;
+import java.util.HashMap;
+import javax.swing.JPanel;
 
 public class FileClickController implements ActionListener {
 	private Store store;
 	private View view;
+	private Controller controller;
 
 	public FileClickController(Store store, View v) {
 		this.view = v;
 		this.store = store;
+		this.controller = new Controller(store, v);
 	}
 
 	public void actionPerformed(ActionEvent e) 
@@ -30,10 +36,12 @@ public class FileClickController implements ActionListener {
 			// Save contents to file...will require JSON save.
 			// If there is a currently loaded file.
 			if (currentLoadedFile != null) {
-				SaveAndLoad.save(currentLoadedFile, store.getClassList());
+				SaveAndLoad.save(currentLoadedFile.getName(), store.getClassList());
 			} else 
 			{
-				performSaveAs();
+				String fileName = view.save();
+				controller.save(fileName);
+				store.setCurrentLoadedFile(file);
 			}
 		} 
 		else if (cmd.equals("SaveAs")) 
@@ -44,7 +52,8 @@ public class FileClickController implements ActionListener {
 		{
 			// before clearing the current data, ask if the user wishes to save?
 			if (checkForSave()) {
-				performSaveAs();
+				
+				performSaveAs(view.save());
 			} 
 			else {
 				// Clear old data.
@@ -66,22 +75,10 @@ public class FileClickController implements ActionListener {
 	/**
 	 * Brings up a box for the user to provide a name for their file.
 	 */
-	private void performSaveAs() {
-		JFileChooser fc = new JFileChooser();
-		// If there is a currently loaded file.
-
-		// Bring up file panel for the user to save as(automatically will choose file
-		// type though in saveandload).
-		int returnValue = fc.showSaveDialog(parentWindow);
-		// Based on the user imput, save the file.
-
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			SaveAndLoad.save(fc.getSelectedFile(), classStore);
-			store.setCurrentLoadedFile(fc.getSelectedFile());
-			JOptionPane.showMessageDialog(parentWindow,
-					"File " + store.getCurrentLoadedFile().getName() + " was saved.", "File Saved",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
+	private void performSaveAs(String fileName) 
+	{
+		File file = controller.save(fileName, classStore);
+		store.setCurrentLoadedFile(file);
 	}
 
 	private boolean checkForSave() {

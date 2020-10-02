@@ -1,5 +1,6 @@
 package UML.views;
 import java.io.File;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public interface View
@@ -20,7 +21,7 @@ public interface View
 
 	void display();
 	void showError(String error);
-	void save(File fileName);
+	String save();
 	void load(File fileName);
 	void exit();
 }

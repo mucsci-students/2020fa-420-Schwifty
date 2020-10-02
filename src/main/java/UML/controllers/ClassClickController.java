@@ -15,15 +15,15 @@ import UML.model.Parameter;
 import UML.model.SaveAndLoad;
 import UML.model.Store;
 
-import UML.views.GraphicalView;
+import UML.views.View;
 
 public class ClassClickController implements ActionListener
 {
 	private Store store;
-	private GraphicalView view;
+	private View view;
 	private Controller controller;
 	
-	public ClassClickController(Store store, GraphicalView v) {
+	public ClassClickController(Store store, View v) {
 		this.view = v;
 		this.store = store;
 		this.controller = new Controller(store, v);

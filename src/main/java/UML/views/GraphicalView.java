@@ -6,6 +6,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JMenuBar;
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -118,14 +119,36 @@ public class GraphicalView implements View {
     }
 
     @Override
-    public void save(File fileName) {
+    public String save(File fileName) {
         // TODO Auto-generated method stub
+        JFileChooser fc = new JFileChooser();
+		// If there is a currently loaded file.
 
+		// Bring up file panel for the user to save as(automatically will choose file
+		// type though in saveandload).
+		int returnValue = fc.showSaveDialog(parentWindow);
+		// Based on the user imput, save the file.
+
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+            return fc.getSelectedFile().getName();
+		}
+        //if no filename is found, retrun an empty string
+        return "";
     }
 
     @Override
-    public void load(File fileName) {
-        // TODO Auto-generated method stub
+    public void load(File fileName) 
+    {
+        // Clear old data.
+		for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) 
+		{
+			parentWindow.remove(panel.getValue());
+		}
+
+		classPanels.clear();
+
+		parentWindow.revalidate();
+		parentWindow.repaint();
 
     }
 
@@ -358,9 +381,10 @@ public class GraphicalView implements View {
 
     private void addFileListeners(ActionListener fileListener)
     {
-        for (JMenuItem item : fileMenu.getMenuComponents()) 
+        for (JComponent item : fileMenu.getMenuComponents()) 
         {
-            item.addActionListener(fileListener);
+            JMenuItem menuItem = (JMenuItem)item;
+            menuItem.addActionListener(fileListener);
         }
     }
 
@@ -368,7 +392,8 @@ public class GraphicalView implements View {
     {
         for (JMenuItem item : classMenu.getMenuComponents()) 
         {
-            item.addActionListener(classListener);
+            JMenuItem menuItem = (JMenuItem)item;
+            menuItem.addActionListener(classListener);
         }
     }
 
@@ -376,14 +401,16 @@ public class GraphicalView implements View {
     {
         for (JMenuItem item : fieldMenu.getMenuComponents()) 
         {
-            item.addActionListener(fieldListener);
+            JMenuItem menuItem = (JMenuItem)item;
+            menuItem.addActionListener(fieldListener);
         }
     }
     private void addRelationshipListeners(ActionListener relationshipListener)
     {
         for (JMenuItem item : relationshipMenu.getMenuComponents()) 
         {
-            item.addActionListener(relationshipListener);
+            JMenuItem menuItem = (JMenuItem)item;
+            menuItem.addActionListener(relationshipListener);
         }
     }
 

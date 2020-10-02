@@ -33,6 +33,11 @@ public class Store {
 	{
 		this.currentLoadedFile = fileToSet;
 	}
+
+	public ArrayList<Class> getClassStore()
+	{
+		return this.classStore;
+	}
     /** 
 	 * Makes and returns a combo box fill with the created classes.
 	 */
@@ -482,7 +487,7 @@ public class Store {
 	{
 		Class aClass = findClass(className);
 		Set<Method> methods = aClass.getMethods();
-		ArrayList<String> params;
+		ArrayList<String> params = new ArrayList<String>();
 		for(Method m : methods)
 		{
 			if(m.toString().equals(methodString))

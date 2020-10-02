@@ -4,6 +4,7 @@ import UML.model.Class;
 import UML.model.Store;
 import UML.views.*;
 import java.util.ArrayList;
+import java.awt.event.*;
 
 public class Controller 
 {
@@ -16,7 +17,7 @@ public class Controller
     {
         this.store = store;
         this.view = view;
-        view.addListeners();
+        addListeners();
     }
 
     public void createClass(String name) 
@@ -101,6 +102,11 @@ public class Controller
         sendToView(temp, "Method", "renamed", className, oldClassStr);
     }
 
+    public void save(String fileName)
+    {
+        File currentFile = SaveAndLoad.save(fileName, store.getClassStore());
+        store.setCurrentLoadedFile(currentFile);
+    }
     /**
      * Sends the correct information back to the view.  Can call for updating class or showing error.
      */
