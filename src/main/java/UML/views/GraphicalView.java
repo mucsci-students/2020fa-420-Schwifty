@@ -25,7 +25,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import javax.swing.border.Border;
-
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
 
@@ -55,6 +56,7 @@ public class GraphicalView implements View {
     @Override
     public void createClass(String name) {
         makeNewClassPanel(name);
+        refresh();
     }
 
     @Override
@@ -152,23 +154,25 @@ public class GraphicalView implements View {
      */
     public void makeWindow() {
         window = new JFrame("UML");
-        window.setLayout(new GridLayout(5, 5));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setSize(800, 750);
-        window.setJMenuBar(mb);
+        window.setLayout(new GridLayout(4, 4));
+        window.setSize(800, 800);
         window.setVisible(true);
         parentWindow = window;
+        createMenu();
+        parentWindow.add(mb);
+        window.setJMenuBar(mb);
+        
     }
 
     public void createMenu() {
         // Set up the menu with helpers and add them to the main window.
-        parentWindow.setLayout(new GridLayout(5, 5));
         mb = new JMenuBar();
         createFileMenu(mb);
         createClassMenu(mb);
         createAtrributeMenu(mb);
         createRelationshipMenu(mb);
-        window.add(mb);
+        mb.setVisible(true);  
     }
 
     public JFrame getMainWindow() {
@@ -292,17 +296,18 @@ public class GraphicalView implements View {
     /**
      * Creates a panel on the window to display information about a class.
      */
-    public void makeNewClassPanel(String aClass) {
+    public void makeNewClassPanel(String aClass) 
+    {
         JPanel classPanel = new JPanel();
-        classPanel.setSize(20, 200);
-        classPanel.setVisible(true);
-        parentWindow.add(classPanel);
         JTextArea classText = new JTextArea(aClass);
         classText.setEditable(false);
         classPanel.add(classText);
         classPanels.put(aClass, classPanel);
+        classPanel.setSize(classText.getSize());
         Border blackline = BorderFactory.createLineBorder(Color.black);
         classText.setBorder(blackline);
+        classPanel.setVisible(true);
+        parentWindow.add(classPanel);
     }
 
     public void deleteClassPanel(String aClass) {
@@ -364,8 +369,7 @@ public class GraphicalView implements View {
     public void start()
     {
         makeWindow();
-        createMenu();
-        parentWindow.pack();
+        refresh();
     }
 
     private void addFileListeners(ActionListener fileListener) {
