@@ -1,6 +1,6 @@
 package UML.controllers;
 /*
-    Author: Chris
+    Author: Chris, Tyler, Drew.
     Date: 09/17/2020
     Purpose: This is a static class with static methods. Handles the saving and 
     loading of user created classes using simple JSON. 
@@ -103,33 +103,34 @@ public class SaveAndLoad
 
     public File load(String fileName) throws IOException, ParseException
     {
-        
-        JSONParser parser = new JSONParser();
-        JSONObject obj;
-        try{
-        //Get the json object from the parser
-        obj = (JSONObject)parser.parse(fileName);
-        
-
-        //Get the classes array inside that json object
-        JSONArray classes = (JSONArray)obj.get("Classes");
-
-        //tell the main controller to create all the classes we need in the store
-        String className = classObjectsToStore(classes);
-        
-        for (Object jsonObject : classes) 
+        File fileToLoad = new File(fileName);
+        try
         {
-            loadFields(jsonObject, className);
-            loadMethods(jsonObject, className);
-            loadRelationsTo(jsonObject, className);
-            loadRelationsFrom(jsonObject, className);
+            FileReader fr = new FileReader(fileToLoad);
+            JSONParser parser = new JSONParser();
+            //Get the json object from the parser
+            JSONObject obj = (JSONObject)parser.parse(fr);
+            
+
+            //Get the classes array inside that json object
+            JSONArray classes = (JSONArray)obj.get("Classes");
+
+            //tell the main controller to create all the classes we need in the store
+            String className = classObjectsToStore(classes);
+        
+            for (Object jsonObject : classes) 
+            {
+                loadFields(jsonObject, className);
+                loadMethods(jsonObject, className);
+                loadRelationsTo(jsonObject, className);
+                loadRelationsFrom(jsonObject, className);
+            }  
         }
-    }
-    catch(ParseException p)
-    {
-        System.out.println("BAD");
-    }
-        return new File(fileName);
+        catch(ParseException p)
+        {
+            p.printStackTrace();
+        }
+        return fileToLoad;
     }
 
     /**
