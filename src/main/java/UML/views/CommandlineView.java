@@ -60,10 +60,12 @@ public class CommandlineView implements View {
 
     }
 
+    /**
+     * Prints error message to the command line.
+     */
     @Override
     public void showError(String error) {
-        // TODO Auto-generated method stub
-
+        System.out.println(error);
     }
 
     @Override
