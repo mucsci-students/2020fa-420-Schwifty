@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.awt.event.*;
 import java.io.File;
 
+import java.io.IOException;
+import org.json.simple.parser.ParseException;
+
 
 public class Controller 
 {
@@ -23,7 +26,7 @@ public class Controller
     {
         this.store = store;
         this.view = view;
-        addListeners();
+        //addListeners();
     }
 
     /**
@@ -32,20 +35,24 @@ public class Controller
     public void createClass(String name) 
     {
         boolean temp = store.addClass(name);
+        Class aClass = findClass(name);
         if (temp)
-            view.createClass(name);
-        else
-            view.showError("Class could not be created");
+        {   
+            String classStr = aClass.toString();
+            view.createClass(classStr);
+        }       
     }
-
-    /**
-     * Deletes a class from the UML diagram.
-     */
+    
+    
     public void deleteClass(String name) 
     {
         boolean temp = store.deleteClass(name);
+        Class aClass = findClass(name);
         if (temp)
-            view.deleteClass(name);
+        {
+            String classStr = aClass.toString();
+            view.deleteClass(classStr);
+        }
         else
             view.showError("Class could not be deleted");
     }
@@ -172,19 +179,23 @@ public class Controller
 
     /**
      * Saves a UML diagram file.
-     */
-    public void save(String fileName)
+     
+        tr*/
+    public void save(String fileName) throws IOException
     {
-        File currentFile = SaveAndLoad.save(fileName, store.getClassStore());
+        SaveAndLoad sl = new SaveAndLoad(store, view, this);
+        
+        File currentFile = sl.save(fileName);
         store.setCurrentLoadedFile(currentFile);
     }
 
     /**
-     * Loads a UML diagram File.
+     * Load selected file.
      */
-    public void load(String fileName)
+    public void load(String fileName) throws IOException, ParseException
     {
-        File currentFile = SaveAndLoad.load(fileName, store.getClassStore());
+        SaveAndLoad sl = new SaveAndLoad(store, view, this);
+        File currentFile = sl.load(fileName);
         store.setCurrentLoadedFile(currentFile);
         ArrayList<String> toStrings = new ArrayList<String>();
         for(Class c : store.getClassStore())
@@ -222,7 +233,7 @@ public class Controller
         return aClass;
     }
 
-    private void addListeners()
+    public void addListeners()
     {
         view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new FieldClickController(store, view, this), new RelationshipClickController(store, view, this));
     }

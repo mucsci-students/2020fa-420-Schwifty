@@ -4,55 +4,80 @@ import java.awt.event.*;
 
 import UML.views.*;
 
-import UML.model.Class;
-import UML.model.Field;
-import UML.model.Method;
-import UML.model.Parameter;
 import UML.model.Store;
-import UML.model.RelationshipType;
 import java.io.File;
-import java.util.Map;
-import java.util.HashMap;
-import javax.swing.JPanel;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.json.simple.parser.ParseException;
 
-public class FileClickController implements ActionListener
-{
+public class FileClickController implements ActionListener {
 	private Store store;
 	private View view;
 	private Controller controller;
 
-	public FileClickController(Store s, View v, Controller c) 
-	{
+	public FileClickController(Store s, View v, Controller c) {
 		this.view = v;
 		this.store = s;
 		this.controller = c;
 	}
 
-	public void actionPerformed(ActionEvent e) 
+	public void actionPerformed(ActionEvent e)
 	{
 		String cmd = e.getActionCommand();
 		if (cmd.equals("Save")) 
 		{
-			File currentLoadedFile = store.getCurrentLoadedFile();
+
+			try
+			{
+				File currentLoadedFile = store.getCurrentLoadedFile();
+			
+			
 			// Save contents to file...will require JSON save.
 			// If there is a currently loaded file.
-			if (currentLoadedFile != null) {
-				SaveAndLoad.save(currentLoadedFile.getName(), store.getClassStore());
-			} else 
+				if (currentLoadedFile != null) 
+				{
+					controller.save(currentLoadedFile.getName());
+				} 
+				else 
+				{
+					String fileName = view.save();
+					controller.save(fileName);
+				}
+			}
+			catch(IOException io)
 			{
-				String fileName = view.save();
-				controller.save(fileName);
+				view.showError("IOException found");
 			}
 		} 
 		else if (cmd.equals("SaveAs")) 
 		{
-			String fileName = view.save();
-			controller.save(fileName);
+			try
+			{
+				String fileName = view.save();
+				controller.save(fileName);
+			}
+			catch(IOException io)
+			{
+				view.showError("IOException found");
+			}
 		} 
 		else if (cmd.equals("Load")) 
 		{
-			String fileName = view.load();
-			controller.load(fileName);
+			try
+			{
+				String fileName = view.load();
+				controller.load(fileName);
+			}
+			catch(IOException io)
+			{
+				view.showError("IOException found");
+			}
+			catch(ParseException pe)
+			{
+				view.showError("IOException found");
+			}
+			
+
 		}
 	}
 }

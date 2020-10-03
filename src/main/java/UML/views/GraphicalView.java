@@ -49,26 +49,21 @@ public class GraphicalView implements View {
     private JMenu relationshipMenu;
 
     public GraphicalView() {
-        makeWindow();
-        createMenu();
         this.classPanels = new HashMap<String, JPanel>();
     }
 
     @Override
     public void createClass(String name) {
-        // TODO Auto-generated method stub
         makeNewClassPanel(name);
     }
 
     @Override
     public void deleteClass(String name) {
-        // TODO Auto-generated method stub
         deleteClassPanel(name);
     }
 
     @Override
     public void updateClass(String oldString, String newString) {
-        // TODO Auto-generated method stub
         JPanel panel = classPanels.get(oldString);
         classPanels.remove(oldString);
         classPanels.put(newString, panel);
@@ -160,9 +155,9 @@ public class GraphicalView implements View {
         window.setLayout(new GridLayout(5, 5));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(800, 750);
-        createMenu();
         window.setJMenuBar(mb);
         window.setVisible(true);
+        parentWindow = window;
     }
 
     public void createMenu() {
@@ -365,6 +360,14 @@ public class GraphicalView implements View {
         addRelationshipListeners(relationshipListener);
     }
 
+    @Override
+    public void start()
+    {
+        makeWindow();
+        createMenu();
+        parentWindow.pack();
+    }
+
     private void addFileListeners(ActionListener fileListener) {
         for (Component item : fileMenu.getMenuComponents()) 
         {
@@ -398,5 +401,4 @@ public class GraphicalView implements View {
             menuItem.addActionListener(relationshipListener);
         }
     }
-
 }

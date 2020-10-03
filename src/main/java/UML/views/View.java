@@ -20,4 +20,5 @@ public interface View
 	String save();
 	String load();
 	void exit();
+	void start();
 }

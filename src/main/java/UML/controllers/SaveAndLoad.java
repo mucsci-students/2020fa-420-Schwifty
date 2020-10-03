@@ -76,27 +76,169 @@ public class SaveAndLoad
      *      {
      *          ClassName: name
      *          fields[]
-     *          methods[ Method: [{
-     *                                type 
-     *                                name
-     *                                params[] 
-     *                            }]
-     *                  ]
+     *          methods[ type name [type name type name ...]]
      *          relationTo []
      *          relationFrom []
      *      }
      *      {
      *          ClassName: name
      *          fields[]
+     *          methods[ type name [type name type name ...]]
      *          relationTo []
      *          relationFrom []
      *      }
      * ]} 
     */
-    public static File save(String fileName, ArrayList<Class> classesToSave) throws IOException
+    public File save(String fileName) throws IOException, FileNotFoundException
     {
         //the json file
         File jsonFile;
+        //build the json object to be saved
+        JSONObject toBeSaved = buildObjectToSave();
+        //Write that to a file
+        jsonFile = writeToFile(fileName, toBeSaved);
+  
+        return jsonFile;
+    }
+
+    public File load(String fileName) throws IOException, ParseException
+    {
+        
+        JSONParser parser = new JSONParser();
+        JSONObject obj;
+        try{
+        //Get the json object from the parser
+        obj = (JSONObject)parser.parse(fileName);
+        
+
+        //Get the classes array inside that json object
+        JSONArray classes = (JSONArray)obj.get("Classes");
+
+        //tell the main controller to create all the classes we need in the store
+        String className = classObjectsToStore(classes);
+        
+        for (Object jsonObject : classes) 
+        {
+            loadFields(jsonObject, className);
+            loadMethods(jsonObject, className);
+            loadRelationsTo(jsonObject, className);
+            loadRelationsFrom(jsonObject, className);
+        }
+    }
+    catch(ParseException p)
+    {
+        System.out.println("BAD");
+    }
+        return new File(fileName);
+    }
+
+    /**
+     * Gets the JSON array of fields to be added to the class details object. 
+     */
+    private JSONArray getFieldArray(Class aClass)
+    {
+        Set<Field> fields = aClass.getFields();
+        //Create a JSONArray of the fields to be stored
+        JSONArray fieldsToBeAdded = new JSONArray();
+
+        for (Field f : fields) 
+        {
+            //Get the current fields and put in the JSONObject
+            String nameAndType = f.getType() + " " + f.getName();
+            fieldsToBeAdded.add(nameAndType);
+        }
+
+        return fieldsToBeAdded;
+    }
+    /**
+     * Get the array of methods to be added to the class details object
+     */
+    private JSONArray getMethodArray(Class aClass)
+    {
+        Set<Method> methods = aClass.getMethods();
+        //Create a JSONArray of the fields to be stored
+        JSONArray methodsToBeAdded = new JSONArray();
+
+        //Add the methods to the json object
+        for (Method m : methods) 
+        {
+            JSONObject methObject = new JSONObject();
+            //Get the current fields and put in the JSONObject
+            String methodName = m.getName();
+            String methodType = m.getType();
+            ArrayList<String> params  = store.getMethodParamString(methodName, methodType);
+
+            String methodString = methodType + " " + methodName + "[ ";
+            for(String s : params)
+            {
+                methodString += s;
+            }
+            methodString += " ]";
+            methodsToBeAdded.add(methodString);
+        }
+        return methodsToBeAdded;
+    }
+    /**
+     * Gets the JSON array of relationships to other classes to be added to the class details object. 
+     */
+    private JSONArray getRelationToArray(Class aClass)
+    {
+        //Add the relations to others
+        Map<String,RelationshipType> relationToOthers = aClass.getRelationshipsToOther();
+            
+        JSONArray relationsTo = new JSONArray();
+ 
+        for (Map.Entry<String, RelationshipType> relation : relationToOthers.entrySet()) 
+        {
+            String relationship = relation.getValue() + " " + relation.getKey();
+            relationsTo.add(relationship);
+        }
+        
+        return relationsTo;
+    }
+    /**
+     * Gets the JSON array of relationships from other classes to be added to the class details object. 
+     */
+    private JSONArray getRelationFromArray(Class aClass)
+    {
+        Map<String,RelationshipType> relationFromOthers = aClass.getRelationshipsFromOther();
+            
+        JSONArray relationsFrom = new JSONArray();
+        
+        for (Map.Entry<String, RelationshipType> relation : relationFromOthers.entrySet()) 
+        {
+            String relationship = relation.getValue() + " " + relation.getKey();
+            relationsFrom.add(relationship);
+        }
+        return relationsFrom;
+    }
+    /**
+     * Writes the json contents to file
+     */
+    private File writeToFile(String fileName, JSONObject toBeSaved) throws IOException
+    {
+        //Attempt to write the json data to passed in file name. IOExcetion on failure. 
+        //Append the .json format to name
+        //ensures we are not adding it if we don't need to
+        if(!fileName.contains(".json"))
+        {
+            fileName += ".json";
+        }
+
+        File jsonFile = new File(fileName);
+        FileWriter fw = new FileWriter(jsonFile);
+        fw.write(toBeSaved.toJSONString());
+        fw.flush();
+        fw.close();
+
+        return jsonFile;
+    }
+    /**
+     * Builds the json object to be written to file
+     */
+    private JSONObject buildObjectToSave()
+    {
+        ArrayList<Class> classesToSave = store.getClassStore();
         JSONObject toBeSaved = new JSONObject();
 
         //Store an arraylist of JSONObjects to be written to the file
@@ -107,176 +249,116 @@ public class SaveAndLoad
         {
             //Get the deails about the class    
             JSONObject classDetails = new JSONObject();
+            
+            //Add the relations from others
+            JSONArray relationsFrom = getRelationFromArray(aClass);
+            classDetails.put("RelationshipFromOthers", relationsFrom);
+
+            //Add the relations to other  
+            JSONArray relationsTo = getRelationToArray(aClass);
+            classDetails.put("RelationshipToOthers",relationsTo);
+
+            //Create a JSONArray of the fields to be stored
+            JSONArray methodsToBeAdded = getMethodArray(aClass);
+            classDetails.put("Methods", methodsToBeAdded);
+
+            //Get the field array and add it to class details.
+            JSONArray fieldsToBeAdded = getFieldArray(aClass);
+            classDetails.put("Fields", fieldsToBeAdded);
 
             //Get the current class name and put it in the JSONObject
             String className = aClass.getName();
             classDetails.put("ClassName", className); 
-                                    
-            Set<Field> fields = aClass.getFields();
-            //Create a JSONArray of the fields to be stored
-            JSONArray fieldsToBeAdded = new JSONArray();
-
-            for (Field f : fields) 
-            {
-                //Get the current fields and put in the JSONObject
-                String nameAndType = f.getType() + " " + f.getName();
-                fieldsToBeAdded.add(nameAndType);
-            }
-            classDetails.put("Fields", fieldsToBeAdded);
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            Set<Method> methods = aClass.getMethods();
-            //Create a JSONArray of the fields to be stored
-            JSONArray methodsToBeAdded = new JSONArray();
-
-            //Add the methods to the json object
-            for (Method m : methods) 
-            {
-                //Get the current fields and put in the JSONObject
-                String methodName = m.getName();
-                String methodType = m.getType();
-                ArrayList<String> params  = store.getMethodParamString(methodName, methodType);
-                // {returnType Name {type name, type name, ...  }}
-                JSONArray paramsToAdd = new JSONArray();
-                JSONObject methObject = new JSONObject();
-                for(String p : params)
-                {
-                    JSONObject par = new JSONObject();
-                    par.put("Parameter", p);
-                    paramsToAdd.add(p);
-                }
-                methObject.put("Params", paramsToAdd);
-                methodsToBeAdded.add(m);
-                classDetails.put("Methods", methodName);
-            }
-            
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            //Add the relations to others
-            Map<String,RelationshipType> relationToOthers = aClass.getRelationshipsToOther();
-            
-            JSONArray relationsTo = new JSONArray();
-
-            for (Map.Entry<String, RelationshipType> relation : relationToOthers.entrySet()) 
-            {
-                String relationship = relation.getValue() + " " + relation.getKey();
-                relationsTo.add(relationship);
-            }
-            //Add the JSONArray to the JSONObject
-            classDetails.put("RelationshipToOthers",relationsTo);
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            //Add the relations from others
-            Map<String,RelationshipType> relationFromOthers = aClass.getRelationshipsFromOther();
-            
-            JSONArray relationsFrom = new JSONArray();
-            
-            for (Map.Entry<String, RelationshipType> relation : relationFromOthers.entrySet()) 
-            {
-                String relationship = relation.getValue() + " " + relation.getKey();
-                relationsFrom.add(relationship);
-            }
-            
-            //Add the JSONArray to the JSONObject
-            classDetails.put("RelationshipFromOthers", relationsFrom);
 
             //Add the JSONArray to the JSONObject
-            
             classesToBeSaved.add(classDetails);
         }
         toBeSaved.put("Classes",classesToBeSaved);
-        //Attempt to write the json data to passed in file name. IOExcetion on failure. 
-        //Append the .json format to name
-        //ensures we are not adding it if we don't need to
-        if(!fileName.contains(".json"))
-        {
-            fileName += ".json";
-        }
 
-        jsonFile = new File(fileName);
-        FileWriter fw = new FileWriter(fileName);
-        fw.write(toBeSaved.toJSONString());
-        fw.flush();
-        fw.close();
-  
-        return jsonFile;
+        return toBeSaved;
     }
 
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-    
-    public static File load(String fileName, ArrayList<Class> classStore) throws IOException, ParseException
+    private String classObjectsToStore(JSONArray classes)
     {
-        JSONParser parser = new JSONParser();
-        
-        //Get the json object from the parser
-        JSONObject obj = (JSONObject)parser.parse(fileName);
-        //Get the classes array inside that json object
-        JSONArray classes = (JSONArray)obj.get("Classes");
-
+        String className = "";
         for(Object jsonObject : classes)
         {
             //Get the current json object, lots of casting ahead.
             JSONObject jobct = (JSONObject)jsonObject;
-            String className = (String)jobct.get("ClassName");
-            //The class to be created
-            Class aClass = new Class(className);
-            classStore.add(aClass);
+            className = (String)jobct.get("ClassName");
+            //create the class from the name
+            controller.createClass(className);
         }
-        
-        int index = 0;
-        
-        for (Object jsonObject : classes) 
-        {
-            JSONObject jobct = (JSONObject)jsonObject;
-            Class aClass = classStore.get(index);
-            JSONArray jsonAttr = (JSONArray)jobct.get("Fields");
-            Iterator<String> it = jsonAttr.iterator();
-            while(it.hasNext())
-            {
-                String[] attr = it.next().split(" ");
-                aClass.addField(attr[0], attr[1]);
-            }
-            
-            //Get the relationships to other class and add it to the correct class
-            JSONArray jsonRelationToOthers = (JSONArray)jobct.get("RelationshipToOthers");
-            it = jsonRelationToOthers.iterator();
-            while(it.hasNext())
-            {
-                String[] relationship = it.next().split(" ");
-                String className = relationship[1];
-                Class relatedClass = store.findClass(className);
-                aClass.addRelationshipToOther(RelationshipType.valueOf(relationship[0]), relatedClass);
-            }
 
-            //Get the relationships to other class and add it to the correct class
-            JSONArray jsonRelationFromOthers = (JSONArray)jobct.get("RelationshipFromOthers");
-            it = jsonRelationFromOthers.iterator();
-            while(it.hasNext())
-            {
-                String[] relationship = it.next().split(" ");
-                String className = relationship[1];
-                Class relatedClass = store.findClass(className);
-                aClass.addRelationshipFromOther(RelationshipType.valueOf(relationship[0]), relatedClass);
-            }
-            index++;
+        return className;
+    }
+
+    private void loadFields(Object jsonObject, String className)
+    {
+        JSONObject jobct = (JSONObject)jsonObject;
+        Class aClass = store.findClass(className);
+        JSONArray jsonAttr = (JSONArray)jobct.get("Fields");
+        Iterator<String> it = jsonAttr.iterator();
+
+        while(it.hasNext())
+        {
+            String[] field = it.next().split(" ");
+            aClass.addField(field[0], field[1]);
         }
-        return new File("File.txt");
+    }
+
+    private void loadMethods(Object jsonObject, String className)
+    {
+        JSONObject jobct = (JSONObject)jsonObject;
+        Class aClass = store.findClass(className);
+
+        JSONArray jsonMethods = (JSONArray)jobct.get("Methods");
+        Iterator<String> it = jsonMethods.iterator();
+        
+        while(it.hasNext())
+        {
+            String[] methodString = it.next().split(" ");
+            String type = methodString[0];
+            String name = methodString[1];
+            ArrayList<String> params = new ArrayList<String>();
+            
+            for(int count = 3; count < methodString.length - 1; count += 2)
+            {
+                params.add(methodString[count] + " " + methodString[count + 1]);    
+            }
+            store.addMethod(className, type, name, params);
+        }
+    }
+
+    private void loadRelationsTo(Object jsonObject, String className)
+    {
+        JSONObject jobct = (JSONObject)jsonObject;
+        //Get the relationships to other class and add it to the correct class
+        JSONArray jsonRelationToOthers = (JSONArray)jobct.get("RelationshipToOthers");
+        Iterator<String> it = jsonRelationToOthers.iterator();
+        Class aClass = store.findClass(className);
+        while(it.hasNext())
+        {
+            String[] relationship = it.next().split(" ");
+            String relatedClassName = relationship[1];
+            Class relatedClass = store.findClass(relatedClassName);
+            aClass.addRelationshipToOther(RelationshipType.valueOf(relationship[0]), relatedClass);
+        }
+    }
+
+    private void loadRelationsFrom(Object jsonObject, String className)
+    {
+        JSONObject jobct = (JSONObject)jsonObject;
+        //Get the relationships to other class and add it to the correct class
+        JSONArray jsonRelationFromOthers = (JSONArray)jobct.get("RelationshipFromOthers");
+        Iterator<String> it = jsonRelationFromOthers.iterator();
+        Class aClass = store.findClass(className);
+        while(it.hasNext())
+        {
+            String[] relationship = it.next().split(" ");
+            String relatedClassName = relationship[1];
+            Class relatedClass = store.findClass(relatedClassName);
+            relatedClass.addRelationshipFromOther(RelationshipType.valueOf(relationship[1]), aClass);
+        }
     }
 }

@@ -39,6 +39,11 @@ public class Store {
 	{
 		return this.classStore;
 	}
+	
+	public void setClassStore(ArrayList<Class> newStore)
+	{
+		this.classStore = newStore;
+	}
     /** 
 	 * Makes and returns a combo box fill with the created classes.
 	 */
@@ -140,7 +145,7 @@ public class Store {
 		if(findField(className, name) == null)
 		{
 			Class classToAddAttrTo = findClass(className);
-			classToAddAttrTo.addField(type, name);
+			return classToAddAttrTo.addField(type, name);
 		}
 		return false;
 	}

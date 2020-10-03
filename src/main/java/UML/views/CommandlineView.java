@@ -78,4 +78,9 @@ public class CommandlineView implements View {
         return null;
     }
     
+    @Override
+    public void start()
+    {
+        
+    }
 }

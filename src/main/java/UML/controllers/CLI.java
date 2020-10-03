@@ -1,4 +1,4 @@
-
+package UML.controllers;
 /*
     Author: Chris, Tyler, Drew, Dominic, Cory. 
     Date: 09/24/2020
@@ -6,8 +6,6 @@
  */
 import java.io.Console;
 import java.util.Scanner;
-
-import javax.lang.model.util.ElementScanner6;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
@@ -17,17 +15,24 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import java.util.ArrayList;
 import UML.model.*;
+import UML.model.Store;
+import UML.views.View;
 public class CLI {
     
     private Options options;
     private Store store;
+    private View view;
+    private Controller controller;
     
-    public CLI(String[] args)
+    public CLI(String[] args, Store s, View v, Controller c)
     {
         options = addOptions();
         store = new Store();
+        this.store = s;
+        this.view = v;
+        this.controller = c;
+
         printHeader();
-        cliLoop(args);
         //System.out.print("Schwifty-UML> ");
     }
      /**
@@ -70,8 +75,6 @@ public class CLI {
         .addOption("save", true, "Save a UML diagram: save [fileName]")
         .addOption("chungus", true, "Loads Thicc Chungus")
         .addOption("load", true, "Load a UML diagram: load [fileName]");
-    //HelpFormatter formatter = new HelpFormatter();
-    //formatter.printHelp("CLITester", options);
         return options;
     }
 
@@ -79,60 +82,15 @@ public class CLI {
      * Parses a command line argument in order to call the correct method.
      */
 
-    private void parse(CommandLine cmd) {
-        /*
-        switch(cmd.nextToken())
-        {
-            case "exit": exit(cmd.getOptionValues("exit"));
-            break;
-            case "help": help(cmd.getOptionValues("help"));
-            break;
-            case "display": display(cmd.getOptionValues("display"));
-            break;
-            case "addc": addClass(cmd.getOptionValues("addc"));
-            break;
-            case "renamec": renameClass(cmd.getOptionValues("renamec"));
-            break;
-            case "deletec": deleteClass(cmd.getOptionValues("deletec"));
-            break;
-            case "addf": addField(cmd.getOptionValues("addf"));
-            break;
-            case "renamef": renameField(cmd.getOptionValues("renamef"));
-            break;
-            case "deletef": deleteField(cmd.getOptionValues("deletef"));
-            break;
-            case "addm": addMethod(cmd.getOptionValues("addm"));
-            break;
-            case "renamem": renameMethod(cmd.getOptionValues("renamem"));
-            break;
-            case "deletem": deleteMethod(cmd.getOptionValues("deletem"));
-            break;
-            case "addp": addParameter(cmd.getOptionValues("addp"));
-            break;
-            case "deletep": deleteParameter(cmd.getOptionValues("deletep"));
-            break;
-            case "renamep": renameParameter(cmd.getOptionValues("renamep"));
-            break;
-            case "addr": addRelationship(cmd.getOptionValues("addr"));
-            break;
-            case "deleter": deleteRelationship(cmd.getOptionValues("deleter"));
-            break;
-            case "save": save(cmd.getOptionValues("save"));
-            break;
-            case "chungus": chungus(cmd.getOptionValues("chungus"));
-            break;
-            case "load": load(cmd.getOptionValues("load"));
-            break;
-        }
-        */
-
+    private void parse(CommandLine cmd) 
+    {
         if(cmd.hasOption("help"))
         {
             help();
         }
         else if(cmd.hasOption("display"))
         {
-            display(cmd.getOptionValue("display"));
+            display();
         }
         else if(cmd.hasOption("showgui"))
         {
@@ -178,10 +136,6 @@ public class CLI {
         {
             addParameter(cmd.getOptionValues("addp"));
         }
-        else if(cmd.hasOption("renamep"))
-        {
-            renameParameter(cmd.getOptionValues("renamep"));
-        }
         else if(cmd.hasOption("deletep"))
         {
             deleteParameter(cmd.getOptionValues("deletep"));
@@ -196,7 +150,7 @@ public class CLI {
         }
         else if(cmd.hasOption("chungus"))
         {
-            chungus(cmd.getOptionValues("chungus"));
+            chungus();
         }
         else if(cmd.hasOption("load"))
         {
@@ -239,7 +193,7 @@ public class CLI {
     //Displays the GUI for the user. 
     private void showGUI()
     {
-        UMLWindow window = new UMLWindow();
+        
     }
 
     /**
@@ -432,7 +386,8 @@ public class CLI {
     private void addRelationship(String [] args)
     {
         try {
-            store.addRelationship(args[0], args[1], Enum);
+            RelationshipType type = RelationshipType.valueOf(args[2]);
+            store.addRelationship(args[0], args[1], type);
         } catch (Exception e) 
         {   
             System.out.println(e.getMessage());
@@ -448,7 +403,7 @@ public class CLI {
     {
         try 
         {
-            store.save(args[0]);
+            controller.save(args[0]);
             
         } 
         catch (Exception e) 
@@ -462,12 +417,17 @@ public class CLI {
     {
         try 
         {
-            store.load(args[0]);
+            controller.load(args[0]);
         } 
         catch (Exception e) 
         {
             System.out.println("Invalid arguments");
         }
+    }
+
+    private void chungus()
+    {
+        System.out.println("THICCC BOY void");
     }
 
 
