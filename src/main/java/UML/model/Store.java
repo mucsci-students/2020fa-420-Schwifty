@@ -35,6 +35,9 @@ public class Store {
 		this.currentLoadedFile = fileToSet;
 	}
 
+	/**
+	 * Returns ArrayList of classes in the store.
+	 */
 	public ArrayList<Class> getClassStore()
 	{
 		return this.classStore;
@@ -44,6 +47,13 @@ public class Store {
 	{
 		this.classStore = newStore;
 	}
+
+
+//================================================================================================================================================
+//Getters
+//===============================================================================================================================================
+
+
     /** 
 	 * Makes and returns a combo box fill with the created classes.
 	 */
@@ -91,7 +101,20 @@ public class Store {
 		}
 
 		return methodsToReturn;
+
 	}
+
+//********************************************************************************************************************	
+//********************************************************************************************************************
+//None of the below methods for modyifying classes can be called by the controller unless the class in question exists.
+//********************************************************************************************************************
+//********************************************************************************************************************
+
+
+//================================================================================================================================================
+//Class methods
+//================================================================================================================================================
+
 	/**
 	 * Adds a class to the store.
 	 */
@@ -137,17 +160,19 @@ public class Store {
 		return false;
 	}
 
+
+//================================================================================================================================================
+//Field methods
+//================================================================================================================================================
+
+
 	/**
 	 * Adds a field to a class in the store.
 	 */
 	public boolean addField(String className, String type, String name) throws IllegalArgumentException
 	{
-		if(findField(className, name) == null)
-		{
-			Class classToAddAttrTo = findClass(className);
-			return classToAddAttrTo.addField(type, name);
-		}
-		return false;
+		Class classToAddAttrTo = findClass(className);
+		return classToAddAttrTo.addField(type, name);
 	}
 
 	/**
@@ -156,11 +181,7 @@ public class Store {
 	public boolean deleteField(String className, String name) 
 	{
 		Class classToDeleteFrom = findClass(className);
-		if(classToDeleteFrom != null) 
-		{		
-			return classToDeleteFrom.deleteField(name);
-		}
-		return false;
+		return classToDeleteFrom.deleteField(name);
 	}
 
 	/**
@@ -181,6 +202,11 @@ public class Store {
 		Class toChange = findClass(className);
 		return toChange.changeFieldType(newType, name);
 	}
+
+
+//================================================================================================================================================
+//Method methods
+//================================================================================================================================================
 
 
 	/**
@@ -236,45 +262,74 @@ public class Store {
 			Parameter newParam = new Parameter(splitParam[0], splitParam[1]);
 			newParams.add(newParam);
 		}
+
 		return toRename.renameMethod(type, oldName, newParams, newName);
 	}
 
 	/**
      * Chnages the return type of a method of a class in the store.
      */
-	public void changeMethodType(String className, String oldType, String methodName, ArrayList<Parameter> params, String newType)
+	public boolean changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String newType)
 	{
 		Class aClass = findClass(className);
-		aClass.changeMethodType(oldType, methodName, params, newType);
+
+		ArrayList<Parameter> newParams = new ArrayList<Parameter>();
+
+		for(String param : params)
+		{
+			String[] splitParam = param.split(" ");
+			Parameter newParam = new Parameter(splitParam[0], splitParam[1]);
+			newParams.add(newParam);
+		}
+
+		return aClass.changeMethodType(oldType, methodName, newParams, newType);
 	}
+
+//================================================================================================================================================
+//Parameter methods
+//================================================================================================================================================
+
+
 	/**
 	 * Add parameter to a method of a class in the store.
 	 */
 	public boolean addParam(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName) throws IllegalArgumentException
 	{
-		Class theClass = findClass(className);
-		ArrayList<Parameter> newParams = new ArrayList<Parameter>();
+		ArrayList<Parameter> theParams = new ArrayList<Parameter>();
 
 		for(String p : params)
 		{
 			String[] splitStr = p.split(" ");
 			Parameter newParam = new Parameter(splitStr[0], splitStr[1]);
-			newParams.add(newParam);
+			theParams.add(newParam);
 		}
-
-		Method theMethod = findMethod(theClass.getName(), methodType, methodName, newParams);
+		Method theMethod = findMethod(className, methodType, methodName, theParams);
 		return theMethod.addParam(new Parameter(paramType, paramName));
 	}
 
 	/**
 	 * Deletes parameter of a method of a class in the store.
 	 */
-	public boolean deleteParam(String className, String methodType, String methodName, ArrayList<Parameter> params, String paramType, String paramName)
+	public boolean deleteParam(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName)
 	{
-		Method theMethod = findMethod(className, methodType, methodName, params);
+		ArrayList<Parameter> theParams = new ArrayList<Parameter>();
+		for(String p : params)
+		{
+			String[] splitStr = p.split(" ");
+			Parameter toBeDeleted = new Parameter(splitStr[0], splitStr[1]);
+			theParams.add(toBeDeleted);
+		}
+		
+		Method theMethod = findMethod(className, methodType, methodName, theParams);
 		return theMethod.deleteParam(new Parameter(paramType, paramName));
 	}
 	
+
+//================================================================================================================================================
+//Relationship methods
+//================================================================================================================================================
+
+
 	/**
 	 * Adds a relationship between two classes in the store.
 	 */
@@ -324,7 +379,13 @@ public class Store {
 			temp.deleteRelationshipToOther(entry.getValue(), aClass);
 		}
     }
-    
+	
+	
+//================================================================================================================================================
+//Find methods
+//================================================================================================================================================
+
+
     /**
 	 * Finds a class in the storage and returns it. Returns null if nothing found.
 	 */
@@ -338,50 +399,6 @@ public class Store {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Finds a class in storage and returns it.  Throws exception if class does not exist.
-	 */
-	public Class classExists(String name) throws IllegalArgumentException
-	{
-		Class temp = findClass(name);
-		if(temp == null)
-		{
-			throw new IllegalArgumentException("The class " + name + " does not exist.");	
-		}
-		return temp;
-	}
-
-	/**
-	 * Finds a field in a class in storage and returns it.
-	 */
-	public Field findField(String className, String fieldName) 
-	{
-		Class aClass = findClass(className);
-		Set<Field> fields = aClass.getFields();
-		for(Field f : fields)
-		{
-			if(f.getName().equals(fieldName))
-			{
-				return f;
-			} 
-		}
-		return null;
-	}
-
-	/**
-	 * Finds a field in a class in storage and returns it.  Throws exception if class or field does not exist.
-	 */
-	public Field fieldExists(String className, String fieldName) throws IllegalArgumentException
-	{
-		Class temp = classExists(className);
-		Field fieldTemp = findField(className, fieldName);
-		if(fieldTemp == null)
-		{
-			throw new IllegalArgumentException("The field " + fieldName + " does not exist.");	
-		}
-		return fieldTemp;
 	}
 
 	/**
@@ -401,31 +418,11 @@ public class Store {
 		return null;
 	}
 
-	/**
-	 * Finds a method in a class in storage and returns it.  Throws exception if class or method does not exist.
-	 */
-	public Method methodExits(String className, String methodType, String methodName, ArrayList<String> params) throws IllegalArgumentException
-	{
-		Class temp = classExists(className);
 
-		ArrayList<Parameter> newParams = new ArrayList<Parameter>();
+//===============================================================================================================================================
+//Others
+//===============================================================================================================================================
 
-		for(String param : params)
-		{
-			String[] splitStr = param.split(" ");
-			Parameter newParam = new Parameter(splitStr[0], splitStr[1]);
-			newParams.add(newParam);
-		}
-
-		Method methodTemp = findMethod(className, methodType, methodName, newParams);
-
-
-		if(methodTemp == null)
-		{
-			throw new IllegalArgumentException("The method " + methodName + " does not exist.");	
-		}
-		return methodTemp;
-	}
 
 	/**
 	 * Remove a method from a class based on the method string. Takes in a class name 
@@ -485,6 +482,10 @@ public class Store {
 		return false;
 	}
 
+
+//===============================================================================================================================================
+
+
 	public String stringOfClasses()
 	{	
 		String result = "";
@@ -497,6 +498,10 @@ public class Store {
 		return result;
 	}
 
+
+//===============================================================================================================================================
+
+
 	public ArrayList<String> getMethodParamString(String className, String methodString)
 	{
 		Class aClass = findClass(className);
@@ -505,7 +510,6 @@ public class Store {
 		for(Method m : methods)
 		{
 			if(m.toString().equals(methodString))
-				
 				for(Parameter p : m.getParams()) 
 				{
 					params.add(p.getType() + " " + p.getName());

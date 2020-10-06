@@ -20,8 +20,6 @@ public class UMLEditor
         CommandlineView v = new CommandlineView();
         Controller c = new Controller(s, v);
         CLI cli = new CLI(s, v, c, console);
-     
     }
-
 }
 

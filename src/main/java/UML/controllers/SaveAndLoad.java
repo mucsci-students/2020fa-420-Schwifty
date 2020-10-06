@@ -116,14 +116,16 @@ public class SaveAndLoad
             JSONArray classes = (JSONArray)obj.get("Classes");
 
             //tell the main controller to create all the classes we need in the store
-            String className = classObjectsToStore(classes);
+            Object[] className = classObjectsToStore(classes);
         
+            int i = 0;
             for (Object jsonObject : classes) 
             {
-                loadFields(jsonObject, className);
-                loadMethods(jsonObject, className);
-                loadRelationsTo(jsonObject, className);
-                loadRelationsFrom(jsonObject, className);
+                loadFields(jsonObject, (String)className[i]);
+                loadMethods(jsonObject, (String)className[i]);
+                loadRelationsTo(jsonObject, (String)className[i]);
+                loadRelationsFrom(jsonObject, (String)className[i]);
+                i++;
             }  
         }
         catch(ParseException p)
@@ -131,6 +133,23 @@ public class SaveAndLoad
             p.printStackTrace();
         }
         return fileToLoad;
+    }
+
+    private Object[] classObjectsToStore(JSONArray classes)
+    {
+        Object[] className = new Object[classes.size()];
+        int i = 0;
+        for(Object jsonObject : classes)
+        {
+            //Get the current json object, lots of casting ahead.
+            JSONObject jobct = (JSONObject)jsonObject;
+            className[i] = (String)jobct.get("ClassName");
+            //create the class from the name
+            controller.createClass((String)className[i]);
+            i++;
+        }
+
+        return className;
     }
 
     /**
@@ -167,7 +186,7 @@ public class SaveAndLoad
             //Get the current fields and put in the JSONObject
             String methodName = m.getName();
             String methodType = m.getType();
-            ArrayList<String> params  = store.getMethodParamString(methodName, methodType);
+            ArrayList<String> params  = store.getMethodParamString(aClass.getName(), m.toString());
 
             String methodString = methodType + " " + methodName + "[ ";
             for(String s : params)
@@ -279,21 +298,6 @@ public class SaveAndLoad
         return toBeSaved;
     }
 
-    private String classObjectsToStore(JSONArray classes)
-    {
-        String className = "";
-        for(Object jsonObject : classes)
-        {
-            //Get the current json object, lots of casting ahead.
-            JSONObject jobct = (JSONObject)jsonObject;
-            className = (String)jobct.get("ClassName");
-            //create the class from the name
-            controller.createClass(className);
-        }
-
-        return className;
-    }
-
     private void loadFields(Object jsonObject, String className)
     {
         JSONObject jobct = (JSONObject)jsonObject;
@@ -319,11 +323,11 @@ public class SaveAndLoad
         while(it.hasNext())
         {
             String[] methodString = it.next().split(" ");
-            String type = methodString[0];
-            String name = methodString[1];
+            String type = methodString[1];
+            String name = methodString[2];
             ArrayList<String> params = new ArrayList<String>();
             
-            for(int count = 3; count < methodString.length - 1; count += 2)
+            for(int count = 4; count < methodString.length - 1; count += 3)
             {
                 params.add(methodString[count] + " " + methodString[count + 1]);    
             }
@@ -359,7 +363,7 @@ public class SaveAndLoad
             String[] relationship = it.next().split(" ");
             String relatedClassName = relationship[1];
             Class relatedClass = store.findClass(relatedClassName);
-            relatedClass.addRelationshipFromOther(RelationshipType.valueOf(relationship[1]), aClass);
+            relatedClass.addRelationshipFromOther(RelationshipType.valueOf(relationship[0]), aClass);
         }
     }
 }

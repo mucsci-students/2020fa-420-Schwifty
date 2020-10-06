@@ -108,12 +108,14 @@ public class Method extends Formal
         String result = "";
         result += "Method: ";
         result += this.getType() + " " + this.getName();
-        result += "( ";
+        result += " ( ";
 
-        for(Parameter p : this.getParams())
+        for(int counter = 0; counter < params.size() - 1; counter++)
         {
-            result += p.toString() + ", ";
+            result += params.get(counter).toString() + " , ";
         }
+        if(params.size() > 0)
+            result += params.get(params.size() - 1).toString();
         result += " )";
         return result;
     }

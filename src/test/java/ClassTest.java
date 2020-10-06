@@ -49,9 +49,9 @@ public class ClassTest {
     {
         Class class1 = new Class("class1");
         Class class2 = new Class("class2");
-        class1.addRelationshipFromOther(RelationshipType.ASSOCIATION, class2);
+        class1.addRelationshipFromOther(RelationshipType.REALIZATION, class2);
         Map map = new HashMap<String, RelationshipType>();
-        map.put("class2", RelationshipType.ASSOCIATION);
+        map.put("class2", RelationshipType.REALIZATION);
         //Make sure expected map is the same as the actual returned map.
         assertEquals(map, class1.getRelationshipsFromOther());
     }
@@ -61,9 +61,9 @@ public class ClassTest {
     {
         Class class1 = new Class("class1");
         Class class2 = new Class("class2");
-        class1.addRelationshipToOther(RelationshipType.ASSOCIATION, class2);
+        class1.addRelationshipToOther(RelationshipType.REALIZATION, class2);
         Map map = new HashMap<String, RelationshipType>();
-        map.put("class2", RelationshipType.ASSOCIATION);
+        map.put("class2", RelationshipType.REALIZATION);
         //Make sure expected map is the same as the actual returned map.
         assertEquals(map, class1.getRelationshipsToOther());
     }
@@ -154,9 +154,9 @@ public class ClassTest {
         Class test2 = new Class("name2");
         Map map = new HashMap<String, RelationshipType>();
         Map map2 = new HashMap<String, RelationshipType>();
-        test.addRelationshipToOther(RelationshipType.ASSOCIATION, test2);
-        map.put("name2", RelationshipType.ASSOCIATION);
-        map2.put("name", RelationshipType.ASSOCIATION);
+        test.addRelationshipToOther(RelationshipType.REALIZATION, test2);
+        map.put("name2", RelationshipType.REALIZATION);
+        map2.put("name", RelationshipType.REALIZATION);
         //Should have the correctly oriented relationship in both classes.
         assertEquals(map, test.getRelationshipsToOther());
         assertEquals(map2, test2.getRelationshipsFromOther());
@@ -176,9 +176,9 @@ public class ClassTest {
         Class test2 = new Class("name2");
         Map map = new HashMap<String, RelationshipType>();
         Map map2 = new HashMap<String, RelationshipType>();
-        test.addRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
-        map.put("name2", RelationshipType.ASSOCIATION);
-        map2.put("name", RelationshipType.ASSOCIATION);
+        test.addRelationshipFromOther(RelationshipType.REALIZATION, test2);
+        map.put("name2", RelationshipType.REALIZATION);
+        map2.put("name", RelationshipType.REALIZATION);
         //Should have the correctly oriented relationship in both classes.
         assertEquals(map, test.getRelationshipsFromOther());
         assertEquals(map2, test2.getRelationshipsToOther());
@@ -196,9 +196,9 @@ public class ClassTest {
         Class test = new Class("name");
         Class test2 = new Class("name2");
         //Deleting from empty should return false.
-        assertFalse(test.deleteRelationshipToOther(RelationshipType.ASSOCIATION, test2));
-        test.addRelationshipToOther(RelationshipType.ASSOCIATION, test2);
-        test.deleteRelationshipToOther(RelationshipType.ASSOCIATION, test2);
+        assertFalse(test.deleteRelationshipToOther(RelationshipType.REALIZATION, test2));
+        test.addRelationshipToOther(RelationshipType.REALIZATION, test2);
+        test.deleteRelationshipToOther(RelationshipType.REALIZATION, test2);
         //Relationship should be gone from both classes.
         assertTrue(test.getRelationshipsToOther().isEmpty());
         assertTrue(test2.getRelationshipsFromOther().isEmpty());
@@ -210,9 +210,9 @@ public class ClassTest {
         Class test = new Class("name");
         Class test2 = new Class("name2");
         //Deleting from empty should return false.
-        assertFalse(test.deleteRelationshipFromOther(RelationshipType.ASSOCIATION, test2));
-        test.addRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
-        test.deleteRelationshipFromOther(RelationshipType.ASSOCIATION, test2);
+        assertFalse(test.deleteRelationshipFromOther(RelationshipType.REALIZATION, test2));
+        test.addRelationshipFromOther(RelationshipType.REALIZATION, test2);
+        test.deleteRelationshipFromOther(RelationshipType.REALIZATION, test2);
         //Relationship should be gone from both classes
         assertTrue(test.getRelationshipsFromOther().isEmpty());
         assertTrue(test2.getRelationshipsToOther().isEmpty());
@@ -226,8 +226,8 @@ public class ClassTest {
         Class test2 = new Class("name");
         test2.addField("int", "5");
         Class extra = new Class("extra");
-        test1.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
-        test2.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
+        test1.addRelationshipToOther(RelationshipType.REALIZATION, extra);
+        test2.addRelationshipToOther(RelationshipType.REALIZATION, extra);
         Class extra1 = new Class("extra1");
         test1.addRelationshipFromOther(RelationshipType.AGGREGATION, extra1);
         test2.addRelationshipFromOther(RelationshipType.AGGREGATION, extra1);
@@ -243,8 +243,8 @@ public class ClassTest {
         Class extra = new Class("extra");
         Class extra2 = new Class("extra2");
         Class test2 = test1;
-        test1.addRelationshipToOther(RelationshipType.ASSOCIATION, extra);
-        extra2.addRelationshipFromOther(RelationshipType.ASSOCIATION, test1);
+        test1.addRelationshipToOther(RelationshipType.REALIZATION, extra);
+        extra2.addRelationshipFromOther(RelationshipType.REALIZATION, test1);
         Set<Field> testSet = test1.getFields();
         String result = "";
         //Tests that the strings are equal.

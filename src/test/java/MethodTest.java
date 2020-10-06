@@ -95,12 +95,12 @@ public class MethodTest {
     @Test
     public void testToString() 
     {
-        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        ArrayList<Parameter> params = new ArrayList<Parameter>(); 
         params.add(new Parameter("String", "param"));
         Method test = new Method("type", "name", params);
         test.addParam(new Parameter("int", "num"));
         //The toString() output should be equal to the string below.
-        assertEquals("Parameters: String : param | int : num | \nMethod: type : name", test.toString());
+        assertEquals("Method: type name ( String param , int num )", test.toString());
     }
 
     @Test

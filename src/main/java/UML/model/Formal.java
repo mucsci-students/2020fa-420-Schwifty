@@ -88,7 +88,7 @@ abstract class Formal {
      */
     public String toString()
     {
-        return this.type + " : " + this.name;
+        return this.type + " " + this.name;
     }
 
     /**

@@ -26,17 +26,17 @@ public class RelationshipClickController implements ActionListener {
     public void actionPerformed(ActionEvent e) 
     {
         String cmd = e.getActionCommand();
-        if (cmd.equals("Association"))
+        if (cmd.equals("Realization"))
          {
             // Creates two dialog boxes to get the classes to add the relationship to or from.
             ArrayList<String> classList = store.getClassList();
 
-            String buildRelateOne = view.getChoiceFromUser("Choose first class", "Association", classList);
+            String buildRelateOne = view.getChoiceFromUser("Choose first class", "Realization", classList);
 
-            String buildRelateTwo = view.getChoiceFromUser("Choose second class", "Association", classList);
+            String buildRelateTwo = view.getChoiceFromUser("Choose second class", "Realization", classList);
 
             // Change add relationship.
-            controller.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.ASSOCIATION);
+            controller.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.REALIZATION);
 
         } else if (cmd.equals("Aggregation")) {
             ArrayList<String> classList = store.getClassList();

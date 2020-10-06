@@ -138,7 +138,7 @@ public class GraphicalView implements View {
 
     @Override
     public void exit() {
-        // TODO Auto-generated method stub
+        //Get rid of window.  Make sure call save and load in controller.
 
     }
 
@@ -162,7 +162,6 @@ public class GraphicalView implements View {
         createMenu();
         parentWindow.add(mb);
         window.setJMenuBar(mb);
-        
     }
 
     public void createMenu() {
@@ -179,7 +178,9 @@ public class GraphicalView implements View {
         return window;
     }
 
-    /* Creates a file menu. */
+    /**
+     * Creates a file menu. 
+     */
     private void createFileMenu(JMenuBar mb) {
         fileMenu = new JMenu("File");
         // Sub-Menus.
@@ -201,7 +202,6 @@ public class GraphicalView implements View {
             } else
                 arr[count].addActionListener((event) -> System.exit(0));
         }
-
         mb.add(fileMenu);
     }
 
@@ -271,15 +271,15 @@ public class GraphicalView implements View {
     private void createRelationshipMenu(JMenuBar mb) {
         relationshipMenu = new JMenu("Relate");
         // Create JMenuItems for each type of relationship and deleting a relationship.
-        JMenuItem association = new JMenuItem("Association");
+        JMenuItem realization = new JMenuItem("Realization");
         JMenuItem aggregation = new JMenuItem("Aggregation");
         JMenuItem composition = new JMenuItem("Composition");
         JMenuItem generalization = new JMenuItem("Generalization");
         JMenuItem deleteRelate = new JMenuItem("Delete Relationship");
         // Create arrays of JMenuItems and Strings to use for loop for setting up
         // relationship menu.
-        JMenuItem[] arr = { association, aggregation, composition, generalization, deleteRelate };
-        String[] names = { "Association", "Aggregation", "Composition", "Generalization", "DeleteRelationship" };
+        JMenuItem[] arr = { realization, aggregation, composition, generalization, deleteRelate };
+        String[] names = { "Realization", "Aggregation", "Composition", "Generalization", "DeleteRelationship" };
 
         for (int count = 0; count < 5; ++count) {
             relationshipMenu.add(arr[count]);
@@ -325,7 +325,6 @@ public class GraphicalView implements View {
 
     /**
      * Updates the relationships visually in the window .
-     *
      */
     public void updateDisplayRelationship(String classOne, String classTwo) {
         JPanel panelOne = classPanels.get(classOne);

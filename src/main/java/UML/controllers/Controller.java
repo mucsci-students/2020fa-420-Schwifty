@@ -29,6 +29,17 @@ public class Controller
         //addListeners();
     }
 
+
+//================================================================================================================================================
+//Class methods
+//================================================================================================================================================
+
+
+//================================================================================================================================================
+//Class methods
+//================================================================================================================================================
+
+
     /**
      * Creates a class in the UML diagram.
      */
@@ -46,8 +57,9 @@ public class Controller
     
     public void deleteClass(String name) 
     {
-        boolean temp = store.deleteClass(name);
+    
         Class aClass = findClass(name);
+        boolean temp = store.deleteClass(name);
         if (temp)
         {
             String classStr = aClass.toString();
@@ -67,6 +79,12 @@ public class Controller
         boolean temp = store.renameClass(oldName, newName);
         sendToView(temp, "Class", "renamed", newName, oldClassStr);
     }
+
+    
+//================================================================================================================================================
+//Field methods
+//================================================================================================================================================
+
 
     /**
      * Creates a field for a given class.
@@ -112,6 +130,12 @@ public class Controller
         sendToView(temp, "Field", "re-typed", className, oldClassStr);  
     }
     
+
+//================================================================================================================================================
+//Method methods
+//================================================================================================================================================
+
+
     /**
      * Creates a method in a given class.
      */
@@ -144,6 +168,52 @@ public class Controller
         boolean temp = store.renameMethod(className, returnType, methodName, params, newName);
         sendToView(temp, "Method", "renamed", className, oldClassStr);
     }
+
+    /**
+     * Changes the type of a given method.
+     */
+    public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String newType)
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.changeMethodType(className, oldType, methodName, params, newType);
+        sendToView(temp, "Method", "re-typed", className, oldClassStr);
+    }
+
+
+ //================================================================================================================================================
+//Parameter methods
+//================================================================================================================================================
+
+
+/**
+ * Adds an parameter to a given method.
+ */
+public void addParameter(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName)
+{
+    Class aClass = findClass(className);
+    String oldClassStr = aClass.toString();
+    boolean temp = store.addParam(className, methodType, methodName, params, paramType, paramName);
+    sendToView(temp, "Parameter", "added", className, oldClassStr);
+}
+
+
+/**
+ * Deletes an parameter from a given method.
+ */
+public void deleteParameter(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName)
+{
+    Class aClass = findClass(className);
+    String oldClassStr = aClass.toString();
+    boolean temp = store.deleteParam(className, methodType, methodName, params, paramType, paramName);
+    sendToView(temp, "Parameter", "deleted", className, oldClassStr);
+}
+
+    
+//================================================================================================================================================
+//Relationship methods
+//================================================================================================================================================
+
 
     public void addRelationship(String from, String to, RelationshipType relation)
     {   

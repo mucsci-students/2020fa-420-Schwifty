@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 public class CommandlineView implements View {
 
+    @Override
+    public void updateClass(String oldName, String newName) {
+        // TODO Auto-generated method stub
+
+    }
 
     @Override
     public void createClass(String name) {
@@ -19,30 +24,14 @@ public class CommandlineView implements View {
 
     }
 
-
-
     @Override
-    public String getInputFromUser(String prompt) {
+    public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
         // TODO Auto-generated method stub
         return null;
     }
 
-
-
     @Override
-    public void exit() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void updateClass(String oldName, String newName) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
+    public String getInputFromUser(String prompt) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -60,9 +49,6 @@ public class CommandlineView implements View {
 
     }
 
-    /**
-     * Prints error message to the command line.
-     */
     @Override
     public void showError(String error) {
         System.out.println(error);
@@ -79,10 +65,18 @@ public class CommandlineView implements View {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     @Override
-    public void start()
-    {
-        
+    public void exit() {
+        // TODO Auto-generated method stub
+
     }
+
+    @Override
+    public void start() {
+        // TODO Auto-generated method stub
+
+    }
+
+
 }

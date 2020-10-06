@@ -6,6 +6,7 @@ package UML.controllers;
     Purpose: 
  */
 import java.io.Console;
+import java.io.IOException;
 import java.util.Scanner;
 
 import org.apache.commons.cli.CommandLine;
@@ -59,10 +60,9 @@ public class CLI {
      */
     private void parse(String[] line) {
 
-        if(line[0].equals("exit")){
+        if (line[0].equals("exit")) {
             exit();
-        }
-        else if (line[0].equals("help")) {
+        } else if (line[0].equals("help")) {
             help();
         } else if (line[0].equals(("display"))) {
             display();
@@ -126,57 +126,72 @@ public class CLI {
      * Displays the current structure of the models.
      */
     private void display() {
-        store.stringOfClasses();
+        System.out.println(store.stringOfClasses());
     }
 
     // Displays the GUI for the user.
     private void showGUI() {
+        try {
+            controller.save("toLoad");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         Store s = new Store();
         GraphicalView v = new GraphicalView();
         Controller c = new Controller(s, v);
         v.start();
         c.addListeners();
+        try {
+            c.load("toLoad.JSON");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (org.json.simple.parser.ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**
      * Adds a class to the store.
      */
     private void addClass(String[] args) {
-        controller.createClass(args[0]);
+        controller.createClass(args[1]);
     }
 
     /**
      * Renames a class in the store.
      */
     private void renameClass(String[] args) {
-        controller.renameClass(args[0], args[1]);
+        controller.renameClass(args[1], args[2]);
     }
 
     /**
      * Deletes a class in the store.
      */
     private void deleteClass(String[] args) {
-        controller.deleteClass(args[0]);
+        controller.deleteClass(args[1]);
     }
 
     /**
      * Adds a field to a class in the store.
      */
     private void addField(String[] args) {
-        controller.createField(args[0], args[1], args[2]);
+        controller.createField(args[1], args[2], args[3]);
     }
     /**
      * Calls the controller to add a field to the given class.
      */
     private void renameField(String[] args) {
-        controller.renameField(args[0], args[1], args[2]);
+        controller.renameField(args[1], args[2], args[3]);
     }
 
     /**
      * Deletes a field from a class in the store.
      */
     private void deleteField(String[] args) {
-        controller.deleteField(args[0], args[1]);
+        controller.deleteField(args[1], args[2]);
     }
 
     /**
@@ -189,10 +204,10 @@ public class CLI {
         if ((args.length - 4) % 2 != 0) 
             System.out.println("Invalid arguments");
         
-        for (int counter = 3; counter < args.length; counter += 2) 
+        for (int counter = 4; counter < args.length; counter += 2) 
             params.add(args[counter] + " " + args[counter + 1]);
 
-        controller.createMethod(args[0], args[1], args[2], params);
+        controller.createMethod(args[1], args[2], args[3], params);
     }
     
     /**
@@ -203,10 +218,10 @@ public class CLI {
         if ((args.length - 4) % 2 != 0) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 3; counter < args.length - 1; counter += 2) {
+        for (int counter = 4; counter < args.length - 1; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.renameMethod(args[0], args[1], args[2], params, args[args.length - 1]);
+        controller.renameMethod(args[1], args[2], args[3], params, args[args.length - 1]);
     }
 
     /**
@@ -214,13 +229,13 @@ public class CLI {
      */
     private void deleteMethod(String[] args) {
         ArrayList<String> params = new ArrayList<String>();
-        if ((args.length - 3) % 2 != 0) {
+        if ((args.length - 4) % 2 != 0) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 3; counter < args.length; counter += 2) {
+        for (int counter = 4; counter < args.length; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.deleteMethod(args[0], args[1], args[2], params);
+        controller.deleteMethod(args[1], args[2], args[3], params);
 
     }
 
@@ -231,12 +246,13 @@ public class CLI {
      */
     private void addParameter(String[] args) {
         ArrayList<String> params = new ArrayList<String>();
-        if ((args.length - 5) % 2 != 0) {
+        if ((args.length - 6) % 2 != 0) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 3; counter < args.length - 2; counter += 2) {
+        for (int counter = 4; counter < args.length - 2; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
+        controller.addParameter(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
     }
     /**
      * Deletes a given parameter from a methodDeletes a parameters from a method from a class in the store.
@@ -264,7 +280,7 @@ public class CLI {
      */
     private void save(String[] args) {
         try {
-            controller.save(args[0]);
+            controller.save(args[1]);
 
         } catch (Exception e) {
             System.out.println("Invalid arguments");
@@ -276,7 +292,7 @@ public class CLI {
      */
     private void load(String[] args) {
         try {
-            controller.load(args[0]);
+            controller.load(args[1]);
         } catch (Exception e) {
             System.out.println("Invalid arguments");
         }

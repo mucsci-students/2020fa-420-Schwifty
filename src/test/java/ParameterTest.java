@@ -77,6 +77,6 @@ public class ParameterTest {
     {
         Parameter test = new Parameter("type", "name");
         //assertEquals("type : name", test.toString().equals("type : name"));
-        assertEquals("type : name", test.toString());
+        assertEquals("type name", test.toString());
     }
 }

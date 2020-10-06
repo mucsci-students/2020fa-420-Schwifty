@@ -76,6 +76,6 @@ public class FieldTest {
     {
         Field test = new Field("type", "name");
         //assertEquals("type : name", test.toString().equals("type : name"));
-        assertEquals("type : name", test.toString());
+        assertEquals("type name", test.toString());
     }
 }

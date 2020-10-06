@@ -57,8 +57,8 @@ public class FieldClickController implements ActionListener {
 
             // Get field to delete.
             String field = view.getChoiceFromUser("Delete this atrribute", "Delete atrribute", fieldList);
-
-            controller.deleteField(className, field);
+            String[] f = field.split("");
+            controller.deleteField(className, f[1]);
 
         } else if (cmd.equals("RenameField")) {
             // Get class from storage.
@@ -143,7 +143,7 @@ public class FieldClickController implements ActionListener {
         // Ensure we get a number, defaults to zero on bad input.
         try 
         {
-            paramNum = Integer.parseInt(view.getInputFromUser("Number of Parameters: "));
+            paramNum = Integer.parseInt(input);
         }
         catch (NumberFormatException e) 
         {
