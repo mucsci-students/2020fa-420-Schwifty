@@ -1,5 +1,9 @@
 package UML.model;
-
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Defines the structure of a paramter and methods that act upon it.
+ */
 public class Parameter extends Formal 
 {
     /**
@@ -10,6 +14,9 @@ public class Parameter extends Formal
         super(type, name);
     }
 
+    /**
+     * Returns true if the objects are equal, false otherwise.
+     */
     public boolean equals(Object other) {
         boolean result = false;
         if(this == other) {

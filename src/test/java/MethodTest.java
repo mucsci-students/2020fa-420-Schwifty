@@ -35,8 +35,6 @@ public class MethodTest {
         Method test = new Method("type", "name", params);
         test.setName("newName");
         assertEquals("newName", test.getName());
-        //Change to empty string/white spaces.
-        Method test2 = new Method("type", "name", params);
         //Don't allow empty/whitespace name.
         assertThrows(IllegalArgumentException.class, () -> {
             test.setName(" ");

@@ -5,7 +5,6 @@ import UML.model.Class;
 import UML.model.Store;
 import UML.views.*;
 import java.util.ArrayList;
-import java.awt.event.*;
 import java.io.File;
 
 import java.io.IOException;
@@ -51,7 +50,9 @@ public class Controller
         {   
             String classStr = aClass.toString();
             view.createClass(classStr);
-        }       
+        }
+        else  
+        view.showError("Class could not be created");     
     }
     
     
@@ -239,12 +240,14 @@ public void deleteParameter(String className, String methodType, String methodNa
         String fromOldStr = fromOld.toString();
         String toOldStr = toOld.toString();
 
-        boolean temp = store.deleteRelationship(fromOldStr, toOldStr);
-        if(!temp || fromOld == null || toOld == null)
+        if(fromOld == null || toOld == null)
             view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
-        else 
+        else
+        {
+            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName()); 
             sendToView(temp, "Relationship", "deleted", from, fromOldStr);
             sendToView(temp, "Relationship", "deleted", to, toOldStr);
+        }
     }
 
     /**
@@ -303,6 +306,9 @@ public void deleteParameter(String className, String methodType, String methodNa
         return aClass;
     }
 
+    /**
+     * Adds action listeners (used in GUIView).
+     */
     public void addListeners()
     {
         view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new FieldClickController(store, view, this), new RelationshipClickController(store, view, this));

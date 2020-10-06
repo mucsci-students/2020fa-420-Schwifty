@@ -19,7 +19,6 @@
 */
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
@@ -136,7 +135,7 @@ public class SaveAndLoadTest {
 
             Set<Method> methods = aClass.getMethods();
 
-            ArrayList<Parameter> params = new ArrayList();
+            ArrayList<Parameter> params = new ArrayList<>();
             params.add(new Parameter("int","num"));
 
             Method testMethod = new Method("void", "testMethod", params);

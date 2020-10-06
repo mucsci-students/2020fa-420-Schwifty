@@ -1,20 +1,15 @@
 package UML.controllers;
-
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Creates the action listeners for the class buttons.
+ */
 import java.util.ArrayList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
-import UML.model.Class;
-import UML.model.Field;
-import UML.model.Method;
-import UML.model.Parameter;
 import UML.model.Store;
-import UML.model.RelationshipType;
-
 import UML.views.View;
 
 public class ClassClickController implements ActionListener

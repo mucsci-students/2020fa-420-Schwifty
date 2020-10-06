@@ -31,8 +31,6 @@ public class ParameterTest {
         Parameter test = new Parameter("type", "name");
         test.setName("newName");
         assertEquals("newName", test.getName());
-        //Change to empty string/white spaces.
-        Parameter test2 = new Parameter("type", "name");
         //Don't allow empty/whitespace name.
         assertThrows(IllegalArgumentException.class, () -> {
             test.setName(" ");

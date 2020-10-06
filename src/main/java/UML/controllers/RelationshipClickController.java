@@ -1,12 +1,12 @@
 package UML.controllers;
-
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Creates the action listeners for the relationship buttons.
+ */
 import java.awt.event.*;
 import java.util.ArrayList;
 
-import UML.model.Class;
-import UML.model.Field;
-import UML.model.Method;
-import UML.model.Parameter;
 import UML.model.Store;
 import UML.model.RelationshipType;
 
@@ -47,10 +47,6 @@ public class RelationshipClickController implements ActionListener {
 
             String buildRelateTwo = view.getChoiceFromUser("Choose second class", "Aggregation", classList);
 
-            // Add the relationship between the classes.
-            Class class1 = store.findClass(buildRelateOne);
-            Class class2 = store.findClass(buildRelateTwo);
-            // Change add relationship.
             controller.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.AGGREGATION);
 
         } else if (cmd.equals("Composition")) {
@@ -62,7 +58,6 @@ public class RelationshipClickController implements ActionListener {
 
             String buildRelateTwo = view.getChoiceFromUser("Choose second class", "Composition", classList);
 
-            // Chnage add relationship
             controller.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.COMPOSITION);
 
         } else if (cmd.equals("Generalization")) {
@@ -73,14 +68,11 @@ public class RelationshipClickController implements ActionListener {
 
             String buildRelateTwo = view.getChoiceFromUser("Choose first class", "Generalization", classList);
 
-            // Change add relationship.
             controller.addRelationship(buildRelateOne, buildRelateTwo, RelationshipType.GENERALIZATION);
-            // Display relationship.
 
         } 
         else if (cmd.equals("DeleteRelationship")) 
         {
-            // TODO: Not working correctly, need to display the relationship to the user
             // Create a dialog box with two dropdowns of available classes.
             ArrayList<String> classList = store.getClassList();
 

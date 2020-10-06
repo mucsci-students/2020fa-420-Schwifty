@@ -1,12 +1,13 @@
 package UML.model;
-
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Stores all the classes and saved files being used in the UML diagram editor.
+ */
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.HashMap;
 
 public class Store {
     
@@ -354,7 +355,7 @@ public class Store {
 		else
 		{
 			RelationshipType relation = class1.getRelationshipsToOther().get(classTo);
-			return class1.deleteRelationshipToOther(relation, class2) && class2.deleteRelationshipToOther(relation, class1);
+			return class1.deleteRelationshipToOther(relation, class2);
 		}
 	}	
 

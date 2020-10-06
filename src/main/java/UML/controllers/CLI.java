@@ -3,18 +3,12 @@ package UML.controllers;
 /*
     Author: Chris, Tyler, Drew, Dominic, Cory. 
     Date: 09/24/2020
-    Purpose: 
+    Purpose: Controls the actions taken when commands are used in the CLI.
  */
-import java.io.Console;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Scanner;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import java.util.ArrayList;
 import UML.model.*;
 import UML.model.Store;
@@ -23,7 +17,6 @@ import UML.views.View;
 
 public class CLI {
 
-    private Options options;
     private Store store;
     private View view;
     private Controller controller;
@@ -33,22 +26,22 @@ public class CLI {
         this.store = s;
         this.view = v;
         this.controller = c;
-
-        // printHeader();
-        try {
+        printHeader();
+        try
+        {
             cliLoop(console);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
+        } 
+        catch (ParseException e) 
+        {
             e.printStackTrace();
         }
-        // System.out.print("Schwifty-UML> ");
     }
 
     /**
      * As long as the user hasn't typed in exit, continue the app.
      */
     private void cliLoop(Scanner console) throws ParseException {
-        while (true) {
+        while(true) {
             String nextLine = console.nextLine();
             String[] line = nextLine.split(" ");
             parse(line);
@@ -98,6 +91,10 @@ public class CLI {
             chungus();
         } else if (line[0].equals(("load"))) {
             load(line);
+        } else if (line[0].equals(("addr"))) {
+            addRelationship(line);;
+        } else if (line[0].equals(("deleter"))) {
+            deleteRelationship(line);
         } else {
             System.out.println("That is not a valid command.");
         }
@@ -129,12 +126,13 @@ public class CLI {
         System.out.println(store.stringOfClasses());
     }
 
-    // Displays the GUI for the user.
+    /**
+     * Displays a GUI version of the app with all current changes loaded.
+     */
     private void showGUI() {
         try {
             controller.save("toLoad");
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         Store s = new Store();
@@ -145,10 +143,8 @@ public class CLI {
         try {
             c.load("toLoad.JSON");
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (org.json.simple.parser.ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -225,7 +221,7 @@ public class CLI {
     }
 
     /**
-     * Deletes a method from a class in the store
+     * Deletes a method from a class in the store.
      */
     private void deleteMethod(String[] args) {
         ArrayList<String> params = new ArrayList<String>();
@@ -240,9 +236,7 @@ public class CLI {
     }
 
     /**
-     * Adds a given parameter to a method
-     */    /**
-     * Adds a parameter to a given method
+     * Adds a parameter to a given method.
      */
     private void addParameter(String[] args) {
         ArrayList<String> params = new ArrayList<String>();
@@ -257,14 +251,15 @@ public class CLI {
     /**
      * Deletes a given parameter from a methodDeletes a parameters from a method from a class in the store.
      */
-    private void deleteParameter(String[] args) {
+    private void deleteParameter(String[] args) 
+    {
 
     }
     /**
      * Creates a relationship between two classes Adds a relationship bewteen two classees in the store.
      */
     private void addRelationship(String[] args) {
-        controller.addRelationship(args[0], args[1], RelationshipType.valueOf(args[2].toUpperCase()));
+        controller.addRelationship(args[1], args[2], RelationshipType.valueOf(args[3].toUpperCase()));
     }
     
      /**
@@ -272,7 +267,7 @@ public class CLI {
      */
     private void deleteRelationship(String[] args) {
         
-        controller.deleteRelationship(args[0], args[1]);
+        controller.deleteRelationship(args[1], args[2]);
     }
 
      /**

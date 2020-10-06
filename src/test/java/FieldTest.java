@@ -30,8 +30,6 @@ public class FieldTest {
         Field test = new Field("type", "name");
         test.setName("newName");
         assertEquals("newName", test.getName());
-        //Change to empty string/white spaces.
-        Field test2 = new Field("type", "name");
         //Don't allow empty/whitespace name.
         assertThrows(IllegalArgumentException.class, () -> {
             test.setName(" ");

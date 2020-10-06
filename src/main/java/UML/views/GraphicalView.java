@@ -1,5 +1,9 @@
 package UML.views;
-
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Provides an implementation of the GUI view.
+ */
 import UML.model.Class;
 import javax.swing.JTextArea;
 import javax.swing.JMenu;
@@ -352,7 +356,7 @@ public class GraphicalView implements View {
 
     @Override
     public void showError(String error) {
-        // TODO Auto-generated method stub
+        JOptionPane.showMessageDialog(new JFrame(), error, "Error", JOptionPane.ERROR_MESSAGE);
 
     }
 

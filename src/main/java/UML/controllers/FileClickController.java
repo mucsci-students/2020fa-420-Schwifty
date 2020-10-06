@@ -1,12 +1,15 @@
 package UML.controllers;
-
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Creates the action listeners for the file buttons.
+ */
 import java.awt.event.*;
 
 import UML.views.*;
 
 import UML.model.Store;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
@@ -26,11 +29,9 @@ public class FileClickController implements ActionListener {
 		String cmd = e.getActionCommand();
 		if (cmd.equals("Save")) 
 		{
-
 			try
 			{
 				File currentLoadedFile = store.getCurrentLoadedFile();
-			
 			
 			// Save contents to file...will require JSON save.
 			// If there is a currently loaded file.
@@ -76,8 +77,6 @@ public class FileClickController implements ActionListener {
 			{
 				view.showError("IOException found");
 			}
-			
-
 		}
 	}
 }

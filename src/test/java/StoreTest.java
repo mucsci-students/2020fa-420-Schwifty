@@ -384,13 +384,11 @@ public class StoreTest {
     {
         //create store.
         Store store = new Store();
-        Store store1 = new Store();
         //add a test class to store.
         store.addClass("Test");
         store.addClass("Test1");
         //create ArrayList of parameters for creating a method.
         ArrayList<String> params = new ArrayList<String>();
-        ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         //add method to test class.
         store.addMethod("Test", "int", "testMethod", params);
         store.addMethod("Test1", "String", "method", params);
@@ -409,13 +407,11 @@ public class StoreTest {
     {
         //create store.
         Store store = new Store();
-        Store store1 = new Store();
         //add a test class to store.
         store.addClass("Test");
         store.addClass("Test1");
         //create ArrayList of parameters for creating a method.
         ArrayList<String> params = new ArrayList<String>();
-        ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         //add method to test class.
         store.addMethod("Test", "int", "testMethod", params);
         store.addMethod("Test1", "String", "method", params);

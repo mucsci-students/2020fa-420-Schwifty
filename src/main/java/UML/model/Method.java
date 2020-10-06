@@ -1,5 +1,9 @@
 package UML.model;
-
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Defines the structure of a method and methods that act upon it.
+ */
 import java.util.ArrayList;
 
 public class Method extends Formal 
@@ -70,6 +74,9 @@ public class Method extends Formal
         return this.params.remove(param);
     }
 
+    /**
+     * Returns true if the objects are equal, false otherwise.
+     */
     public boolean equals(Object other) {
         boolean result = false;
         if(this == other) {
@@ -102,6 +109,9 @@ public class Method extends Formal
         return result;
     }
 
+    /**
+     * Returns a string representation of a method.
+     */
     @Override
     public String toString() 
     {

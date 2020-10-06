@@ -27,21 +27,14 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
-import javax.swing.JFrame;
-
-import java.util.HashSet;
 import java.util.Iterator;
 
 import UML.views.View;

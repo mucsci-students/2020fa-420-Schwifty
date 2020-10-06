@@ -1,24 +1,18 @@
 package UML.controllers;
-
-import UML.model.*;
-import UML.views.*;
-
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Creates the action listeners for the field and method buttons.
+ */
 import java.util.ArrayList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
 import UML.model.Class;
-import UML.model.Field;
-import UML.model.Method;
-import UML.model.Parameter;
 import UML.model.Store;
-import UML.model.RelationshipType;
+import UML.views.View;
 
-import UML.views.GraphicalView;
 
 public class FieldClickController implements ActionListener {
     private Store store;
@@ -39,11 +33,7 @@ public class FieldClickController implements ActionListener {
 
         String cmd = e.getActionCommand();
         if (cmd.equals("CreateField")) {
-            // TODO: Consider making a custom window for this? It would make it look cleaner
-            // in the future.
-            // Get Type from user.
             String type = view.getInputFromUser("Type: ");
-            // Get name from user.
             String name = view.getInputFromUser("Name: ");
             // Add field to the class using received params.
             controller.createField(className, type, name);
@@ -149,7 +139,6 @@ public class FieldClickController implements ActionListener {
         {
             paramNum = 0;
         }
-
         return paramNum;
     }
 }
