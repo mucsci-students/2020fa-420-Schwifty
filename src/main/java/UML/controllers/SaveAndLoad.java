@@ -360,7 +360,7 @@ public class SaveAndLoad
             String[] relationship = it.next().split(" ");
             String relatedClassName = relationship[1];
             Class relatedClass = store.findClass(relatedClassName);
-            relatedClass.addRelationshipFromOther(RelationshipType.valueOf(relationship[0]), aClass);
+            relatedClass.addRelationshipToOther(RelationshipType.valueOf(relationship[0]), aClass);
         }
     }
 }
