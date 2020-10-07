@@ -26,4 +26,6 @@ public interface View
 	String load();
 	void exit();
 	void start();
+	void showHelp();
+	void showPrompt();
 }

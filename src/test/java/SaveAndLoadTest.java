@@ -58,23 +58,18 @@ public class SaveAndLoadTest {
         Controller c = new Controller(s, v);
         SaveAndLoad sl = new SaveAndLoad(s, v, c);
 
-        Class testClass = new Class("Test");
-        testClass.addField("int", "num");
+        ArrayList<String> params = new ArrayList();
+        params.add("int num");
+        c.createClass("Test");
+        c.createField("Test", "int", "num");
+        c.createMethod("Test", "void", "testMethod", params);
 
-        Class testClassTwo = new Class("TestTwo");
-        testClassTwo.addField("string", "aStr");
-        ArrayList<Parameter> params = new ArrayList();
-        params.add(new Parameter("int","num"));
+        c.createClass("TestTwo");
+        c.createField("TestTwo", "string", "aStr");
+        c.createMethod( "TestTwo","void", "testMethod", params);
+        
+        c.addRelationship("Test", "TestTwo", RelationshipType.REALIZATION);
 
-        testClass.addMethod("void", "testMethod", params);
-        testClassTwo.addMethod("void", "testMethod", params);
-
-        testClass.addRelationshipToOther(RelationshipType.REALIZATION, testClassTwo);
-
-        ArrayList<Class> arrList = new ArrayList<Class>();
-        arrList.add(testClass);
-        arrList.add(testClassTwo);
-        s.setClassStore(arrList);
         try {
             File testFile = sl.save("JSONTest.json");
             assertTrue(testFile.exists());
@@ -114,7 +109,7 @@ public class SaveAndLoadTest {
         }
         ArrayList<Class> classStore = s.getClassStore();
         String[] classNameTests = {"Test","TestTwo"};
-        String[] relatedClasses = {"TestTwo",""};
+        String[] relatedClasses = {"TestTwo","Test"};
         //Create the test fields
         Field attrTest = new Field("int", "num");
         Field attrTestTwo = new Field("string", "aStr");

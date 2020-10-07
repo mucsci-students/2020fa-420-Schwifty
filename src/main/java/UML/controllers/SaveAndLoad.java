@@ -185,8 +185,9 @@ public class SaveAndLoad
             for(String s : params)
             {
                 methodString += s;
+                methodString += " ";
             }
-            methodString += " ]";
+            methodString += "]";
             methodsToBeAdded.add(methodString);
         }
         return methodsToBeAdded;
@@ -315,12 +316,15 @@ public class SaveAndLoad
         
         while(it.hasNext())
         {
-            String[] methodString = it.next().split(" ");
-            String type = methodString[1];
-            String name = methodString[2];
+            String nextElement = it.next().replace("[", "");
+            String[] methodString = nextElement.split(" ");
+            String type = methodString[0];
+            String name = methodString[1];
+            //void testMethod ( int num )
+            //void testMethod int num 
             ArrayList<String> params = new ArrayList<String>();
             
-            for(int count = 4; count < methodString.length - 1; count += 3)
+            for(int count = 2; count < methodString.length - 1; count += 2)
             {
                 params.add(methodString[count] + " " + methodString[count + 1]);    
             }

@@ -26,7 +26,6 @@ public class CLI {
         this.store = s;
         this.view = v;
         this.controller = c;
-        printHeader();
         try
         {
             cliLoop(console);
@@ -42,6 +41,7 @@ public class CLI {
      */
     private void cliLoop(Scanner console) throws ParseException {
         while(true) {
+            view.showPrompt();
             String nextLine = console.nextLine();
             String[] line = nextLine.split(" ");
             parse(line);
@@ -108,7 +108,7 @@ public class CLI {
      * Exits from the CLI.
      */
     private void exit() {
-        System.out.println("Closing application.");
+        view.exit();
         System.exit(0);
     }
 
@@ -123,7 +123,7 @@ public class CLI {
      * Displays the current structure of the models.
      */
     private void display() {
-        System.out.println(store.stringOfClasses());
+        view.display(store.stringOfClasses());
     }
 
     /**
@@ -280,7 +280,7 @@ public class CLI {
         } catch (Exception e) {
             System.out.println("Invalid arguments");
         }
-
+        view.save();
     }
      /**
      * Loads a jsonLoads a current diagram from a JSON file.
@@ -291,6 +291,7 @@ public class CLI {
         } catch (Exception e) {
             System.out.println("Invalid arguments");
         }
+        view.load();
     }
     /**
      * Prints a thicc boi.
@@ -299,39 +300,8 @@ public class CLI {
         System.out.println("THICCC BOY void");
     }
 
-    /**
-     * Prints the cli header.
-     */
-    private void printHeader() {
-        System.out.println("  _____      _             _  __ _");
-        System.out.println(" /  ___|    | |           (_)/ _| |");
-        System.out.println(" \\ `--.  ___| |____      ___| |_| |_ _   _");
-        System.out.println("  `--. \\/ __| '_ \\ \\ /\\ / / |  _| __| | | |");
-        System.out.println(" /\\__/ / (__| | | \\ V  V /| | | | |_| |_| |");
-        System.out.println(" \\____/ \\___|_| |_|\\_/\\_/ |_|_|  \\__|\\__, |");
-        System.out.println("                                      __/ |");
-        System.out.println("                                     |___ /");
-    }
-
     public void helpPage()
     {
-        System.out.println("exit:                                                                                            Close CLI");
-        System.out.println("help:                                                                                            Show all options");
-        System.out.println("display:                                                                                         Display all classes");
-        System.out.println("showgui:                                                                                         Displays the GUI");
-        System.out.println("addc [class]:                                                                                    Create a class");
-        System.out.println("renamec [oldName] [newName]:                                                                     Rename a class");
-        System.out.println("deletec [class]:                                                                                 Delete a class");
-        System.out.println("addf [class] [type] [name]:                                                                      Create a field");
-        System.out.println("renamef [className] [oldName][newName]:                                                          Rename a field");
-        System.out.println("deletef [class] [FieldName]:                                                                     Delete a field");
-        System.out.println("addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                            Add a method");
-        System.out.println("renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:      Rename a method");
-        System.out.println("deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                         Delete a method");
-        System.out.println("deletep [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType] [newName]:     Delete a parameter");
-        System.out.println("addr [classFrom] [classTo] [relateType]:                                                         Add a relationship");
-        System.out.println("deleter [classFrom] [classTo]:                                                                   Delete a relationship");
-        System.out.println("save [fileName]:                                                                                 Saves to passed in file name");
-        System.out.println("load [fileName]:                                                                                 Loads the passed in file name");
+        view.showHelp();
     }
 }

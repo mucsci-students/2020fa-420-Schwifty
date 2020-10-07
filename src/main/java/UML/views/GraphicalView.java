@@ -408,4 +408,16 @@ public class GraphicalView implements View {
             menuItem.addActionListener(relationshipListener);
         }
     }
+
+    @Override
+    public void showPrompt()
+    {
+        //Does nothing here. 
+    }
+
+    @Override
+    public void showHelp()
+    {
+        //TODO: Make me work
+    }
 }

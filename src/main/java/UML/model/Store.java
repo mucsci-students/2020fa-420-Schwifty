@@ -487,14 +487,12 @@ public class Store {
 //===============================================================================================================================================
 
 
-	public String stringOfClasses()
+	public ArrayList<String> stringOfClasses()
 	{	
-		String result = "";
+		ArrayList<String> result = new ArrayList<String>();
 		for(Class c : classStore)
 		{
-			result += "-------------------------------\n";
-			result += c.toString();
-			result += "\n-------------------------------";
+			result.add(c.toString());
 		}
 		return result;
 	}
