@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 import UML.model.Class;
 import UML.model.Store;
@@ -89,7 +90,20 @@ public class FieldClickController implements ActionListener {
             // Get name from user.
             String name = view.getInputFromUser("Method Name: ");
             // Get number of parameters from user.
+            boolean valid = false;
             int paramNum = getNumberFromInput(view.getInputFromUser("Number of Parameters: "));
+            while(!valid)
+            {
+                if(paramNum < 0)
+                {
+                    JOptionPane.showMessageDialog(new JFrame(), "Specify a nonnegative number of parameters.", "Error", JOptionPane.ERROR_MESSAGE);
+                    paramNum = getNumberFromInput(view.getInputFromUser("Number of Parameters: "));
+                }
+                else
+                {
+                    valid = true;
+                }
+            }
 
             ArrayList<String> params = new ArrayList<String>();
 
