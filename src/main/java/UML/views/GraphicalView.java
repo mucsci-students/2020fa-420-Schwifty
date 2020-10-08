@@ -86,7 +86,7 @@ public class GraphicalView implements View {
 
     @Override
     public String getInputFromUser(String prompt) {
-        String strToRtn = JOptionPane.showInputDialog(parentWindow, prompt, JOptionPane.PLAIN_MESSAGE);
+        String strToRtn = JOptionPane.showInputDialog(parentWindow, prompt, "", JOptionPane.PLAIN_MESSAGE);
 
         return strToRtn;
     }
