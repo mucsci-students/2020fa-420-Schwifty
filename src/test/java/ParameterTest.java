@@ -3,6 +3,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
+import UML.model.Parameter;
 
 
 public class ParameterTest {
@@ -30,8 +31,6 @@ public class ParameterTest {
         Parameter test = new Parameter("type", "name");
         test.setName("newName");
         assertEquals("newName", test.getName());
-        //Change to empty string/white spaces.
-        Parameter test2 = new Parameter("type", "name");
         //Don't allow empty/whitespace name.
         assertThrows(IllegalArgumentException.class, () -> {
             test.setName(" ");
@@ -76,6 +75,6 @@ public class ParameterTest {
     {
         Parameter test = new Parameter("type", "name");
         //assertEquals("type : name", test.toString().equals("type : name"));
-        assertEquals("type : name", test.toString());
+        assertEquals("type name", test.toString());
     }
 }

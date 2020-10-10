@@ -1,3 +1,9 @@
+package UML.model;
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Defines the structure of a method and methods that act upon it.
+ */
 import java.util.ArrayList;
 
 public class Method extends Formal 
@@ -33,7 +39,7 @@ public class Method extends Formal
     /**
      * Adds a parameter to the method's ArrayList of parameters.
      */
-    public void addParam(Parameter param) throws IllegalArgumentException
+    public boolean addParam(Parameter param) throws IllegalArgumentException
     {
         if(param.getName().trim().isEmpty())
             throw new IllegalArgumentException("The parameter name cannot be blank.");
@@ -49,11 +55,15 @@ public class Method extends Formal
         for(Parameter p : params)
         {
             if(p.getName().equals(param.getName()))
-                throw new IllegalArgumentException("A parameter of this name already exists in this method");
+                return false;
         }
 
         if(!this.params.contains(param))
+        {
             this.params.add(param);
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -64,6 +74,9 @@ public class Method extends Formal
         return this.params.remove(param);
     }
 
+    /**
+     * Returns true if the objects are equal, false otherwise.
+     */
     public boolean equals(Object other) {
         boolean result = false;
         if(this == other) {
@@ -96,18 +109,23 @@ public class Method extends Formal
         return result;
     }
 
+    /**
+     * Returns a string representation of a method.
+     */
     @Override
     public String toString() 
     {
         String result = "";
         result += "Method: ";
         result += this.getType() + " " + this.getName();
-        result += "( ";
+        result += " ( ";
 
-        for(Parameter p : this.getParams())
+        for(int counter = 0; counter < params.size() - 1; counter++)
         {
-            result += p.toString() + ", ";
+            result += params.get(counter).toString() + " , ";
         }
+        if(params.size() > 0)
+            result += params.get(params.size() - 1).toString();
         result += " )";
         return result;
     }

@@ -1,4 +1,10 @@
-/*
+
+package UML.controllers;
+
+import UML.model.*;
+import UML.views.*;
+import java.util.Scanner;
+/**
     Author: Chris, Cory, Dominic, Drew, Tyler.
     Date: 09/24/2020
     Purpose: Provide the user a way to select between using the command line view
@@ -70,13 +76,22 @@ public class InterfaceChoice
                 //if the choice is cli, load it. otherwise, load the gui. 
                 if(cliChoice.isSelected())
                 {
-                    CLI cli = new CLI();
+
+                    Store s = new Store();
+                    View v = new CommandlineView();
+                    Controller c = new Controller(s, v);
+                    //Scanner console = new Scanner(System.in);
                     window.setVisible(false);
+                    CLI cli = new CLI(s, v, c);
                 }
                 else
                 {
-                    UMLWindow uml = new UMLWindow();
+                    Store s = new Store();
+                    GraphicalView v = new GraphicalView();
+                    Controller c = new Controller(s, v);
                     window.setVisible(false);
+                    v.start();
+                    c.addListeners();
                 }
             }
             else 

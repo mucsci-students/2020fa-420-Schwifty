@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
 import java.util.ArrayList;
+import UML.model.Method;
+import UML.model.Parameter;
 
 public class MethodTest {
     
@@ -33,8 +35,6 @@ public class MethodTest {
         Method test = new Method("type", "name", params);
         test.setName("newName");
         assertEquals("newName", test.getName());
-        //Change to empty string/white spaces.
-        Method test2 = new Method("type", "name", params);
         //Don't allow empty/whitespace name.
         assertThrows(IllegalArgumentException.class, () -> {
             test.setName(" ");
@@ -93,12 +93,12 @@ public class MethodTest {
     @Test
     public void testToString() 
     {
-        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        ArrayList<Parameter> params = new ArrayList<Parameter>(); 
         params.add(new Parameter("String", "param"));
         Method test = new Method("type", "name", params);
         test.addParam(new Parameter("int", "num"));
         //The toString() output should be equal to the string below.
-        assertEquals("Parameters: String : param | int : num | \nMethod: type : name", test.toString());
+        assertEquals("Method: type name ( String param , int num )", test.toString());
     }
 
     @Test
@@ -131,10 +131,8 @@ public class MethodTest {
         //The method should contaim the added parameters.
         assertTrue(test.getParams().contains(new Parameter("int", "param")));
         assertTrue(test.getParams().contains(new Parameter("String", "test")));
-        //Should throw exception for duplicate name parameter.
-        assertThrows(IllegalArgumentException.class, () -> {
-            test.addParam("String", "param");
-        });
+        //Should return false for duplicate name parameter.
+        assertFalse(test.addParam(new Parameter("String", "param")));
     }
 
     @Test

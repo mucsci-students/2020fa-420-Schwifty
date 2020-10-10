@@ -3,6 +3,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
+import UML.model.Field;
 
 public class FieldTest {
 
@@ -29,8 +30,6 @@ public class FieldTest {
         Field test = new Field("type", "name");
         test.setName("newName");
         assertEquals("newName", test.getName());
-        //Change to empty string/white spaces.
-        Field test2 = new Field("type", "name");
         //Don't allow empty/whitespace name.
         assertThrows(IllegalArgumentException.class, () -> {
             test.setName(" ");
@@ -75,6 +74,6 @@ public class FieldTest {
     {
         Field test = new Field("type", "name");
         //assertEquals("type : name", test.toString().equals("type : name"));
-        assertEquals("type : name", test.toString());
+        assertEquals("type name", test.toString());
     }
 }

@@ -1,14 +1,21 @@
-
+package UML.model;
+/*
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Defines an abstract class for all formal parameters.
+*/
 abstract class Formal {
 
     //The type of a formal parameter.
     private String type;
     //The name of a formal parameter.
     private String name;
+    
     /**
      * Constructs a Formal object.
      */
-    public Formal(String type, String name) throws IllegalArgumentException{
+    public Formal(String type, String name) throws IllegalArgumentException
+    {
         if(name.trim().isEmpty()) {
             throw new IllegalArgumentException("The attribute name cannot be blank.");
         }
@@ -70,11 +77,11 @@ abstract class Formal {
         else if (other == null) {
             result = false;
         }
-        else if(!(other instanceof Attribute)) { 
+        else if(!(other instanceof Formal)) { 
             result = false; 
         }
         else {
-            Attribute object = (Attribute) other;
+            Formal object = (Formal) other;
             if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) {
                 result = true;
             }
@@ -87,7 +94,7 @@ abstract class Formal {
      */
     public String toString()
     {
-        return this.type + " : " + this.name;
+        return this.type + " " + this.name;
     }
 
     /**
