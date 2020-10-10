@@ -80,9 +80,9 @@ public class InterfaceChoice
                     Store s = new Store();
                     View v = new CommandlineView();
                     Controller c = new Controller(s, v);
-                    Scanner console = new Scanner(System.in);
+                    //Scanner console = new Scanner(System.in);
                     window.setVisible(false);
-                    CLI cli = new CLI(s, v, c, console);
+                    CLI cli = new CLI(s, v, c);
                 }
                 else
                 {

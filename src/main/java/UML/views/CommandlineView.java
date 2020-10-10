@@ -101,7 +101,6 @@ public class CommandlineView implements View {
         System.out.println("addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                            Add a method");
         System.out.println("renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:      Rename a method");
         System.out.println("deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                         Delete a method");
-        System.out.println("addp");
         System.out.println("deletep [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType] [newName]:     Delete a parameter");
         System.out.println("addr [classFrom] [classTo] [relateType]:                                                         Add a relationship");
         System.out.println("deleter [classFrom] [classTo]:                                                                   Delete a relationship");
