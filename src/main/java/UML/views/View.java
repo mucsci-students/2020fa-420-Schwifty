@@ -14,11 +14,12 @@ public interface View
     void updateClass(String oldName, String newName);
 	void createClass(String name);
 	void deleteClass(String name);
-
+	
 	String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options);
     String getInputFromUser(String prompt);
 	
 	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener, ActionListener relationshipListener);
+	void addListener(ActionListener listener);
 
 	void display(ArrayList<String> str);
 	void showError(String error);
@@ -27,5 +28,4 @@ public interface View
 	void exit();
 	void start();
 	void showHelp();
-	void showPrompt();
 }

@@ -6,12 +6,16 @@ package UML.controllers;
     Purpose: Controls the actions taken when commands are used in the CLI.
  */
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.Scanner;
 import org.jline.reader.*;
+import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.impl.AbstractTerminal;
+import org.jline.terminal.impl.DumbTerminal;
 import org.jline.terminal.TerminalBuilder;
-//import org.jline.terminal.*;
+import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import java.util.ArrayList;
 import UML.model.*;
@@ -19,11 +23,15 @@ import UML.model.Store;
 import UML.views.GraphicalView;
 import UML.views.View;
 
+import org.jline.keymap.KeyMap;
+
 public class CLI {
     
     private Store store;
     private View view;
     private Controller controller;
+    private Terminal terminal;
+    private LineReader reader;
 
     public CLI(Store s, View v, Controller c) 
     {
@@ -34,15 +42,18 @@ public class CLI {
         v.start();
         try
         {
-            Terminal terminal = TerminalBuilder.builder()
-            .system(true)
+            terminal = TerminalBuilder.builder()
+            .system(false).streams(System.in, System.out)
             .build();
+            //terminal.setSize(new Size(100, 5));
             cliLoop(terminal);//close out terminal when finished
+            terminal.close();
         } 
         catch (IOException e) 
         {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -50,16 +61,24 @@ public class CLI {
      */
     private void cliLoop(Terminal terminal) throws IOException
     {
-        LineReader reader = LineReaderBuilder.builder()
+        reader = LineReaderBuilder.builder()
                                              .terminal(terminal)
                                              .build();
-        while(true) 
+        boolean go = true;
+        while(go) 
         {
             //Get the view's prompt
             //view.showPrompt();
-            String nextLine = reader.readLine(">");
-            String[] line = nextLine.split(" ");
-            parse(line);
+            try
+            {
+                String nextLine = reader.readLine(">");
+                String[] line = nextLine.split(" ");
+                parse(line);
+            }
+            catch(EndOfFileException e)
+            {
+                go = false;
+            }
         }
     }
 
@@ -198,6 +217,7 @@ public class CLI {
         {
             e.printStackTrace();
         }
+        
         Store s = new Store();
         GraphicalView v = new GraphicalView();
         Controller c = new Controller(s, v);
@@ -206,6 +226,7 @@ public class CLI {
         try 
         {
             c.load("toLoad.JSON");
+            terminal.close();
         } 
         catch (IOException e)
         {
@@ -431,6 +452,9 @@ public class CLI {
         System.out.println("THICCC BOY void");
     }
 
+    /**
+     * Displays the help menu.
+     */
     public void helpPage()
     {
         view.showHelp();
