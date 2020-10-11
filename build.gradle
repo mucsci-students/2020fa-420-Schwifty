@@ -40,6 +40,12 @@ application {
     mainClassName = 'UMLEditor'
 }
 
+jar {
+    manifest {
+        attributes 'UMLEditor': 'UML.UMLEditor'
+    }
+}
+
 test {
   useJUnitPlatform()
   testLogging {
