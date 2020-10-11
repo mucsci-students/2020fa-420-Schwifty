@@ -19,6 +19,7 @@ public interface View
     String getInputFromUser(String prompt);
 	
 	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener, ActionListener relationshipListener);
+	void addListener(ActionListener listener);
 
 	void display(ArrayList<String> str);
 	void showError(String error);

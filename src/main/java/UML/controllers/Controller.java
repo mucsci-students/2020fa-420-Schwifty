@@ -267,6 +267,8 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void load(String fileName) throws IOException, ParseException
     {
+        store.getClassStore().clear();
+        
         SaveAndLoad sl = new SaveAndLoad(store, view, this);
         File currentFile = sl.load(fileName);
         store.setCurrentLoadedFile(currentFile);
@@ -314,4 +316,8 @@ public void deleteParameter(String className, String methodType, String methodNa
         view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new FieldClickController(store, view, this), new RelationshipClickController(store, view, this));
     }
 
+    public void interfaceChoice()
+    {
+        view.addListener(new InterfaceChoice(store, view, this));
+    }
 }
