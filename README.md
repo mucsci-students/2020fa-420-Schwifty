@@ -9,7 +9,7 @@ To run the application, navigate to the project directory. Using Gradle, run the
 
 ## How to use the GUI UML Editor
 Once the graphical application is brought up, There will be be a blank window with a menubar showing all current operations of the UML.
-**File** ,**Class** ,**Attribute** , and **Relate**. 
+**File**, **Class**, **Field**, and **Relate**. 
 
 ## File
 **Save - Save as:** Creates .json file that can be loaded
