@@ -469,15 +469,85 @@ public class StoreTest {
         assertEquals(null, store.findMethod("name", "int", "TestMethod", params2));
     }
 
+    
     @Test
     public void testRemoveMethodByString()
     {
-
+        Store store = new Store();
+        store.addClass("name");
+        store.addMethod("name","int", "num", new ArrayList<String>());
+        //Should return true if method deleted.
+        assertTrue(store.removeMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>()).toString(), "name"));
+        //Method should no longer exist.
+        assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>()));
     }
 
     @Test
     public void testRenameMethodByString()
     {
+        Store store = new Store();
+        store.addClass("name");
+        store.addMethod("name","int", "num", new ArrayList<String>());
+        //Should return true if method deleted.
+        assertTrue(store.renameMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>()).toString(), "name", "newName"));
+        //Method of old name should no longer exist.
+        assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>()));
+        //Method with new name should exist.
+        assertFalse(store.findMethod("name", "int", "newName", new ArrayList<Parameter>()) == null);
+    }
+
+    @Test
+    public void testGetSetClassStore()
+    {
+        //Create store.
+        Store store = new Store();
+        //Add two classes to store. 
+        store.addClass("name");
+        store.addClass("name2");
+        
+        //Create ArrayList of classes.
+        ArrayList<Class> classAL = new ArrayList<Class>();
+        //Add class to classAL.
+        Class testClass = new Class("test");
+        classAL.add(testClass);
+
+        store.setClassStore(classAL);
+        //Store's classStore should have been changed.         
+        assertTrue(store.getClassStore().equals(classAL));
         
     }
+
+    @Test
+    public void testGetMethodList()
+    {
+        //Create store.
+        Store store = new Store(); 
+
+        //Add class to store.
+        store.addClass("name");
+
+        //Add methods to class in store.
+        ArrayList<String> params = new ArrayList<String>();
+        store.addMethod("name", "int", "m1", params);
+        store.addMethod("name", "int", "m2", params);
+
+        //Get methods in store.
+        ArrayList<Parameter> findParams = new ArrayList<Parameter>();
+        Method m1 = store.findMethod("name", "int", "m1", findParams);
+        Method m2 = store.findMethod("name", "int", "m2", findParams);
+
+        //Get class in store.
+        Class test = store.findClass("name");
+        //Get class's Set of Methods. 
+        Set<Method> methods = test.getMethods();
+                
+        //Test ArrayList of Method toStrings.
+        ArrayList<String> testM = new ArrayList<String>();
+        testM.add(m1.toString());
+        testM.add(m2.toString());
+
+        //store Method List equals testM.
+        assertTrue(store.getMethodList(methods).equals(testM));
+
+    }  
 }
