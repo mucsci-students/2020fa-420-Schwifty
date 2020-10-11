@@ -16,7 +16,6 @@ import org.jline.terminal.impl.AbstractTerminal;
 import org.jline.terminal.impl.DumbTerminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Size;
-//import org.jline.terminal.*;
 import org.jline.terminal.Terminal;
 import java.util.ArrayList;
 import UML.model.*;

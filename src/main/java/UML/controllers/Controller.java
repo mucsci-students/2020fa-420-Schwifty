@@ -1,5 +1,9 @@
 package UML.controllers;
-
+/*
+    Author: Chris, Tyler, Drew, Dominic, Cory. 
+    Date: 09/24/2020
+    Purpose: Main controller for the UML application. 
+ */
 import UML.model.RelationshipType;
 import UML.model.Class;
 import UML.model.Store;
@@ -215,7 +219,9 @@ public void deleteParameter(String className, String methodType, String methodNa
 //Relationship methods
 //================================================================================================================================================
 
-
+    /**
+     * Adds a relationship between two classes.
+     */
     public void addRelationship(String from, String to, RelationshipType relation)
     {   
         Class fromOld = findClass(from);
@@ -223,15 +229,25 @@ public void deleteParameter(String className, String methodType, String methodNa
         //Get toStrings from each string.
         String fromOldStr = fromOld.toString();
         String toOldStr = toOld.toString();
-        
-        boolean temp = store.addRelationship(from, to, relation);
-        if(!temp || fromOld == null || toOld == null)
-            view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
-        else 
-            sendToView(temp, "Relationship", "added", from, fromOldStr);
-            sendToView(temp, "Relationship", "added", to, toOldStr);
+        try{
+            boolean temp = store.addRelationship(from, to, relation);
+            if(!temp || fromOld == null || toOld == null)
+                view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
+            else 
+            {
+                sendToView(temp, "Relationship", "added", from, fromOldStr);
+                sendToView(temp, "Relationship", "added", to, toOldStr);
+            }
+        }
+        catch(IllegalArgumentException e)
+        {
+            view.showError(e.getMessage());
+        }
     }
 
+    /**
+     * Deletes a relationship between two classes.
+     */
     public void deleteRelationship(String from, String to)
     {
         Class fromOld = findClass(from);
@@ -252,8 +268,7 @@ public void deleteParameter(String className, String methodType, String methodNa
 
     /**
      * Saves a UML diagram file.
-     
-        tr*/
+     */
     public void save(String fileName) throws IOException
     {
         SaveAndLoad sl = new SaveAndLoad(store, view, this);
@@ -316,8 +331,11 @@ public void deleteParameter(String className, String methodType, String methodNa
         view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new FieldClickController(store, view, this), new RelationshipClickController(store, view, this));
     }
 
-    public void interfaceChoice()
+    /**
+     * Adds listener for interface choice.
+     */
+    public void addListener()
     {
-        view.addListener(new InterfaceChoice(store, view, this));
+        view.addListener(new InterfaceChoiceClickController(store, view, this));
     }
 }

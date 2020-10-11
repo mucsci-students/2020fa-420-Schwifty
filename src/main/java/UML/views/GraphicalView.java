@@ -80,6 +80,7 @@ public class GraphicalView implements View {
     @Override
     public void updateClass(String oldString, String newString) {
         JPanel panel = classPanels.get(oldString);
+
         classPanels.remove(oldString);
         classPanels.put(newString, panel);
         windowUpdateHelper(newString);
@@ -188,7 +189,7 @@ public class GraphicalView implements View {
     public void makeWindow() {
         window = new JFrame("UML");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLayout(new GridLayout(4, 4));
+        window.setLayout(new GridLayout());
         window.setSize(800, 800);
         window.setVisible(true);
         parentWindow = window;
@@ -346,6 +347,9 @@ public class GraphicalView implements View {
         parentWindow.add(classPanel);
     }
 
+    /**
+     * Deletes a class panel from the window.
+     */
     public void deleteClassPanel(String aClass) {
         JPanel panel = classPanels.get(aClass);
         classPanels.remove(aClass);
@@ -354,6 +358,9 @@ public class GraphicalView implements View {
 
     }
 
+    /**
+     * Refreshes the window.
+     */
     public void refresh() {
         parentWindow.revalidate();
         parentWindow.repaint();
@@ -455,20 +462,13 @@ public class GraphicalView implements View {
     }
 
     @Override
-    public void showPrompt()
-    {
-        //Does nothing here. 
-    }
-
-    @Override
     public void showHelp()
     {
-        //TODO: Make me work
+        //Do nothing.
     }
 
     @Override
     public void addListener(ActionListener listener) {
-        // TODO Auto-generated method stub
-
+        //Do nothing.
     }
 }

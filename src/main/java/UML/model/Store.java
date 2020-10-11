@@ -10,8 +10,10 @@ import java.util.Set;
 import java.util.Map;
 
 public class Store {
-    
-    private ArrayList<Class> classStore;
+	
+	//An array list to store the current classes.
+	private ArrayList<Class> classStore;
+	//The currently loaded file.  Null if there is none.
     private File currentLoadedFile;
 
 	public Store() 
@@ -486,7 +488,9 @@ public class Store {
 
 //===============================================================================================================================================
 
-
+	/**
+	 * Returns an array list with the toStrings 
+	 */
 	public ArrayList<String> stringOfClasses()
 	{	
 		ArrayList<String> result = new ArrayList<String>();
@@ -500,7 +504,9 @@ public class Store {
 
 //===============================================================================================================================================
 
-
+	/**
+	 * Creates an ArrayList<String> of a methods parameters from className and methodToString. 
+	 */
 	public ArrayList<String> getMethodParamString(String className, String methodString)
 	{
 		Class aClass = findClass(className);

@@ -1,15 +1,15 @@
 package UML.controllers;
-
-import UML.model.*;
-import UML.views.*;
-import java.util.Scanner;
-import java.util.ArrayList;
 /**
     Author: Chris, Cory, Dominic, Drew, Tyler.
     Date: 09/24/2020
     Purpose: Provide the user a way to select between using the command line view
     or through the graphical interface. 
  */
+import UML.model.*;
+import UML.views.*;
+import java.util.Scanner;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
@@ -20,13 +20,13 @@ import java.awt.event.*;
 import java.awt.FlowLayout;
 
 
-    public class InterfaceChoice implements ActionListener
+    public class InterfaceChoiceClickController implements ActionListener
     {
         private Store store;
         private View view;
         private Controller controller;
 
-        public InterfaceChoice(Store s, View v, Controller c)
+        public InterfaceChoiceClickController(Store s, View v, Controller c)
         {
             this.view = v;
             this.store = store;

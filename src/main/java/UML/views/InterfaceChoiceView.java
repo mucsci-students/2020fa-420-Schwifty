@@ -1,5 +1,9 @@
 package UML.views;
-
+/**
+    Author: Chris, Cory, Dominic, Drew, Tyler.
+    Date: 10/11/2020
+    Purpose: Provide an implementation of the Interface Choice view.
+ */
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
@@ -75,6 +79,9 @@ public class InterfaceChoiceView implements View {
         //Do nothing.
     }
 
+    /**
+     * Returns string based off the user's selection.
+     */
     @Override
     public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
         return cliChoice.isSelected() == true ? "true" : "false";
@@ -114,10 +121,12 @@ public class InterfaceChoiceView implements View {
         return null;
     }
 
+    /**
+     * Sets choice window to invisible.
+     */
     @Override
     public void exit() {
         window.setVisible(false);
-
     }
 
     @Override
@@ -129,10 +138,4 @@ public class InterfaceChoiceView implements View {
     public void showHelp() {
         //Do nothing.
     }
-
-    @Override
-    public void showPrompt() {
-        //Do nothing.
-    }
-
 }

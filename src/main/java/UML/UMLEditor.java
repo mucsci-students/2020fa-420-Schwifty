@@ -10,7 +10,6 @@ import UML.views.GraphicalView;
 import UML.views.InterfaceChoiceView;
 import UML.views.CommandlineView;
 import UML.controllers.Controller;
-import UML.controllers.InterfaceChoice;
 import UML.controllers.CLI;
 import java.util.Scanner;
 
@@ -24,7 +23,8 @@ public class UMLEditor
         Store s = new Store();
         InterfaceChoiceView v = new InterfaceChoiceView();
         Controller c = new Controller(s, v);
-        c.interfaceChoice();
+        //Adds the action lsiteners for the interface choice controller.
+        c.addListener();
     }
 }
 

@@ -14,7 +14,7 @@ public interface View
     void updateClass(String oldName, String newName);
 	void createClass(String name);
 	void deleteClass(String name);
-
+	
 	String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options);
     String getInputFromUser(String prompt);
 	
@@ -28,5 +28,4 @@ public interface View
 	void exit();
 	void start();
 	void showHelp();
-	void showPrompt();
 }

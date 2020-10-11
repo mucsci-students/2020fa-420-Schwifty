@@ -10,16 +10,25 @@ import java.util.ArrayList;
 
 public class CommandlineView implements View {
 
+    /**
+     * Print updated class.
+     */
     @Override
     public void updateClass(String oldName, String newName) {
         System.out.println("Updated class:\n" + newName);
     }
 
+    /**
+     * Print new class.
+     */
     @Override
     public void createClass(String name) {
         System.out.println("New class:\n" + name);
     }
 
+    /**
+     * Print deleted class message.
+     */
     @Override
     public void deleteClass(String name) {
         System.out.println("Class deleted");
@@ -27,19 +36,25 @@ public class CommandlineView implements View {
 
     @Override
     public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
+        //Do nothing.
         return null;
     }
 
     @Override
     public String getInputFromUser(String prompt) {
+        //Do nothing.
         return null;
     }
 
     @Override
     public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
             ActionListener relationshipListener) {
+        //Do nothing.
     }
 
+    /**
+     * Print out each class.
+     */
     @Override
     public void display(ArrayList<String> str) {
         for(String s : str)
@@ -50,41 +65,53 @@ public class CommandlineView implements View {
         }       
     }
 
+    /**
+     * Print error message.
+     */
     @Override
     public void showError(String error) {
         System.out.println(error);
     }
 
+    /**
+     * Print save message.
+     */
     @Override
     public String save() {
         System.out.println("Your file has been saved.");
         return "";
     }
 
+    /**
+     * Print load message.
+     */
     @Override
     public String load() {
         System.out.println("Your file has been loaded.");
         return "";
     }
 
+    /**
+     * Print exit message.
+     */
     @Override
     public void exit() {
         //Needs implmented in controller, here, and GUI.
         System.out.println("Closing application.");
     }
 
+    /**
+     * Run printHeader the cli header.
+     */
     @Override
     public void start() {
         //Maybe not needed for either?
         printHeader();
     }
 
-    @Override
-    public void showPrompt()
-    {
-        System.out.print("Schwifty-UML> ");
-    }
-    
+    /**
+     * Print command list. 
+     */
     @Override 
     public void showHelp()
     {
@@ -101,7 +128,6 @@ public class CommandlineView implements View {
         System.out.println("addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                            Add a method");
         System.out.println("renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:      Rename a method");
         System.out.println("deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                         Delete a method");
-        System.out.println("deletep [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType] [newName]:     Delete a parameter");
         System.out.println("addr [classFrom] [classTo] [relateType]:                                                         Add a relationship");
         System.out.println("deleter [classFrom] [classTo]:                                                                   Delete a relationship");
         System.out.println("save [fileName]:                                                                                 Saves to passed in file name");
@@ -125,7 +151,6 @@ public class CommandlineView implements View {
 
     @Override
     public void addListener(ActionListener listener) {
-        // TODO Auto-generated method stub
-
+        //Do nothing.
     }
 }

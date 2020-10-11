@@ -247,6 +247,7 @@ public class SaveAndLoad
 
         return jsonFile;
     }
+
     /**
      * Builds the json object to be written to file
      */
@@ -292,6 +293,9 @@ public class SaveAndLoad
         return toBeSaved;
     }
 
+    /**
+     * Loads fields from the JSON file.
+     */
     private void loadFields(Object jsonObject, String className)
     {
         JSONObject jobct = (JSONObject)jsonObject;
@@ -306,6 +310,9 @@ public class SaveAndLoad
         }
     }
 
+    /**
+     * Loads methods from the JSON file.
+     */
     private void loadMethods(Object jsonObject, String className)
     {
         JSONObject jobct = (JSONObject)jsonObject;
@@ -332,6 +339,9 @@ public class SaveAndLoad
         }
     }
 
+    /**
+     * Loads the relationships to other classes from the JSON file.
+     */
     private void loadRelationsTo(Object jsonObject, String className)
     {
         JSONObject jobct = (JSONObject)jsonObject;
@@ -348,6 +358,9 @@ public class SaveAndLoad
         }
     }
 
+    /**
+     * Loads relationships from other classes from the JSON file.
+     */
     private void loadRelationsFrom(Object jsonObject, String className)
     {
         JSONObject jobct = (JSONObject)jsonObject;
