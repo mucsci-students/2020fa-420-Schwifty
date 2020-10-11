@@ -1,14 +1,14 @@
 # UML Editor
 
 ## Running the UML Editor
-To run the application, navigate to the project directory. Using Gradle, run the command **gradle clean run** to start the application. This should bring up the application GUI.
+To run the application, navigate to the project directory. Using Gradle, run the command **gradle clean run** to start the application. A interface will load asking you to choose between a graphical or command line view. Instructions for each are below. 
 
 ## Requirements
 * Java 8
 * Gradle
 
-## How to use the UML Editor
-Once the application is brought up, There will be be a blank window with a menubar showing all current operations of the UML.
+## How to use the GUI UML Editor
+Once the graphical application is brought up, There will be be a blank window with a menubar showing all current operations of the UML.
 **File** ,**Class** ,**Attribute** , and **Relate**. 
 
 ## File
@@ -44,6 +44,26 @@ Selecting class and clicking the okay button will open a prompt to rename the cl
 
 *Each of the above operations will result in the display updating concurrently to changes made.
 
+## Command line commands
+If you choose the command line version, use the following commands to interact with the application. 
+exit:                                                                                            Close CLI
+help:                                                                                            Show all options
+display:                                                                                         Display all classes
+showgui:                                                                                         Displays the GUI
+addc [class]:                                                                                    Create a class
+renamec [oldName] [newName]:                                                                     Rename a class
+deletec [class]:                                                                                 Delete a class
+addf [class] [type] [name]:                                                                      Create a field
+renamef [className] [oldName][newName]:                                                          Rename a field
+deletef [class] [FieldName]:                                                                     Delete a field
+addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                            Add a method
+renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:      Rename a method
+deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                         Delete a method
+deletep [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType] [newName]:     Delete a parameter
+addr [classFrom] [classTo] [relateType]:                                                         Add a relationship
+deleter [classFrom] [classTo]:                                                                   Delete a relationship
+save [fileName]:                                                                                 Saves to passed in file name
+load [fileName]:   
 
 
 ## Developers
