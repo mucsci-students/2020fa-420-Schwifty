@@ -1,3 +1,4 @@
+
 /*
     Author: Chris, Cory, Dominic, Drew, Tyler. 
     Date: 09/10/2020
@@ -20,14 +21,37 @@ public class UMLEditor
     public static void main(String[] args)
     {
         /**
-        Scanner console = new Scanner(System.in);
         Store s = new Store();
         CommandlineView v = new CommandlineView();
         Controller c = new Controller(s, v);
         //Opens the CLI version of the app.
-        CLI cli = new CLI(s, v, c, console);
+        CLI cli = new CLI(s, v, c);
         */
+        
+        //InterfaceChoiceView icv - new InterfaceChoiceView();
         InterfaceChoice ic = new InterfaceChoice();
+        //boolean test = ic.selection();
+    }
+
+
+    public static void launchGUI()
+    {
+        Store s = new Store();
+        GraphicalView v = new GraphicalView();
+        Controller c = new Controller(s, v);
+        //Opens the CLI version of the app.
+        v.start();
+        c.addListeners();
+    }
+
+    public static void launchCLI()
+    {
+        Store s = new Store();
+        CommandlineView v = new CommandlineView();
+        Controller c = new Controller(s, v);
+        //Opens the CLI version of the app.
+        CLI cli = new CLI(s, v, c);
     }
 }
+
 

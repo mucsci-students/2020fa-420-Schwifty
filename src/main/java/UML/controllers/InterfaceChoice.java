@@ -1,4 +1,3 @@
-
 package UML.controllers;
 
 import UML.model.*;
@@ -18,6 +17,7 @@ import javax.swing.JRadioButton;
 
 import java.awt.event.*;
 import java.awt.FlowLayout;
+
 
 public class InterfaceChoice 
 {
@@ -51,7 +51,7 @@ public class InterfaceChoice
         window.add(buttonPanel);
         window.pack();
         window.setVisible(true);
-        
+
     }
 
     private void windowSetup()
@@ -65,6 +65,8 @@ public class InterfaceChoice
         buttonGroup.add(guiChoice);
 
     }
+    
+
 
     private class ButtonClickListener implements ActionListener
     {
@@ -76,23 +78,26 @@ public class InterfaceChoice
                 //if the choice is cli, load it. otherwise, load the gui. 
                 if(cliChoice.isSelected())
                 {
-
+                    //window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+                    //window.setVisible(false);
                     Store s = new Store();
-                    View v = new CommandlineView();
+                    CommandlineView v = new CommandlineView();
                     Controller c = new Controller(s, v);
-                    //Scanner console = new Scanner(System.in);
-                    window.setVisible(false);
+                    //Opens the CLI version of the app.
                     CLI cli = new CLI(s, v, c);
                 }
                 else
                 {
+                    //window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+                    window.setVisible(false);
                     Store s = new Store();
                     GraphicalView v = new GraphicalView();
                     Controller c = new Controller(s, v);
-                    window.setVisible(false);
+                    //Opens the CLI version of the app.
                     v.start();
                     c.addListeners();
                 }
+                //selectionMade = true;
             }
             else 
             {

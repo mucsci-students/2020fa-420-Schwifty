@@ -57,17 +57,26 @@ public class GraphicalView implements View {
         this.classPanels = new HashMap<String, JPanel>();
     }
 
+    /**
+     * Creates a class panel to be displayed.
+     */
     @Override
     public void createClass(String name) {
         makeNewClassPanel(name);
         refresh();
     }
 
+    /**
+     * Deletes a class panel that was being displayed.
+     */
     @Override
     public void deleteClass(String name) {
         deleteClassPanel(name);
     }
 
+    /**
+     * Updates a class panel that is already being displayed on the window.
+     */
     @Override
     public void updateClass(String oldString, String newString) {
         JPanel panel = classPanels.get(oldString);
@@ -76,6 +85,9 @@ public class GraphicalView implements View {
         windowUpdateHelper(newString);
     }
 
+    /**
+     * Gets a choice from the GUI user.
+     */
     @Override
     public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
         Object[] optionsToArray = options.toArray();
@@ -84,6 +96,9 @@ public class GraphicalView implements View {
         return strToRtn;
     }
 
+    /**
+     * Creates a String from the GUI user.
+     */
     @Override
     public String getInputFromUser(String prompt) {
         String strToRtn = JOptionPane.showInputDialog(parentWindow, prompt, "", JOptionPane.PLAIN_MESSAGE);
@@ -91,6 +106,9 @@ public class GraphicalView implements View {
         return strToRtn;
     }
 
+    /**
+     * Refreshes class panel window.
+     */
     @Override
     public void display(ArrayList<String> toStrings) {
 
@@ -108,9 +126,11 @@ public class GraphicalView implements View {
 
     }
 
+    /**
+     * Saves a JSON representation of the UML diagram.
+     */
     @Override
     public String save() {
-        // TODO Auto-generated method stub
         JFileChooser fc = new JFileChooser();
         // If there is a currently loaded file.
 
@@ -126,6 +146,9 @@ public class GraphicalView implements View {
         return "";
     }
 
+    /**
+     * Loads a JSON representation of the UML diagram.
+     */
     @Override
     public String load() {
         // Make a filechooser
@@ -140,12 +163,18 @@ public class GraphicalView implements View {
 
     }
 
+    /**
+     * Will exit the window but not close application.
+     */
     @Override
     public void exit() {
         //Get rid of window.  Make sure call save and load in controller.
 
     }
 
+    /**
+     * Helps update the window.
+     */
     private void windowUpdateHelper(String classInfo) {
         JPanel panel = classPanels.get(classInfo);
         JTextArea textArea = (JTextArea) panel.getComponents()[0];
@@ -178,6 +207,9 @@ public class GraphicalView implements View {
         mb.setVisible(true);  
     }
 
+    /**
+     * Returns the main window.
+     */
     public JFrame getMainWindow() {
         return window;
     }
@@ -346,20 +378,17 @@ public class GraphicalView implements View {
     }
 
     /**
-     * Gets text from user input(text box)
+     * Displays an error message.
      */
-    private String getTextFromInput(String message) {
-        String strToRtn = JOptionPane.showInputDialog(parentWindow, message, JOptionPane.PLAIN_MESSAGE);
-
-        return strToRtn;
-    }
-
     @Override
     public void showError(String error) {
         JOptionPane.showMessageDialog(new JFrame(), error, "Error", JOptionPane.ERROR_MESSAGE);
 
     }
 
+    /**
+     * Adds action lisnters for buttons.
+     */
     public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
             ActionListener relationshipListener) {
         addFileListeners(fileListener);
@@ -368,6 +397,9 @@ public class GraphicalView implements View {
         addRelationshipListeners(relationshipListener);
     }
 
+    /**
+     * Creates the initial window.
+     */
     @Override
     public void start()
     {
@@ -375,6 +407,9 @@ public class GraphicalView implements View {
         refresh();
     }
 
+    /**
+     * Adds the listeners for the file buttons.
+     */
     private void addFileListeners(ActionListener fileListener) {
         for (Component item : fileMenu.getMenuComponents()) 
         {
@@ -383,6 +418,9 @@ public class GraphicalView implements View {
         }
     }
 
+    /**
+     * Adds the listeners for the class buttons.
+     */
     private void addClassListeners(ActionListener classListener)
     {
         for (Component item : classMenu.getMenuComponents()) 
@@ -392,6 +430,9 @@ public class GraphicalView implements View {
         }
     }
 
+    /**
+     * Adds the listeners for the field buttons.
+     */
     private void addFieldListeners(ActionListener fieldListener)
     {
         for (Component item : fieldMenu.getMenuComponents()) 
@@ -400,6 +441,10 @@ public class GraphicalView implements View {
             menuItem.addActionListener(fieldListener);
         }
     }
+
+    /**
+     * Adds the listeners for the relationship buttons.
+     */
     private void addRelationshipListeners(ActionListener relationshipListener)
     {
         for (Component item : relationshipMenu.getMenuComponents()) 
