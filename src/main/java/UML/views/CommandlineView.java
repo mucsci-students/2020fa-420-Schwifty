@@ -122,4 +122,10 @@ public class CommandlineView implements View {
         System.out.println("                                      __/ |");
         System.out.println("                                     |___ /");
     }
+
+    @Override
+    public void addListener(ActionListener listener) {
+        // TODO Auto-generated method stub
+
+    }
 }

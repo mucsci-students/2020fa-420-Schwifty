@@ -465,4 +465,10 @@ public class GraphicalView implements View {
     {
         //TODO: Make me work
     }
+
+    @Override
+    public void addListener(ActionListener listener) {
+        // TODO Auto-generated method stub
+
+    }
 }

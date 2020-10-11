@@ -3,6 +3,7 @@ package UML.controllers;
 import UML.model.*;
 import UML.views.*;
 import java.util.Scanner;
+import java.util.ArrayList;
 /**
     Author: Chris, Cory, Dominic, Drew, Tyler.
     Date: 09/24/2020
@@ -19,67 +20,28 @@ import java.awt.event.*;
 import java.awt.FlowLayout;
 
 
-public class InterfaceChoice 
-{
-    private JFrame window = new JFrame("UML");
-    private JPanel radioPanel = new JPanel();
-    private JPanel buttonPanel = new JPanel();
-    private JButton okButton = new JButton("Choose selected");
-    private JButton closeButton = new JButton("Close");
-    private ButtonGroup buttonGroup = new ButtonGroup();
-    private JRadioButton cliChoice = new JRadioButton("CLI");
-    private JRadioButton guiChoice = new JRadioButton("GUI");
-
-    public InterfaceChoice()
+    public class InterfaceChoice implements ActionListener
     {
-        //Setup the window. 
-        windowSetup();
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setSize(200, 300);
-        window.setLayout(new FlowLayout());
+        private Store store;
+        private View view;
+        private Controller controller;
 
-        //add radios to panel.
-        radioPanel.add(cliChoice);
-        radioPanel.add(guiChoice);
+        public InterfaceChoice(Store s, View v, Controller c)
+        {
+            this.view = v;
+            this.store = store;
+            this.controller = c;
+        }
 
-        //add buttons to panel.
-        buttonPanel.add(okButton);
-        buttonPanel.add(closeButton);
-
-        //Add panels to main window.
-        window.add(radioPanel);
-        window.add(buttonPanel);
-        window.pack();
-        window.setVisible(true);
-
-    }
-
-    private void windowSetup()
-    {
-        //add the action commands where needed.
-        okButton.setActionCommand("OK");
-        okButton.addActionListener(new ButtonClickListener());
-        closeButton.setActionCommand("Close");
-        cliChoice.setSelected(true);
-        buttonGroup.add(cliChoice);
-        buttonGroup.add(guiChoice);
-
-    }
-    
-
-
-    private class ButtonClickListener implements ActionListener
-    {
         public void actionPerformed(ActionEvent e)
         {
             String cmd = e.getActionCommand();
             if(cmd.equals("OK"))
             {
                 //if the choice is cli, load it. otherwise, load the gui. 
-                if(cliChoice.isSelected())
+                if(view.getChoiceFromUser("", "", new ArrayList<String>()).equals("true"))
                 {
-                    //window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-                    //window.setVisible(false);
+                    view.exit();
                     Store s = new Store();
                     CommandlineView v = new CommandlineView();
                     Controller c = new Controller(s, v);
@@ -88,8 +50,7 @@ public class InterfaceChoice
                 }
                 else
                 {
-                    //window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-                    window.setVisible(false);
+                    view.exit();
                     Store s = new Store();
                     GraphicalView v = new GraphicalView();
                     Controller c = new Controller(s, v);
@@ -97,7 +58,6 @@ public class InterfaceChoice
                     v.start();
                     c.addListeners();
                 }
-                //selectionMade = true;
             }
             else 
             {
@@ -105,4 +65,3 @@ public class InterfaceChoice
             }
         }
     }
-}
