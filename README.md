@@ -59,7 +59,6 @@ deletef [class] [FieldName]:                                                    
 addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                            Add a method
 renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:      Rename a method
 deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                         Delete a method
-deletep [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType] [newName]:     Delete a parameter
 addr [classFrom] [classTo] [relateType]:                                                         Add a relationship
 deleter [classFrom] [classTo]:                                                                   Delete a relationship
 save [fileName]:                                                                                 Saves to passed in file name
