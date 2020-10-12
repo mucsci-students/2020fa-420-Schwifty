@@ -5,13 +5,13 @@
     * {Classes: [
     *      {
     *          ClassName: name
-    *          attributes[]
+    *          fields[]
     *          relationTo []
     *          relationFrom []
     *      }
     *      {
     *          ClassName: name
-    *          attributes[]
+    *          fields[]
     *          relationTo []
     *          relationFrom []
     *      }
@@ -19,70 +19,124 @@
 */
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.HashSet;
+
+import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import UML.model.Class;
+import UML.model.Field;
+import UML.model.Method;
+import UML.model.RelationshipType;
+import UML.views.CommandlineView;
+import UML.controllers.SaveAndLoad;
+import UML.controllers.*;
+import UML.model.*;
+import UML.views.*;
 
-public class SaveAndLoadTest
-{
+public class SaveAndLoadTest {
     @Test
     /**
-     * Test file: JSONTest.json
-     * Output to file: 
-     * {"Classes":[{"RelationshipToOthers":["ASSOCIATION TestTwo"],"RelationshipFromOthers":["ASSOCIATION TestTwo"],"ClassName":"Test","Attributes":["int num"]},
-     * {"RelationshipToOthers":["ASSOCIATION Test"],"RelationshipFromOthers":["ASSOCIATION Test"],"ClassName":"TestTwo","Attributes":["string aStr"]}]}
+     * Test file: JSONTest.json Output to file:
+     * {"Classes":[{"RelationshipToOthers":["ASSOCIATION
+     * TestTwo"],"RelationshipFromOthers":["ASSOCIATION
+     * TestTwo"],"ClassName":"Test","Fields":["int num"]},
+     * {"RelationshipToOthers":["ASSOCIATION
+     * Test"],"RelationshipFromOthers":["ASSOCIATION
+     * Test"],"ClassName":"TestTwo","Fields":["string aStr"]}]}
      */
-    public void testSave()
-    {
-        Class testClass = new Class("Test");
-        testClass.addAttribute("int", "num");
+    public void testSave() {
+        Store s = new Store();
+        CommandlineView v = new CommandlineView();
+        Controller c = new Controller(s, v);
+        SaveAndLoad sl = new SaveAndLoad(s, v, c);
 
-        Class testClassTwo = new Class("TestTwo");
-        testClassTwo.addAttribute("string", "aStr");
-        testClass.addRelationshipToOther(RelationshipType.ASSOCIATION, testClassTwo);
-        testClass.addRelationshipFromOther(RelationshipType.ASSOCIATION, testClassTwo);
-        testClassTwo.addRelationshipToOther(RelationshipType.ASSOCIATION, testClass);
-        testClassTwo.addRelationshipFromOther(RelationshipType.ASSOCIATION, testClass);
+        ArrayList<String> params = new ArrayList();
+        params.add("int num");
+        c.createClass("Test");
+        c.createField("Test", "int", "num");
+        c.createMethod("Test", "void", "testMethod", params);
 
-        ArrayList<Class> arrList = new ArrayList<Class>();
-        arrList.add(testClass);
-        arrList.add(testClassTwo);
-        SaveAndLoad.save("JSONTest.json", arrList);
-        File testFile = new File("JSONTest.json");
-        assertTrue(testFile.exists());
+        c.createClass("TestTwo");
+        c.createField("TestTwo", "string", "aStr");
+        c.createMethod( "TestTwo","void", "testMethod", params);
+        
+        c.addRelationship("Test", "TestTwo", RelationshipType.REALIZATION);
+
+        try {
+            File testFile = sl.save("JSONTest.json");
+            assertTrue(testFile.exists());
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }    
     }
 
-    //Test that the JSON data being saved correctly
+    // Test that the JSON data being saved correctly
     /**
-     * Expected: {"Classes":[{"RelationshipToOthers":["ASSOCIATION TestTwo"],"RelationshipFromOthers":["ASSOCIATION TestTwo"],"ClassName":"Test","Attributes":["int num"]},
-     * {"RelationshipToOthers":["ASSOCIATION Test"],"RelationshipFromOthers":["ASSOCIATION Test"],"ClassName":"TestTwo","Attributes":["string aStr"]}]}
+     * Expected: {"Classes":[{"RelationshipToOthers":["ASSOCIATION
+     * TestTwo"],"RelationshipFromOthers":["ASSOCIATION
+     * TestTwo"],"ClassName":"Test","Fields":["int num"]},
+     * {"RelationshipToOthers":["ASSOCIATION
+     * Test"],"RelationshipFromOthers":["ASSOCIATION
+     * Test"],"ClassName":"TestTwo","Fields":["string aStr"]}]}
      */
     @Test
-    public void testLoadedData()
-    {
-        ArrayList<Class> classStore = new ArrayList<Class>();
-        SaveAndLoad.load("JSONTest.json", classStore);
-        String[] classNameTests = {"Test","TestTwo"};
+    public void testLoadedData() {
+        Store s = new Store();
+        CommandlineView v = new CommandlineView();
+        Controller c = new Controller(s, v);
+        SaveAndLoad sl = new SaveAndLoad(s, v, c);
 
-        //Create the test attributes
-        Attribute attrTest = new Attribute("num", "int");
-        Attribute attrTestTwo = new Attribute("aStr", "string");
-        Attribute[] attrTestArray = {attrTest, attrTestTwo};
-        String[] relationName = {"TestTwo", "Test"};
-        RelationshipType[] rType = {RelationshipType.ASSOCIATION, RelationshipType.ASSOCIATION};
+        try {
+            sl.load("JSONTest.json");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        ArrayList<Class> classStore = s.getClassStore();
+        String[] classNameTests = {"Test","TestTwo"};
+        String[] relatedClasses = {"TestTwo","Test"};
+        //Create the test fields
+        Field attrTest = new Field("int", "num");
+        Field attrTestTwo = new Field("string", "aStr");
+        Field[] attrTestArray = {attrTest, attrTestTwo};
+
+        RelationshipType[] relationsTo = {RelationshipType.REALIZATION, null};
+        RelationshipType[] relationsFrom = {null, RelationshipType.REALIZATION};
+
         int counter = 0;
         for(Class aClass : classStore)
         {
             assertEquals(classNameTests[counter], aClass.getName());
-            Set<Attribute> classAttributes = aClass.getAttributes();
-            for(Attribute attr : classAttributes)
+            Set<Field> classFields = aClass.getFields();
+            for(Field attr : classFields)
             {
                 assertEquals(attrTestArray[counter], attr);
+            }
+
+            Set<Method> methods = aClass.getMethods();
+
+            ArrayList<Parameter> params = new ArrayList<>();
+            params.add(new Parameter("int","num"));
+
+            Method testMethod = new Method("void", "testMethod", params);
+            for(Method m : methods)
+            {
+                assertEquals(testMethod, m);
             }
 
             Map<String, RelationshipType> relationToOthers = aClass.getRelationshipsToOther();
@@ -93,16 +147,16 @@ public class SaveAndLoadTest
             {
                 String className = relation.getKey();
                 RelationshipType type = relation.getValue();
-                assertEquals(relationName[counter], className);
-                assertEquals(rType[counter], type);
+                assertEquals(relatedClasses[counter], className);
+                assertEquals(relationsTo[counter], type);
             }
 
             for (Map.Entry<String, RelationshipType> relation : relationFromOthers.entrySet()) 
             {
-                String className = relation.getKey();
+                String className = relation.getKey(); 
                 RelationshipType type = relation.getValue();
-                assertEquals(relationName[counter], className);
-                assertEquals(rType[counter], type);
+                assertEquals(relatedClasses[counter], className);
+                assertEquals(relationsFrom[counter], type);
             }
             counter++;
         }

@@ -1,45 +1,53 @@
+package UML.model;
 /*
-    Author: Tyler, Cory, Dominic, Drew, Chris. 
-    Date: 09/08/2020
-    Purpose: To define an attribute that consist of a name and type. Added 
-    classes as requested by the user. To construct an attribute a name and type must be provided. 
+    Author: Chris, Cory, Dominic, Drew, Tyler. 
+    Date: 10/06/2020
+    Purpose: Defines an abstract class for all formal parameters.
 */
-public class Attribute {
-    //The name of the attribute object.
-    private String name;
-    //The type of the attribute object.
-    private String type;
+abstract class Formal {
 
+    //The type of a formal parameter.
+    private String type;
+    //The name of a formal parameter.
+    private String name;
+    
     /**
-     * Constructs an attribute object.
+     * Constructs a Formal object.
      */
-    public Attribute(String name, String type) throws IllegalArgumentException{
+    public Formal(String type, String name) throws IllegalArgumentException
+    {
         if(name.trim().isEmpty()) {
             throw new IllegalArgumentException("The attribute name cannot be blank.");
         }
         if(type.trim().isEmpty()) {
             throw new IllegalArgumentException("The attribute type cannot be blank.");
         }
-        this.name = name;
+        if(name.contains(" ")) {
+            throw new IllegalArgumentException("The attribute name cannot contain a space.");
+        }
+        if(type.contains(" ")) {
+            throw new IllegalArgumentException("The attribute type cannot contain a space.");
+        }
         this.type = type;
+        this.name = name;
     }
 
     /**
-     * Returns the name of the attribute object.
+     * Returns the name of the formal parameter.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Returns the type of the attribute object.
+     * Returns the type of the formal parameter.
      */
     public String getType() {
         return this.type;
     }
 
-    /**
-     * Changes the name of the attribute object.
+     /**
+     * Changes the name of the formal parameter object.
      */
     public void setName (String name) throws IllegalArgumentException{
         if(name.trim().isEmpty()) {
@@ -49,7 +57,7 @@ public class Attribute {
     }
 
     /**
-     * Changes the name of the attribute object.
+     * Changes the name of the formal parameter object.
      */
     public void setType(String type) throws IllegalArgumentException{
         if(type.trim().isEmpty()) {
@@ -59,7 +67,7 @@ public class Attribute {
     }
 
     /**
-     * Returns true if two attribute object are equal and false otehrwise.
+     * Returns true if two formal parameters object are equal and false otehrwise.
      */
     public boolean equals(Object other) {
         boolean result = false;
@@ -69,11 +77,11 @@ public class Attribute {
         else if (other == null) {
             result = false;
         }
-        else if(!(other instanceof Attribute)) { 
+        else if(!(other instanceof Formal)) { 
             result = false; 
         }
         else {
-            Attribute object = (Attribute) other;
+            Formal object = (Formal) other;
             if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) {
                 result = true;
             }
@@ -82,11 +90,11 @@ public class Attribute {
     }
 
     /**
-     * Returns a string reppresentation of an attribute.
+     * Returns a string reppresentation of a formal parameter.
      */
     public String toString()
     {
-        return this.type + " : " + this.name;
+        return this.type + " " + this.name;
     }
 
     /**
