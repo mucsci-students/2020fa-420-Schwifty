@@ -94,11 +94,11 @@ public class Controller
     /**
      * Creates a field for a given class.
      */
-    public void createField(String className, String type, String name) throws IllegalArgumentException
+    public void createField(String className, String type, String name, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.addField(className, type, name);
+        boolean temp = store.addField(className, type, name, access);
         sendToView(temp, "Field", "created", className, oldClassStr);
     }
 
@@ -134,7 +134,17 @@ public class Controller
         boolean temp = store.changeFieldType(className, newType, fieldName);
         sendToView(temp, "Field", "re-typed", className, oldClassStr);  
     }
-    
+
+    /**
+     * Changes access type of a field.
+     */
+    public void changeFieldAccess(String className, String fieldName, String access) throws IllegalArgumentException
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.changeFieldAccess(className, fieldName, access);
+        sendToView(temp, "Field", "re-access-typed", className, oldClassStr);
+    }
 
 //================================================================================================================================================
 //Method methods

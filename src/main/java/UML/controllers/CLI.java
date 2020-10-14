@@ -122,6 +122,42 @@ public class CLI {
         else if (line[0].equals("renamef")) 
         {
             renameField(line);
+        }
+        else if (line[0].equals("changefa")) 
+        {
+            changeFieldAccess(line);
+        }
+        else if (line[0].equals("renamef")) 
+        {
+            renameField(line);
+        }
+        else if (line[0].equals("renamef")) 
+        {
+            renameField(line);
+        }
+        else if (line[0].equals("renamef")) 
+        {
+            renameField(line);
+        }
+        else if (line[0].equals("renamef")) 
+        {
+            renameField(line);
+        }
+        else if (line[0].equals("renamef")) 
+        {
+            renameField(line);
+        }
+        else if (line[0].equals("renamef")) 
+        {
+            renameField(line);
+        }
+        else if (line[0].equals("renamef")) 
+        {
+            renameField(line);
+        }
+        else if (line[0].equals("renamef")) 
+        {
+            renameField(line);
         } 
         else if (line[0].equals("deletef")) 
         {
@@ -250,8 +286,7 @@ public class CLI {
         else
         {
             view.showError("Invalid arguments for adding a class, please refer to help.");
-        }
-        
+        }  
     }
 
     /**
@@ -289,9 +324,9 @@ public class CLI {
      */
     private void addField(String[] args) 
     {
-        if(args.length == 4)
+        if(args.length == 5)
         {
-            controller.createField(args[1], args[2], args[3]);            
+            controller.createField(args[1], args[2], args[3], args[4]);            
         }
         else
         {
@@ -325,6 +360,18 @@ public class CLI {
         else
         {
             view.showError("Invalid arguments for renaming a field, please refer to help.");
+        }
+    }
+
+    private void changeFieldAccess(String[] args)
+    {
+        if(args.length == 3)
+        {
+            controller.changeFieldAccess(args[1], args[2], args[3]);
+        }
+        else
+        {
+            view.showError("Invalid arguments for changing field access, please refer to help.");
         }
     }
 

@@ -287,13 +287,16 @@ public class GraphicalView implements View {
         JMenuItem deleteMethod = new JMenuItem("Delete method");
         JMenuItem rnMethod = new JMenuItem("Rename method");
 
-        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod };
-        String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
-                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method" };
-        String[] command = { "CreateField", "DeleteField", "RenameField", "ChangeFieldType", "CreateMethod",
-                "DeleteMethod", "RenameMethod" };
+        //Change the access of a field or method
+        JMenuItem chgAccess = new JMenuItem("Change Field Access");
 
-        for (int count = 0; count < 7; ++count) {
+        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod, chgAccess};
+        String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
+                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method", "Change field access level" };
+        String[] command = { "CreateField", "DeleteField", "RenameField", "ChangeFieldType", "CreateMethod",
+                "DeleteMethod", "RenameMethod","ChangeFieldAccess"};
+
+        for (int count = 0; count < 8; ++count) {
             fieldMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);

@@ -172,10 +172,10 @@ public class Store {
 	/**
 	 * Adds a field to a class in the store.
 	 */
-	public boolean addField(String className, String type, String name) throws IllegalArgumentException
+	public boolean addField(String className, String type, String name, String access) throws IllegalArgumentException
 	{
 		Class classToAddAttrTo = findClass(className);
-		return classToAddAttrTo.addField(type, name);
+		return classToAddAttrTo.addField(type, name, access);
 	}
 
 	/**
@@ -204,6 +204,15 @@ public class Store {
 		//Class always exists if this method is called; guarenteed by controller.
 		Class toChange = findClass(className);
 		return toChange.changeFieldType(newType, name);
+	}
+
+	/**
+	 * Changes the access type of a field.
+	 */
+	public boolean changeFieldAccess(String className, String fieldName, String access)
+	{
+		Class toChange = findClass(className);
+		return toChange.changeFieldAccess(fieldName, access);
 	}
 
 
@@ -287,6 +296,7 @@ public class Store {
 
 		return aClass.changeMethodType(oldType, methodName, newParams, newType);
 	}
+
 
 //================================================================================================================================================
 //Parameter methods

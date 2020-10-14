@@ -27,14 +27,6 @@ public class Method extends Formal
     {
         return this.params;
     }
-
-    /**
-     * Sets the params ArrayList equal to the parameter.
-     */
-    public void setParams(ArrayList<Parameter> toSet) 
-    {
-        this.params = toSet;
-    }
     
     /**
      * Adds a parameter to the method's ArrayList of parameters.
@@ -77,6 +69,7 @@ public class Method extends Formal
     /**
      * Returns true if the objects are equal, false otherwise.
      */
+    @Override
     public boolean equals(Object other) {
         boolean result = false;
         if(this == other) {
@@ -133,6 +126,6 @@ public class Method extends Formal
     @Override
     public int hashCode()
     {
-        return this.getName().hashCode() + this.getType().hashCode();
+        return this.getName().hashCode() + this.getType().hashCode() + this.getParams().hashCode();
     }
 }

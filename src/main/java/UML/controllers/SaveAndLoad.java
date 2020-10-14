@@ -157,7 +157,7 @@ public class SaveAndLoad
         for (Field f : fields) 
         {
             //Get the current fields and put in the JSONObject
-            String nameAndType = f.getType() + " " + f.getName();
+            String nameAndType = f.getAccessString() + " " + f.getType() + " " + f.getName();
             fieldsToBeAdded.add(nameAndType);
         }
 
@@ -306,7 +306,7 @@ public class SaveAndLoad
         while(it.hasNext())
         {
             String[] field = it.next().split(" ");
-            aClass.addField(field[0], field[1]);
+            aClass.addField(field[0], field[1], field[2]);
         }
     }
 

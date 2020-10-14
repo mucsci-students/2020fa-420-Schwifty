@@ -36,8 +36,15 @@ public class FieldClickController implements ActionListener {
         if (cmd.equals("CreateField")) {
             String type = view.getInputFromUser("Type: ");
             String name = view.getInputFromUser("Name: ");
+            
+            ArrayList<String> accessTypes = new ArrayList<String>();
+            accessTypes.add("public");
+            accessTypes.add("private");
+            accessTypes.add("protected");
+
+            String access = view.getChoiceFromUser("New access level", "New access level", accessTypes);
             // Add field to the class using received params.
-            controller.createField(className, type, name);
+            controller.createField(className, type, name, access);
 
         } else if (cmd.equals("DeleteField")) {
             // Get class from storage.
@@ -139,6 +146,27 @@ public class FieldClickController implements ActionListener {
 
             controller.renameMethod(className, returnType, methodName, store.getMethodParamString(className, methodString), newMethod);
         }
+        else if(cmd.equals("ChangeFieldAccess"))
+        {
+            // Get class from storage.
+            Class classToRenameFrom = store.findClass(className);
+
+            // Get a list of atrributes from the class.
+            ArrayList<String> fieldList = store.getFieldList(classToRenameFrom.getFields());
+
+            // Get field to rename.
+            String field = view.getChoiceFromUser("Rename this field", "Rename atrribute", fieldList);
+
+
+            ArrayList<String> accessTypes = new ArrayList<String>();
+            accessTypes.add("public");
+            accessTypes.add("private");
+            accessTypes.add("protected");
+
+            String newAccess = view.getChoiceFromUser("New access level", "New access level", accessTypes);
+            controller.changeFieldAccess(className, field, newAccess);
+        }
+
     }
 
     private int getNumberFromInput(String input) 

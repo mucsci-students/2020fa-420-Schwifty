@@ -52,7 +52,7 @@ public class StoreTest {
         
         //add a class and a field to the store
         store.addClass("TestClass");
-        store.addField("TestClass","int", "num");
+        store.addField("TestClass","int", "num", "public");
         
         //Find the test class in the store
         Class testClass = store.findClass("TestClass");
@@ -61,7 +61,7 @@ public class StoreTest {
         ArrayList<String> stringFields = store.getFieldList(testClass.getFields());
         
         //Test the correct thing was added.
-        assertTrue(stringFields.contains("int num"));
+        assertTrue(stringFields.contains("int num public"));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class StoreTest {
         Store store = new Store();
         
         //create a field. 
-        Field f = new Field("int", "num"); 
+        Field f = new Field("int", "num", "public"); 
         
         //create a field set. 
         Set<Field> fieldSet = new HashSet<Field>();
@@ -81,7 +81,7 @@ public class StoreTest {
         ArrayList<String> stringFields = store.getFieldList(fieldSet);
         
         //Test that an ArrayList was returned with field int num. 
-        assertTrue(stringFields.contains("int num")); 
+        assertTrue(stringFields.contains("int num public")); 
     }
     
     @Test
@@ -93,7 +93,7 @@ public class StoreTest {
         //add a class to the store.
         store.addClass("Test");
         //add a field to that class.
-        store.addField("Test", "int", "num");
+        store.addField("Test", "int", "num", "public");
         //Delete that field.
         store.deleteField("Test", "num");
 
@@ -102,7 +102,7 @@ public class StoreTest {
         Set<Field> fields = testClass.getFields();
         
         //Validate the field has been removed. 
-        assertFalse(store.getFieldList(fields).contains("int num"));
+        assertFalse(store.getFieldList(fields).contains("int num public"));
     }
     
     @Test

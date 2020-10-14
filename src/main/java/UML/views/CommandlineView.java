@@ -125,6 +125,7 @@ public class CommandlineView implements View {
         System.out.println("addf [class] [type] [name]:                                                                      Create a field");
         System.out.println("renamef [className] [oldName][newName]:                                                          Rename a field");
         System.out.println("deletef [class] [FieldName]:                                                                     Delete a field");
+        System.out.println("changefa [class] [fieldName] [public or private or protected]:                                   Change field access");
         System.out.println("addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                            Add a method");
         System.out.println("renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:      Rename a method");
         System.out.println("deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                         Delete a method");
@@ -146,7 +147,7 @@ public class CommandlineView implements View {
         System.out.println(" /\\__/ / (__| | | \\ V  V /| | | | |_| |_| |");
         System.out.println(" \\____/ \\___|_| |_|\\_/\\_/ |_|_|  \\__|\\__, |");
         System.out.println("                                      __/ |");
-        System.out.println("                                     |___ /");
+        System.out.println("                                     |___/ ");
     }
 
     @Override

@@ -33,10 +33,10 @@ public class ClassTest {
     public void testGetFields() 
     {
         Class test = new Class("Test");
-        test.addField("int", "attribute");
+        test.addField("int", "attribute", "public");
         //The class's call to get fields is nonempty.
         assertTrue(!test.getFields().isEmpty());
-        Field att = new Field("int", "attribute");
+        Field att = new Field("int", "attribute", "public");
         //The class's call to get fields should comtain the added field.
         assertTrue(test.getFields().contains(att));
     }
@@ -82,17 +82,17 @@ public class ClassTest {
     public void testAddField() 
     {
         Class test = new Class("aName");
-        test.addField("int", "att");
-        test.addField("String", "att2");
+        test.addField("int", "att", "public");
+        test.addField("String", "att2", "private");
         Set<Field> testSet = test.getFields();
-        Field attrTest = new Field("int", "att");
-        Field attrTestTwo = new Field("String", "att2");
+        Field attrTest = new Field("int", "att", "public");
+        Field attrTestTwo = new Field("String", "att2", "private");
         //The class should contain the added fields.
         assertTrue(test.getFields().contains(attrTest));
         assertTrue(test.getFields().contains(attrTestTwo));
         //Don't allow adding whitespace/empty strings.
         assertThrows(IllegalArgumentException.class, () -> {
-            test.addField("", "   ");
+            test.addField("", "   ","   ");
         });
     }
     
@@ -103,8 +103,8 @@ public class ClassTest {
         Class test = new Class("name");
         //When field doesn't exist.
         assertFalse(test.deleteField("name"));
-        test.addField("int", "att");
-        test.addField("String", "att2");
+        test.addField("int", "att", "private");
+        test.addField("String", "att2", "protected");
         test.deleteField("att");
         test.deleteField("att2");
         //Set should be empty.
@@ -115,9 +115,9 @@ public class ClassTest {
     public void testRenameField() 
     {
         Class test = new Class("name");
-        test.addField("int", "att"); 
+        test.addField("int", "att", "public"); 
         test.renameField("att", "newAtt");
-        Field newAtt = new Field("int", "newAtt");
+        Field newAtt = new Field("int", "newAtt", "public");
         //Should contain the new field.
         assertTrue(test.getFields().contains(newAtt));
         //Renaming an field name that doesn't exist should return false.
@@ -132,15 +132,28 @@ public class ClassTest {
     public void testChangeFieldType()
     {
         Class test = new Class("name");
-        test.addField("int", "att"); 
+        test.addField("int", "att", "public"); 
         test.changeFieldType("String", "att");
-        Field newAtt = new Field("String", "att");
+        Field newAtt = new Field("String", "att", "public");
         assertTrue(test.getFields().contains(newAtt));
         //Changing a field type that doesn't exist should return false.
         assertFalse(test.changeFieldType("double", "att2"));
         //Rename to empty or whitespace expects exception.
         assertThrows(IllegalArgumentException.class, () -> {
             test.changeFieldType("", "att");
+        });
+    }
+
+    @Test
+    public void testChangeFieldAccess()
+    {
+        Class test = new Class("name");
+        test.addfield("int","att","public");
+        test.testChangeFieldAccess("att", "private");
+        Field newAtt = new Field("int", "att", "private");
+        assertFalse(test.ChangeFieldAccess("att","protected"));
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.ChangeFieldAccess("", "   ");
         });
     }
 
@@ -219,9 +232,9 @@ public class ClassTest {
     public void testEquals() 
     {
         Class test1 = new Class("name");
-        test1.addField("int", "5");
+        test1.addField("int", "5", "private");
         Class test2 = new Class("name");
-        test2.addField("int", "5");
+        test2.addField("int", "5", "private");
         Class extra = new Class("extra");
         test1.addRelationshipToOther(RelationshipType.REALIZATION, extra);
         test2.addRelationshipToOther(RelationshipType.REALIZATION, extra);
@@ -236,7 +249,7 @@ public class ClassTest {
     public void testToString() 
     {
         Class test1 = new Class("name");
-        test1.addField("attribute", "type");
+        test1.addField("attribute", "type", "public");
         Class extra = new Class("extra");
         Class extra2 = new Class("extra2");
         Class test2 = test1;
