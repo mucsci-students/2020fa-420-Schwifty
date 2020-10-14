@@ -7,7 +7,7 @@ package UML.model;
 public class Field extends Formal 
 {   
     //Stores public +, private -, or protected *
-    char access;
+    private char access;
     
     /**
      * Contructs a new field object.
@@ -26,21 +26,24 @@ public class Field extends Formal
         boolean isSet;
         if(access.equals("public"))
         {
-            temp = '+';
+            this.access = '+';
             isSet = true;
         }
         else if(access.equals("private"))
         {
-            temp = '-';
+            this.access = '-';
             isSet = true;
         }
         else if(access.equals("protected"))
         {
-            temp = '*';
+            this.access = '*';
             isSet = true;
         }
         else
+        {
+            this.access = '+';
             isSet = false;
+        }
         return isSet;
     }
 
@@ -74,7 +77,7 @@ public class Field extends Formal
     }    
     /**
      * 
-     * Returns a char for the requested level of access of this field
+     * Returns a char for the requested level of access of this field.
      * public:    +
      * private:   - 
      * protected: *
@@ -111,7 +114,7 @@ public class Field extends Formal
         }
         else {
             Field object = (Field) other;
-            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType()) && object.getAccess() == this.getAccess()) {
+            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType()) && object.getAccessChar() == this.getAccessChar()) {
                 result = true;
             }
         }
@@ -124,6 +127,6 @@ public class Field extends Formal
     @Override
     public String toString()
     {
-        return this.getAccess() + " " + this.getType() + " " + this.getName();
+        return this.getAccessChar() + " " + this.getType() + " " + this.getName();
     }
 } 

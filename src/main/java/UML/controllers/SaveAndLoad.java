@@ -325,8 +325,9 @@ public class SaveAndLoad
         {
             String nextElement = it.next().replace("[", "");
             String[] methodString = nextElement.split(" ");
-            String type = methodString[0];
-            String name = methodString[1];
+            String access = methodString[0];
+            String type = methodString[1];
+            String name = methodString[2];
             //void testMethod ( int num )
             //void testMethod int num 
             ArrayList<String> params = new ArrayList<String>();
@@ -335,7 +336,7 @@ public class SaveAndLoad
             {
                 params.add(methodString[count] + " " + methodString[count + 1]);    
             }
-            store.addMethod(className, type, name, params);
+            store.addMethod(className, type, name, params, access);
         }
     }
 

@@ -324,7 +324,7 @@ public class CLI {
      */
     private void addField(String[] args) 
     {
-        if(args.length == 5)
+        if(args.length == 5 && store.findClass(args[1]) != null)
         {
             controller.createField(args[1], args[2], args[3], args[4]);            
         }
@@ -338,7 +338,7 @@ public class CLI {
      */
     private void renameField(String[] args) 
     {
-        if (args.length == 4)
+        if (args.length == 4 && store.findClass(args[1]) != null)
         {
             controller.renameField(args[1], args[2], args[3]);
         }
@@ -353,10 +353,8 @@ public class CLI {
      */
     private void deleteField(String[] args) 
     {
-        if (args.length == 3)
-        {
+        if (args.length == 3 && store.findClass(args[1]) != null)
             controller.deleteField(args[1], args[2]);
-        }
         else
         {
             view.showError("Invalid arguments for renaming a field, please refer to help.");
@@ -365,7 +363,7 @@ public class CLI {
 
     private void changeFieldAccess(String[] args)
     {
-        if(args.length == 3)
+        if(args.length == 3 || store.findClass(args[1]) != null)
         {
             controller.changeFieldAccess(args[1], args[2], args[3]);
         }
@@ -382,13 +380,15 @@ public class CLI {
     {
         ArrayList<String> params = new ArrayList<String>();
         
-        if (args.length < 4 || (args.length - 4) % 2 != 0) 
-            System.out.println("Invalid arguments");
-        
-        for (int counter = 4; counter < args.length; counter += 2) 
-            params.add(args[counter] + " " + args[counter + 1]);
+        if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null)
+            view.showError("Invalid arguments for adding method, please refer to help.");
+        else
+        {
+            for (int counter = 4; counter < args.length - 1; counter += 2) 
+                params.add(args[counter] + " " + args[counter + 1]);
 
-        controller.createMethod(args[1], args[2], args[3], params);
+            controller.createMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+        }
     }
     
     /**
@@ -396,13 +396,13 @@ public class CLI {
      */
     private void renameMethod(String[] args) {
         ArrayList<String> params = new ArrayList<String>();
-        if (args.length < 4 || (args.length - 4) % 2 != 0) {
+        if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 1; counter += 2) {
+        for (int counter = 4; counter < args.length - 2; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.renameMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+        controller.renameMethod(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
     }
 
     /**
@@ -410,13 +410,13 @@ public class CLI {
      */
     private void deleteMethod(String[] args) {
         ArrayList<String> params = new ArrayList<String>();
-        if (args.length < 4 || (args.length - 4) % 2 != 0) {
+        if (args.length < 5 || (args.length - 5) % 2 != 0 ) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length; counter += 2) {
+        for (int counter = 4; counter < args.length - 1; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.deleteMethod(args[1], args[2], args[3], params);
+        controller.deleteMethod(args[1], args[2], args[3], params, args[args.length - 1]);
 
     }
 
@@ -425,13 +425,13 @@ public class CLI {
      */
     private void addParameter(String[] args) {
         ArrayList<String> params = new ArrayList<String>();
-        if ((args.length - 6) % 2 != 0) {
+        if ((args.length - 7) % 2 != 0) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 2; counter += 2) {
+        for (int counter = 4; counter < args.length - 3; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.addParameter(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
+        controller.addParameter(args[1], args[2], args[3], params, args[args.length - 3], args[args.length - 2], args[args.length - 1]);
     }
     /**
      * Deletes a given parameter from a methodDeletes a parameters from a method from a class in the store.

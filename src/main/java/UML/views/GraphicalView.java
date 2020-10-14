@@ -287,16 +287,19 @@ public class GraphicalView implements View {
         JMenuItem deleteMethod = new JMenuItem("Delete method");
         JMenuItem rnMethod = new JMenuItem("Rename method");
 
-        //Change the access of a field or method
-        JMenuItem chgAccess = new JMenuItem("Change Field Access");
+        //Change the access of a field
+        JMenuItem chgFieldAccess = new JMenuItem("Change Field Access");
 
-        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod, chgAccess};
+        //Change the access level of a method
+        JMenuItem chgMethodAccess = new JMenuItem("Change Method Access");
+
+        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod, chgFieldAccess, chgMethodAccess};
         String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
-                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method", "Change field access level" };
+                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method", "Change field access level", "Change method access level" };
         String[] command = { "CreateField", "DeleteField", "RenameField", "ChangeFieldType", "CreateMethod",
-                "DeleteMethod", "RenameMethod","ChangeFieldAccess"};
+                "DeleteMethod", "RenameMethod","ChangeFieldAccess", "ChangeMethodAccess"};
 
-        for (int count = 0; count < 8; ++count) {
+        for (int count = 0; count < 9; ++count) {
             fieldMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);

@@ -154,45 +154,56 @@ public class Controller
     /**
      * Creates a method in a given class.
      */
-    public void createMethod(String className, String returnType, String methodName, ArrayList<String> params)
+    public void createMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.addMethod(className, returnType, methodName, params);
+        boolean temp = store.addMethod(className, returnType, methodName, params, access);
         sendToView(temp, "Method", "added", className, oldClassStr);
     }
 
     /**
      * Deletes a method from a given class.
      */
-    public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params)
+    public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.deleteMethod(className, returnType, methodName, params);
+        boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
         sendToView(temp, "Method", "deleted", className, oldClassStr);
     }
 
     /**
      * Renames a method in a given class.
      */
-    public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String newName)
+    public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String access, String newName)
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.renameMethod(className, returnType, methodName, params, newName);
+        boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
         sendToView(temp, "Method", "renamed", className, oldClassStr);
     }
 
     /**
      * Changes the type of a given method.
      */
-    public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String newType)
+    public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String access, String newType)
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.changeMethodType(className, oldType, methodName, params, newType);
+        boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
         sendToView(temp, "Method", "re-typed", className, oldClassStr);
+    }
+
+    /**
+     * Changes the access type of a given method.
+     */
+    public void changeMethodAccess(String className, String type, String name, ArrayList<String> params, String access, String newAccess)
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
+        sendToView(temp, "Method", "re-access-typed", className, oldClassStr);
     }
 
 
@@ -204,11 +215,11 @@ public class Controller
 /**
  * Adds an parameter to a given method.
  */
-public void addParameter(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName)
+public void addParameter(String className, String methodType, String methodName, ArrayList<String> params, String access, String paramType, String paramName)
 {
     Class aClass = findClass(className);
     String oldClassStr = aClass.toString();
-    boolean temp = store.addParam(className, methodType, methodName, params, paramType, paramName);
+    boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
     sendToView(temp, "Parameter", "added", className, oldClassStr);
 }
 
@@ -216,11 +227,11 @@ public void addParameter(String className, String methodType, String methodName,
 /**
  * Deletes an parameter from a given method.
  */
-public void deleteParameter(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName)
+public void deleteParameter(String className, String methodType, String methodName, ArrayList<String> params, String access,  String paramType, String paramName)
 {
     Class aClass = findClass(className);
     String oldClassStr = aClass.toString();
-    boolean temp = store.deleteParam(className, methodType, methodName, params, paramType, paramName);
+    boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
     sendToView(temp, "Parameter", "deleted", className, oldClassStr);
 }
 

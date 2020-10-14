@@ -49,6 +49,12 @@ public class Class {
         this.methods = new HashSet<Method>();
     }
 
+
+//================================================================================================================================================
+//Getters.
+//================================================================================================================================================
+
+    
     /**
      * Returns the name of the class object.
      */
@@ -89,6 +95,12 @@ public class Class {
         return this.relationshipsFromOther;
     }
 
+
+//================================================================================================================================================
+//Setters
+//================================================================================================================================================
+
+
     /**
      * Changes the name of the class object.
      */
@@ -103,6 +115,12 @@ public class Class {
         }
         this.name = name;
     }
+
+
+//================================================================================================================================================
+//Field methods
+//================================================================================================================================================
+
 
     /**
      * Adds a field the the class object.  If the field name is already used, return false.
@@ -204,12 +222,19 @@ public class Class {
         return false;
     }
 
+
+//================================================================================================================================================
+//Method methods
+//================================================================================================================================================
+
+
+
     /**
      * Adds method with parameters.  If the method cannot be added, return false.
      */
-    public boolean addMethod(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException 
+    public boolean addMethod(String type, String name, ArrayList<Parameter> params, String access) throws IllegalArgumentException 
     {
-        Method newMethod = new Method(type, name, params);
+        Method newMethod = new Method(type, name, params, access);
         for (Method m : methods) 
         {
             // If the number of parameters doesn't match, no need to check if the parameters are equal.
@@ -241,9 +266,9 @@ public class Class {
      * Deletes a method from the class.  If it is not deleted, return false.
      */
     //////////Can rewrite in one line as long as method.equals() works correctly.
-    public boolean deleteMethod(String type, String name, ArrayList<Parameter> params) 
+    public boolean deleteMethod(String type, String name, ArrayList<Parameter> params, String access) 
     {
-        Method method = new Method(type, name, params);
+        Method method = new Method(type, name, params, access);
         for (Method m : methods) 
         {
             if (m.getType().equals(type) && m.getName().equals(name) && m.getParams().equals(params)) 
@@ -258,9 +283,9 @@ public class Class {
     /**
      * Renames method with parameters.  If it cannot be renamed, return false.
      */
-    public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String newName) throws IllegalArgumentException 
+    public boolean renameMethod(String type, String oldName, ArrayList<Parameter> params, String access, String newName) throws IllegalArgumentException 
     {
-        Method methodNew = new Method(type, newName, params);
+        Method methodNew = new Method(type, newName, params, access);
         for (Method m : methods) 
         {
             //If that exact method already exists, return false.
@@ -269,22 +294,22 @@ public class Class {
                 return false;
             }
         }
-        Method method = new Method(type, oldName, params);
+        Method method = new Method(type, oldName, params, access);
         boolean deleted = methods.remove(method);
         if (deleted) 
         {
-            addMethod(type, newName, params);
+            addMethod(type, newName, params, access);
         }
         //Returns false if method wasn't found in methods, true if it was found and renamed.
         return deleted;
     }
 
     /**
-     * Chnages the return type of a method.  If it cannot be changed, return false.
+     * Changes the return type of a method.  If it cannot be changed, return false.
      */
-    public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String newType) throws IllegalArgumentException 
+    public boolean changeMethodType(String oldType, String methodName, ArrayList<Parameter> params, String access, String newType) throws IllegalArgumentException 
     {
-        Method methodNew = new Method(newType, methodName, params);
+        Method methodNew = new Method(newType, methodName, params, access);
         for (Method m : methods) 
         {
             //If that exact method already exists, return false.
@@ -293,15 +318,44 @@ public class Class {
                 return false;
             }
         }
-        Method method = new Method(oldType, methodName, params);
+        Method method = new Method(oldType, methodName, params, access);
         boolean deleted = methods.remove(method);
         if (deleted) 
         {
-            addMethod(newType, methodName, params);
+            addMethod(newType, methodName, params, access);
         }
         //Returns false if method wasn't found in methods, true if it was found and retyped.
         return deleted;
     }
+    /**
+     * Changes the access type of a method.  If it cannot be changed, return false.
+     */
+    public boolean changeMethodAccess(String type, String methodName, ArrayList<Parameter> params, String access, String newAccess) throws IllegalArgumentException 
+    {
+        Method methodNew = new Method(type, methodName, params, newAccess);
+        for (Method m : methods) 
+        {
+            //If that exact method already exists, return false.
+            if (m.equals(methodNew)) 
+            {
+                return false;
+            }
+        }
+        Method method = new Method(type, methodName, params, access);
+        boolean deleted = methods.remove(method);
+        if (deleted) 
+        {
+            addMethod(type, methodName, params, newAccess);
+        }
+        return deleted;
+    }
+
+
+//================================================================================================================================================
+//Relationship methods
+//================================================================================================================================================
+
+
 
     /**
      * Adds a relationship from this class object to another.  Returns false if the relationship couldn't be created.
@@ -371,6 +425,13 @@ public class Class {
         //True if both cases above were true.
         return removedFromOther && removedToOther;
     }
+
+
+//================================================================================================================================================
+//Other methods
+//================================================================================================================================================
+
+
 
     /**
      * Returns true if two class object are equal and false otehrwise.
