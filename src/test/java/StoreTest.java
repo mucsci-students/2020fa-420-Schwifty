@@ -483,7 +483,7 @@ public class StoreTest {
     {
         Store store = new Store();
         store.addClass("name");
-        store.addMethod("name","int", "num", new ArrayList<String>(), "private");
+        store.addMethod("name", "int", "num", new ArrayList<String>(), "private");
         //Should return true if method deleted.
         assertTrue(store.removeMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private").toString(), "name"));
         //Method should no longer exist.
@@ -495,13 +495,12 @@ public class StoreTest {
     {
         Store store = new Store();
         store.addClass("name");
-        store.addMethod("name","int", "num", new ArrayList<String>(), "private");
+        store.addMethod("name", "int", "num", new ArrayList<String>(), "private");
+
         //Should return true if method deleted.
-        assertTrue(store.renameMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private").toString(), "name", "newName", "private"));
-        //Method of old name should no longer exist.
+        assertEquals(true,store.renameMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private").toString(), "name", "newName", "private"));
         assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private"));
-        //Method with new name should exist.
-        assertFalse(store.findMethod("name", "int", "newName", new ArrayList<Parameter>(), "private") == null);
+        assertEquals("Method: - int newName (  )",store.findMethod("name", "int", "newName", new ArrayList<Parameter>(), "private").toString());
     }
 
     @Test

@@ -37,14 +37,6 @@ public class Store {
 	{
 		this.currentLoadedFile = fileToSet;
 	}
-
-	/**
-	 * Returns ArrayList of classes in the store.
-	 */
-	public ArrayList<Class> getClassStore()
-	{
-		return this.classStore;
-	}
 	
 	public void setClassStore(ArrayList<Class> newStore)
 	{
@@ -56,6 +48,13 @@ public class Store {
 //Getters
 //===============================================================================================================================================
 
+	/**
+	 * Returns ArrayList of classes in the store.
+	 */
+	public ArrayList<Class> getClassStore()
+	{
+		return this.classStore;
+	}
 
     /** 
 	 * Makes and returns a combo box fill with the created classes.
@@ -498,12 +497,13 @@ public class Store {
 				//ArrayList of param strings
 				ArrayList<String> paramStrings = new ArrayList<String>();
 				//Generate an ArrayList of strings to be passed into the rename method. 
-				for(Parameter p : m.getParams())
+				ArrayList<Parameter> params = m.getParams();
+				for(Parameter p : params)
 				{
 					paramStrings.add(p.getType() + " " + p.getName());
 				}
 				//rename the method and break out. 
-				return renameMethod(className, m.getType(), m.getName(), paramStrings, newName, access);
+				return renameMethod(className, m.getType(), m.getName(), paramStrings, m.getAccessString(), newName);
 			}
 		}
 		return false;
