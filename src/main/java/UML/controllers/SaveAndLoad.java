@@ -157,7 +157,7 @@ public class SaveAndLoad
         for (Field f : fields) 
         {
             //Get the current fields and put in the JSONObject
-            String nameAndType = f.getAccessString() + " " + f.getType() + " " + f.getName();
+            String nameAndType = f.getAccessChar() + " " + f.getType() + " " + f.getName();
             fieldsToBeAdded.add(nameAndType);
         }
 
@@ -177,11 +177,12 @@ public class SaveAndLoad
         {
             JSONObject methObject = new JSONObject();
             //Get the current fields and put in the JSONObject
+            String access = String.valueOf(m.getAccessChar());
             String methodName = m.getName();
             String methodType = m.getType();
             ArrayList<String> params  = store.getMethodParamString(aClass.getName(), m.toString());
 
-            String methodString = methodType + " " + methodName + "[ ";
+            String methodString = access + " " + methodType + " " + methodName + "[ ";
             for(String s : params)
             {
                 methodString += s;
@@ -306,7 +307,7 @@ public class SaveAndLoad
         while(it.hasNext())
         {
             String[] field = it.next().split(" ");
-            aClass.addField(field[0], field[1], field[2]);
+            aClass.addField(field[1], field[2], field[0]);
         }
     }
 
@@ -332,7 +333,7 @@ public class SaveAndLoad
             //void testMethod int num 
             ArrayList<String> params = new ArrayList<String>();
             
-            for(int count = 2; count < methodString.length - 1; count += 2)
+            for(int count = 3; count < methodString.length - 1; count += 2)
             {
                 params.add(methodString[count] + " " + methodString[count + 1]);    
             }

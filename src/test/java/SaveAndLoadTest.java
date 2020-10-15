@@ -112,7 +112,7 @@ public class SaveAndLoadTest {
         String[] relatedClasses = {"TestTwo","Test"};
         //Create the test fields
         Field attrTest = new Field("int", "num", "public");
-        Field attrTestTwo = new Field("string", "aStr", "private");
+        Field attrTestTwo = new Field("string", "aStr", "public");
         Field[] attrTestArray = {attrTest, attrTestTwo};
 
         RelationshipType[] relationsTo = {RelationshipType.REALIZATION, null};
@@ -133,7 +133,7 @@ public class SaveAndLoadTest {
             ArrayList<Parameter> params = new ArrayList<>();
             params.add(new Parameter("int","num"));
 
-            Method testMethod = new Method("void", "testMethod", params, "private");
+            Method testMethod = new Method("void", "testMethod", params, "public");
             for(Method m : methods)
             {
                 assertEquals(testMethod, m);
