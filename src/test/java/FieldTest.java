@@ -84,7 +84,7 @@ public class FieldTest {
         assertEquals("public", test.getAccessString());
         assertEquals('+', test.getAccessChar());
         //Illegal type should not allow setting
-        assertFalse(test.setAccess("nonsense");
+        assertFalse(test.setAccess("nonsense"));
         //The field should not have changed.
         assertEquals('+', test.getAccessChar());
     }

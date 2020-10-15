@@ -332,6 +332,8 @@ public class Class {
      */
     public boolean changeMethodAccess(String type, String methodName, ArrayList<Parameter> params, String access, String newAccess) throws IllegalArgumentException 
     {
+        if(!newAccess.equals("public") && !newAccess.equals("private") && !newAccess.equals("protected"))
+            return false;
         Method methodNew = new Method(type, methodName, params, newAccess);
         for (Method m : methods) 
         {

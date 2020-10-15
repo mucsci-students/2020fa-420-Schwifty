@@ -110,6 +110,13 @@ public class Method extends Formal
     }
     
     /**
+     * Sets params to given array list of Parameter.
+     */
+    public void setParams(ArrayList<Parameter> parameters)
+    {
+        this.params = parameters;
+    }
+    /**
      * Adds a parameter to the method's ArrayList of parameters.
      */
     public boolean addParam(Parameter param) throws IllegalArgumentException

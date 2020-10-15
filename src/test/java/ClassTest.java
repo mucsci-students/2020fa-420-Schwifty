@@ -148,13 +148,16 @@ public class ClassTest {
     public void testChangeFieldAccess()
     {
         Class test = new Class("name");
-        test.addfield("int","att","public");
-        test.testChangeFieldAccess("att", "private");
-        Field newAtt = new Field("int", "att", "private");
-        assertFalse(test.ChangeFieldAccess("att","protected"));
-        assertThrows(IllegalArgumentException.class, () -> {
-            test.ChangeFieldAccess("", "   ");
-        });
+        test.addField("int", "att", "public");
+        //If change works, should return true.
+        assertTrue(test.changeFieldAccess("att", "private"));
+        assertTrue(test.changeFieldAccess("att","protected"));
+        //If wrong field name given, shgould return false.
+        assertFalse(test.changeFieldAccess("att1","public"));
+        //Test class should only contain int att protected field.
+        Field field = new Field("int", "att", "protected");
+        assertTrue(test.getFields().contains(field));
+        assertEquals(1, test.getFields().size());
     }
 
     @Test
@@ -266,13 +269,14 @@ public class ClassTest {
     {
         Class test = new Class("Test");
         ArrayList<Parameter> params = new ArrayList<Parameter>();
-        test.addMethod("int", "attribute", params);
+        test.addMethod("int", "attribute", params, "private");
         //The class's call to get methods is nonempty.
         assertTrue(!test.getMethods().isEmpty());
-        Method att1 = new Method("int", "attribute", params);
+        Method att1 = new Method("int", "attribute", params, "private");
+        test.addMethod("int", "attribute", params, "private");
         params.add(new Parameter("Type", "Name"));
-        Method att2 = new Method("int", "attribute", params);
-        test.addMethod("int", "attribute", params);
+        Method att2 = new Method("int", "attribute", params, "private");
+        test.addMethod("int", "attribute", params, "private");
         //The class's call to get methods should comtain the added methods.
         assertTrue(test.getMethods().contains(att1));
         assertTrue(test.getMethods().contains(att2));
@@ -284,16 +288,16 @@ public class ClassTest {
         Class test = new Class("Test");
         ArrayList<Parameter> params = new ArrayList<Parameter>();
         params.add(new Parameter("Type", "Name"));
-        test.addMethod("int", "attribute", params);
+        test.addMethod("int", "attribute", params, "private");
         assertTrue(test.getMethods().size() == 1);
-        test.addMethod("int", "attribute", params);
+        test.addMethod("int", "attribute", params, "private");
         assertTrue(test.getMethods().size() == 1);
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
-        test.addMethod("int", "attribute", params2);
+        test.addMethod("int", "attribute", params2, "private");
         assertTrue(test.getMethods().size() == 2);
         //Shouldn't allow adding method with name containing space.
         assertThrows(IllegalArgumentException.class, () -> {
-            test.addMethod("int", "new method", params);
+            test.addMethod("int", "new method", params, "private");
         });
     }
 
@@ -304,13 +308,14 @@ public class ClassTest {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
         params.add(new Parameter("Type", "Name"));
         //Deleting from empty set should return false.
-        assertFalse(test.deleteMethod("int", "attribute", params));
-        test.addMethod("int", "attribute", params);
+        assertFalse(test.deleteMethod("int", "attribute", params, "private"));
+        test.addMethod("int", "attribute", params, "private");
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
-        test.deleteMethod("int", "attribute", params2);
+        params2.add(new Parameter("type", "name"));
+        test.deleteMethod("int", "attribute", params2, "private");
         //Call to delete method with wrong params shouldn't change methods set.
         assertTrue(test.getMethods().size() == 1);
-        test.deleteMethod("int", "attribute", params);
+        test.deleteMethod("int", "attribute", params, "private");
         //Call to delete methods with correct params should delete the method.
         assertTrue(test.getMethods().size() == 0);
     }
@@ -320,16 +325,37 @@ public class ClassTest {
     {
         Class test = new Class("Test");
         ArrayList<Parameter> params = new ArrayList<Parameter>();
-        test.addMethod("int", "attribute", params);
-        test.renameMethod("int", "attribute", params, "newName");
-        Method method = new Method("int", "newName", params);
+        test.addMethod("int", "attribute", params, "protected");
+        test.renameMethod("int", "attribute", params, "protected", "newName");
+        Method method = new Method("int", "newName", params, "protected");
         assertTrue(test.getMethods().contains(method));
         //Renaming using old name shouldn't work.
-        assertFalse(test.renameMethod("int", "attribute", params, "newName2"));
+        assertFalse(test.renameMethod("int", "attribute", params, "protected", "newName2"));
         //Shouldn't allow names containg space.
         assertThrows(IllegalArgumentException.class, () -> {
-            test.renameMethod("int", "newName", params, " ");
+            test.renameMethod("int", "newName", params, "protected", " ");
         });
+    }
+
+    @Test
+    public void testChangeMethodType()
+    {
+
+    }
+
+    @Test
+    public void testChangeMethodAccess()
+    {
+        Class test = new Class("name");
+        test.addMethod("int", "att", new ArrayList<Parameter>(), "public");
+        //Should return true if access changed.
+        assertTrue(test.changeMethodAccess("int", "att", new ArrayList<Parameter>(), "public", "private"));
+        Method newAtt = new Method("int", "att", new ArrayList<Parameter>(), "private");
+        //Changing name of field that doesn;t exist should return false.
+        assertFalse(test.changeMethodAccess("int", "att1", new ArrayList<Parameter>(), "private", "protected"));
+        //Should not change value if access if bad value.
+        test.changeMethodAccess("int", "att", new ArrayList<Parameter>(), "private", "nonsense");
+        assertTrue(test.getMethods().contains(newAtt));
     }
         
 }

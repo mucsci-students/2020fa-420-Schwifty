@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.Scanner;
 import org.jline.reader.*;
+import org.jline.reader.impl.completer.ArgumentCompleter;
+import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.impl.AbstractTerminal;
 import org.jline.terminal.impl.DumbTerminal;
@@ -64,6 +66,11 @@ public class CLI {
         reader = LineReaderBuilder.builder()
                                              .terminal(terminal)
                                              .build();
+        Parser parser = new DefaultParser();
+
+        Completer s1 = new StringsCompleter("add class", "delete class", "rename class");
+
+        Completer completer = new ArgumentCompleter(s1);
         boolean go = true;
         while(go) 
         {
