@@ -270,13 +270,16 @@ public class ClassTest {
         Class test = new Class("Test");
         ArrayList<Parameter> params = new ArrayList<Parameter>();
         test.addMethod("int", "attribute", params, "private");
+
         //The class's call to get methods is nonempty.
         assertTrue(!test.getMethods().isEmpty());
         Method att1 = new Method("int", "attribute", params, "private");
         test.addMethod("int", "attribute", params, "private");
-        params.add(new Parameter("Type", "Name"));
-        Method att2 = new Method("int", "attribute", params, "private");
-        test.addMethod("int", "attribute", params, "private");
+        ArrayList<Parameter> params2 = new ArrayList<Parameter>();
+        params2.add(new Parameter("Type", "Name"));
+        Method att2 = new Method("int", "attribute", params2, "private");
+        test.addMethod("int", "attribute", params2, "private");
+        
         //The class's call to get methods should comtain the added methods.
         assertTrue(test.getMethods().contains(att1));
         assertTrue(test.getMethods().contains(att2));
