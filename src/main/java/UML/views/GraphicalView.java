@@ -68,13 +68,13 @@ public class GraphicalView implements View {
      * Creates a class panel to be displayed.
      */
     @Override
-    public void createClass(String classToString) {
+    public void createClass(String classToString, int x, int y) {
         ClassPanelBuilder classPanelBuilder = new ClassPanelBuilder(classToString, parentWindow);
         JPanel newClassPanel = classPanelBuilder.makeNewClassPanel();
         sl.putConstraint(SpringLayout.EAST, newClassPanel,5, SpringLayout.NORTH, parentWindow);
         classPanels.put(classToString, newClassPanel);
         //parentWindow.add(newClassPanel);
-        newClassPanel.setLocation(200, 200);
+        newClassPanel.setLocation(x, y);
         refresh();
     }
 
@@ -108,6 +108,16 @@ public class GraphicalView implements View {
         //parent.setLocationByPlatform(true);
         //panel.setLocation(0, 0);
         refresh();
+    }
+
+    @Override
+    public Dimension getLoc(String name)
+    {
+        JPanel panel = classPanels.get(name);
+        int x = panel.getX();
+        int y = panel.getY();
+        Dimension loc = new Dimension(x, y);
+        return loc;
     }
 
     /**

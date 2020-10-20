@@ -13,7 +13,9 @@ import java.io.File;
 
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
-import UML.controllers.MouseClickAndDragController; 
+import UML.controllers.MouseClickAndDragController;
+
+import java.awt.Dimension;
 
 public class Controller 
 {
@@ -53,7 +55,7 @@ public class Controller
         if (temp)
         {   
             String classStr = aClass.toString();
-            view.createClass(classStr);
+            view.createClass(classStr, 0, 0);
         }
         else  
         view.showError("Class could not be created");     
@@ -99,10 +101,10 @@ public class Controller
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
         boolean temp = store.addField(className, type, name, access);
-        view.deleteClass(oldClassStr);
-        view.createClass(aClass.toString());
-        view.addListener(new MouseClickAndDragController(store, view, this), aClass.toString());
-        //sendToView(temp, "Field", "created", className, oldClassStr);
+        //view.deleteClass(oldClassStr);
+        //view.createClass(aClass.toString());
+        //view.addListener(new MouseClickAndDragController(store, view, this), aClass.toString());
+        sendToView(temp, "Field", "created", className, oldClassStr);
     }
 
     /**
@@ -327,7 +329,10 @@ public void deleteParameter(String className, String methodType, String methodNa
         if (canSend) 
         {
             String newClassStr = store.findClass(className).toString();
-            view.updateClass(oldClassStr, newClassStr);
+            Dimension loc = view.getLoc(oldClassStr);
+            view.deleteClass(oldClassStr);
+            view.createClass(newClassStr, (int)loc.getWidth(), (int)loc.getHeight());
+            view.addListener(new MouseClickAndDragController(store, view, this), newClassStr);
         } 
         else
         {

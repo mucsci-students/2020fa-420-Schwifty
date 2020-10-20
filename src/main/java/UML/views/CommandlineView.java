@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import UML.controllers.MouseClickAndDragController;
+import java.awt.Dimension;
+
 public class CommandlineView implements View {
 
     /**
@@ -22,7 +24,7 @@ public class CommandlineView implements View {
      * Print new class.
      */
     @Override
-    public void createClass(String name) {
+    public void createClass(String name, int x, int y) {
         System.out.println("New class:\n" + name);
     }
 
@@ -158,5 +160,11 @@ public class CommandlineView implements View {
     public void addListener(MouseClickAndDragController mouseListener, String classText)
     {
 
+    }
+
+    @Override
+    public Dimension getLoc(String name)
+    {
+        return new Dimension(0, 0);
     }
 }

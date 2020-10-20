@@ -13,6 +13,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.awt.FlowLayout;
 import UML.controllers.*;
+import java.awt.Dimension;
 
 public class InterfaceChoiceView implements View {
 
@@ -73,7 +74,7 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
-    public void createClass(String name) {
+    public void createClass(String name, int x, int y) {
         //Do nothing.
     }
 
@@ -140,5 +141,10 @@ public class InterfaceChoiceView implements View {
     @Override
     public void showHelp() {
         //Do nothing.
+    }
+
+    @Override
+    public Dimension getLoc(String name) {
+        return new Dimension(0, 0);
     }
 }

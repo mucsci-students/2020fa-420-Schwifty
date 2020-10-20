@@ -8,12 +8,13 @@ import java.io.File;
 import java.awt.event.*;
 import java.util.ArrayList;
 import UML.controllers.MouseClickAndDragController;
+import java.awt.Dimension;
 
 public interface View
 {
 	//updates every part of the class, including attributes within
     void updateClass(String oldName, String newName);
-	void createClass(String name);
+	void createClass(String name, int x, int y);
 	void deleteClass(String name);
 	
 	String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options);
@@ -30,4 +31,5 @@ public interface View
 	void exit();
 	void start();
 	void showHelp();
+	Dimension getLoc(String name);
 }
