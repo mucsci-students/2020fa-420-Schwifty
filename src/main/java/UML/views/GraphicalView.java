@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import javax.swing.JTextField;
+import javax.swing.Spring;
+import javax.swing.SpringLayout;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,6 +35,10 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import UML.controllers.MouseClickAndDragController; 
+import java.awt.Dimension;
+import javax.swing.SwingUtilities;
 
 public class GraphicalView implements View {
 
@@ -52,6 +58,7 @@ public class GraphicalView implements View {
     private JMenu classMenu;
     private JMenu fieldMenu;
     private JMenu relationshipMenu;
+    private SpringLayout sl;
 
     public GraphicalView() {
         this.classPanels = new HashMap<String, JPanel>();
@@ -61,8 +68,13 @@ public class GraphicalView implements View {
      * Creates a class panel to be displayed.
      */
     @Override
-    public void createClass(String name) {
-        makeNewClassPanel(name);
+    public void createClass(String classToString) {
+        ClassPanelBuilder classPanelBuilder = new ClassPanelBuilder(classToString, parentWindow);
+        JPanel newClassPanel = classPanelBuilder.makeNewClassPanel();
+        sl.putConstraint(SpringLayout.EAST, newClassPanel,5, SpringLayout.NORTH, parentWindow);
+        classPanels.put(classToString, newClassPanel);
+        //parentWindow.add(newClassPanel);
+        newClassPanel.setLocation(200, 200);
         refresh();
     }
 
@@ -80,10 +92,31 @@ public class GraphicalView implements View {
     @Override
     public void updateClass(String oldString, String newString) {
         JPanel panel = classPanels.get(oldString);
-
+        int x = panel.getX();
+        int y = panel.getY();
+        Dimension loc = new Dimension(x, y);
         classPanels.remove(oldString);
+
         classPanels.put(newString, panel);
-        windowUpdateHelper(newString);
+
+        //classPanels.put(newString, panel);
+        //ArrayList<Dimension> dimensions = getDimensions();
+        windowUpdateHelper(newString, loc);
+        //panel.setLocation(100000, 200);
+        parentWindow.remove(panel);
+        parentWindow.add(panel);
+        //parent.setLocationByPlatform(true);
+        //panel.setLocation(0, 0);
+        refresh();
+    }
+
+    /**
+     * Helps update the window.
+     */
+    private void windowUpdateHelper(String classInfo, Dimension loc) {
+        JPanel aPanel = classPanels.get(classInfo);
+        JTextArea textArea = (JTextArea) aPanel.getComponents()[0];
+        textArea.setText(classInfo);
     }
 
     /**
@@ -124,7 +157,6 @@ public class GraphicalView implements View {
         }
 
         refresh();
-
     }
 
     /**
@@ -173,15 +205,6 @@ public class GraphicalView implements View {
 
     }
 
-    /**
-     * Helps update the window.
-     */
-    private void windowUpdateHelper(String classInfo) {
-        JPanel panel = classPanels.get(classInfo);
-        JTextArea textArea = (JTextArea) panel.getComponents()[0];
-        textArea.setText(classInfo);
-        refresh();
-    }
 
     /**
      * Constructrs a UMLWindow object.
@@ -189,7 +212,8 @@ public class GraphicalView implements View {
     public void makeWindow() {
         window = new JFrame("UML");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLayout(new GridLayout());
+        sl = new SpringLayout();
+        window.setLayout(sl);
         window.setSize(800, 800);
         window.setVisible(true);
         parentWindow = window;
@@ -368,8 +392,19 @@ public class GraphicalView implements View {
      * Refreshes the window.
      */
     public void refresh() {
+        ArrayList<Dimension> dimensions = new ArrayList<Dimension>();
+        for(Map.Entry<String, JPanel> panel : classPanels.entrySet())
+        {
+            dimensions.add(new Dimension(panel.getValue().getX(), panel.getValue().getY()));
+        }
         parentWindow.revalidate();
         parentWindow.repaint();
+        int counter = 0;
+        for(Map.Entry<String, JPanel> panel : classPanels.entrySet())
+        {
+            panel.getValue().setLocation((int)dimensions.get(counter).getWidth(), (int)dimensions.get(counter).getHeight());
+            ++counter;
+        }
     }
 
     /**
@@ -476,5 +511,24 @@ public class GraphicalView implements View {
     @Override
     public void addListener(ActionListener listener) {
         //Do nothing.
+    }
+
+    /**
+     * Adds listener for specified class panel.
+     */
+    @Override 
+    public void addListener(MouseClickAndDragController mouseListener, String classText)
+    {
+        JPanel panel = classPanels.get(classText);
+        panel.addMouseListener(mouseListener);
+        panel.addMouseMotionListener(mouseListener);
+    }
+
+    /**
+     * Restores class panels to actual locations.
+     */
+    public void setPositions()
+    {
+
     }
 }

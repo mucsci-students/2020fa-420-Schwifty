@@ -7,6 +7,7 @@ package UML.views;
 import java.io.File;
 import java.awt.event.*;
 import java.util.ArrayList;
+import UML.controllers.MouseClickAndDragController;
 
 public interface View
 {
@@ -20,6 +21,7 @@ public interface View
 	
 	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener, ActionListener relationshipListener);
 	void addListener(ActionListener listener);
+	void addListener(MouseClickAndDragController mouseListener, String className);
 
 	void display(ArrayList<String> str);
 	void showError(String error);

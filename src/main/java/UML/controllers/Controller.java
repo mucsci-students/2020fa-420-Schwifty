@@ -13,7 +13,7 @@ import java.io.File;
 
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
-
+import UML.controllers.MouseClickAndDragController; 
 
 public class Controller 
 {
@@ -99,7 +99,10 @@ public class Controller
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
         boolean temp = store.addField(className, type, name, access);
-        sendToView(temp, "Field", "created", className, oldClassStr);
+        view.deleteClass(oldClassStr);
+        view.createClass(aClass.toString());
+        view.addListener(new MouseClickAndDragController(store, view, this), aClass.toString());
+        //sendToView(temp, "Field", "created", className, oldClassStr);
     }
 
     /**

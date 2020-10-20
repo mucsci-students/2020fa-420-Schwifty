@@ -7,7 +7,7 @@ package UML.views;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-
+import UML.controllers.MouseClickAndDragController;
 public class CommandlineView implements View {
 
     /**
@@ -153,5 +153,10 @@ public class CommandlineView implements View {
     @Override
     public void addListener(ActionListener listener) {
         //Do nothing.
+    }
+    @Override 
+    public void addListener(MouseClickAndDragController mouseListener, String classText)
+    {
+
     }
 }

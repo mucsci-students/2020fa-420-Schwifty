@@ -24,63 +24,132 @@ import UML.model.*;
 import UML.model.Store;
 import UML.views.GraphicalView;
 import UML.views.View;
-
+import org.jline.builtins.Completers.TreeCompleter;
+import org.jline.builtins.Completers.TreeCompleter.Node;
+import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.keymap.KeyMap;
+import org.jline.builtins.Widgets.AutosuggestionWidgets;
+import org.jline.builtins.Widgets.TailTipWidgets;
+import org.jline.builtins.Widgets.CmdDesc;
+import org.jline.builtins.Widgets.ArgDesc;
+import org.jline.utils.AttributedString;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Arrays;
+import org.jline.builtins.Widgets.TailTipWidgets.TipType;
+import org.jline.builtins.Completers.OptDesc;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CLI {
+public class CLI
+{
     
     private Store store;
     private View view;
     private Controller controller;
     private Terminal terminal;
     private LineReader reader;
+    private Completer completer;
+    private Completer s1;
+    private Completer s2;
+    //private ArrayList<Candidate> candidates;
+    private boolean running;
 
     public CLI(Store s, View v, Controller c) 
     {
         store = new Store();
         this.store = s;
         this.view = v;
-        this.controller = c; 
+        this.controller = c;
         v.start();
-        try
-        {
+        try{
             terminal = TerminalBuilder.builder()
             .system(false).streams(System.in, System.out)
             .build();
-            //terminal.setSize(new Size(100, 5));
-            cliLoop(terminal);//close out terminal when finished
-            terminal.close();
-        } 
-        catch (IOException e) 
-        {
-            e.printStackTrace();
-        }
+            /**
+            s1 = new StringsCompleter(candidates);
 
+            s2 = new StringsCompleter("a");
+
+            completer = new ArgumentCompleter(s1, s2);
+            
+        
+            
+            reader = LineReaderBuilder.builder()
+                                        .terminal(terminal)
+                                        .completer(completer)
+                                        .build();
+            
+            */
+
+            //sc.buildReader(LineReaderBuilder.builder());
+            //sc.start();
+
+            cliLoop();
+            //terminal.close();
+        }
+        catch(IOException e)
+        {
+            //Catch!
+        }
     }
 
+    
     /**
      * As long as the user hasn't typed in exit, continue the app.
      */
-    private void cliLoop(Terminal terminal) throws IOException
+    private void cliLoop() throws IOException
     {
-        reader = LineReaderBuilder.builder()
-                                             .terminal(terminal)
-                                             .build();
+        
+        
         Parser parser = new DefaultParser();
 
-        Completer s1 = new StringsCompleter("add class", "delete class", "rename class");
-
-        Completer completer = new ArgumentCompleter(s1);
         boolean go = true;
         while(go) 
         {
-            //Get the view's prompt
-            //view.showPrompt();
             try
             {
+                
+                //reader.unsetOpt(LineReader.Option.INSERT_TAB);
+                s1 = new StringsCompleter(candidateBuilder(buildCandidateList()));
+
+                if(store.getClassList().size() == 0)
+                {
+                    s2 = new StringsCompleter("");
+                }
+                else
+                {
+                    s2 = new StringsCompleter(store.getClassList());
+                }
+
+                completer = new ArgumentCompleter(s1, s2);
+                //reader.unsetOpt(LineReader.Option.INSERT_TAB);
+                reader = LineReaderBuilder.builder()
+                                        .terminal(terminal)
+                                        .completer(completer)
+                                        .parser(parser)
+                                        .build();
+                reader.unsetOpt(LineReader.Option.AUTO_LIST);
+                reader.setOpt(LineReader.Option.AUTO_MENU);
+                reader.unsetOpt(LineReader.Option.INSERT_TAB);
+                reader.setOpt(LineReader.Option.AUTO_FRESH_LINE);
+                reader.option(LineReader.Option.COMPLETE_IN_WORD, true);
+                reader.option(LineReader.Option.RECOGNIZE_EXACT, true);
+                reader.option(LineReader.Option.CASE_INSENSITIVE, true);
+                //reader.setOpt(LineReader.Option.DISABLE_EVENT_EXPANSION);
+                
+                while(reader.getParsedLine() != null)
+                {
+                    ParsedLine parsed = reader.getParsedLine();
+                    //String[] line = parsed.line().split(" ");
+                    completer.complete(reader, parsed, candidateBuilder(buildCandidateList()));
+                }
                 String nextLine = reader.readLine(">");
                 String[] line = nextLine.split(" ");
                 parse(line);
+
+
+                //on tab, list commands one at a time
             }
             catch(EndOfFileException e)
             {
@@ -94,6 +163,7 @@ public class CLI {
      */
     private void parse(String[] line) 
     {
+        
         if (line[0].equals("exit")) 
         {
             exit();
@@ -134,38 +204,7 @@ public class CLI {
         {
             changeFieldAccess(line);
         }
-        else if (line[0].equals("renamef")) 
-        {
-            renameField(line);
-        }
-        else if (line[0].equals("renamef")) 
-        {
-            renameField(line);
-        }
-        else if (line[0].equals("renamef")) 
-        {
-            renameField(line);
-        }
-        else if (line[0].equals("renamef")) 
-        {
-            renameField(line);
-        }
-        else if (line[0].equals("renamef")) 
-        {
-            renameField(line);
-        }
-        else if (line[0].equals("renamef")) 
-        {
-            renameField(line);
-        }
-        else if (line[0].equals("renamef")) 
-        {
-            renameField(line);
-        }
-        else if (line[0].equals("renamef")) 
-        {
-            renameField(line);
-        } 
+       
         else if (line[0].equals("deletef")) 
         {
             deleteField(line);
@@ -289,6 +328,8 @@ public class CLI {
         if(args.length == 2)
         {
             controller.createClass(args[1]);
+            s2 = new StringsCompleter("RANDOM");
+            //completer = new ArgumentCompleter(s1, s2);
         }
         else
         {
@@ -353,6 +394,11 @@ public class CLI {
         {
             view.showError("Invalid arguments for renaming a field, please refer to help.");
         }
+    }
+
+    private void changeFieldType()
+    {
+
     }
 
     /**
@@ -424,6 +470,16 @@ public class CLI {
             params.add(args[counter] + " " + args[counter + 1]);
         }
         controller.deleteMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+
+    }
+
+    private void changeMethodType()
+    {
+
+    }
+
+    private void changeMethodAccess()
+    {
 
     }
 
@@ -512,5 +568,82 @@ public class CLI {
     public void helpPage()
     {
         view.showHelp();
+    }
+
+    /*
+    @Override
+    protected boolean isRunning() {
+        // TODO: Return true if your application is still running
+        return this.running;
+    }
+
+    @Override
+    protected void runCommand(String command) {
+        String[] line = command.split(" ");
+        parse(line);
+    }
+
+    @Override
+    protected void shutdown() {
+        // TODO: Shutdown your application cleanly (e.g. because CTRL+C was pressed)
+        exit();
+    }
+
+    /**
+    @Override
+    protected LineReader buildReader(LineReaderBuilder builder) {
+        ArrayList<String> arr = new ArrayList<String>();
+        arr.add("test");
+        return super.buildReader(builder
+                .appName("UML") // TODO: Replace with your application name
+                .completer(new StringsCompleter(arr))
+        );
+    }
+    */
+
+    private StringsCompleter buildCompleter()
+    {
+         return new StringsCompleter(buildCandidateList());  
+    }
+
+    private List<String> buildCandidateList()
+    {
+        List<String> candidates = new LinkedList<String>();
+        candidates.add("addc");
+        candidates.add("deletec");
+        candidates.add("renamec");
+        candidates.add("addf");
+        candidates.add("deletef");
+        candidates.add("renamef");
+        candidates.add("changefa");
+        candidates.add("changeft");
+        candidates.add("addm");
+        candidates.add("deletem");
+        candidates.add("renamem");
+        candidates.add("changema");
+        candidates.add("changemt");
+        candidates.add("addr");
+        candidates.add("deleter");
+        candidates.add("exit");
+        candidates.add("help");
+
+        return candidates;
+    }
+
+    private List<Candidate> candidateBuilder(List<String> stringList)
+    {
+        List<Candidate> candidates = new LinkedList<Candidate>();
+        for(String s : stringList)
+        {
+            candidates.add(new Candidate(s));
+        }
+
+        return candidates;
+    }
+
+    private ArgumentCompleter buildArgumentOptions()
+    {
+        ArgumentCompleter ac = new ArgumentCompleter();
+        return ac;
     }
 }

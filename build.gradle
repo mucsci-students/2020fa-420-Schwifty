@@ -36,6 +36,7 @@ dependencies {
     testCompileOnly 'junit:junit:4.13'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.8'
     compile 'org.jline:jline:3.14.1'
 }
 
@@ -46,7 +47,9 @@ application {
 
 jar {
     manifest {
-        attributes 'UMLEditor': 'UML.UMLEditor'
+        attributes (
+          'UMLEditor' : 'UML.UMLEditor'
+        )
     }
 }
 

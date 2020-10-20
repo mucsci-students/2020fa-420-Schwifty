@@ -61,8 +61,11 @@ public class InterfaceChoiceView implements View {
     public void addListener(ActionListener listener) {
         okButton.addActionListener(listener);
     }
+    @Override
+    public void addListener(MouseClickAndDragController mouseListener, String className)
+    {
 
-
+    }
 
     @Override
     public void updateClass(String oldName, String newName) {
