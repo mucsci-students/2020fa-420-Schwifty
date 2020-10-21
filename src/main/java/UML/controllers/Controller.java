@@ -345,10 +345,7 @@ public void deleteParameter(String className, String methodType, String methodNa
         if (canSend) 
         {
             String newClassStr = store.findClass(className).toString();
-            Dimension loc = view.getLoc(oldClassStr);
-            view.deleteClass(oldClassStr);
-            view.createClass(newClassStr, (int)loc.getWidth(), (int)loc.getHeight());
-            view.addListener(new MouseClickAndDragController(store, view, this), newClassStr);
+            view.updateClass(oldClassStr, newClassStr);
         } 
         else
         {
