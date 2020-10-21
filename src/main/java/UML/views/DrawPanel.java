@@ -29,6 +29,7 @@ import java.awt.LayoutManager;
 import javax.swing.border.Border;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.lang.model.util.ElementScanner6;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
@@ -60,15 +61,62 @@ public class DrawPanel extends JPanel
                                                 (int)fromLoc.getHeight(), (int)(fromLoc.getHeight() + fromSize.getHeight()), 
                                                 (int)toLoc.getWidth(), (int)(toLoc.getWidth() + toSize.getWidth()),
                                                 (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));
-            g.drawLine(line[0], line[1], line[2], line[3]);
+            if(relationship.getValue().equals("Realization"))
+            {
+                //Do a dotted line
+                
+            }
+            else
+            {
+                g.setColor(Color.PINK);
+                g.drawLine(line[0], line[1], line[2], line[3]);
+                g.fillOval(line[4], line[5], 36, 36);
+            }
+            //drawCorrectShape(g, line[0], line[1], relationship.getValue());
         }
     
     }
-     
+
+    /**
+     * 
+     */
+    public void drawCorrectShape(Graphics g, int x, int y, String relationship)
+    {
+        //Open diamond.
+        if(relationship.equals("Aggregation"))
+        {
+            g.setColor(Color.BLACK);
+            //g.rotate(90.0)
+            g.clearRect(x, y, 25, 25);
+
+        }
+        //Filled diamond.
+        else if(relationship.equals("Composition"))
+        {
+            g.setColor(Color.BLACK);
+            g.drawOval(x, y, 25, 25);
+        }
+        //Open arrow
+        else if(relationship.equals("Generalization"))
+        {
+            g.setColor(Color.MAGENTA);
+            g.drawOval(x, y, 25, 25);
+        }
+        //Filled arrow
+        else if(relationship.equals("Realization"))
+        {
+            g.setColor(Color.CYAN);
+            g.drawOval(x, y, 25, 25);
+        }
+    }
+
+    /**
+     * Get's shortest line points between two class panels.
+     */
     public int[] getClosest(int fromLeft, int fromRight, int fromUp, int fromDown, int toLeft, int toRight, int toUp, int toDown)
     {
         //fromX, fromY, toX, toY.
-        int[] x = new int[4];
+        int[] x = new int[6];
         //From is to the right.
         if(fromLeft > toRight)
         {   
@@ -80,6 +128,7 @@ public class DrawPanel extends JPanel
                 x[1] = fromDown;
                 x[3] = toUp;
             }
+            //Down and to the right.
             else if(fromUp > toDown)
             {
                 x[1] = fromUp;
@@ -87,17 +136,24 @@ public class DrawPanel extends JPanel
             }
             else
             {
+                //Directly to the right.
                 if(fromUp < toUp)
                 {
                     x[1] = ((fromDown - toUp) / 2) + toUp;
                     x[3] = ((fromDown - toUp) / 2) + toUp;
+                    //x[4] = fromLeft;
+                    //x[5] = x[1] - 18;
                 }
                 else
                 {
                     x[1] = ((toDown - fromUp) / 2) + fromUp;
                     x[3] = ((toDown - fromUp) / 2) + fromUp;
+                    //x[4] = fromLeft;
+                    //x[5] = x[1] - 18;
                 }
             }
+            x[4] = fromLeft - 36;
+            x[5] = x[1] - 18;
         }
         //From is to the left.
         else if(fromRight < toLeft)
@@ -110,6 +166,7 @@ public class DrawPanel extends JPanel
                 x[1] = fromDown;
                 x[3] = toUp;
             }
+            //Down and to the left.
             else if(fromUp > toDown)
             {
                 x[1] = fromUp;
@@ -117,17 +174,24 @@ public class DrawPanel extends JPanel
             }
             else
             {
+                //Directly to the left.
                 if(fromUp < toUp)
                 {
                     x[1] = ((fromDown - toUp) / 2) + toUp;
                     x[3] = ((fromDown - toUp) / 2) + toUp;
+                    //x[4] = fromRight;
+                    //x[5] = x[1] - 18;
                 }
                 else
                 {
                     x[1] = ((toDown - fromUp) / 2) + fromUp;
                     x[3] = ((toDown - fromUp) / 2) + fromUp;
+                    //x[4] = fromRight;
+                    //x[5] = x[1] - 18;
                 }
             }
+            x[4] = fromRight;
+            x[5] = x[1] - 18;
         }
         //From is above.
         else if(fromDown < toUp)
@@ -140,6 +204,7 @@ public class DrawPanel extends JPanel
                 x[0] = fromRight;
                 x[2] = toLeft;
             }
+            //Up and to the right.
             else if(fromRight < toLeft)
             {
                 x[0] = fromLeft;
@@ -147,17 +212,24 @@ public class DrawPanel extends JPanel
             }
             else
             {
+                //Directly above.
                 if(fromLeft < toLeft)
                 {
                     x[0] = ((fromRight - toLeft) / 2) + toLeft;
                     x[2] = ((fromRight - toLeft) / 2) + toLeft;
+                    //x[4] = x[0] - 18;
+                    //x[5] = fromDown;
                 }
                 else
                 {
                     x[0] = ((toRight - fromLeft) / 2) + fromLeft;
                     x[2] = ((toRight - fromLeft) / 2) + fromLeft;
+                    //x[4] = x[0] - 18;
+                    //x[5] = fromDown;
                 }
             }
+            x[4] = x[0] - 18;
+            x[5] = fromDown;
         }
         //From is below
         else if(fromUp > toDown)
@@ -170,6 +242,7 @@ public class DrawPanel extends JPanel
                 x[0] = fromLeft;
                 x[2] = toRight;
             }
+            //Down and to the left.
             else if(fromRight < toLeft)
             {
                 x[0] = fromRight;
@@ -177,16 +250,24 @@ public class DrawPanel extends JPanel
             }
             else
             {
+                //Directly below.
                 if(fromLeft < toLeft)
                 {
                     x[0] = ((fromRight - toLeft) / 2) + toLeft;
                     x[2] = ((fromRight - toLeft) / 2) + toLeft;
+                    //x[4] = x[0] - 18;
+                    //x[5] = fromUp;
                 }
-                else {
+                else 
+                {
                     x[0] = ((toRight - fromLeft) / 2) + fromLeft;
                     x[2] = ((toRight - fromLeft) / 2) + fromLeft;
+                    //x[4] = x[0] - 18;
+                    //x[5] = fromUp;
                 }
             }
+            x[4] = x[0] - 18;
+            x[5] = fromUp -36;
         }
         else 
         {

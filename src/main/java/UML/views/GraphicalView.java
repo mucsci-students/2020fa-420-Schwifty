@@ -45,9 +45,6 @@ public class GraphicalView implements View {
     // Holds menu bar used to navigate program.
     private JMenuBar mb;
 
-    // The UML editor window.
-    private JFrame parentWindow;
-
     // Displays each individual class.
     private Map<String, JPanel> classPanels;
 
@@ -81,8 +78,8 @@ public class GraphicalView implements View {
     {
         ClassPanelBuilder classPanelBuilder = new ClassPanelBuilder(classToString, dp);
         JPanel newClassPanel = classPanelBuilder.makeNewClassPanel();
-        //sl.putConstraint(SpringLayout.EAST, newClassPanel,5, SpringLayout.NORTH, parentWindow);
         classPanels.put(classToString, newClassPanel);
+        /**
         Scanner lineScanner = new Scanner(classToString);
         int longest = 0;
         int height = 0;
@@ -105,6 +102,8 @@ public class GraphicalView implements View {
         newClassPanel.setLocation(x, y);
         newClassPanel.setBounds(x, y, longest * 90, height * 20);
         refresh();
+        */
+        resizePanel(classToString, x, y);
     }
 
     /**
@@ -125,10 +124,12 @@ public class GraphicalView implements View {
     {
         Dimension fromLoc = getLoc(from);
         Dimension toLoc = getLoc(to);
+        /**
         int fromX = (int)fromLoc.getWidth();
         int fromY = (int)fromLoc.getWidth();
         int toX = (int)toLoc.getWidth();
         int toY = (int)toLoc.getWidth();
+        */
         ArrayList<String> toAdd = new ArrayList<String>();
         toAdd.add(from);
         toAdd.add(to);
@@ -140,11 +141,6 @@ public class GraphicalView implements View {
      */
     @Override
     public void updateClass(String oldString, String newString) {
-        /**
-        //Adjust class strings held in relationships.
-        Map<ArrayList<String>, String> toAdjust0 = new HashMap<ArrayList<String>, String>();
-        Map<ArrayList<String>, String> toAdjust1 = new HashMap<ArrayList<String>, String>();
-        */
         for(ArrayList<String> classes : getRelationships().keySet())
         {
             if(classes.get(0).equals(oldString))
@@ -155,13 +151,6 @@ public class GraphicalView implements View {
                 toPut.add(newString);
                 toPut.add(classes.get(1));
                 relationships.put(toPut, value);
-                /**
-                relationships.remove(relationship.getKey());
-                ArrayList<String> toPut = new ArrayList<String>();
-                toPut.add(newString);
-                toPut.add(relationship.getKey().get(1));
-                relationships.put(toPut, relationship.getValue());
-                */
             }
             else if(classes.get(1).equals(oldString))
             {
@@ -171,51 +160,20 @@ public class GraphicalView implements View {
                 toPut.add(classes.get(0));
                 toPut.add(newString);
                 relationships.put(toPut, value);
-                /**
-                relationships.remove(relationship.getKey());
-                ArrayList<String> toPut = new ArrayList<String>();
-                toPut.add(relationship.getKey().get(0));
-                toPut.add(newString);
-                relationships.put(toPut, relationship.getValue());
-                */
             }
-            /**
-            for(Map.Entry<ArrayList<String>, String> adjust : toAdjust0.entrySet())
-            {
-                relationships.remove(adjust.getKey());
-                ArrayList<String> toPut = new ArrayList<String>();
-                toPut.add(newString);
-                toPut.add(adjust.getKey().get(1));
-                relationships.put(toPut, adjust.getValue());
-            }
-            for(Map.Entry<ArrayList<String>, String> adjust : toAdjust1.entrySet())
-            {
-                relationships.remove(adjust.getKey());
-                ArrayList<String> toPut = new ArrayList<String>();
-                toPut.add(adjust.getKey().get(0));
-                toPut.add(newString);
-                relationships.put(toPut, adjust.getValue());
-            }
-            */
         }
+        
         JPanel panel = classPanels.get(oldString);
+        /**
         int x = panel.getX();
         int y = panel.getY();
-        Dimension loc = new Dimension(x, y);
+        */
+        Dimension loc = getLoc(oldString);
         classPanels.remove(oldString);
-
         classPanels.put(newString, panel);
-
-        //classPanels.put(newString, panel);
-        //ArrayList<Dimension> dimensions = getDimensions();
-
         //Just sets TextArea.
         windowUpdateHelper(newString, loc);
-        //panel.setLocation(100000, 200);
-        //dp.remove(panel);
-        //dp.add(panel);
-        //parent.setLocationByPlatform(true);
-        //panel.setLocation(0, 0);
+        resizePanel(newString, (int)loc.getWidth(), (int)loc.getHeight());
         refresh();
     }
 
@@ -274,7 +232,6 @@ public class GraphicalView implements View {
         for (String s : toStrings) {
             makeNewClassPanel(s);
         }
-
         refresh();
     }
 
@@ -331,16 +288,10 @@ public class GraphicalView implements View {
     public void makeWindow() {
         window = new JFrame("UML");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //sl = new SpringLayout();
-        //window.setLayout(null);
         window.setSize(800, 800);
         window.setPreferredSize(new Dimension(800, 800));
-        //window.setVisible(true);
-        //parentWindow = window;
         createMenu();
-        //parentWindow.setPreferredSize(new Dimension(800, 800));
         window.add(mb);
-        //parentWindow.setVisible(true);
         window.setJMenuBar(mb);
         dp = new DrawPanel(this);
         window.add(dp);
@@ -517,7 +468,6 @@ public class GraphicalView implements View {
         classPanels.remove(aClass);
         dp.remove(panel);
         refresh();
-
     }
 
     /**
@@ -662,5 +612,34 @@ public class GraphicalView implements View {
     public void setPositions()
     {
 
+    }
+    /**
+     * Resizes panels to adjust to text of panel
+     */
+    public void resizePanel(String classToString, int x, int y)
+    {
+        JPanel panel = classPanels.get(classToString);
+        Scanner lineScanner = new Scanner(classToString);
+        int longest = 0;
+        int height = 0;
+        while(lineScanner.hasNextLine())
+        {
+            String line = lineScanner.nextLine();
+            Scanner scanner = new Scanner(line);
+            int localBest = 0;
+            while(scanner.hasNext())
+            {
+                localBest++;
+                scanner.next();
+            }
+            scanner.close();
+            ++height;
+            if(localBest > longest)
+                longest = localBest;
+        }
+        lineScanner.close();
+        panel.setLocation(x, y);
+        panel.setBounds(x, y, longest * 90, height * 20);
+        refresh();
     }
 }
