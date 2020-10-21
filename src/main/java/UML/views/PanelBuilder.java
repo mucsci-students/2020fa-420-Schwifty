@@ -5,6 +5,6 @@ import javax.swing.JPanel;
 public interface PanelBuilder
 {
     void setClassData(String classData);
-    void setParentWindow(JFrame window);
+    void setParentWindow(DrawPanel window);
     JPanel buildClassPanel();
 }

@@ -13,6 +13,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import UML.views.DrawPanel;
 
 public class MouseClickAndDragController implements MouseListener, MouseMotionListener
 {
@@ -46,6 +47,9 @@ public class MouseClickAndDragController implements MouseListener, MouseMotionLi
             int newX = found.getX() + (e.getX() - startDragX);
             int newY = found.getY() + (e.getY() - startDragY);
             found.setLocation(newX, newY);
+            view.getMainWindow().repaint();
+            DrawPanel dp = new DrawPanel(view);
+            dp.paintComponent(view.getMainWindow().getGraphics());
         }
     }
     @Override

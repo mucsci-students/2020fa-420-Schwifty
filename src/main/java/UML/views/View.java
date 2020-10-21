@@ -9,6 +9,9 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
+import java.util.Map;
+import javax.swing.JFrame;
+import javax.swing.JPanel;;
 
 public interface View
 {
@@ -16,6 +19,8 @@ public interface View
     void updateClass(String oldName, String newName);
 	void createClass(String name, int x, int y);
 	void deleteClass(String name);
+
+	void addRelationship(String from, String to, String type);
 	
 	String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options);
     String getInputFromUser(String prompt);
@@ -32,4 +37,7 @@ public interface View
 	void start();
 	void showHelp();
 	Dimension getLoc(String name);
+	Map<ArrayList<String>, String> getRelationships();
+	JFrame getMainWindow();
+	Map<String, JPanel> getPanels();
 }

@@ -261,8 +261,24 @@ public void deleteParameter(String className, String methodType, String methodNa
                 view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
             else 
             {
-                sendToView(temp, "Relationship", "added", from, fromOldStr);
-                sendToView(temp, "Relationship", "added", to, toOldStr);
+                //sendToView(temp, "Relationship", "added", from, fromOldStr);
+                //sendToView(temp, "Relationship", "added", to, toOldStr);
+                //Dimension fromLoc = view.getLoc(fromOldStr);
+                //Dimension toLoc = view.getLoc(toOldStr);
+                //view.deleteClass(fromOldStr);
+                //view.deleteClass(toOldStr);
+                String newFrom = store.findClass(from).toString();
+                String newTo = store.findClass(to).toString();
+                /**
+                view.createClass(newFrom, (int)fromLoc.getWidth(), (int)fromLoc.getHeight());
+                view.addListener(new MouseClickAndDragController(store, view, this), newFrom);
+                view.createClass(newTo, (int)toLoc.getWidth(), (int)toLoc.getHeight());
+                view.addListener(new MouseClickAndDragController(store, view, this), newTo);
+                */
+                view.updateClass(fromOldStr, newFrom);
+                view.updateClass(toOldStr, newTo);
+                view.addRelationship(newFrom, newTo, relation.toString());
+                
             }
         }
         catch(IllegalArgumentException e)

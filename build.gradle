@@ -38,6 +38,7 @@ dependencies {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
     compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.8'
     compile 'org.jline:jline:3.14.1'
+
 }
 
 application {
