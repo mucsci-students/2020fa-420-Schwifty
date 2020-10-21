@@ -10,6 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.Scanner;
+
+import javax.lang.model.util.ElementScanner6;
+
 import org.jline.reader.*;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
@@ -24,8 +27,8 @@ import UML.model.*;
 import UML.model.Store;
 import UML.views.GraphicalView;
 import UML.views.View;
-import org.jline.builtins.Completers.TreeCompleter;
-import org.jline.builtins.Completers.TreeCompleter.Node;
+
+import org.jline.reader.impl.completer.EnumCompleter;
 import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.keymap.KeyMap;
 import org.jline.builtins.Widgets.AutosuggestionWidgets;
@@ -40,6 +43,7 @@ import org.jline.builtins.Widgets.TailTipWidgets.TipType;
 import org.jline.builtins.Completers.OptDesc;
 import java.util.HashMap;
 import java.util.Map;
+import UML.views.CLICommands;
 
 public class CLI
 {
@@ -50,8 +54,8 @@ public class CLI
     private Terminal terminal;
     private LineReader reader;
     private Completer completer;
-    private Completer s1;
-    private Completer s2;
+    private StringsCompleter commands;
+    private StringsCompleter recentlyTyped;
     //private ArrayList<Candidate> candidates;
     private boolean running;
 
@@ -64,29 +68,11 @@ public class CLI
         v.start();
         try{
             terminal = TerminalBuilder.builder()
-            .system(false).streams(System.in, System.out)
+            .system(true)
             .build();
-            /**
-            s1 = new StringsCompleter(candidates);
-
-            s2 = new StringsCompleter("a");
-
-            completer = new ArgumentCompleter(s1, s2);
-            
-        
-            
-            reader = LineReaderBuilder.builder()
-                                        .terminal(terminal)
-                                        .completer(completer)
-                                        .build();
-            
-            */
-
-            //sc.buildReader(LineReaderBuilder.builder());
-            //sc.start();
 
             cliLoop();
-            //terminal.close();
+            terminal.close();
         }
         catch(IOException e)
         {
@@ -100,56 +86,34 @@ public class CLI
      */
     private void cliLoop() throws IOException
     {
-        
-        
         Parser parser = new DefaultParser();
+        
+        completer = new StringsCompleter(buildCandidateList());
+
+        reader = LineReaderBuilder.builder()
+                                .terminal(terminal)
+                                .completer(completer)
+                                .parser(parser)
+                                .variable(LineReader.MENU_COMPLETE, true).build();
+
+        reader.option(LineReader.Option.COMPLETE_IN_WORD, true);
+        reader.option(LineReader.Option.RECOGNIZE_EXACT, true);
+        reader.option(LineReader.Option.CASE_INSENSITIVE, true);
+        reader.unsetOpt(LineReader.Option.INSERT_TAB);
 
         boolean go = true;
         while(go) 
         {
             try
             {
-                
-                //reader.unsetOpt(LineReader.Option.INSERT_TAB);
-                s1 = new StringsCompleter(candidateBuilder(buildCandidateList()));
+      
+                String readLine = reader.readLine(">", "", (MaskingCallback) null, null);
+                readLine = readLine.trim();
 
-                if(store.getClassList().size() == 0)
-                {
-                    s2 = new StringsCompleter("");
-                }
-                else
-                {
-                    s2 = new StringsCompleter(store.getClassList());
-                }
-
-                completer = new ArgumentCompleter(s1, s2);
-                //reader.unsetOpt(LineReader.Option.INSERT_TAB);
-                reader = LineReaderBuilder.builder()
-                                        .terminal(terminal)
-                                        .completer(completer)
-                                        .parser(parser)
-                                        .build();
-                reader.unsetOpt(LineReader.Option.AUTO_LIST);
-                reader.setOpt(LineReader.Option.AUTO_MENU);
-                reader.unsetOpt(LineReader.Option.INSERT_TAB);
-                reader.setOpt(LineReader.Option.AUTO_FRESH_LINE);
-                reader.option(LineReader.Option.COMPLETE_IN_WORD, true);
-                reader.option(LineReader.Option.RECOGNIZE_EXACT, true);
-                reader.option(LineReader.Option.CASE_INSENSITIVE, true);
-                //reader.setOpt(LineReader.Option.DISABLE_EVENT_EXPANSION);
-                
-                while(reader.getParsedLine() != null)
-                {
-                    ParsedLine parsed = reader.getParsedLine();
-                    //String[] line = parsed.line().split(" ");
-                    completer.complete(reader, parsed, candidateBuilder(buildCandidateList()));
-                }
-                String nextLine = reader.readLine(">");
-                String[] line = nextLine.split(" ");
+                terminal.writer().println(readLine);
+                terminal.flush();
+                String[] line = readLine.split(" ");
                 parse(line);
-
-
-                //on tab, list commands one at a time
             }
             catch(EndOfFileException e)
             {
@@ -328,7 +292,7 @@ public class CLI
         if(args.length == 2)
         {
             controller.createClass(args[1]);
-            s2 = new StringsCompleter("RANDOM");
+            //s2 = new StringsCompleter("RANDOM");
             //completer = new ArgumentCompleter(s1, s2);
         }
         else
@@ -628,22 +592,5 @@ public class CLI
         candidates.add("help");
 
         return candidates;
-    }
-
-    private List<Candidate> candidateBuilder(List<String> stringList)
-    {
-        List<Candidate> candidates = new LinkedList<Candidate>();
-        for(String s : stringList)
-        {
-            candidates.add(new Candidate(s));
-        }
-
-        return candidates;
-    }
-
-    private ArgumentCompleter buildArgumentOptions()
-    {
-        ArgumentCompleter ac = new ArgumentCompleter();
-        return ac;
     }
 }
