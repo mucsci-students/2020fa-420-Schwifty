@@ -11,8 +11,6 @@ import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.Scanner;
 
-import javax.lang.model.util.ElementScanner6;
-
 import org.jline.reader.*;
 import org.jline.reader.impl.completer.ArgumentCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
@@ -30,6 +28,7 @@ import UML.views.View;
 
 import org.jline.reader.impl.completer.EnumCompleter;
 import org.jline.reader.impl.completer.AggregateCompleter;
+import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.keymap.KeyMap;
 import org.jline.builtins.Widgets.AutosuggestionWidgets;
 import org.jline.builtins.Widgets.TailTipWidgets;
@@ -86,12 +85,17 @@ public class CLI
      */
     private void cliLoop() throws IOException
     {
+        //Stores the command history
+        History history = new DefaultHistory();
+        //The parser
         Parser parser = new DefaultParser();
-        
+        //Command completer for tab completion
         completer = new StringsCompleter(buildCandidateList());
 
+        //Build the reader and it's options
         reader = LineReaderBuilder.builder()
                                 .terminal(terminal)
+                                .history(history)
                                 .completer(completer)
                                 .parser(parser)
                                 .variable(LineReader.MENU_COMPLETE, true).build();
@@ -99,17 +103,19 @@ public class CLI
         reader.option(LineReader.Option.COMPLETE_IN_WORD, true);
         reader.option(LineReader.Option.RECOGNIZE_EXACT, true);
         reader.option(LineReader.Option.CASE_INSENSITIVE, true);
+        //unset default tab behavior
         reader.unsetOpt(LineReader.Option.INSERT_TAB);
+        history.attach(reader);
 
         boolean go = true;
         while(go) 
         {
             try
             {
-      
+                //Reads the line from the user
                 String readLine = reader.readLine(">", "", (MaskingCallback) null, null);
                 readLine = readLine.trim();
-
+                //Writer back completions to console. 
                 terminal.writer().println(readLine);
                 terminal.flush();
                 String[] line = readLine.split(" ");
