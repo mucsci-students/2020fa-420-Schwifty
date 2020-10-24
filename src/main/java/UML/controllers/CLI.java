@@ -25,7 +25,9 @@ import UML.model.*;
 import UML.model.Store;
 import UML.views.GraphicalView;
 import UML.views.View;
-
+import org.jline.builtins.Completers.TreeCompleter;
+import static org.jline.builtins.Completers.TreeCompleter.node;
+import org.jline.reader.impl.completer.NullCompleter;
 import org.jline.reader.impl.completer.EnumCompleter;
 import org.jline.reader.impl.completer.AggregateCompleter;
 import org.jline.reader.impl.history.DefaultHistory;
@@ -43,6 +45,9 @@ import org.jline.builtins.Completers.OptDesc;
 import java.util.HashMap;
 import java.util.Map;
 import UML.views.CLICommands;
+import org.jline.reader.Candidate;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CLI
 {
@@ -55,7 +60,8 @@ public class CLI
     private Completer completer;
     private StringsCompleter commands;
     private StringsCompleter recentlyTyped;
-    //private ArrayList<Candidate> candidates;
+    private History history;
+    private Parser parser;
     private boolean running;
 
     public CLI(Store s, View v, Controller c) 
@@ -65,6 +71,7 @@ public class CLI
         this.view = v;
         this.controller = c;
         v.start();
+        
         try{
             terminal = TerminalBuilder.builder()
             .system(true)
@@ -86,11 +93,15 @@ public class CLI
     private void cliLoop() throws IOException
     {
         //Stores the command history
-        History history = new DefaultHistory();
+        history = new DefaultHistory();
         //The parser
-        Parser parser = new DefaultParser();
+        parser = new DefaultParser();
+        //LineReader.Option.AUTO_REMOVE_SLASH
         //Command completer for tab completion
-        completer = new StringsCompleter(buildCandidateList());
+        StringsCompleter s2 = new StringsCompleter("test");
+        //completer = new ArgumentCompleter(new StringsCompleter(buildCandidateList()), s2);
+        completer = new TreeCompleter(
+            node("addc", "exit", "help", "showgui"));
 
         //Build the reader and it's options
         reader = LineReaderBuilder.builder()
@@ -103,6 +114,7 @@ public class CLI
         reader.option(LineReader.Option.COMPLETE_IN_WORD, true);
         reader.option(LineReader.Option.RECOGNIZE_EXACT, true);
         reader.option(LineReader.Option.CASE_INSENSITIVE, true);
+        reader.option(LineReader.Option.AUTO_REMOVE_SLASH, true);
         //unset default tab behavior
         reader.unsetOpt(LineReader.Option.INSERT_TAB);
         history.attach(reader);
@@ -298,8 +310,7 @@ public class CLI
         if(args.length == 2)
         {
             controller.createClass(args[1]);
-            //s2 = new StringsCompleter("RANDOM");
-            //completer = new ArgumentCompleter(s1, s2);
+            makeReader();
         }
         else
         {
@@ -315,6 +326,7 @@ public class CLI
         if (args.length == 3)
         {
             controller.renameClass(args[1], args[2]);
+            makeReader();
         }
         else
         {
@@ -330,6 +342,7 @@ public class CLI
         if(args.length == 2)
         {
             controller.deleteClass(args[1]);
+            makeReader();
         }
         else
         {
@@ -344,7 +357,8 @@ public class CLI
     {
         if(args.length == 5 && store.findClass(args[1]) != null)
         {
-            controller.createField(args[1], args[2], args[3], args[4]);            
+            controller.createField(args[1], args[2], args[3], args[4]);    
+            makeReader();        
         }
         else
         {
@@ -359,6 +373,7 @@ public class CLI
         if (args.length == 4 && store.findClass(args[1]) != null)
         {
             controller.renameField(args[1], args[2], args[3]);
+            makeReader();  
         }
         else
         {
@@ -377,7 +392,10 @@ public class CLI
     private void deleteField(String[] args) 
     {
         if (args.length == 3 && store.findClass(args[1]) != null)
+        {
             controller.deleteField(args[1], args[2]);
+            makeReader();  
+        }
         else
         {
             view.showError("Invalid arguments for renaming a field, please refer to help.");
@@ -389,6 +407,7 @@ public class CLI
         if(args.length == 3 || store.findClass(args[1]) != null)
         {
             controller.changeFieldAccess(args[1], args[2], args[3]);
+            makeReader();
         }
         else
         {
@@ -411,6 +430,7 @@ public class CLI
                 params.add(args[counter] + " " + args[counter + 1]);
 
             controller.createMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+            makeReader();  
         }
     }
     
@@ -426,6 +446,7 @@ public class CLI
             params.add(args[counter] + " " + args[counter + 1]);
         }
         controller.renameMethod(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
+        makeReader();  
     }
 
     /**
@@ -440,17 +461,20 @@ public class CLI
             params.add(args[counter] + " " + args[counter + 1]);
         }
         controller.deleteMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+        makeReader();  
 
     }
 
     private void changeMethodType()
     {
 
+        makeReader();  
     }
 
     private void changeMethodAccess()
     {
 
+        makeReader();  
     }
 
     /**
@@ -465,13 +489,14 @@ public class CLI
             params.add(args[counter] + " " + args[counter + 1]);
         }
         controller.addParameter(args[1], args[2], args[3], params, args[args.length - 3], args[args.length - 2], args[args.length - 1]);
+        makeReader();  
     }
     /**
      * Deletes a given parameter from a methodDeletes a parameters from a method from a class in the store.
      */
     private void deleteParameter(String[] args) 
     {
-
+        makeReader();
     }
     /**
      * Creates a relationship between two classes Adds a relationship bewteen two classees in the store.
@@ -480,6 +505,7 @@ public class CLI
         if(args.length == 4)
         {
             controller.addRelationship(args[1], args[2], RelationshipType.valueOf(args[3].toUpperCase()));
+            makeReader();
         }
         else
         {
@@ -495,6 +521,7 @@ public class CLI
         if(args.length == 3)
         {
             controller.deleteRelationship(args[1], args[2]);
+            
         }
         else
         {
@@ -540,42 +567,6 @@ public class CLI
         view.showHelp();
     }
 
-    /*
-    @Override
-    protected boolean isRunning() {
-        // TODO: Return true if your application is still running
-        return this.running;
-    }
-
-    @Override
-    protected void runCommand(String command) {
-        String[] line = command.split(" ");
-        parse(line);
-    }
-
-    @Override
-    protected void shutdown() {
-        // TODO: Shutdown your application cleanly (e.g. because CTRL+C was pressed)
-        exit();
-    }
-
-    /**
-    @Override
-    protected LineReader buildReader(LineReaderBuilder builder) {
-        ArrayList<String> arr = new ArrayList<String>();
-        arr.add("test");
-        return super.buildReader(builder
-                .appName("UML") // TODO: Replace with your application name
-                .completer(new StringsCompleter(arr))
-        );
-    }
-    */
-
-    private StringsCompleter buildCompleter()
-    {
-         return new StringsCompleter(buildCandidateList());  
-    }
-
     private List<String> buildCandidateList()
     {
         List<String> candidates = new LinkedList<String>();
@@ -598,5 +589,177 @@ public class CLI
         candidates.add("help");
 
         return candidates;
+    }
+
+    /**
+     * Makes a new completer and reader based on state of the model.
+     */
+    private void makeReader()
+    {
+        StringsCompleter classes = new StringsCompleter(store.getClassList());
+        String[] str = reader.getHistory().get(reader.getHistory().last()).split(" ");
+        if(store.findClass(str[1]).getFields().isEmpty() && store.findClass(str[1]).getMethods().isEmpty())
+        {
+            completer = new TreeCompleter(
+                                node("addc"),
+                                node("renamec",
+                                    node(classes)
+                                    ),
+                                node("deletec",
+                                    node(classes)
+                                    ),
+                                node("addf",
+                                    node(classes)
+                                    ),
+                                node("addr",
+                                    node(classes,
+                                        node(new StringsCompleter("Aggregation", "Composition", "Generalization", "Realization")
+                                        )
+                                    )
+                                ),
+                                node("help", "exit", "showgui")
+                                );
+        }
+        else if(store.findClass(str[1]).getFields().isEmpty())
+        {
+            completer = new TreeCompleter(
+                                node("addc"),
+                                node("renamec",
+                                    node(classes)
+                                ),
+                                node("deletec",
+                                    node(classes)
+                                ),
+                                node("addf",
+                                    node(classes)
+                                ),
+                                node("addm",
+                                    node(classes)
+                                ),
+                                node("renamem",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
+                                        )
+                                    )
+                                ),   
+                                node("changemt",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
+                                        )
+                                    )
+                                ),
+                                node("changema",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
+                                        )
+                                    )
+                                ),
+                                node("help", "exit", "showgui")
+                                );
+        }
+        else if(store.findClass(str[1]).getMethods().isEmpty())
+        {
+            completer = new TreeCompleter(
+                                node("addc"),
+                                node("renamec",
+                                    node(classes)
+                                ),
+                                node("deletec",
+                                    node(classes)
+                                ),
+                                node("addf",
+                                    node(classes)
+                                ),
+                                node("addm",
+                                    node(classes)
+                                ),
+                                node("renamef",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
+                                        )
+                                    )
+                                ),   
+                                node("changeft",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
+                                        )
+                                    )
+                                ),
+                                node("changefa",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
+                                        )
+                                    )
+                                ),
+                                node("help", "exit", "showgui")
+                                );
+        }
+        else 
+        {
+            completer = new TreeCompleter(
+                                node("addc"),
+                                node("renamec",
+                                    node(classes)
+                                ),
+                                node("deletec",
+                                    node(classes)
+                                ),
+                                node("addf",
+                                    node(classes)
+                                ),
+                                node("renamef",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
+                                        )
+                                    )
+                                ), 
+                                node("changeft",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
+                                        )
+                                    )
+                                ),
+                                node("changefa",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
+                                        )
+                                    )
+                                ),
+                                node("addm",
+                                    node(classes)
+                                ),
+                                node("renamem",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
+                                        )
+                                    )
+                                ),   
+                                node("changemt",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
+                                        )
+                                    )
+                                ),
+                                node("changema",
+                                    node(classes,
+                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
+                                        )
+                                    )
+                                ),
+                                node("help", "exit", "showgui")
+                                );
+        }
+
+        reader = LineReaderBuilder.builder()
+        .terminal(terminal)
+        .history(history)
+        .completer(completer)
+        .parser(parser)
+        .variable(LineReader.MENU_COMPLETE, true).build();
+
+        reader.option(LineReader.Option.COMPLETE_IN_WORD, true);
+        reader.option(LineReader.Option.RECOGNIZE_EXACT, true);
+        reader.option(LineReader.Option.CASE_INSENSITIVE, true);
+        reader.option(LineReader.Option.AUTO_REMOVE_SLASH, true);
     }
 }
