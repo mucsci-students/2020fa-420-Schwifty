@@ -76,7 +76,7 @@ public class CLI
         StringsCompleter s2 = new StringsCompleter("test");
         //completer = new ArgumentCompleter(new StringsCompleter(buildCandidateList()), s2);
         completer = new TreeCompleter(
-            node("addc", "exit", "help", "showgui"));
+            node("addc", "exit", "help", "showgui", "load"));
 
         //Build the reader and it's options
         reader = LineReaderBuilder.builder()
@@ -106,6 +106,8 @@ public class CLI
                 terminal.writer().println(readLine);
                 terminal.flush();
                 String[] line = readLine.split(" ");
+                if(line[0].equals("showgui"))
+                    go = false;
                 parse(line);
             }
             catch(EndOfFileException e)
@@ -275,8 +277,8 @@ public class CLI
         c.addListeners();
         try 
         {
-            c.load("toLoad.JSON");
             terminal.close();
+            c.load("toLoad.JSON");
         } 
         catch (IOException e)
         {
@@ -661,7 +663,7 @@ public class CLI
         if(store.getClassStore().isEmpty())
         {
             completer = new TreeCompleter(
-            node("addc", "exit", "help", "showgui"));
+            node("addc", "exit", "help", "showgui", "save", "load"));
         }
         else
         {
@@ -670,7 +672,6 @@ public class CLI
             if(store.findClass(str[1]).getFields().isEmpty() && store.findClass(str[1]).getMethods().isEmpty())
             {
                 completer = new TreeCompleter(
-                                    node(new StringsCompleter(new Candidate("addc ", "addc ", "class", "class name", " ", " ", false))),
                                     node("renamec",
                                         node(classes)
                                         ),
@@ -694,7 +695,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui")
+                                    node("help", "exit", "showgui", "save", "load")
                                     );
             }
             else if(store.findClass(str[1]).getFields().isEmpty())
@@ -742,7 +743,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui")
+                                    node("help", "exit", "showgui", "save", "load")
                                     );
             }
             else if(store.findClass(str[1]).getMethods().isEmpty())
@@ -790,7 +791,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui")
+                                    node("help", "exit", "showgui", "save", "load")
                                     );
             }
             else 
@@ -856,7 +857,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui")
+                                    node("help", "exit", "showgui", "save", "load")
                                     );
             }
         }

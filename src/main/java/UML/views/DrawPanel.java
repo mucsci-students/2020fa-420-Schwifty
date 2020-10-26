@@ -45,7 +45,6 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.*;
-import javafx.scene.transform.Rotate;
 
 
 public class DrawPanel extends JPanel 
@@ -74,7 +73,7 @@ public class DrawPanel extends JPanel
             if(relationship.getValue().equals("REALIZATION"))
             {
                 //Do a dotted line
-                g.setColor(Color.BLUE);
+                g.setColor(Color.BLACK);
                 Graphics2D g2d = (Graphics2D)g;
                 BasicStroke defaultStroke = (BasicStroke) g2d.getStroke();
                 BasicStroke dashLine = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 10 }, 0);
@@ -86,11 +85,17 @@ public class DrawPanel extends JPanel
                 {
                     //File path = new File("/src/main/java/UML/view/");
                     BufferedImage image = ImageIO.read(new File("./Images/Association.png"));
-                    //double theta = Math.tan((line[3] - line[1]) / (line[2] - line[0]));
+                    double theta = Math.toDegrees(Math.atan((line[3] - line[1]) / (line[2] - line[0])));
                     //Rotate rotate = new Rotate(theta);
-                    BufferedImage rotatedImage = rotate.apply(image);
-                    //g2d.rotate(theta);
+                    //BufferedImage rotatedImage = rotate.apply(image);
+                    //g2d.rotate(theta, line[4], line[5]);
+                    AffineTransform at = new AffineTransform();
+                    at.setToRotation(theta, line[4] + (image.getWidth() / 2), line[5] + (image.getHeight() / 2));
+                    //at.translate(x, y);
+                    //g2d.setTransform(at);
                     g2d.drawImage(image, line[4], line[5], null);
+                    //at.setToRotation(-theta, line[4] + (image.getWidth() / 2), line[5] + (image.getHeight() / 2));
+                    //g2d.setTransform(at);
                     //g2d.rotate(-theta);
                 }
                 catch(Exception e)

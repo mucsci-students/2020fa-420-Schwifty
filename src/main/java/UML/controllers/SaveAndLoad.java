@@ -44,6 +44,7 @@ import UML.model.Field;
 import UML.model.Method;
 import UML.model.Store;
 import UML.model.RelationshipType;
+import java.awt.Dimension;
 
 
 public class SaveAndLoad
@@ -118,6 +119,7 @@ public class SaveAndLoad
                 loadMethods(jsonObject, (String)className[i]);
                 loadRelationsTo(jsonObject, (String)className[i]);
                 loadRelationsFrom(jsonObject, (String)className[i]);
+                loadLocation(jsonObject, (String)className[i]);
                 i++;
             }  
         }
@@ -138,7 +140,7 @@ public class SaveAndLoad
             JSONObject jobct = (JSONObject)jsonObject;
             className[i] = (String)jobct.get("ClassName");
             //create the class from the name
-            controller.createClass((String)className[i]);
+            store.addClass((String)className[i]);
             i++;
         }
 
@@ -265,6 +267,14 @@ public class SaveAndLoad
         {
             //Get the deails about the class    
             JSONObject classDetails = new JSONObject();
+
+            //Add location of the class
+
+            Dimension location = aClass.getLocation();
+            JSONArray locationArray = new JSONArray();
+            locationArray.add(Integer.toString((int)location.getWidth()));
+            locationArray.add(Integer.toString((int)location.getHeight()));
+            classDetails.put("Location", locationArray);
             
             //Add the relations from others
             JSONArray relationsFrom = getRelationFromArray(aClass);
@@ -377,5 +387,23 @@ public class SaveAndLoad
             Class relatedClass = store.findClass(relatedClassName);
             relatedClass.addRelationshipToOther(RelationshipType.valueOf(relationship[0]), aClass);
         }
+    }
+
+    /**
+     * Loads location of a class.
+     */
+    public void loadLocation(Object jsonObject, String className)
+    {
+        JSONObject jobct = (JSONObject)jsonObject;
+        JSONArray arr = (JSONArray)jobct.get("Location");
+        Iterator<String> it = arr.iterator();
+        int[] toAdd = new int[2];
+        Class aClass = store.findClass(className);
+        for(int count = 0; count < 2; count++)
+        {
+            String str = it.next();
+            toAdd[count] = Integer.parseInt(str);
+        }
+        aClass.setLocation(new Dimension(toAdd[0], toAdd[1]));
     }
 }

@@ -324,17 +324,24 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void load(String fileName) throws IOException, ParseException
     {
+        for(Class c : store.getClassStore())
+        {
+            view.deleteClass(c.toString());
+        }
         store.getClassStore().clear();
         
         SaveAndLoad sl = new SaveAndLoad(store, view, this);
         File currentFile = sl.load(fileName);
         store.setCurrentLoadedFile(currentFile);
-        ArrayList<String> toStrings = new ArrayList<String>();
+        //ArrayList<String> toStrings = new ArrayList<String>();
         for(Class c : store.getClassStore())
         {
-            toStrings.add(c.toString());
+            //toStrings.add(c.toString());
+            //System.out.println(c.getLocation().toString());
+            view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
+            view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
         }
-        view.display(toStrings);
+        //view.display(toStrings);
     }
 
     /**
