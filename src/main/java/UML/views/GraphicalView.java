@@ -106,8 +106,25 @@ public class GraphicalView implements View {
         relationships.put(toAdd, type);
     }
 
+    /**
+     * Deletes a relationship between two class panels.
+     */
     @Override
-    public void deleteRelationships(String name) {
+    public void deleteRelationship(String from, String to)
+    {
+        for(ArrayList<String> classes : getRelationships().keySet())
+        {
+            if(classes.get(0).equals(from) && classes.get(1).equals(to))
+            {
+                relationships.remove(classes);
+            }
+        }
+    }
+
+    /**
+     * Deletes all relationships from or a to a specified class.
+     */
+    private void deleteRelationships(String name) {
         for(ArrayList<String> classes : getRelationships().keySet())
         {
             if(classes.get(0).equals(name))

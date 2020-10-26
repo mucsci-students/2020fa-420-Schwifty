@@ -75,17 +75,16 @@ public class Controller
             }
         }
         String classStr = aClass.toString();
-        view.deleteClass(classStr);
         boolean temp = store.deleteClass(name);
-        int counter = 0;
-        for(Class c : store.getClassStore())
-        {
-            view.updateClass(oldClassStrings.get(counter), c.toString());
-            counter++;
-        }
         if (temp)
         {
-
+            view.deleteClass(classStr);
+            int counter = 0;
+            for(Class c : store.getClassStore())
+            {
+                view.updateClass(oldClassStrings.get(counter), c.toString());
+                counter++;
+            }
         }
         else
             view.showError("Class could not be deleted");
@@ -302,9 +301,22 @@ public void deleteParameter(String className, String methodType, String methodNa
             view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
         else
         {
-            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName()); 
-            sendToView(temp, "Relationship", "deleted", from, fromOldStr);
-            sendToView(temp, "Relationship", "deleted", to, toOldStr);
+            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
+            //sendToView(temp, "Relationship", "deleted", from, fromOldStr);
+            //sendToView(temp, "Relationship", "deleted", to, toOldStr);
+            if (temp) 
+            {
+                String newFromStr = store.findClass(from).toString();
+                String newToStr = store.findClass(to).toString();
+                view.updateClass(fromOldStr, newFromStr);
+                view.updateClass(toOldStr, newToStr);
+                view.deleteRelationship(newFromStr, newToStr); 
+            } 
+            else
+            {
+                String error = "Relationship could not be deleted";
+                view.showError(error);
+            }
         }
     }
 

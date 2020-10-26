@@ -156,7 +156,7 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
-    public void deleteRelationships(String name) {
+    public void deleteRelationship(String from, String to) {
         // TODO Auto-generated method stub
         
     }
