@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
-import javax.swing.JTextField;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,14 +32,18 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import UML.controllers.MouseClickAndDragController; 
+import java.awt.Dimension;
+import javax.swing.SwingUtilities;
+import java.awt.Graphics;
+import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GraphicalView implements View {
 
     // Holds menu bar used to navigate program.
     private JMenuBar mb;
-
-    // The UML editor window.
-    private JFrame parentWindow;
 
     // Displays each individual class.
     private Map<String, JPanel> classPanels;
@@ -52,18 +55,55 @@ public class GraphicalView implements View {
     private JMenu classMenu;
     private JMenu fieldMenu;
     private JMenu relationshipMenu;
+    private Graphics graphics;
+    private DrawPanel dp;
+    private ConcurrentHashMap<ArrayList<String>, String> relationships;
 
     public GraphicalView() {
         this.classPanels = new HashMap<String, JPanel>();
+        this.relationships = new ConcurrentHashMap<ArrayList<String>, String>();
+    }
+
+    @Override
+    public Map<String, JPanel> getPanels()
+    {
+        return this.classPanels;
     }
 
     /**
      * Creates a class panel to be displayed.
      */
     @Override
-    public void createClass(String name) {
-        makeNewClassPanel(name);
+    public void createClass(String classToString, int x, int y) 
+    {
+        ClassPanelBuilder classPanelBuilder = new ClassPanelBuilder(classToString, dp);
+        JPanel newClassPanel = classPanelBuilder.makeNewClassPanel();
+        classPanels.put(classToString, newClassPanel);
+        /**
+        Scanner lineScanner = new Scanner(classToString);
+        int longest = 0;
+        int height = 0;
+        while(lineScanner.hasNextLine())
+        {
+            String line = lineScanner.nextLine();
+            Scanner scanner = new Scanner(line);
+            int localBest = 0;
+            while(scanner.hasNext())
+            {
+                localBest++;
+                scanner.next();
+            }
+            scanner.close();
+            ++height;
+            if(localBest > longest)
+                longest = localBest;
+        }
+        lineScanner.close();
+        newClassPanel.setLocation(x, y);
+        newClassPanel.setBounds(x, y, longest * 90, height * 20);
         refresh();
+        */
+        resizePanel(classToString, x, y);
     }
 
     /**
@@ -74,16 +114,86 @@ public class GraphicalView implements View {
         deleteClassPanel(name);
     }
 
+    public Map<ArrayList<String>, String> getRelationships()
+    {
+        return relationships;
+    }
+
+    @Override
+    public void addRelationship(String from, String to, String type)
+    {
+        Dimension fromLoc = getLoc(from);
+        Dimension toLoc = getLoc(to);
+        /**
+        int fromX = (int)fromLoc.getWidth();
+        int fromY = (int)fromLoc.getWidth();
+        int toX = (int)toLoc.getWidth();
+        int toY = (int)toLoc.getWidth();
+        */
+        ArrayList<String> toAdd = new ArrayList<String>();
+        toAdd.add(from);
+        toAdd.add(to);
+        relationships.put(toAdd, type);
+    }
+
     /**
      * Updates a class panel that is already being displayed on the window.
      */
     @Override
     public void updateClass(String oldString, String newString) {
+        for(ArrayList<String> classes : getRelationships().keySet())
+        {
+            if(classes.get(0).equals(oldString))
+            {
+                String value = relationships.get(classes);
+                relationships.remove(classes);
+                ArrayList<String> toPut = new ArrayList<String>();
+                toPut.add(newString);
+                toPut.add(classes.get(1));
+                relationships.put(toPut, value);
+            }
+            else if(classes.get(1).equals(oldString))
+            {
+                String value = relationships.get(classes);
+                relationships.remove(classes);
+                ArrayList<String> toPut = new ArrayList<String>();
+                toPut.add(classes.get(0));
+                toPut.add(newString);
+                relationships.put(toPut, value);
+            }
+        }
+        
         JPanel panel = classPanels.get(oldString);
-
+        /**
+        int x = panel.getX();
+        int y = panel.getY();
+        */
+        Dimension loc = getLoc(oldString);
         classPanels.remove(oldString);
         classPanels.put(newString, panel);
-        windowUpdateHelper(newString);
+        //Just sets TextArea.
+        windowUpdateHelper(newString, loc);
+        resizePanel(newString, (int)loc.getWidth(), (int)loc.getHeight());
+        refresh();
+    }
+
+    @Override
+    public Dimension getLoc(String name)
+    {
+        JPanel panel = classPanels.get(name);
+        int x = panel.getX();
+        int y = panel.getY();
+        Dimension loc = new Dimension(x, y);
+        return loc;
+    }
+
+    /**
+     * Helps update the window.
+     */
+    private void windowUpdateHelper(String classInfo, Dimension loc) {
+        JPanel aPanel = classPanels.get(classInfo);
+        JTextArea textArea = (JTextArea) aPanel.getComponents()[0];
+        textArea.setText(classInfo);
     }
 
     /**
@@ -92,7 +202,7 @@ public class GraphicalView implements View {
     @Override
     public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
         Object[] optionsToArray = options.toArray();
-        String strToRtn = (String) JOptionPane.showInputDialog(parentWindow, msgOne, msgTwo, JOptionPane.PLAIN_MESSAGE,
+        String strToRtn = (String) JOptionPane.showInputDialog(dp, msgOne, msgTwo, JOptionPane.PLAIN_MESSAGE,
                 null, optionsToArray, null);
         return strToRtn;
     }
@@ -102,7 +212,7 @@ public class GraphicalView implements View {
      */
     @Override
     public String getInputFromUser(String prompt) {
-        String strToRtn = JOptionPane.showInputDialog(parentWindow, prompt, "", JOptionPane.PLAIN_MESSAGE);
+        String strToRtn = JOptionPane.showInputDialog(dp, prompt, "", JOptionPane.PLAIN_MESSAGE);
 
         return strToRtn;
     }
@@ -114,7 +224,7 @@ public class GraphicalView implements View {
     public void display(ArrayList<String> toStrings) {
 
         for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
-            parentWindow.remove(panel.getValue());
+            dp.remove(panel.getValue());
         }
 
         classPanels.clear();
@@ -122,9 +232,7 @@ public class GraphicalView implements View {
         for (String s : toStrings) {
             makeNewClassPanel(s);
         }
-
         refresh();
-
     }
 
     /**
@@ -137,7 +245,7 @@ public class GraphicalView implements View {
 
         // Bring up file panel for the user to save as(automatically will choose file
         // type though in saveandload).
-        int returnValue = fc.showSaveDialog(parentWindow);
+        int returnValue = fc.showSaveDialog(dp);
         // Based on the user imput, save the file.
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -154,7 +262,7 @@ public class GraphicalView implements View {
     public String load() {
         // Make a filechooser
         JFileChooser fc = new JFileChooser();
-        int returnValue = fc.showOpenDialog(parentWindow);
+        int returnValue = fc.showOpenDialog(dp);
         // If the user selected to open this file, open it.
         // TODO: Consider filtering this information to only inlcude JSON filetypes
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -173,15 +281,6 @@ public class GraphicalView implements View {
 
     }
 
-    /**
-     * Helps update the window.
-     */
-    private void windowUpdateHelper(String classInfo) {
-        JPanel panel = classPanels.get(classInfo);
-        JTextArea textArea = (JTextArea) panel.getComponents()[0];
-        textArea.setText(classInfo);
-        refresh();
-    }
 
     /**
      * Constructrs a UMLWindow object.
@@ -189,13 +288,20 @@ public class GraphicalView implements View {
     public void makeWindow() {
         window = new JFrame("UML");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLayout(new GridLayout());
         window.setSize(800, 800);
-        window.setVisible(true);
-        parentWindow = window;
+        window.setPreferredSize(new Dimension(800, 800));
         createMenu();
-        parentWindow.add(mb);
+        window.add(mb);
         window.setJMenuBar(mb);
+        dp = new DrawPanel(this);
+        window.add(dp);
+        window.setVisible(true);
+        dp.setVisible(true);
+        //dp.setBackground(Color.BLUE);
+        dp.setPreferredSize(new Dimension(800, 800));
+        graphics = dp.getGraphics();
+        graphics.setColor(Color.WHITE);
+        dp.setLayout(null);
     }
 
     public void createMenu() {
@@ -211,6 +317,7 @@ public class GraphicalView implements View {
     /**
      * Returns the main window.
      */
+    @Override
     public JFrame getMainWindow() {
         return window;
     }
@@ -287,13 +394,19 @@ public class GraphicalView implements View {
         JMenuItem deleteMethod = new JMenuItem("Delete method");
         JMenuItem rnMethod = new JMenuItem("Rename method");
 
-        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod };
-        String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
-                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method" };
-        String[] command = { "CreateField", "DeleteField", "RenameField", "ChangeFieldType", "CreateMethod",
-                "DeleteMethod", "RenameMethod" };
+        //Change the access of a field
+        JMenuItem chgFieldAccess = new JMenuItem("Change Field Access");
 
-        for (int count = 0; count < 7; ++count) {
+        //Change the access level of a method
+        JMenuItem chgMethodAccess = new JMenuItem("Change Method Access");
+
+        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod, chgFieldAccess, chgMethodAccess};
+        String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
+                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method", "Change field access level", "Change method access level" };
+        String[] command = { "CreateField", "DeleteField", "RenameField", "ChangeFieldType", "CreateMethod",
+                "DeleteMethod", "RenameMethod","ChangeFieldAccess", "ChangeMethodAccess"};
+
+        for (int count = 0; count < 9; ++count) {
             fieldMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
@@ -344,7 +457,7 @@ public class GraphicalView implements View {
         Border blackline = BorderFactory.createLineBorder(Color.black);
         classText.setBorder(blackline);
         classPanel.setVisible(true);
-        parentWindow.add(classPanel);
+        dp.add(classPanel);
     }
 
     /**
@@ -353,17 +466,27 @@ public class GraphicalView implements View {
     public void deleteClassPanel(String aClass) {
         JPanel panel = classPanels.get(aClass);
         classPanels.remove(aClass);
-        parentWindow.remove(panel);
+        dp.remove(panel);
         refresh();
-
     }
 
     /**
      * Refreshes the window.
      */
     public void refresh() {
-        parentWindow.revalidate();
-        parentWindow.repaint();
+        ArrayList<Dimension> dimensions = new ArrayList<Dimension>();
+        for(Map.Entry<String, JPanel> panel : classPanels.entrySet())
+        {
+            dimensions.add(new Dimension(panel.getValue().getX(), panel.getValue().getY()));
+        }
+        dp.revalidate();
+        dp.repaint();
+        int counter = 0;
+        for(Map.Entry<String, JPanel> panel : classPanels.entrySet())
+        {
+            panel.getValue().setLocation((int)dimensions.get(counter).getWidth(), (int)dimensions.get(counter).getHeight());
+            ++counter;
+        }
     }
 
     /**
@@ -470,5 +593,53 @@ public class GraphicalView implements View {
     @Override
     public void addListener(ActionListener listener) {
         //Do nothing.
+    }
+
+    /**
+     * Adds listener for specified class panel.
+     */
+    @Override 
+    public void addListener(MouseClickAndDragController mouseListener, String classText)
+    {
+        JPanel panel = classPanels.get(classText);
+        panel.addMouseListener(mouseListener);
+        panel.addMouseMotionListener(mouseListener);
+    }
+
+    /**
+     * Restores class panels to actual locations.
+     */
+    public void setPositions()
+    {
+
+    }
+    /**
+     * Resizes panels to adjust to text of panel
+     */
+    public void resizePanel(String classToString, int x, int y)
+    {
+        JPanel panel = classPanels.get(classToString);
+        Scanner lineScanner = new Scanner(classToString);
+        int longest = 0;
+        int height = 0;
+        while(lineScanner.hasNextLine())
+        {
+            String line = lineScanner.nextLine();
+            Scanner scanner = new Scanner(line);
+            int localBest = 0;
+            while(scanner.hasNext())
+            {
+                localBest++;
+                scanner.next();
+            }
+            scanner.close();
+            ++height;
+            if(localBest > longest)
+                longest = localBest;
+        }
+        lineScanner.close();
+        panel.setLocation(x, y);
+        panel.setBounds(x, y, longest * 90, height * 20);
+        refresh();
     }
 }

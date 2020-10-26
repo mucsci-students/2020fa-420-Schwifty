@@ -13,7 +13,9 @@ import java.io.File;
 
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
+import UML.controllers.MouseClickAndDragController;
 
+import java.awt.Dimension;
 
 public class Controller 
 {
@@ -53,7 +55,7 @@ public class Controller
         if (temp)
         {   
             String classStr = aClass.toString();
-            view.createClass(classStr);
+            view.createClass(classStr, 0, 0);
         }
         else  
         view.showError("Class could not be created");     
@@ -94,11 +96,14 @@ public class Controller
     /**
      * Creates a field for a given class.
      */
-    public void createField(String className, String type, String name) throws IllegalArgumentException
+    public void createField(String className, String type, String name, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.addField(className, type, name);
+        boolean temp = store.addField(className, type, name, access);
+        //view.deleteClass(oldClassStr);
+        //view.createClass(aClass.toString());
+        //view.addListener(new MouseClickAndDragController(store, view, this), aClass.toString());
         sendToView(temp, "Field", "created", className, oldClassStr);
     }
 
@@ -134,7 +139,17 @@ public class Controller
         boolean temp = store.changeFieldType(className, newType, fieldName);
         sendToView(temp, "Field", "re-typed", className, oldClassStr);  
     }
-    
+
+    /**
+     * Changes access type of a field.
+     */
+    public void changeFieldAccess(String className, String fieldName, String access) throws IllegalArgumentException
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.changeFieldAccess(className, fieldName, access);
+        sendToView(temp, "Field", "re-access-typed", className, oldClassStr);
+    }
 
 //================================================================================================================================================
 //Method methods
@@ -144,45 +159,56 @@ public class Controller
     /**
      * Creates a method in a given class.
      */
-    public void createMethod(String className, String returnType, String methodName, ArrayList<String> params)
+    public void createMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.addMethod(className, returnType, methodName, params);
+        boolean temp = store.addMethod(className, returnType, methodName, params, access);
         sendToView(temp, "Method", "added", className, oldClassStr);
     }
 
     /**
      * Deletes a method from a given class.
      */
-    public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params)
+    public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.deleteMethod(className, returnType, methodName, params);
+        boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
         sendToView(temp, "Method", "deleted", className, oldClassStr);
     }
 
     /**
      * Renames a method in a given class.
      */
-    public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String newName)
+    public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String access, String newName)
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.renameMethod(className, returnType, methodName, params, newName);
+        boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
         sendToView(temp, "Method", "renamed", className, oldClassStr);
     }
 
     /**
      * Changes the type of a given method.
      */
-    public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String newType)
+    public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String access, String newType)
     {
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
-        boolean temp = store.changeMethodType(className, oldType, methodName, params, newType);
+        boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
         sendToView(temp, "Method", "re-typed", className, oldClassStr);
+    }
+
+    /**
+     * Changes the access type of a given method.
+     */
+    public void changeMethodAccess(String className, String type, String name, ArrayList<String> params, String access, String newAccess)
+    {
+        Class aClass = findClass(className);
+        String oldClassStr = aClass.toString();
+        boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
+        sendToView(temp, "Method", "re-access-typed", className, oldClassStr);
     }
 
 
@@ -194,11 +220,11 @@ public class Controller
 /**
  * Adds an parameter to a given method.
  */
-public void addParameter(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName)
+public void addParameter(String className, String methodType, String methodName, ArrayList<String> params, String access, String paramType, String paramName)
 {
     Class aClass = findClass(className);
     String oldClassStr = aClass.toString();
-    boolean temp = store.addParam(className, methodType, methodName, params, paramType, paramName);
+    boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
     sendToView(temp, "Parameter", "added", className, oldClassStr);
 }
 
@@ -206,11 +232,11 @@ public void addParameter(String className, String methodType, String methodName,
 /**
  * Deletes an parameter from a given method.
  */
-public void deleteParameter(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName)
+public void deleteParameter(String className, String methodType, String methodName, ArrayList<String> params, String access,  String paramType, String paramName)
 {
     Class aClass = findClass(className);
     String oldClassStr = aClass.toString();
-    boolean temp = store.deleteParam(className, methodType, methodName, params, paramType, paramName);
+    boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
     sendToView(temp, "Parameter", "deleted", className, oldClassStr);
 }
 
@@ -235,8 +261,24 @@ public void deleteParameter(String className, String methodType, String methodNa
                 view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
             else 
             {
-                sendToView(temp, "Relationship", "added", from, fromOldStr);
-                sendToView(temp, "Relationship", "added", to, toOldStr);
+                //sendToView(temp, "Relationship", "added", from, fromOldStr);
+                //sendToView(temp, "Relationship", "added", to, toOldStr);
+                //Dimension fromLoc = view.getLoc(fromOldStr);
+                //Dimension toLoc = view.getLoc(toOldStr);
+                //view.deleteClass(fromOldStr);
+                //view.deleteClass(toOldStr);
+                String newFrom = store.findClass(from).toString();
+                String newTo = store.findClass(to).toString();
+                /**
+                view.createClass(newFrom, (int)fromLoc.getWidth(), (int)fromLoc.getHeight());
+                view.addListener(new MouseClickAndDragController(store, view, this), newFrom);
+                view.createClass(newTo, (int)toLoc.getWidth(), (int)toLoc.getHeight());
+                view.addListener(new MouseClickAndDragController(store, view, this), newTo);
+                */
+                view.updateClass(fromOldStr, newFrom);
+                view.updateClass(toOldStr, newTo);
+                view.addRelationship(newFrom, newTo, relation.toString());
+                
             }
         }
         catch(IllegalArgumentException e)

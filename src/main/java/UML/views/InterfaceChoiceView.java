@@ -11,8 +11,10 @@ import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Map;
 import java.awt.FlowLayout;
 import UML.controllers.*;
+import java.awt.Dimension;
 
 public class InterfaceChoiceView implements View {
 
@@ -62,21 +64,24 @@ public class InterfaceChoiceView implements View {
         okButton.addActionListener(listener);
     }
 
-
-
     @Override
-    public void updateClass(String oldName, String newName) {
-        //Do nothing.
+    public void addListener(MouseClickAndDragController mouseListener, String className) {
+
     }
 
     @Override
-    public void createClass(String name) {
-        //Do nothing.
+    public void updateClass(String oldName, String newName) {
+        // Do nothing.
+    }
+
+    @Override
+    public void createClass(String name, int x, int y) {
+        // Do nothing.
     }
 
     @Override
     public void deleteClass(String name) {
-        //Do nothing.
+        // Do nothing.
     }
 
     /**
@@ -89,35 +94,35 @@ public class InterfaceChoiceView implements View {
 
     @Override
     public String getInputFromUser(String prompt) {
-        //Do nothing.
+        // Do nothing.
         return null;
     }
 
     @Override
     public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
             ActionListener relationshipListener) {
-        //Do nothing.
+        // Do nothing.
     }
 
     @Override
     public void display(ArrayList<String> str) {
-        //Do nothing.
+        // Do nothing.
     }
 
     @Override
     public void showError(String error) {
-        //Do nothing.
+        // Do nothing.
     }
 
     @Override
     public String save() {
-        //Do nothing.
+        // Do nothing.
         return null;
     }
 
     @Override
     public String load() {
-        //Do nothing.
+        // Do nothing.
         return null;
     }
 
@@ -131,11 +136,40 @@ public class InterfaceChoiceView implements View {
 
     @Override
     public void start() {
-        //Do nothing.
+        // Do nothing.
     }
 
     @Override
     public void showHelp() {
-        //Do nothing.
+        // Do nothing.
+    }
+
+    @Override
+    public Dimension getLoc(String name) {
+        return new Dimension(0, 0);
+    }
+
+    @Override
+    public void addRelationship(String from, String to, String type) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Map<ArrayList<String>, String> getRelationships() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JFrame getMainWindow() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Map<String, JPanel> getPanels() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -8,11 +8,15 @@
 
 
 plugins {
+
+    id 'java-library'
     // Apply the java plugin to add support for Java
     id 'java'
 
     // Apply the application plugin to add support for building a CLI application.
     id 'application'
+
+
 }
 
 run{
@@ -32,7 +36,9 @@ dependencies {
     testCompileOnly 'junit:junit:4.13'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    compile group: 'org.jline', name: 'jline-terminal-jna', version: '3.16.0'
     compile 'org.jline:jline:3.14.1'
+
 }
 
 application {
@@ -42,7 +48,9 @@ application {
 
 jar {
     manifest {
-        attributes 'UMLEditor': 'UML.UMLEditor'
+        attributes (
+          'UMLEditor' : 'UML.UMLEditor'
+        )
     }
 }
 

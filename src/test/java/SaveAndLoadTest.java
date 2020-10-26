@@ -61,12 +61,12 @@ public class SaveAndLoadTest {
         ArrayList<String> params = new ArrayList();
         params.add("int num");
         c.createClass("Test");
-        c.createField("Test", "int", "num");
-        c.createMethod("Test", "void", "testMethod", params);
+        c.createField("Test", "int", "num", "public");
+        c.createMethod("Test", "void", "testMethod", params, "public");
 
         c.createClass("TestTwo");
-        c.createField("TestTwo", "string", "aStr");
-        c.createMethod( "TestTwo","void", "testMethod", params);
+        c.createField("TestTwo", "string", "aStr", "private");
+        c.createMethod( "TestTwo","void", "testMethod", params, "private");
         
         c.addRelationship("Test", "TestTwo", RelationshipType.REALIZATION);
 
@@ -111,8 +111,8 @@ public class SaveAndLoadTest {
         String[] classNameTests = {"Test","TestTwo"};
         String[] relatedClasses = {"TestTwo","Test"};
         //Create the test fields
-        Field attrTest = new Field("int", "num");
-        Field attrTestTwo = new Field("string", "aStr");
+        Field attrTest = new Field("int", "num", "public");
+        Field attrTestTwo = new Field("string", "aStr", "public");
         Field[] attrTestArray = {attrTest, attrTestTwo};
 
         RelationshipType[] relationsTo = {RelationshipType.REALIZATION, null};
@@ -133,7 +133,7 @@ public class SaveAndLoadTest {
             ArrayList<Parameter> params = new ArrayList<>();
             params.add(new Parameter("int","num"));
 
-            Method testMethod = new Method("void", "testMethod", params);
+            Method testMethod = new Method("void", "testMethod", params, "public");
             for(Method m : methods)
             {
                 assertEquals(testMethod, m);

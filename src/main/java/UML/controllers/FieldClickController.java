@@ -36,8 +36,15 @@ public class FieldClickController implements ActionListener {
         if (cmd.equals("CreateField")) {
             String type = view.getInputFromUser("Type: ");
             String name = view.getInputFromUser("Name: ");
+            
+            ArrayList<String> accessTypes = new ArrayList<String>();
+            accessTypes.add("public");
+            accessTypes.add("private");
+            accessTypes.add("protected");
+
+            String access = view.getChoiceFromUser("New access level", "New access level", accessTypes);
             // Add field to the class using received params.
-            controller.createField(className, type, name);
+            controller.createField(className, type, name, access);
 
         } else if (cmd.equals("DeleteField")) {
             // Get class from storage.
@@ -48,8 +55,8 @@ public class FieldClickController implements ActionListener {
 
             // Get field to delete.
             String field = view.getChoiceFromUser("Delete this atrribute", "Delete atrribute", fieldList);
-            String[] f = field.split("");
-            controller.deleteField(className, f[1]);
+            String[] f = field.split(" ");
+            controller.deleteField(className, f[2]);
 
         } else if (cmd.equals("RenameField")) {
             // Get class from storage.
@@ -66,7 +73,7 @@ public class FieldClickController implements ActionListener {
             // Old field. 
             String[] att = field.split(" ");
             // Rename the field.
-            controller.renameField(className, att[1], newField);
+            controller.renameField(className, att[2], newField);
 
             
         } else if (cmd.equals("ChangeFieldType")) {
@@ -85,6 +92,14 @@ public class FieldClickController implements ActionListener {
             controller.changeFieldType(className, newType, att[1]);
 
         } else if (cmd.equals("CreateMethod")) {
+            // Get the access level from the user.
+            ArrayList<String> accessTypes = new ArrayList<String>();
+            accessTypes.add("public");
+            accessTypes.add("private");
+            accessTypes.add("protected");
+
+            String access = view.getChoiceFromUser("New access level", "New access level", accessTypes);
+
             // Get Type from user.
             String returnType = view.getInputFromUser("Return Type: ");
             // Get name from user.
@@ -113,7 +128,7 @@ public class FieldClickController implements ActionListener {
                 params.add(paramType + " " + paramName);
             }
             // Add field to the class using received params.
-            controller.createMethod(className, returnType, name, params);
+            controller.createMethod(className, returnType, name, params, access);
         } 
         else if (cmd.equals("DeleteMethod")) {
             // Get a list of methods to show user in a combo box.
@@ -122,10 +137,11 @@ public class FieldClickController implements ActionListener {
             String methodString = view.getChoiceFromUser("Delete method", "DeleteMethod", methods);
             //Get the needed componets from the method string
             String[] splitStr = methodString.split(" ");
+            String access = splitStr[0];
             String returnType = splitStr[1];
             String methodName = splitStr[2];
             
-            controller.deleteMethod(className, returnType, methodName, store.getMethodParamString(className, methodString));
+            controller.deleteMethod(className, returnType, methodName, store.getMethodParamString(className, methodString), access);
         } 
         else if (cmd.equals("RenameMethod")) {
             ArrayList<String> methodList = store.getMethodList(store.findClass(className).getMethods());
@@ -134,10 +150,66 @@ public class FieldClickController implements ActionListener {
             String newMethod = view.getInputFromUser("Enter new method name: ");
             
             String[] splitStr = methodString.split(" ");
+            String access = splitStr[0];
             String returnType = splitStr[1];
             String methodName = splitStr[2];
 
-            controller.renameMethod(className, returnType, methodName, store.getMethodParamString(className, methodString), newMethod);
+            controller.renameMethod(className, returnType, methodName, store.getMethodParamString(className, methodString), access, newMethod);
+        }
+        else if(cmd.equals("ChangeFieldAccess"))
+        {
+            // Get class from storage.
+            Class aClass = store.findClass(className);
+
+            // Get a list of atrributes from the class.
+            ArrayList<String> fieldList = store.getFieldList(aClass.getFields());
+
+            // Get field to rename.
+            String field = view.getChoiceFromUser("Rename this field", "Rename atrribute", fieldList);
+            String[] fieldString = field.split(" ");
+            String fieldName = fieldString[2];
+
+            ArrayList<String> accessTypes = new ArrayList<String>();
+            accessTypes.add("public");
+            accessTypes.add("private");
+            accessTypes.add("protected");
+
+            String newAccess = view.getChoiceFromUser("New access level", "New access level", accessTypes);
+            controller.changeFieldAccess(className, fieldName, newAccess);
+        }
+        else if(cmd.equals("ChangeMethodAccess"))
+        {
+            ArrayList<String> methodList = store.getMethodList(store.findClass(className).getMethods());
+            String methodString = view.getChoiceFromUser("Rename method access", "Method access", methodList);
+
+            String[] splitStr = methodString.split(" ");
+            String accessChar = splitStr[1];
+            String accessString = "";
+            if(accessChar.equals("+"))
+            {
+                accessString = "public";
+            }
+            else if(accessChar.equals("-"))
+            {
+                accessString = "private";
+            }
+            else if(accessChar.equals("*"))
+            {
+                accessString = "protected";
+            }
+            String returnType = splitStr[2];
+            String methodName = splitStr[3];
+            System.out.println(accessString);
+            System.out.println(returnType);
+            System.out.println(methodName);
+            ArrayList<String> accessTypes = new ArrayList<String>();
+            accessTypes.add("public");
+            accessTypes.add("private");
+            accessTypes.add("protected");
+
+            String newAccess = view.getChoiceFromUser("New access level", "New access level", accessTypes);
+
+            controller.changeMethodAccess(className, returnType, methodName, store.getMethodParamString(className, methodString), accessString, newAccess);
         }
     }
 

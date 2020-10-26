@@ -37,14 +37,6 @@ public class Store {
 	{
 		this.currentLoadedFile = fileToSet;
 	}
-
-	/**
-	 * Returns ArrayList of classes in the store.
-	 */
-	public ArrayList<Class> getClassStore()
-	{
-		return this.classStore;
-	}
 	
 	public void setClassStore(ArrayList<Class> newStore)
 	{
@@ -56,6 +48,13 @@ public class Store {
 //Getters
 //===============================================================================================================================================
 
+	/**
+	 * Returns ArrayList of classes in the store.
+	 */
+	public ArrayList<Class> getClassStore()
+	{
+		return this.classStore;
+	}
 
     /** 
 	 * Makes and returns a combo box fill with the created classes.
@@ -82,9 +81,7 @@ public class Store {
 
 		for(Field field : fieldsFromClass)
 		{
-			String type = field.getType();
-			String name = field.getName();
-			fields.add(type + " " + name);
+			fields.add(field.toString());
 		}
 		return fields;
     }
@@ -172,10 +169,10 @@ public class Store {
 	/**
 	 * Adds a field to a class in the store.
 	 */
-	public boolean addField(String className, String type, String name) throws IllegalArgumentException
+	public boolean addField(String className, String type, String name, String access) throws IllegalArgumentException
 	{
 		Class classToAddAttrTo = findClass(className);
-		return classToAddAttrTo.addField(type, name);
+		return classToAddAttrTo.addField(type, name, access);
 	}
 
 	/**
@@ -206,6 +203,15 @@ public class Store {
 		return toChange.changeFieldType(newType, name);
 	}
 
+	/**
+	 * Changes the access type of a field.
+	 */
+	public boolean changeFieldAccess(String className, String fieldName, String access)
+	{
+		Class toChange = findClass(className);
+		return toChange.changeFieldAccess(fieldName, access);
+	}
+
 
 //================================================================================================================================================
 //Method methods
@@ -215,7 +221,7 @@ public class Store {
 	/**
 	 * Adds method to a class in the store.
 	 */
-	public boolean addMethod(String className, String type, String name, ArrayList<String> params) throws IllegalArgumentException
+	public boolean addMethod(String className, String type, String name, ArrayList<String> params, String access) throws IllegalArgumentException
 	{
 		Class toAdd = findClass(className);
 		
@@ -228,13 +234,13 @@ public class Store {
 			newParams.add(newParam);
 		}
 
-		return toAdd.addMethod(type, name, newParams);
+		return toAdd.addMethod(type, name, newParams, access);
 	}
 
 	/**
 	 * Deletes a method from a class in the store.
 	 */
-	public boolean deleteMethod(String className, String type, String name, ArrayList<String> params)
+	public boolean deleteMethod(String className, String type, String name, ArrayList<String> params, String access)
 	{
 		Class toDelete = findClass(className);
 
@@ -247,13 +253,13 @@ public class Store {
 			newParams.add(newParam);
 		}
 		
-		return toDelete.deleteMethod(type, name, newParams);
+		return toDelete.deleteMethod(type, name, newParams, access);
 	}
 
 	/**
      * Renames method of a class in the store.
      */
-	public boolean renameMethod(String className, String type, String oldName, ArrayList<String> params, String newName) throws IllegalArgumentException
+	public boolean renameMethod(String className, String type, String oldName, ArrayList<String> params, String access, String newName) throws IllegalArgumentException
 	{
 		Class toRename = findClass(className);
 
@@ -266,13 +272,13 @@ public class Store {
 			newParams.add(newParam);
 		}
 
-		return toRename.renameMethod(type, oldName, newParams, newName);
+		return toRename.renameMethod(type, oldName, newParams, access, newName);
 	}
 
 	/**
      * Chnages the return type of a method of a class in the store.
      */
-	public boolean changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String newType)
+	public boolean changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String access, String newType)
 	{
 		Class aClass = findClass(className);
 
@@ -285,8 +291,25 @@ public class Store {
 			newParams.add(newParam);
 		}
 
-		return aClass.changeMethodType(oldType, methodName, newParams, newType);
+		return aClass.changeMethodType(oldType, methodName, newParams, access, newType);
 	}
+
+	public boolean changeMethodAccess(String className, String type, String methodName, ArrayList<String> params, String access, String newAccess)
+	{
+		Class aClass = findClass(className);
+		
+		ArrayList<Parameter> newParams = new ArrayList<Parameter>();
+
+		for(String param: params)
+		{
+			String[] splitParam = param.split(" ");
+			Parameter newParam = new Parameter(splitParam[0], splitParam[1]);
+			newParams.add(newParam);
+		}
+		
+		return aClass.changeMethodAccess(type, methodName, newParams, access, newAccess);
+	}
+	
 
 //================================================================================================================================================
 //Parameter methods
@@ -296,7 +319,7 @@ public class Store {
 	/**
 	 * Add parameter to a method of a class in the store.
 	 */
-	public boolean addParam(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName) throws IllegalArgumentException
+	public boolean addParam(String className, String methodType, String methodName, ArrayList<String> params, String access, String paramType, String paramName) throws IllegalArgumentException
 	{
 		ArrayList<Parameter> theParams = new ArrayList<Parameter>();
 
@@ -306,14 +329,14 @@ public class Store {
 			Parameter newParam = new Parameter(splitStr[0], splitStr[1]);
 			theParams.add(newParam);
 		}
-		Method theMethod = findMethod(className, methodType, methodName, theParams);
+		Method theMethod = findMethod(className, methodType, methodName, theParams, access);
 		return theMethod.addParam(new Parameter(paramType, paramName));
 	}
 
 	/**
 	 * Deletes parameter of a method of a class in the store.
 	 */
-	public boolean deleteParam(String className, String methodType, String methodName, ArrayList<String> params, String paramType, String paramName)
+	public boolean deleteParam(String className, String methodType, String methodName, ArrayList<String> params, String access, String paramType, String paramName)
 	{
 		ArrayList<Parameter> theParams = new ArrayList<Parameter>();
 		for(String p : params)
@@ -323,7 +346,7 @@ public class Store {
 			theParams.add(toBeDeleted);
 		}
 		
-		Method theMethod = findMethod(className, methodType, methodName, theParams);
+		Method theMethod = findMethod(className, methodType, methodName, theParams, access);
 		return theMethod.deleteParam(new Parameter(paramType, paramName));
 	}
 	
@@ -405,11 +428,11 @@ public class Store {
 	}
 
 	/**
-	 * Finds a method in a class in the storage and returns it. Returns null if nothing found.
+ 	 * Finds a method in a class in the storage and returns it. Returns null if nothing found.
 	 */
-	public Method findMethod(String className, String methodType, String methodName, ArrayList<Parameter> params)
+	public Method findMethod(String className, String methodType, String methodName, ArrayList<Parameter> params, String access)
 	{
-		Method newMethod = new Method(methodType, methodName, params);
+		Method newMethod = new Method(methodType, methodName, params, access);
 		Class foundClass = findClass(className);
 		for(Method method : foundClass.getMethods())
 		{
@@ -454,7 +477,7 @@ public class Store {
 				{
 					arr.add(p.getType() + " " + p.getName());
 				}
-				return deleteMethod(className, m.getType(), m.getName(), arr);
+				return deleteMethod(className, m.getType(), m.getName(), arr, m.getAccessString());
 			}
 		}
 		return false;
@@ -464,7 +487,7 @@ public class Store {
 	 * Rename a method from a class based on the method string. Takes in a class name 
 	 * from which the method is to be removed and the method toString result. 
 	 */
-	public boolean renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName)
+	public boolean renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName, String access)
 	{
 		//Loop through the returned methods to find the method to be renamed.
 		for(Method m : methods)
@@ -474,12 +497,13 @@ public class Store {
 				//ArrayList of param strings
 				ArrayList<String> paramStrings = new ArrayList<String>();
 				//Generate an ArrayList of strings to be passed into the rename method. 
-				for(Parameter p : m.getParams())
+				ArrayList<Parameter> params = m.getParams();
+				for(Parameter p : params)
 				{
 					paramStrings.add(p.getType() + " " + p.getName());
 				}
 				//rename the method and break out. 
-				return renameMethod(className, m.getType(), m.getName(), paramStrings, newName);
+				return renameMethod(className, m.getType(), m.getName(), paramStrings, m.getAccessString(), newName);
 			}
 		}
 		return false;
