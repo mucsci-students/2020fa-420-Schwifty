@@ -32,11 +32,21 @@ import javax.swing.BoxLayout;
 import javax.lang.model.util.ElementScanner6;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
-import java.awt.FlowLayout;
 import UML.controllers.MouseClickAndDragController; 
 import java.awt.Dimension;
 import javax.swing.SwingUtilities;
 import java.awt.Graphics;
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.ImageIcon;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.*;
+import javafx.scene.transform.Rotate;
+
 
 public class DrawPanel extends JPanel 
 {
@@ -47,7 +57,7 @@ public class DrawPanel extends JPanel
         this.view = v;
     }
 
-    public void paintComponent(Graphics g) 
+    public void paintComponent(Graphics g)
     {
         g.setColor(Color.BLACK);
         for(Map.Entry<ArrayList<String>, String> relationship : view.getRelationships().entrySet())
@@ -60,19 +70,42 @@ public class DrawPanel extends JPanel
             int[] line = getClosest((int)fromLoc.getWidth(), (int)(fromLoc.getWidth() + fromSize.getWidth()), 
                                                 (int)fromLoc.getHeight(), (int)(fromLoc.getHeight() + fromSize.getHeight()), 
                                                 (int)toLoc.getWidth(), (int)(toLoc.getWidth() + toSize.getWidth()),
-                                                (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));
-            if(relationship.getValue().equals("Realization"))
+                                                (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));                            
+            if(relationship.getValue().equals("REALIZATION"))
             {
                 //Do a dotted line
-                
+                g.setColor(Color.BLUE);
+                Graphics2D g2d = (Graphics2D)g;
+                BasicStroke defaultStroke = (BasicStroke) g2d.getStroke();
+                BasicStroke dashLine = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 10 }, 0);
+                g2d.setStroke(dashLine);
+                g.drawLine(line[0], line[1], line[2], line[3]);
+                g2d.setStroke(defaultStroke);
+                //Draw correct shape
+                try
+                {
+                    //File path = new File("/src/main/java/UML/view/");
+                    BufferedImage image = ImageIO.read(new File("./Images/Association.png"));
+                    //double theta = Math.tan((line[3] - line[1]) / (line[2] - line[0]));
+                    //Rotate rotate = new Rotate(theta);
+                    BufferedImage rotatedImage = rotate.apply(image);
+                    //g2d.rotate(theta);
+                    g2d.drawImage(image, line[4], line[5], null);
+                    //g2d.rotate(-theta);
+                }
+                catch(Exception e)
+                {
+
+                }
+                //g.fillOval(line[4], line[5], 36, 36);
             }
             else
             {
                 g.setColor(Color.PINK);
                 g.drawLine(line[0], line[1], line[2], line[3]);
+                //Draw correct shape
                 g.fillOval(line[4], line[5], 36, 36);
             }
-            //drawCorrectShape(g, line[0], line[1], relationship.getValue());
         }
     
     }
@@ -141,15 +174,11 @@ public class DrawPanel extends JPanel
                 {
                     x[1] = ((fromDown - toUp) / 2) + toUp;
                     x[3] = ((fromDown - toUp) / 2) + toUp;
-                    //x[4] = fromLeft;
-                    //x[5] = x[1] - 18;
                 }
                 else
                 {
                     x[1] = ((toDown - fromUp) / 2) + fromUp;
                     x[3] = ((toDown - fromUp) / 2) + fromUp;
-                    //x[4] = fromLeft;
-                    //x[5] = x[1] - 18;
                 }
             }
             x[4] = fromLeft - 36;
@@ -179,15 +208,11 @@ public class DrawPanel extends JPanel
                 {
                     x[1] = ((fromDown - toUp) / 2) + toUp;
                     x[3] = ((fromDown - toUp) / 2) + toUp;
-                    //x[4] = fromRight;
-                    //x[5] = x[1] - 18;
                 }
                 else
                 {
                     x[1] = ((toDown - fromUp) / 2) + fromUp;
                     x[3] = ((toDown - fromUp) / 2) + fromUp;
-                    //x[4] = fromRight;
-                    //x[5] = x[1] - 18;
                 }
             }
             x[4] = fromRight;
@@ -217,15 +242,11 @@ public class DrawPanel extends JPanel
                 {
                     x[0] = ((fromRight - toLeft) / 2) + toLeft;
                     x[2] = ((fromRight - toLeft) / 2) + toLeft;
-                    //x[4] = x[0] - 18;
-                    //x[5] = fromDown;
                 }
                 else
                 {
                     x[0] = ((toRight - fromLeft) / 2) + fromLeft;
                     x[2] = ((toRight - fromLeft) / 2) + fromLeft;
-                    //x[4] = x[0] - 18;
-                    //x[5] = fromDown;
                 }
             }
             x[4] = x[0] - 18;
@@ -255,15 +276,11 @@ public class DrawPanel extends JPanel
                 {
                     x[0] = ((fromRight - toLeft) / 2) + toLeft;
                     x[2] = ((fromRight - toLeft) / 2) + toLeft;
-                    //x[4] = x[0] - 18;
-                    //x[5] = fromUp;
                 }
                 else 
                 {
                     x[0] = ((toRight - fromLeft) / 2) + fromLeft;
                     x[2] = ((toRight - fromLeft) / 2) + fromLeft;
-                    //x[4] = x[0] - 18;
-                    //x[5] = fromUp;
                 }
             }
             x[4] = x[0] - 18;

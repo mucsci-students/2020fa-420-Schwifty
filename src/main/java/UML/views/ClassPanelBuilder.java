@@ -1,6 +1,5 @@
 package UML.views;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
@@ -8,7 +7,6 @@ import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.util.Scanner;
 
 public class ClassPanelBuilder implements PanelBuilder
@@ -17,8 +15,6 @@ public class ClassPanelBuilder implements PanelBuilder
     private String classData;
     private JPanel panel;
     private DrawPanel parentWindow;
-    private int xLoc = 0;
-    private int yLoc = 0;
     Border blackline = BorderFactory.createLineBorder(Color.black);
 
     public ClassPanelBuilder(String data, DrawPanel window)
@@ -104,18 +100,11 @@ public class ClassPanelBuilder implements PanelBuilder
         panel.add(top, BorderLayout.NORTH);
         panel.add(bottom, BorderLayout.SOUTH);
         panel.setBackground(Color.PINK);
-        Dimension d = classText.getSize();
-        //int x = (int)d.getWidth();
-        //int y = (int)d.getHeight();
-        int x = classText.getRows() * 10;
         panel.setBounds(0, 500, longest * 90, height * 20);
         left.setPreferredSize(new Dimension(25, height * 20));
-        //setBounds(int x, int y, int width, int height)
         classText.setBorder(blackline);
         panel.setVisible(true);
         parentWindow.add(panel);
-        //panel.setPreferredSize(new Dimension(100, 100));
-        //panel.setLocation(xLoc, yLoc);
         return panel;
     }
 
