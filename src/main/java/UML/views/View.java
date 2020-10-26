@@ -21,6 +21,7 @@ public interface View
 	void deleteClass(String name);
 
 	void addRelationship(String from, String to, String type);
+	void deleteRelationships(String name);
 	
 	String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options);
     String getInputFromUser(String prompt);

@@ -104,7 +104,7 @@ public class ClassPanelBuilder implements PanelBuilder
         left.setPreferredSize(new Dimension(25, height * 20));
         classText.setBorder(blackline);
         panel.setVisible(true);
-        parentWindow.add(panel);
+        //parentWindow.add(panel);
         return panel;
     }
 

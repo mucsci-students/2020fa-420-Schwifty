@@ -79,31 +79,8 @@ public class GraphicalView implements View {
         ClassPanelBuilder classPanelBuilder = new ClassPanelBuilder(classToString, dp);
         JPanel newClassPanel = classPanelBuilder.makeNewClassPanel();
         classPanels.put(classToString, newClassPanel);
-        /**
-        Scanner lineScanner = new Scanner(classToString);
-        int longest = 0;
-        int height = 0;
-        while(lineScanner.hasNextLine())
-        {
-            String line = lineScanner.nextLine();
-            Scanner scanner = new Scanner(line);
-            int localBest = 0;
-            while(scanner.hasNext())
-            {
-                localBest++;
-                scanner.next();
-            }
-            scanner.close();
-            ++height;
-            if(localBest > longest)
-                longest = localBest;
-        }
-        lineScanner.close();
-        newClassPanel.setLocation(x, y);
-        newClassPanel.setBounds(x, y, longest * 90, height * 20);
-        refresh();
-        */
         resizePanel(classToString, x, y);
+        dp.add(newClassPanel);
     }
 
     /**
@@ -112,6 +89,7 @@ public class GraphicalView implements View {
     @Override
     public void deleteClass(String name) {
         deleteClassPanel(name);
+        deleteRelationships(name);
     }
 
     public Map<ArrayList<String>, String> getRelationships()
@@ -122,18 +100,25 @@ public class GraphicalView implements View {
     @Override
     public void addRelationship(String from, String to, String type)
     {
-        Dimension fromLoc = getLoc(from);
-        Dimension toLoc = getLoc(to);
-        /**
-        int fromX = (int)fromLoc.getWidth();
-        int fromY = (int)fromLoc.getWidth();
-        int toX = (int)toLoc.getWidth();
-        int toY = (int)toLoc.getWidth();
-        */
         ArrayList<String> toAdd = new ArrayList<String>();
         toAdd.add(from);
         toAdd.add(to);
         relationships.put(toAdd, type);
+    }
+
+    @Override
+    public void deleteRelationships(String name) {
+        for(ArrayList<String> classes : getRelationships().keySet())
+        {
+            if(classes.get(0).equals(name))
+            {
+                relationships.remove(classes);
+            }
+            else if(classes.get(1).equals(name))
+            {
+                relationships.remove(classes);
+            }
+        }
     }
 
     /**
@@ -465,8 +450,8 @@ public class GraphicalView implements View {
      */
     public void deleteClassPanel(String aClass) {
         JPanel panel = classPanels.get(aClass);
-        classPanels.remove(aClass);
         dp.remove(panel);
+        classPanels.remove(aClass);
         refresh();
     }
 

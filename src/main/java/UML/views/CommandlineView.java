@@ -194,6 +194,12 @@ public class CommandlineView implements View {
     }
 
     @Override
+    public void deleteRelationships(String name) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
     public Map<ArrayList<String>, String> getRelationships() {
         // TODO Auto-generated method stub
         return null;
