@@ -6,19 +6,12 @@ package UML.controllers;
     Purpose: Controls the actions taken when commands are used in the CLI.
  */
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.ParseException;
-import java.util.Scanner;
 
 import org.jline.reader.*;
-import org.jline.reader.impl.completer.ArgumentCompleter;
+
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.reader.impl.DefaultParser;
-import org.jline.terminal.impl.AbstractTerminal;
-import org.jline.terminal.impl.DumbTerminal;
 import org.jline.terminal.TerminalBuilder;
-import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import java.util.ArrayList;
 import UML.model.*;
@@ -27,26 +20,11 @@ import UML.views.GraphicalView;
 import UML.views.View;
 import org.jline.builtins.Completers.TreeCompleter;
 import static org.jline.builtins.Completers.TreeCompleter.node;
-import org.jline.reader.impl.completer.NullCompleter;
-import org.jline.reader.impl.completer.EnumCompleter;
-import org.jline.reader.impl.completer.AggregateCompleter;
+
 import org.jline.reader.impl.history.DefaultHistory;
-import org.jline.keymap.KeyMap;
-import org.jline.builtins.Widgets.AutosuggestionWidgets;
-import org.jline.builtins.Widgets.TailTipWidgets;
-import org.jline.builtins.Widgets.CmdDesc;
-import org.jline.builtins.Widgets.ArgDesc;
-import org.jline.utils.AttributedString;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Arrays;
-import org.jline.builtins.Widgets.TailTipWidgets.TipType;
-import org.jline.builtins.Completers.OptDesc;
-import java.util.HashMap;
-import java.util.Map;
-import UML.views.CLICommands;
 import org.jline.reader.Candidate;
-import java.util.HashSet;
 import java.util.Set;
 
 public class CLI
@@ -58,11 +36,8 @@ public class CLI
     private Terminal terminal;
     private LineReader reader;
     private Completer completer;
-    private StringsCompleter commands;
-    private StringsCompleter recentlyTyped;
     private History history;
     private Parser parser;
-    private boolean running;
 
     public CLI(Store s, View v, Controller c) 
     {
@@ -186,7 +161,10 @@ public class CLI
         {
             changeFieldAccess(line);
         }
-       
+        else if (line[0].equals("changeft")) 
+        {
+            changeFieldType(line);
+        }
         else if (line[0].equals("deletef")) 
         {
             deleteField(line);
@@ -203,6 +181,14 @@ public class CLI
         {
             deleteMethod(line);
         } 
+        else if (line[0].equals("changema")) 
+        {
+            changeMethodAccess(line);
+        }
+        else if (line[0].equals("changemt")) 
+        {
+            changeMethodType(line);
+        }
         else if (line[0].equals("addp")) 
         {
             addParameter(line);
@@ -381,9 +367,20 @@ public class CLI
         }
     }
 
-    private void changeFieldType()
+    /**
+     * Calls the controller to change a field's type.
+     */
+    private void changeFieldType(String args[])
     {
-
+        if (args.length == 4 && store.findClass(args[1]) != null)
+        {
+            controller.changeFieldType(args[1], args[2], args[3]);
+            makeReader();  
+        }
+        else
+        {
+            view.showError("Invalid arguments for renaming a field, please refer to help.");
+        }
     }
 
     /**
@@ -402,6 +399,9 @@ public class CLI
         }
     }
 
+    /**
+     * Changes the access type of a field.
+     */
     private void changeFieldAccess(String[] args)
     {
         if(args.length == 3 || store.findClass(args[1]) != null)
@@ -465,15 +465,35 @@ public class CLI
 
     }
 
-    private void changeMethodType()
+    /**
+     * Changes a method return type.
+     */
+    private void changeMethodType(String[] args)
     {
-
+        ArrayList<String> params = new ArrayList<String>();
+        if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
+            System.out.println("Invalid arguments");
+        }
+        for (int counter = 4; counter < args.length - 2; counter += 2) {
+            params.add(args[counter] + " " + args[counter + 1]);
+        }
+        controller.changeMethodType(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
         makeReader();  
     }
-
-    private void changeMethodAccess()
+    
+    /**
+     * Changes a method access type
+     */
+    private void changeMethodAccess(String[] args)
     {
-
+        ArrayList<String> params = new ArrayList<String>();
+        if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
+            System.out.println("Invalid arguments");
+        }
+        for (int counter = 4; counter < args.length - 2; counter += 2) {
+            params.add(args[counter] + " " + args[counter + 1]);
+        }
+        controller.changeMethodAccess(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
         makeReader();  
     }
 
@@ -491,6 +511,7 @@ public class CLI
         controller.addParameter(args[1], args[2], args[3], params, args[args.length - 3], args[args.length - 2], args[args.length - 1]);
         makeReader();  
     }
+
     /**
      * Deletes a given parameter from a methodDeletes a parameters from a method from a class in the store.
      */
@@ -498,6 +519,7 @@ public class CLI
     {
         makeReader();
     }
+
     /**
      * Creates a relationship between two classes Adds a relationship bewteen two classees in the store.
      */
@@ -513,7 +535,7 @@ public class CLI
         }
     }
     
-     /**
+    /**
      * Deletes a relationship created between two classes
      */
     private void deleteRelationship(String[] args) 
@@ -529,7 +551,7 @@ public class CLI
         } 
     }
 
-     /**
+    /**
      * Saves work into a json fileSaves a current diagram to a JSON file.
      */
     private void save(String[] args) {
@@ -541,7 +563,8 @@ public class CLI
         }
         view.save();
     }
-     /**
+
+    /**
      * Loads a jsonLoads a current diagram from a JSON file.
      */
     private void load(String[] args) {
@@ -566,6 +589,45 @@ public class CLI
     {
         view.showHelp();
     }
+
+    /**
+     * Gets a list of field names.
+     */
+    private ArrayList<String> getFieldNames(String className)
+    {
+        UML.model.Class c = store.findClass(className);
+        Set<Field> fields = c.getFields();
+        ArrayList<String> toReturn = new ArrayList<String>();
+        for(Field f : fields)
+        {
+            toReturn.add(f.getName());
+        }
+        return toReturn;
+    }
+
+    /**
+     * Gets a list of method strings.
+     */
+    private ArrayList<String> getMethodNames(String className)
+    {
+        UML.model.Class c = store.findClass(className);
+        Set<Method> methods = c.getMethods();
+        ArrayList<String> toReturn = new ArrayList<String>();
+        for(Method m : methods)
+        {
+            String toAdd = "";
+            toAdd += m.getType() + " ";
+            toAdd += m.getName() + " ";
+            for(Parameter param : m.getParams())
+            {
+                toAdd += param.toString() + " ";
+            }
+            toAdd += m.getAccessString(); 
+            toReturn.add(toAdd);
+        }
+        return toReturn;
+    }
+
 
     private List<String> buildCandidateList()
     {
@@ -596,160 +658,208 @@ public class CLI
      */
     private void makeReader()
     {
-        StringsCompleter classes = new StringsCompleter(store.getClassList());
-        String[] str = reader.getHistory().get(reader.getHistory().last()).split(" ");
-        if(store.findClass(str[1]).getFields().isEmpty() && store.findClass(str[1]).getMethods().isEmpty())
+        if(store.getClassStore().isEmpty())
         {
             completer = new TreeCompleter(
-                                node("addc"),
-                                node("renamec",
-                                    node(classes)
+            node("addc", "exit", "help", "showgui"));
+        }
+        else
+        {
+            StringsCompleter classes = new StringsCompleter(store.getClassList());
+            String[] str = reader.getHistory().get(reader.getHistory().last()).split(" ");
+            if(store.findClass(str[1]).getFields().isEmpty() && store.findClass(str[1]).getMethods().isEmpty())
+            {
+                completer = new TreeCompleter(
+                                    node(new StringsCompleter(new Candidate("addc ", "addc ", "class", "class name", " ", " ", false))),
+                                    node("renamec",
+                                        node(classes)
+                                        ),
+                                    node("deletec",
+                                        node(classes)
+                                        ),
+                                    node("addf",
+                                        node(classes)
+                                        ),
+                                    node("addm",
+                                        node(classes)
+                                        ),
+                                        node("addr",
+                                        node(classes,
+                                            node(classes, 
+                                                node(new StringsCompleter("Aggregation", "Composition", "Generalization", "Realization"))
+                                            )
+                                        )
                                     ),
-                                node("deletec",
-                                    node(classes)
+                                    node("deleter",
+                                        node(classes,
+                                            node(classes))
+                                        ),
+                                    node("help", "exit", "showgui")
+                                    );
+            }
+            else if(store.findClass(str[1]).getFields().isEmpty())
+            {
+                completer = new TreeCompleter(
+                                    node("addc"),
+                                    node("renamec",
+                                        node(classes)
                                     ),
-                                node("addf",
-                                    node(classes)
+                                    node("deletec",
+                                        node(classes)
                                     ),
-                                node("addr",
-                                    node(classes,
-                                        node(new StringsCompleter("Aggregation", "Composition", "Generalization", "Realization")
+                                    node("addf",
+                                        node(classes)
+                                    ),
+                                    node("addm",
+                                        node(classes)
+                                    ),
+                                    node("renamem",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
                                         )
-                                    )
-                                ),
-                                node("help", "exit", "showgui")
-                                );
+                                    ),   
+                                    node("changemt",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ),
+                                    node("changema",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ),
+                                    node("addr",
+                                        node(classes,
+                                            node(classes, 
+                                                node(new StringsCompleter("Aggregation", "Composition", "Generalization", "Realization"))
+                                            )
+                                        )
+                                    ),
+                                    node("deleter",
+                                        node(classes,
+                                            node(classes))
+                                        ),
+                                    node("help", "exit", "showgui")
+                                    );
+            }
+            else if(store.findClass(str[1]).getMethods().isEmpty())
+            {
+                completer = new TreeCompleter(
+                                    node("addc"),
+                                    node("renamec",
+                                        node(classes)
+                                    ),
+                                    node("deletec",
+                                        node(classes)
+                                    ),
+                                    node("addf",
+                                        node(classes)
+                                    ),
+                                    node("addm",
+                                        node(classes)
+                                    ),
+                                    node("renamef",
+                                        node(classes,
+                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            )
+                                        )
+                                    ),   
+                                    node("changeft",
+                                        node(classes,
+                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            )
+                                        )
+                                    ),
+                                    node("changefa",
+                                        node(classes,
+                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            )
+                                        )
+                                    ),
+                                    node("addr",
+                                        node(classes,
+                                            node(classes, 
+                                                node(new StringsCompleter("Aggregation", "Composition", "Generalization", "Realization"))
+                                            )
+                                        )
+                                    ),
+                                    node("deleter",
+                                        node(classes,
+                                            node(classes))
+                                        ),
+                                    node("help", "exit", "showgui")
+                                    );
+            }
+            else 
+            {
+                completer = new TreeCompleter(
+                                    node("addc"),
+                                    node("renamec",
+                                        node(classes)
+                                    ),
+                                    node("deletec",
+                                        node(classes)
+                                    ),
+                                    node("addf",
+                                        node(classes)
+                                    ),
+                                    node("renamef",
+                                        node(classes,
+                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            )
+                                        )
+                                    ), 
+                                    node("changeft",
+                                        node(classes,
+                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            )
+                                        )
+                                    ),
+                                    node("changefa",
+                                        node(classes,
+                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            )
+                                        )
+                                    ),
+                                    node("addm",
+                                        node(classes)
+                                    ),
+                                    node("renamem",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ),   
+                                    node("changemt",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ),
+                                    node("changema",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ),
+                                    node("addr",
+                                        node(classes,
+                                            node(classes, 
+                                                node(new StringsCompleter("Aggregation", "Composition", "Generalization", "Realization"))
+                                            )
+                                        )
+                                    ),
+                                    node("deleter",
+                                        node(classes,
+                                            node(classes))
+                                        ),
+                                    node("help", "exit", "showgui")
+                                    );
+            }
         }
-        else if(store.findClass(str[1]).getFields().isEmpty())
-        {
-            completer = new TreeCompleter(
-                                node("addc"),
-                                node("renamec",
-                                    node(classes)
-                                ),
-                                node("deletec",
-                                    node(classes)
-                                ),
-                                node("addf",
-                                    node(classes)
-                                ),
-                                node("addm",
-                                    node(classes)
-                                ),
-                                node("renamem",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
-                                        )
-                                    )
-                                ),   
-                                node("changemt",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
-                                        )
-                                    )
-                                ),
-                                node("changema",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
-                                        )
-                                    )
-                                ),
-                                node("help", "exit", "showgui")
-                                );
-        }
-        else if(store.findClass(str[1]).getMethods().isEmpty())
-        {
-            completer = new TreeCompleter(
-                                node("addc"),
-                                node("renamec",
-                                    node(classes)
-                                ),
-                                node("deletec",
-                                    node(classes)
-                                ),
-                                node("addf",
-                                    node(classes)
-                                ),
-                                node("addm",
-                                    node(classes)
-                                ),
-                                node("renamef",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
-                                        )
-                                    )
-                                ),   
-                                node("changeft",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
-                                        )
-                                    )
-                                ),
-                                node("changefa",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
-                                        )
-                                    )
-                                ),
-                                node("help", "exit", "showgui")
-                                );
-        }
-        else 
-        {
-            completer = new TreeCompleter(
-                                node("addc"),
-                                node("renamec",
-                                    node(classes)
-                                ),
-                                node("deletec",
-                                    node(classes)
-                                ),
-                                node("addf",
-                                    node(classes)
-                                ),
-                                node("renamef",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
-                                        )
-                                    )
-                                ), 
-                                node("changeft",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
-                                        )
-                                    )
-                                ),
-                                node("changefa",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getFieldList(store.findClass(str[1]).getFields()))
-                                        )
-                                    )
-                                ),
-                                node("addm",
-                                    node(classes)
-                                ),
-                                node("renamem",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
-                                        )
-                                    )
-                                ),   
-                                node("changemt",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
-                                        )
-                                    )
-                                ),
-                                node("changema",
-                                    node(classes,
-                                        node(new StringsCompleter(store.getMethodList(store.findClass(str[1]).getMethods()))
-                                        )
-                                    )
-                                ),
-                                node("help", "exit", "showgui")
-                                );
-        }
-
         reader = LineReaderBuilder.builder()
         .terminal(terminal)
         .history(history)
