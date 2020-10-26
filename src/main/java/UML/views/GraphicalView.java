@@ -64,11 +64,33 @@ public class GraphicalView implements View {
         this.relationships = new ConcurrentHashMap<ArrayList<String>, String>();
     }
 
+
+//================================================================================================================================================
+//Getters
+//================================================================================================================================================
+
+
     @Override
     public Map<String, JPanel> getPanels()
     {
         return this.classPanels;
     }
+
+    @Override
+    public Dimension getLoc(String name)
+    {
+        JPanel panel = classPanels.get(name);
+        int x = panel.getX();
+        int y = panel.getY();
+        Dimension loc = new Dimension(x, y);
+        return loc;
+    }
+
+
+//================================================================================================================================================
+//Panel chnages.
+//================================================================================================================================================
+
 
     /**
      * Creates a class panel to be displayed.
@@ -179,15 +201,6 @@ public class GraphicalView implements View {
         refresh();
     }
 
-    @Override
-    public Dimension getLoc(String name)
-    {
-        JPanel panel = classPanels.get(name);
-        int x = panel.getX();
-        int y = panel.getY();
-        Dimension loc = new Dimension(x, y);
-        return loc;
-    }
 
     /**
      * Helps update the window.
@@ -197,6 +210,12 @@ public class GraphicalView implements View {
         JTextArea textArea = (JTextArea) aPanel.getComponents()[0];
         textArea.setText(classInfo);
     }
+
+
+//================================================================================================================================================
+//Getting user input.
+//================================================================================================================================================
+
 
     /**
      * Gets a choice from the GUI user.
@@ -219,6 +238,8 @@ public class GraphicalView implements View {
         return strToRtn;
     }
 
+
+
     /**
      * Refreshes class panel window.
      */
@@ -236,6 +257,12 @@ public class GraphicalView implements View {
         }
         refresh();
     }
+
+
+//================================================================================================================================================
+//Save and Load.
+//================================================================================================================================================
+
 
     /**
      * Saves a JSON representation of the UML diagram.
@@ -282,6 +309,11 @@ public class GraphicalView implements View {
         //Get rid of window.  Make sure call save and load in controller.
 
     }
+
+
+//================================================================================================================================================
+//Window setup.
+//================================================================================================================================================
 
 
     /**
@@ -445,6 +477,12 @@ public class GraphicalView implements View {
         mb.add(relationshipMenu);
     }
 
+
+//================================================================================================================================================
+//Create, delete, resize class panels + refresh the window.
+//================================================================================================================================================
+
+
     /**
      * Creates a panel on the window to display information about a class.
      */
@@ -469,6 +507,36 @@ public class GraphicalView implements View {
         JPanel panel = classPanels.get(aClass);
         dp.remove(panel);
         classPanels.remove(aClass);
+        refresh();
+    }
+
+    /**
+     * Resizes panels to adjust to text of panel
+     */
+    public void resizePanel(String classToString, int x, int y)
+    {
+        JPanel panel = classPanels.get(classToString);
+        Scanner lineScanner = new Scanner(classToString);
+        int longest = 0;
+        int height = 0;
+        while(lineScanner.hasNextLine())
+        {
+            String line = lineScanner.nextLine();
+            Scanner scanner = new Scanner(line);
+            int localBest = 0;
+            while(scanner.hasNext())
+            {
+                localBest++;
+                scanner.next();
+            }
+            scanner.close();
+            ++height;
+            if(localBest > longest)
+                longest = localBest;
+        }
+        lineScanner.close();
+        panel.setLocation(x, y);
+        panel.setBounds(x, y, longest * 90, height * 20);
         refresh();
     }
 
@@ -517,6 +585,12 @@ public class GraphicalView implements View {
         JOptionPane.showMessageDialog(new JFrame(), error, "Error", JOptionPane.ERROR_MESSAGE);
 
     }
+
+
+//================================================================================================================================================
+//Listener adding.
+//================================================================================================================================================
+
 
     /**
      * Adds action lisnters for buttons.
@@ -586,17 +660,6 @@ public class GraphicalView implements View {
         }
     }
 
-    @Override
-    public void showHelp()
-    {
-        //Do nothing.
-    }
-
-    @Override
-    public void addListener(ActionListener listener) {
-        //Do nothing.
-    }
-
     /**
      * Adds listener for specified class panel.
      */
@@ -608,40 +671,20 @@ public class GraphicalView implements View {
         panel.addMouseMotionListener(mouseListener);
     }
 
-    /**
-     * Restores class panels to actual locations.
-     */
-    public void setPositions()
-    {
 
-    }
-    /**
-     * Resizes panels to adjust to text of panel
-     */
-    public void resizePanel(String classToString, int x, int y)
+//================================================================================================================================================
+//"Do Nothing" methods
+//================================================================================================================================================
+
+
+    @Override
+    public void showHelp()
     {
-        JPanel panel = classPanels.get(classToString);
-        Scanner lineScanner = new Scanner(classToString);
-        int longest = 0;
-        int height = 0;
-        while(lineScanner.hasNextLine())
-        {
-            String line = lineScanner.nextLine();
-            Scanner scanner = new Scanner(line);
-            int localBest = 0;
-            while(scanner.hasNext())
-            {
-                localBest++;
-                scanner.next();
-            }
-            scanner.close();
-            ++height;
-            if(localBest > longest)
-                longest = localBest;
-        }
-        lineScanner.close();
-        panel.setLocation(x, y);
-        panel.setBounds(x, y, longest * 90, height * 20);
-        refresh();
+        //Do nothing.
+    }
+
+    @Override
+    public void addListener(ActionListener listener) {
+        //Do nothing.
     }
 }
