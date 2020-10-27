@@ -60,7 +60,7 @@ public class GraphicalView implements View {
     private ConcurrentHashMap<ArrayList<String>, String> relationships;
 
     public GraphicalView() {
-        this.classPanels = new HashMap<String, JPanel>();
+        this.classPanels = new ConcurrentHashMap<String, JPanel>();
         this.relationships = new ConcurrentHashMap<ArrayList<String>, String>();
     }
 
@@ -188,16 +188,15 @@ public class GraphicalView implements View {
         }
         
         JPanel panel = classPanels.get(oldString);
-        /**
         int x = panel.getX();
         int y = panel.getY();
-        */
         Dimension loc = getLoc(oldString);
         classPanels.remove(oldString);
         classPanels.put(newString, panel);
         //Just sets TextArea.
         windowUpdateHelper(newString, loc);
         resizePanel(newString, (int)loc.getWidth(), (int)loc.getHeight());
+        resizePanel(newString, x, y);
         refresh();
     }
 
@@ -536,7 +535,7 @@ public class GraphicalView implements View {
         }
         lineScanner.close();
         panel.setLocation(x, y);
-        panel.setBounds(x, y, longest * 90, height * 20);
+        panel.setBounds(x, y, (longest * 20) + 150, height * 20);
         refresh();
     }
 

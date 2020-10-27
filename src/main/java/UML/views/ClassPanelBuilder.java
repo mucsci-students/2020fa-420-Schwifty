@@ -9,6 +9,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Scanner;
 
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 public class ClassPanelBuilder implements PanelBuilder
 {
     
@@ -67,6 +70,7 @@ public class ClassPanelBuilder implements PanelBuilder
     
     public JPanel makeNewClassPanel() 
     {
+        JMenuBar miniBar = new JMenuBar();
         JTextArea classText = new JTextArea(classData);
         Scanner lineScanner = new Scanner(classData);
         int longest = 0;
@@ -93,10 +97,22 @@ public class ClassPanelBuilder implements PanelBuilder
         JPanel left = new JPanel();
         left.setBackground(Color.BLUE);
         JPanel top = new JPanel();
+        
+        JMenu miniMenu = new JMenu("+"); 
+        miniMenu.setBackground(Color.darkGray);
+        JMenuItem crtField = new JMenuItem("Create field");
+        JMenuItem crtMethod = new JMenuItem("Create method");
+        JMenuItem delField = new JMenuItem("Delete field");
+        JMenuItem delMethod = new JMenuItem("Delete method");
+        miniMenu.add(crtField);
+        miniMenu.add(crtMethod);
+        miniMenu.add(delField);
+        miniMenu.add(delMethod);
         top.setBackground(Color.darkGray);
         JPanel bottom = new JPanel();
         bottom.setBackground(Color.darkGray);
         panel.add(left, BorderLayout.WEST);
+        panel.add(miniBar, BorderLayout.EAST);
         panel.add(top, BorderLayout.NORTH);
         panel.add(bottom, BorderLayout.SOUTH);
         panel.setBackground(Color.PINK);
@@ -105,6 +121,7 @@ public class ClassPanelBuilder implements PanelBuilder
         classText.setBorder(blackline);
         panel.setVisible(true);
         //parentWindow.add(panel);
+        miniBar.add(miniMenu);
         return panel;
     }
 

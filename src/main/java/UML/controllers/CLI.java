@@ -672,6 +672,7 @@ public class CLI
             if(store.findClass(str[1]).getFields().isEmpty() && store.findClass(str[1]).getMethods().isEmpty())
             {
                 completer = new TreeCompleter(
+                                    node("addc"),
                                     node("renamec",
                                         node(classes)
                                         ),

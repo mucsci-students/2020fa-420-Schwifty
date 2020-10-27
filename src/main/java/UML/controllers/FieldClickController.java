@@ -34,8 +34,8 @@ public class FieldClickController implements ActionListener {
 
         String cmd = e.getActionCommand();
         if (cmd.equals("CreateField")) {
-            String type = view.getInputFromUser("Type: ");
-            String name = view.getInputFromUser("Name: ");
+            String type = handleExceptions("Type: ", "Inavlid field name");
+            String name = handleExceptions("Name: ", "Invalid field name");
             
             ArrayList<String> accessTypes = new ArrayList<String>();
             accessTypes.add("public");
@@ -69,7 +69,7 @@ public class FieldClickController implements ActionListener {
             String field = view.getChoiceFromUser("Rename this field", "Rename atrribute", fieldList);
 
             // Open text input for new name.
-            String newField = view.getInputFromUser("Enter new field name: ");
+            String newField = handleExceptions("New field name: ", "Invalid field name");
             // Old field. 
             String[] att = field.split(" ");
             // Rename the field.
@@ -87,7 +87,7 @@ public class FieldClickController implements ActionListener {
             String field = view.getChoiceFromUser("Change this field's type", "Change Field Type", fieldList);
 
             // get the new type from the user and let the store know it can change.
-            String newType = view.getInputFromUser("New type: ");
+            String newType = handleExceptions("New field type: ", "Invalid field type");
             String[] att = field.split(" ");
             controller.changeFieldType(className, newType, att[1]);
 
@@ -101,12 +101,14 @@ public class FieldClickController implements ActionListener {
             String access = view.getChoiceFromUser("New access level", "New access level", accessTypes);
 
             // Get Type from user.
-            String returnType = view.getInputFromUser("Return Type: ");
+            String returnType = handleExceptions("Return Type: ", "Invalid return type");
             // Get name from user.
-            String name = view.getInputFromUser("Method Name: ");
+            String name = handleExceptions("Method Name: ", "Invalid method name");
             // Get number of parameters from user.
             boolean valid = false;
             int paramNum = getNumberFromInput(view.getInputFromUser("Number of Parameters: "));
+
+
             while(!valid)
             {
                 if(paramNum < 0)
@@ -123,8 +125,8 @@ public class FieldClickController implements ActionListener {
             ArrayList<String> params = new ArrayList<String>();
 
             for (int count = 0; count < paramNum; ++count) {
-                String paramType = view.getInputFromUser("Parameter Type: ");
-                String paramName = view.getInputFromUser("Parameter Name: ");
+                String paramType = handleExceptions("Parameter Type: ", "Invalid parameter type");
+                String paramName = handleExceptions("Parameter Name: ", "Invalid parameter name");
                 params.add(paramType + " " + paramName);
             }
             // Add field to the class using received params.
@@ -147,7 +149,7 @@ public class FieldClickController implements ActionListener {
             ArrayList<String> methodList = store.getMethodList(store.findClass(className).getMethods());
             String methodString = view.getChoiceFromUser("Rename this method", "Rename method", methodList);
 
-            String newMethod = view.getInputFromUser("Enter new method name: ");
+            String newMethod = handleExceptions("Enter new method name: ", "Invalid method name");
             
             String[] splitStr = methodString.split(" ");
             String access = splitStr[0];
@@ -226,5 +228,26 @@ public class FieldClickController implements ActionListener {
             paramNum = 0;
         }
         return paramNum;
+    }
+
+    /**
+	 * Prevents exceptions given exceptional behavior.
+	 */
+	private String handleExceptions(String prompt, String error)
+    {
+        boolean canCreate = false;
+        String name = view.getInputFromUser(prompt);
+			while(!canCreate)
+			{
+				if(name.trim().equals("") || name.contains(" "))
+				{
+					view.showError(error);
+					name = view.getInputFromUser(prompt);
+					canCreate = !(name.trim().equals("") || name.contains(" "));
+				}
+				else
+					canCreate = true;
+            }
+        return name;
     }
 }
