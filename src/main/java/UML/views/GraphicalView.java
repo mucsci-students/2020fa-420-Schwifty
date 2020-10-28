@@ -1,4 +1,5 @@
 package UML.views;
+
 /*
     Author: Chris, Cory, Dominic, Drew, Tyler. 
     Date: 10/06/2020
@@ -6,6 +7,7 @@ package UML.views;
  */
 import UML.model.Class;
 import javax.swing.JTextArea;
+import javax.swing.MenuElement;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -33,7 +35,8 @@ import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
-import UML.controllers.MouseClickAndDragController; 
+import UML.controllers.FieldClickController;
+import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
 import javax.swing.SwingUtilities;
 import java.awt.Graphics;
@@ -64,21 +67,23 @@ public class GraphicalView implements View {
         this.relationships = new ConcurrentHashMap<ArrayList<String>, String>();
     }
 
+    // ================================================================================================================================================
+    // Getters
+    // ================================================================================================================================================
 
-//================================================================================================================================================
-//Getters
-//================================================================================================================================================
-
-
+    /**
+     * Returns the map containing the class panels.
+     */
     @Override
-    public Map<String, JPanel> getPanels()
-    {
+    public Map<String, JPanel> getPanels() {
         return this.classPanels;
     }
 
+    /**
+     * Returns the dimension storing the location of a specific class panel.
+     */
     @Override
-    public Dimension getLoc(String name)
-    {
+    public Dimension getLoc(String name) {
         JPanel panel = classPanels.get(name);
         int x = panel.getX();
         int y = panel.getY();
@@ -86,18 +91,15 @@ public class GraphicalView implements View {
         return loc;
     }
 
-
-//================================================================================================================================================
-//Panel chnages.
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // Panel chnages.
+    // ================================================================================================================================================
 
     /**
      * Creates a class panel to be displayed.
      */
     @Override
-    public void createClass(String classToString, int x, int y) 
-    {
+    public void createClass(String classToString, int x, int y) {
         ClassPanelBuilder classPanelBuilder = new ClassPanelBuilder(classToString, dp);
         JPanel newClassPanel = classPanelBuilder.makeNewClassPanel();
         classPanels.put(classToString, newClassPanel);
@@ -114,14 +116,18 @@ public class GraphicalView implements View {
         deleteRelationships(name);
     }
 
-    public Map<ArrayList<String>, String> getRelationships()
-    {
+    /**
+     * Returns the map containing all the information about relationships in the view.
+     */
+    public Map<ArrayList<String>, String> getRelationships() {
         return relationships;
     }
 
+    /**
+     * Adds a relationship in the map that represents relationships between class panels.
+     */
     @Override
-    public void addRelationship(String from, String to, String type)
-    {
+    public void addRelationship(String from, String to, String type) {
         ArrayList<String> toAdd = new ArrayList<String>();
         toAdd.add(from);
         toAdd.add(to);
@@ -132,12 +138,9 @@ public class GraphicalView implements View {
      * Deletes a relationship between two class panels.
      */
     @Override
-    public void deleteRelationship(String from, String to)
-    {
-        for(ArrayList<String> classes : getRelationships().keySet())
-        {
-            if(classes.get(0).equals(from) && classes.get(1).equals(to))
-            {
+    public void deleteRelationship(String from, String to) {
+        for (ArrayList<String> classes : getRelationships().keySet()) {
+            if (classes.get(0).equals(from) && classes.get(1).equals(to)) {
                 relationships.remove(classes);
             }
         }
@@ -147,14 +150,10 @@ public class GraphicalView implements View {
      * Deletes all relationships from or a to a specified class.
      */
     private void deleteRelationships(String name) {
-        for(ArrayList<String> classes : getRelationships().keySet())
-        {
-            if(classes.get(0).equals(name))
-            {
+        for (ArrayList<String> classes : getRelationships().keySet()) {
+            if (classes.get(0).equals(name)) {
                 relationships.remove(classes);
-            }
-            else if(classes.get(1).equals(name))
-            {
+            } else if (classes.get(1).equals(name)) {
                 relationships.remove(classes);
             }
         }
@@ -165,19 +164,15 @@ public class GraphicalView implements View {
      */
     @Override
     public void updateClass(String oldString, String newString) {
-        for(ArrayList<String> classes : getRelationships().keySet())
-        {
-            if(classes.get(0).equals(oldString))
-            {
+        for (ArrayList<String> classes : getRelationships().keySet()) {
+            if (classes.get(0).equals(oldString)) {
                 String value = relationships.get(classes);
                 relationships.remove(classes);
                 ArrayList<String> toPut = new ArrayList<String>();
                 toPut.add(newString);
                 toPut.add(classes.get(1));
                 relationships.put(toPut, value);
-            }
-            else if(classes.get(1).equals(oldString))
-            {
+            } else if (classes.get(1).equals(oldString)) {
                 String value = relationships.get(classes);
                 relationships.remove(classes);
                 ArrayList<String> toPut = new ArrayList<String>();
@@ -186,20 +181,18 @@ public class GraphicalView implements View {
                 relationships.put(toPut, value);
             }
         }
-        
         JPanel panel = classPanels.get(oldString);
         int x = panel.getX();
         int y = panel.getY();
         Dimension loc = getLoc(oldString);
         classPanels.remove(oldString);
         classPanels.put(newString, panel);
-        //Just sets TextArea.
+        // Just sets TextArea.
         windowUpdateHelper(newString, loc);
-        resizePanel(newString, (int)loc.getWidth(), (int)loc.getHeight());
+        resizePanel(newString, (int) loc.getWidth(), (int) loc.getHeight());
         resizePanel(newString, x, y);
         refresh();
     }
-
 
     /**
      * Helps update the window.
@@ -207,14 +200,14 @@ public class GraphicalView implements View {
     private void windowUpdateHelper(String classInfo, Dimension loc) {
         JPanel aPanel = classPanels.get(classInfo);
         JTextArea textArea = (JTextArea) aPanel.getComponents()[0];
-        textArea.setText(classInfo);
+        int stop = classInfo.indexOf("Relationships To Others: ");
+        String newText =  classInfo.substring(0, stop);
+        textArea.setText(newText);
     }
 
-
-//================================================================================================================================================
-//Getting user input.
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // Getting user input.
+    // ================================================================================================================================================
 
     /**
      * Gets a choice from the GUI user.
@@ -222,8 +215,8 @@ public class GraphicalView implements View {
     @Override
     public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
         Object[] optionsToArray = options.toArray();
-        String strToRtn = (String) JOptionPane.showInputDialog(dp, msgOne, msgTwo, JOptionPane.PLAIN_MESSAGE,
-                null, optionsToArray, null);
+        String strToRtn = (String) JOptionPane.showInputDialog(dp, msgOne, msgTwo, JOptionPane.PLAIN_MESSAGE, null,
+                optionsToArray, null);
         return strToRtn;
     }
 
@@ -236,8 +229,6 @@ public class GraphicalView implements View {
 
         return strToRtn;
     }
-
-
 
     /**
      * Refreshes class panel window.
@@ -257,11 +248,9 @@ public class GraphicalView implements View {
         refresh();
     }
 
-
-//================================================================================================================================================
-//Save and Load.
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // Save and Load.
+    // ================================================================================================================================================
 
     /**
      * Saves a JSON representation of the UML diagram.
@@ -305,15 +294,13 @@ public class GraphicalView implements View {
      */
     @Override
     public void exit() {
-        //Get rid of window.  Make sure call save and load in controller.
+        // Get rid of window. Make sure call save and load in controller.
 
     }
 
-
-//================================================================================================================================================
-//Window setup.
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // Window setup.
+    // ================================================================================================================================================
 
     /**
      * Constructrs a UMLWindow object.
@@ -330,21 +317,24 @@ public class GraphicalView implements View {
         window.add(dp);
         window.setVisible(true);
         dp.setVisible(true);
-        //dp.setBackground(Color.BLUE);
+        // dp.setBackground(Color.BLUE);
         dp.setPreferredSize(new Dimension(800, 800));
         graphics = dp.getGraphics();
         graphics.setColor(Color.WHITE);
         dp.setLayout(null);
     }
 
+    /**
+     * Creates the menubar.
+     */
     public void createMenu() {
         // Set up the menu with helpers and add them to the main window.
         mb = new JMenuBar();
         createFileMenu(mb);
         createClassMenu(mb);
-        createAtrributeMenu(mb);
+        //createAtrributeMenu(mb);
         createRelationshipMenu(mb);
-        mb.setVisible(true);  
+        mb.setVisible(true);
     }
 
     /**
@@ -356,7 +346,7 @@ public class GraphicalView implements View {
     }
 
     /**
-     * Creates a file menu. 
+     * Creates a file menu.
      */
     private void createFileMenu(JMenuBar mb) {
         fileMenu = new JMenu("File");
@@ -426,20 +416,23 @@ public class GraphicalView implements View {
         JMenuItem crtMethod = new JMenuItem("Create method");
         JMenuItem deleteMethod = new JMenuItem("Delete method");
         JMenuItem rnMethod = new JMenuItem("Rename method");
+        JMenuItem chgMethodType = new JMenuItem("Change method type");
 
-        //Change the access of a field
+        // Change the access of a field
         JMenuItem chgFieldAccess = new JMenuItem("Change Field Access");
 
-        //Change the access level of a method
+        // Change the access level of a method
         JMenuItem chgMethodAccess = new JMenuItem("Change Method Access");
 
-        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod, chgFieldAccess, chgMethodAccess};
+        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod,
+                chgFieldAccess, chgMethodAccess, chgMethodType };
         String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
-                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method", "Change field access level", "Change method access level" };
+                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method",
+                "Change field access level", "Change method access level", "Change method type" };
         String[] command = { "CreateField", "DeleteField", "RenameField", "ChangeFieldType", "CreateMethod",
-                "DeleteMethod", "RenameMethod","ChangeFieldAccess", "ChangeMethodAccess"};
+                "DeleteMethod", "RenameMethod", "ChangeFieldAccess", "ChangeMethodAccess", "ChangeMethodType" };
 
-        for (int count = 0; count < 9; ++count) {
+        for (int count = 0; count < 10; ++count) {
             fieldMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
@@ -476,17 +469,14 @@ public class GraphicalView implements View {
         mb.add(relationshipMenu);
     }
 
-
-//================================================================================================================================================
-//Create, delete, resize class panels + refresh the window.
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // Create, delete, resize class panels + refresh the window.
+    // ================================================================================================================================================
 
     /**
      * Creates a panel on the window to display information about a class.
      */
-    public void makeNewClassPanel(String aClass) 
-    {
+    public void makeNewClassPanel(String aClass) {
         JPanel classPanel = new JPanel();
         JTextArea classText = new JTextArea(aClass);
         classText.setEditable(false);
@@ -512,25 +502,22 @@ public class GraphicalView implements View {
     /**
      * Resizes panels to adjust to text of panel
      */
-    public void resizePanel(String classToString, int x, int y)
-    {
+    public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
         Scanner lineScanner = new Scanner(classToString);
         int longest = 0;
         int height = 0;
-        while(lineScanner.hasNextLine())
-        {
+        while (lineScanner.hasNextLine()) {
             String line = lineScanner.nextLine();
             Scanner scanner = new Scanner(line);
             int localBest = 0;
-            while(scanner.hasNext())
-            {
+            while (scanner.hasNext()) {
                 localBest++;
                 scanner.next();
             }
             scanner.close();
             ++height;
-            if(localBest > longest)
+            if (localBest > longest)
                 longest = localBest;
         }
         lineScanner.close();
@@ -544,23 +531,24 @@ public class GraphicalView implements View {
      */
     public void refresh() {
         ArrayList<Dimension> dimensions = new ArrayList<Dimension>();
-        for(Map.Entry<String, JPanel> panel : classPanels.entrySet())
-        {
+        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
             dimensions.add(new Dimension(panel.getValue().getX(), panel.getValue().getY()));
         }
         dp.revalidate();
         dp.repaint();
         int counter = 0;
-        for(Map.Entry<String, JPanel> panel : classPanels.entrySet())
-        {
-            panel.getValue().setLocation((int)dimensions.get(counter).getWidth(), (int)dimensions.get(counter).getHeight());
+        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
+            panel.getValue().setLocation((int) dimensions.get(counter).getWidth(),
+                    (int) dimensions.get(counter).getHeight());
             ++counter;
         }
     }
-
+    
     /**
      * Updates the relationships visually in the window .
      */
+
+    /**
     public void updateDisplayRelationship(String classOne, String classTwo) {
         JPanel panelOne = classPanels.get(classOne);
         JTextArea textArea = (JTextArea) panelOne.getComponents()[0];
@@ -575,7 +563,8 @@ public class GraphicalView implements View {
         classPanels.put(classTwo, panelTwo);
         refresh();
     }
-
+    */
+    
     /**
      * Displays an error message.
      */
@@ -585,11 +574,9 @@ public class GraphicalView implements View {
 
     }
 
-
-//================================================================================================================================================
-//Listener adding.
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // Listener adding.
+    // ================================================================================================================================================
 
     /**
      * Adds action lisnters for buttons.
@@ -598,7 +585,7 @@ public class GraphicalView implements View {
             ActionListener relationshipListener) {
         addFileListeners(fileListener);
         addClassListeners(classListener);
-        addFieldListeners(fieldListener);
+        //addFieldListeners(fieldListener);
         addRelationshipListeners(relationshipListener);
     }
 
@@ -606,8 +593,7 @@ public class GraphicalView implements View {
      * Creates the initial window.
      */
     @Override
-    public void start()
-    {
+    public void start() {
         makeWindow();
         refresh();
     }
@@ -615,10 +601,10 @@ public class GraphicalView implements View {
     /**
      * Adds the listeners for the file buttons.
      */
-    private void addFileListeners(ActionListener fileListener) {
-        for (Component item : fileMenu.getMenuComponents()) 
-        {
-            JMenuItem menuItem = (JMenuItem)item;
+    private void addFileListeners(ActionListener fileListener) 
+    {
+        for (Component item : fileMenu.getMenuComponents()) {
+            JMenuItem menuItem = (JMenuItem) item;
             menuItem.addActionListener(fileListener);
         }
     }
@@ -626,11 +612,10 @@ public class GraphicalView implements View {
     /**
      * Adds the listeners for the class buttons.
      */
-    private void addClassListeners(ActionListener classListener)
+    private void addClassListeners(ActionListener classListener) 
     {
-        for (Component item : classMenu.getMenuComponents()) 
-        {
-            JMenuItem menuItem = (JMenuItem)item;
+        for (Component item : classMenu.getMenuComponents()) {
+            JMenuItem menuItem = (JMenuItem) item;
             menuItem.addActionListener(classListener);
         }
     }
@@ -638,11 +623,10 @@ public class GraphicalView implements View {
     /**
      * Adds the listeners for the field buttons.
      */
-    private void addFieldListeners(ActionListener fieldListener)
+    private void addFieldListeners(ActionListener fieldListener) 
     {
-        for (Component item : fieldMenu.getMenuComponents()) 
-        {
-            JMenuItem menuItem = (JMenuItem)item;
+        for (Component item : fieldMenu.getMenuComponents()) {
+            JMenuItem menuItem = (JMenuItem) item;
             menuItem.addActionListener(fieldListener);
         }
     }
@@ -650,11 +634,10 @@ public class GraphicalView implements View {
     /**
      * Adds the listeners for the relationship buttons.
      */
-    private void addRelationshipListeners(ActionListener relationshipListener)
+    private void addRelationshipListeners(ActionListener relationshipListener) 
     {
-        for (Component item : relationshipMenu.getMenuComponents()) 
-        {
-            JMenuItem menuItem = (JMenuItem)item;
+        for (Component item : relationshipMenu.getMenuComponents()) {
+            JMenuItem menuItem = (JMenuItem) item;
             menuItem.addActionListener(relationshipListener);
         }
     }
@@ -662,28 +645,49 @@ public class GraphicalView implements View {
     /**
      * Adds listener for specified class panel.
      */
-    @Override 
-    public void addListener(MouseClickAndDragController mouseListener, String classText)
+    @Override
+    public void addListener(MouseClickAndDragController mouseListener, String classText) 
     {
         JPanel panel = classPanels.get(classText);
         panel.addMouseListener(mouseListener);
         panel.addMouseMotionListener(mouseListener);
     }
 
+    /**
+     * Adds listener for editing a class panel.
+     */
+    @Override
+    public void addPanelListener(FieldClickController fieldController, String classText) 
+    {
+        JPanel panel = classPanels.get(classText);
+        JMenuBar menuBar = null;
+        for(Component c : panel.getComponents())
+        {
+            if(c instanceof JMenuBar)
+            {
+                menuBar = (JMenuBar)c;
+            }
+        }
+        JMenu menu = (JMenu) menuBar.getMenu(0);
+        for(int count = 0; count < 10; count++)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(count);
+            menuItem.addActionListener(fieldController);
+        }
+    }
 
-//================================================================================================================================================
-//"Do Nothing" methods
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // "Do Nothing" methods
+    // ================================================================================================================================================
 
     @Override
-    public void showHelp()
-    {
-        //Do nothing.
+    public void showHelp() {
+        // Do nothing.
     }
 
     @Override
     public void addListener(ActionListener listener) {
-        //Do nothing.
+        // Do nothing.
     }
+
 }

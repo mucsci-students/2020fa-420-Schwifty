@@ -11,7 +11,8 @@ import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
 import java.util.Map;
 import javax.swing.JFrame;
-import javax.swing.JPanel;;
+import javax.swing.JPanel;
+import UML.controllers.FieldClickController;
 
 public interface View
 {
@@ -29,6 +30,7 @@ public interface View
 	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener, ActionListener relationshipListener);
 	void addListener(ActionListener listener);
 	void addListener(MouseClickAndDragController mouseListener, String className);
+	void addPanelListener(FieldClickController fieldController, String classText);
 
 	void display(ArrayList<String> str);
 	void showError(String error);

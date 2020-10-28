@@ -12,15 +12,15 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import UML.controllers.FieldClickController;
 import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
 
 public class CommandlineView implements View {
 
-//================================================================================================================================================
-//Class changing methods.
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // Class changing methods.
+    // ================================================================================================================================================
 
     /**
      * Print updated class.
@@ -46,11 +46,9 @@ public class CommandlineView implements View {
         System.out.println("Class deleted");
     }
 
-
-//================================================================================================================================================
-//Information displaying methods.
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // Information displaying methods.
+    // ================================================================================================================================================
 
     /**
      * Print out each class.
@@ -95,7 +93,7 @@ public class CommandlineView implements View {
      */
     @Override
     public void exit() {
-        //Needs implmented in controller, here, and GUI.
+        // Needs implmented in controller, here, and GUI.
         System.out.println("Closing application.");
     }
 
@@ -164,71 +162,78 @@ public class CommandlineView implements View {
         System.out.println("                                     |___/ ");
     }
 
-
-//================================================================================================================================================
-//"Do Nothing" methods
-//================================================================================================================================================
-
+    // ================================================================================================================================================
+    // "Do Nothing" methods
+    // ================================================================================================================================================
 
     @Override
     public void addListener(ActionListener listener) {
-        //Do nothing.
+        // Do nothing.
     }
 
     @Override
     public void addListener(MouseClickAndDragController mouseListener, String classText) {
-        //Do nothing.
+        // Do nothing.
     }
 
     @Override
     public Dimension getLoc(String name) {
-        //Do nothing.
+        // Do nothing.
         return null;
     }
 
     @Override
     public void addRelationship(String from, String to, String type) {
-        //Do nothing.
+        // Do nothing.
     }
 
     @Override
     public void deleteRelationship(String from, String to) {
-        //Do nothing.
+        // Do nothing.
     }
 
     @Override
     public Map<ArrayList<String>, String> getRelationships() {
-        //Do nothing.
+        // Do nothing.
         return null;
     }
 
     @Override
     public JFrame getMainWindow() {
-        //Do nothing.
+        // Do nothing.
         return null;
     }
 
     @Override
     public Map<String, JPanel> getPanels() {
-        //Do nothing.
+        // Do nothing.
         return null;
     }
 
     @Override
-    public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
-        //Do nothing.
+    public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) 
+    {
+        // Do nothing.
         return null;
     }
 
     @Override
-    public String getInputFromUser(String prompt) {
-        //Do nothing.
+    public String getInputFromUser(String prompt) 
+    {
+        // Do nothing.
         return null;
     }
 
     @Override
     public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
-            ActionListener relationshipListener) {
+            ActionListener relationshipListener) 
+    {
+        // Do nothing.
+    }
+
+    @Override
+    public void addPanelListener(FieldClickController fieldController, String classText) 
+    {
         //Do nothing.
     }
 }

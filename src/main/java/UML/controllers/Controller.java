@@ -62,7 +62,9 @@ public class Controller
         view.showError("Class could not be created");     
     }
     
-    
+    /**
+     * Deletes a class from the store and view.
+     */
     public void deleteClass(String name) 
     {
         Class aClass = findClass(name);
@@ -349,6 +351,7 @@ public void deleteParameter(String className, String methodType, String methodNa
         {
             view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
             view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
+            view.addPanelListener(new FieldClickController(store, view, this), c.toString());
         }
         for(Class c : store.getClassStore())
         {

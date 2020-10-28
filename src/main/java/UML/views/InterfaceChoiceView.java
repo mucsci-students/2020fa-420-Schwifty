@@ -178,4 +178,10 @@ public class InterfaceChoiceView implements View {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public void addPanelListener(FieldClickController fieldController, String classText) 
+    {
+        //Do nothing.
+    }
 }
