@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import UML.model.Store;
 import UML.views.View;
 import UML.controllers.MouseClickAndDragController;
+import UML.controllers.FieldClickController;
 
 public class ClassClickController implements ActionListener
 {
@@ -24,7 +25,9 @@ public class ClassClickController implements ActionListener
 		this.store = s;
 		this.controller = c;
 	}
-	
+	/**
+	* Handles actions performed on a class 
+	 */
 	public void actionPerformed(ActionEvent e)
 	{
 		String cmd = e.getActionCommand();
@@ -36,7 +39,7 @@ public class ClassClickController implements ActionListener
 			controller.createClass(className);
 			String classText = store.findClass(className).toString();
 			view.addListener(new MouseClickAndDragController(store, view, controller), classText);
-			
+			view.addPanelListener(new FieldClickController(store, view, controller), classText);
 		}
 		else if(cmd.equals("Delete"))
 		{

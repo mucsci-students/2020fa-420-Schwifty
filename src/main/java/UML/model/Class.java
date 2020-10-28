@@ -11,9 +11,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
-
-//Holds the options for relationships between classes.
+import java.awt.Dimension;
 
 
 public class Class {
@@ -23,11 +23,14 @@ public class Class {
     // A set containing the fields of a class object.
     private Set<Field> fields;
     // The relationships from this class object to another.
-    private Map<String, RelationshipType> relationshipsToOther;
+    private ConcurrentHashMap<String, RelationshipType> relationshipsToOther;
     // The relationships from another class object to this one.
-    private Map<String, RelationshipType> relationshipsFromOther;
+    private ConcurrentHashMap<String, RelationshipType> relationshipsFromOther;
     // A set containing the class's methods.
     private Set<Method> methods;
+    //The position of the class to be used in the GUI.
+    Dimension location;
+
 
     /**
      * Constructs a class object that takes in a parameter for the name of the
@@ -44,9 +47,10 @@ public class Class {
         }
         this.name = name;
         this.fields = new HashSet<Field>();
-        this.relationshipsToOther = new HashMap<String, RelationshipType>();
-        this.relationshipsFromOther = new HashMap<String, RelationshipType>();
+        this.relationshipsToOther = new ConcurrentHashMap<String, RelationshipType>();
+        this.relationshipsFromOther = new ConcurrentHashMap<String, RelationshipType>();
         this.methods = new HashSet<Method>();
+        this.location = new Dimension(0, 0);
     }
 
 
@@ -95,6 +99,14 @@ public class Class {
         return this.relationshipsFromOther;
     }
 
+    /**
+     * Returns location associated with the class.
+     */
+    public Dimension getLocation()
+    {
+        return location;
+    }
+
 
 //================================================================================================================================================
 //Setters
@@ -114,6 +126,14 @@ public class Class {
             throw new IllegalArgumentException("The class name cannot contains spaces.");
         }
         this.name = name;
+    }
+
+    /**
+     * Sets the location associated with the class.
+     */
+    public void setLocation(Dimension d)
+    {
+        this.location = d;
     }
 
 
@@ -432,9 +452,6 @@ public class Class {
 //================================================================================================================================================
 //Other methods
 //================================================================================================================================================
-
-
-
     /**
      * Returns true if two class object are equal and false otehrwise.
      */

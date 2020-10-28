@@ -14,6 +14,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import UML.views.DrawPanel;
+import java.awt.Dimension;
+import UML.model.*;
 
 public class MouseClickAndDragController implements MouseListener, MouseMotionListener
 {
@@ -43,9 +45,14 @@ public class MouseClickAndDragController implements MouseListener, MouseMotionLi
         if(source instanceof JPanel)
         {
             JPanel found = (JPanel)source;
-
+            JTextArea text = (JTextArea)found.getComponent(0);
+            String[] rows = text.getText().split("\n");
+            String[] classString = rows[0].split(" ");
+            String className = classString[2];
+            UML.model.Class c = store.findClass(className);
             int newX = found.getX() + (e.getX() - startDragX);
             int newY = found.getY() + (e.getY() - startDragY);
+            c.setLocation(new Dimension(newX, newY));
             found.setLocation(newX, newY);
             view.getMainWindow().repaint();
             DrawPanel dp = new DrawPanel(view);

@@ -156,6 +156,12 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
+    public void deleteRelationship(String from, String to) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
     public Map<ArrayList<String>, String> getRelationships() {
         // TODO Auto-generated method stub
         return null;
@@ -171,5 +177,11 @@ public class InterfaceChoiceView implements View {
     public Map<String, JPanel> getPanels() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void addPanelListener(FieldClickController fieldController, String classText) 
+    {
+        //Do nothing.
     }
 }

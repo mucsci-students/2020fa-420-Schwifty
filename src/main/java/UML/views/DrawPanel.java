@@ -32,11 +32,21 @@ import javax.swing.BoxLayout;
 import javax.lang.model.util.ElementScanner6;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
-import java.awt.FlowLayout;
 import UML.controllers.MouseClickAndDragController; 
 import java.awt.Dimension;
 import javax.swing.SwingUtilities;
 import java.awt.Graphics;
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.ImageIcon;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.*;
+import java.awt.image.AffineTransformOp;
+
 
 public class DrawPanel extends JPanel 
 {
@@ -47,7 +57,7 @@ public class DrawPanel extends JPanel
         this.view = v;
     }
 
-    public void paintComponent(Graphics g) 
+    public void paintComponent(Graphics g)
     {
         g.setColor(Color.BLACK);
         for(Map.Entry<ArrayList<String>, String> relationship : view.getRelationships().entrySet())
@@ -60,54 +70,138 @@ public class DrawPanel extends JPanel
             int[] line = getClosest((int)fromLoc.getWidth(), (int)(fromLoc.getWidth() + fromSize.getWidth()), 
                                                 (int)fromLoc.getHeight(), (int)(fromLoc.getHeight() + fromSize.getHeight()), 
                                                 (int)toLoc.getWidth(), (int)(toLoc.getWidth() + toSize.getWidth()),
-                                                (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));
-            if(relationship.getValue().equals("Realization"))
+                                                (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));                            
+            if(relationship.getValue().equals("REALIZATION"))
             {
                 //Do a dotted line
-                
+                g.setColor(Color.BLACK);
+                Graphics2D g2d = (Graphics2D)g;
+                BasicStroke defaultStroke = (BasicStroke) g2d.getStroke();
+                BasicStroke dashLine = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 10 }, 0);
+                g2d.setStroke(dashLine);
+                g.drawLine(line[0], line[1], line[2], line[3]);
+                g2d.setStroke(defaultStroke);
+                drawCorrectShape(g2d, line[0], line[1], line[2], line[3], relationship.getValue());
             }
             else
             {
-                g.setColor(Color.PINK);
+                g.setColor(Color.BLACK);
                 g.drawLine(line[0], line[1], line[2], line[3]);
-                g.fillOval(line[4], line[5], 36, 36);
+                drawCorrectShape(g, line[0], line[1], line[2], line[3], relationship.getValue());
             }
-            //drawCorrectShape(g, line[0], line[1], relationship.getValue());
         }
     
     }
 
     /**
-     * 
+     * Draws the correct shape based on the relationship.
      */
-    public void drawCorrectShape(Graphics g, int x, int y, String relationship)
+    public void drawCorrectShape(Graphics g, int x, int y, int r, int s, String relationship)
     {
         //Open diamond.
-        if(relationship.equals("Aggregation"))
+        if(relationship.equals("AGGREGATION"))
         {
             g.setColor(Color.BLACK);
-            //g.rotate(90.0)
-            g.clearRect(x, y, 25, 25);
-
+            drawDiamond(g, x, y, r, s, false);
         }
         //Filled diamond.
-        else if(relationship.equals("Composition"))
+        else if(relationship.equals("COMPOSITION"))
         {
             g.setColor(Color.BLACK);
-            g.drawOval(x, y, 25, 25);
+            drawDiamond(g, x, y, r, s, true);
         }
         //Open arrow
-        else if(relationship.equals("Generalization"))
+        else if(relationship.equals("GENERALIZATION"))
         {
-            g.setColor(Color.MAGENTA);
-            g.drawOval(x, y, 25, 25);
+            g.setColor(Color.BLACK);
+            drawTriangle(g, x, y, r, s);
         }
         //Filled arrow
-        else if(relationship.equals("Realization"))
+        else if(relationship.equals("REALIZATION"))
         {
-            g.setColor(Color.CYAN);
-            g.drawOval(x, y, 25, 25);
+            g.setColor(Color.BLACK);
+            drawTriangle(g, x, y, r, s);
         }
+    }
+
+    /**
+     * Draws a triangle attached to the class panel.
+     */
+    private void drawTriangle(Graphics g2d, int x, int y, int r, int s)
+    {
+        //Above
+        if(y > s)
+        {
+            g2d.drawPolygon(new int[] {x, x - 15, x + 15}, new int[] {y, y - 15, y - 15}, 3);
+        }
+        //Right
+        else if(x > r)
+        {
+            g2d.drawPolygon(new int[] {x, x - 15, x - 15}, new int[] {y, y + 15, y - 15}, 3);
+        }
+        //Below
+        else if(s > y)
+        {
+            g2d.drawPolygon(new int[] {x, x - 15, x + 15}, new int[] {y, y + 15, y + 15}, 3);
+        }
+        //Left
+        else
+        {
+            g2d.drawPolygon(new int[] {x, x + 15, x + 15}, new int[] {y, y + 15, y - 15}, 3);
+        }
+    }
+    /**
+     * Draws a diamond attached to the class panel.
+     */
+    private void drawDiamond(Graphics g2d, int x, int y, int r, int s, boolean fill)
+    {
+        if(!fill)
+        {
+            //Above
+            if(s > y)
+            {
+                g2d.drawPolygon(new int[] {x - 15, x, x + 15, x}, new int[] {y + 15, y, y + 15, y + 30}, 4);
+            }
+            //Right
+            else if(x > r)
+            {
+                g2d.drawPolygon(new int[] {x - 30, x - 15, x, x - 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
+            }
+            //Below
+            else if(y > s)
+            {
+                g2d.drawPolygon(new int[] {x - 15, x, x + 15, x}, new int[] {y - 15, y - 30, y - 15, y}, 4);
+            }
+            //Left
+            else
+            {
+                g2d.drawPolygon(new int[] {x, x + 15, x + 30, x + 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
+            }
+        }   
+        else
+        {
+            //Above
+            if(s > y)
+            {
+                g2d.fillPolygon(new int[] {x - 15, x, x + 15, x}, new int[] {y + 15, y, y + 15, y + 30}, 4);
+            }
+            //Right
+            else if(x > r)
+            {
+                g2d.fillPolygon(new int[] {x - 30, x - 15, x, x - 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
+            }
+            //Below
+            else if(y > s)
+            {
+                g2d.fillPolygon(new int[] {x - 15, x, x + 15, x}, new int[] {y - 15, y - 30, y - 15, y}, 4);
+            }
+            //Left
+            else
+            {
+                g2d.fillPolygon(new int[] {x, x + 15, x + 30, x + 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
+            }
+        }
+
     }
 
     /**
@@ -116,7 +210,7 @@ public class DrawPanel extends JPanel
     public int[] getClosest(int fromLeft, int fromRight, int fromUp, int fromDown, int toLeft, int toRight, int toUp, int toDown)
     {
         //fromX, fromY, toX, toY.
-        int[] x = new int[6];
+        int[] x = new int[4];
         //From is to the right.
         if(fromLeft > toRight)
         {   
@@ -141,19 +235,13 @@ public class DrawPanel extends JPanel
                 {
                     x[1] = ((fromDown - toUp) / 2) + toUp;
                     x[3] = ((fromDown - toUp) / 2) + toUp;
-                    //x[4] = fromLeft;
-                    //x[5] = x[1] - 18;
                 }
                 else
                 {
                     x[1] = ((toDown - fromUp) / 2) + fromUp;
                     x[3] = ((toDown - fromUp) / 2) + fromUp;
-                    //x[4] = fromLeft;
-                    //x[5] = x[1] - 18;
                 }
             }
-            x[4] = fromLeft - 36;
-            x[5] = x[1] - 18;
         }
         //From is to the left.
         else if(fromRight < toLeft)
@@ -179,19 +267,13 @@ public class DrawPanel extends JPanel
                 {
                     x[1] = ((fromDown - toUp) / 2) + toUp;
                     x[3] = ((fromDown - toUp) / 2) + toUp;
-                    //x[4] = fromRight;
-                    //x[5] = x[1] - 18;
                 }
                 else
                 {
                     x[1] = ((toDown - fromUp) / 2) + fromUp;
                     x[3] = ((toDown - fromUp) / 2) + fromUp;
-                    //x[4] = fromRight;
-                    //x[5] = x[1] - 18;
                 }
             }
-            x[4] = fromRight;
-            x[5] = x[1] - 18;
         }
         //From is above.
         else if(fromDown < toUp)
@@ -217,19 +299,13 @@ public class DrawPanel extends JPanel
                 {
                     x[0] = ((fromRight - toLeft) / 2) + toLeft;
                     x[2] = ((fromRight - toLeft) / 2) + toLeft;
-                    //x[4] = x[0] - 18;
-                    //x[5] = fromDown;
                 }
                 else
                 {
                     x[0] = ((toRight - fromLeft) / 2) + fromLeft;
                     x[2] = ((toRight - fromLeft) / 2) + fromLeft;
-                    //x[4] = x[0] - 18;
-                    //x[5] = fromDown;
                 }
             }
-            x[4] = x[0] - 18;
-            x[5] = fromDown;
         }
         //From is below
         else if(fromUp > toDown)
@@ -255,19 +331,13 @@ public class DrawPanel extends JPanel
                 {
                     x[0] = ((fromRight - toLeft) / 2) + toLeft;
                     x[2] = ((fromRight - toLeft) / 2) + toLeft;
-                    //x[4] = x[0] - 18;
-                    //x[5] = fromUp;
                 }
                 else 
                 {
                     x[0] = ((toRight - fromLeft) / 2) + fromLeft;
                     x[2] = ((toRight - fromLeft) / 2) + fromLeft;
-                    //x[4] = x[0] - 18;
-                    //x[5] = fromUp;
                 }
             }
-            x[4] = x[0] - 18;
-            x[5] = fromUp -36;
         }
         else 
         {

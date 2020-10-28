@@ -10,6 +10,7 @@ import UML.model.Store;
 import UML.views.*;
 import java.util.ArrayList;
 import java.io.File;
+import java.util.Map;
 
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
@@ -61,16 +62,31 @@ public class Controller
         view.showError("Class could not be created");     
     }
     
-    
+    /**
+     * Deletes a class from the store and view.
+     */
     public void deleteClass(String name) 
     {
-    
         Class aClass = findClass(name);
+        ArrayList<String> oldClassStrings = new ArrayList<String>();
+        for(Class c : store.getClassStore())
+        {
+            if(!c.equals(aClass))
+            {
+                oldClassStrings.add(c.toString());
+            }
+        }
+        String classStr = aClass.toString();
         boolean temp = store.deleteClass(name);
         if (temp)
         {
-            String classStr = aClass.toString();
             view.deleteClass(classStr);
+            int counter = 0;
+            for(Class c : store.getClassStore())
+            {
+                view.updateClass(oldClassStrings.get(counter), c.toString());
+                counter++;
+            }
         }
         else
             view.showError("Class could not be deleted");
@@ -101,9 +117,6 @@ public class Controller
         Class aClass = findClass(className);
         String oldClassStr = aClass.toString();
         boolean temp = store.addField(className, type, name, access);
-        //view.deleteClass(oldClassStr);
-        //view.createClass(aClass.toString());
-        //view.addListener(new MouseClickAndDragController(store, view, this), aClass.toString());
         sendToView(temp, "Field", "created", className, oldClassStr);
     }
 
@@ -212,7 +225,7 @@ public class Controller
     }
 
 
- //================================================================================================================================================
+//================================================================================================================================================
 //Parameter methods
 //================================================================================================================================================
 
@@ -261,20 +274,8 @@ public void deleteParameter(String className, String methodType, String methodNa
                 view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
             else 
             {
-                //sendToView(temp, "Relationship", "added", from, fromOldStr);
-                //sendToView(temp, "Relationship", "added", to, toOldStr);
-                //Dimension fromLoc = view.getLoc(fromOldStr);
-                //Dimension toLoc = view.getLoc(toOldStr);
-                //view.deleteClass(fromOldStr);
-                //view.deleteClass(toOldStr);
                 String newFrom = store.findClass(from).toString();
                 String newTo = store.findClass(to).toString();
-                /**
-                view.createClass(newFrom, (int)fromLoc.getWidth(), (int)fromLoc.getHeight());
-                view.addListener(new MouseClickAndDragController(store, view, this), newFrom);
-                view.createClass(newTo, (int)toLoc.getWidth(), (int)toLoc.getHeight());
-                view.addListener(new MouseClickAndDragController(store, view, this), newTo);
-                */
                 view.updateClass(fromOldStr, newFrom);
                 view.updateClass(toOldStr, newTo);
                 view.addRelationship(newFrom, newTo, relation.toString());
@@ -302,9 +303,22 @@ public void deleteParameter(String className, String methodType, String methodNa
             view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
         else
         {
-            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName()); 
-            sendToView(temp, "Relationship", "deleted", from, fromOldStr);
-            sendToView(temp, "Relationship", "deleted", to, toOldStr);
+            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
+            //sendToView(temp, "Relationship", "deleted", from, fromOldStr);
+            //sendToView(temp, "Relationship", "deleted", to, toOldStr);
+            if (temp) 
+            {
+                String newFromStr = store.findClass(from).toString();
+                String newToStr = store.findClass(to).toString();
+                view.updateClass(fromOldStr, newFromStr);
+                view.updateClass(toOldStr, newToStr);
+                view.deleteRelationship(newFromStr, newToStr); 
+            } 
+            else
+            {
+                String error = "Relationship could not be deleted";
+                view.showError(error);
+            }
         }
     }
 
@@ -324,17 +338,29 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void load(String fileName) throws IOException, ParseException
     {
+        for(Class c : store.getClassStore())
+        {
+            view.deleteClass(c.toString());
+        }
         store.getClassStore().clear();
         
         SaveAndLoad sl = new SaveAndLoad(store, view, this);
         File currentFile = sl.load(fileName);
         store.setCurrentLoadedFile(currentFile);
-        ArrayList<String> toStrings = new ArrayList<String>();
         for(Class c : store.getClassStore())
         {
-            toStrings.add(c.toString());
+            view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
+            view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
+            view.addPanelListener(new FieldClickController(store, view, this), c.toString());
         }
-        view.display(toStrings);
+        for(Class c : store.getClassStore())
+        {
+            for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
+            {
+                view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
+            }
+        }
+        //view.display(toStrings);
     }
 
     /**

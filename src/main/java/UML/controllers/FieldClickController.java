@@ -29,13 +29,13 @@ public class FieldClickController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // Create a drop down list of created classes.
         ArrayList<String> classList = store.getClassList();
-
-        String className = view.getChoiceFromUser("Create Field for this class", "Create atrribute", classList);
-
         String cmd = e.getActionCommand();
-        if (cmd.equals("CreateField")) {
-            String type = view.getInputFromUser("Type: ");
-            String name = view.getInputFromUser("Name: ");
+        String[] cmdArr = cmd.split(" ");
+        String className = cmdArr[1];
+
+        if (cmdArr[0].equals("CreateField")) {
+            String type = handleExceptions("Type: ", "Inavlid field name");
+            String name = handleExceptions("Name: ", "Invalid field name");
             
             ArrayList<String> accessTypes = new ArrayList<String>();
             accessTypes.add("public");
@@ -46,7 +46,7 @@ public class FieldClickController implements ActionListener {
             // Add field to the class using received params.
             controller.createField(className, type, name, access);
 
-        } else if (cmd.equals("DeleteField")) {
+        } else if (cmdArr[0].equals("DeleteField")) {
             // Get class from storage.
             Class classToDeleteFrom = store.findClass(className);
 
@@ -58,7 +58,7 @@ public class FieldClickController implements ActionListener {
             String[] f = field.split(" ");
             controller.deleteField(className, f[2]);
 
-        } else if (cmd.equals("RenameField")) {
+        } else if (cmdArr[0].equals("RenameField")) {
             // Get class from storage.
             Class classToRenameFrom = store.findClass(className);
 
@@ -69,14 +69,14 @@ public class FieldClickController implements ActionListener {
             String field = view.getChoiceFromUser("Rename this field", "Rename atrribute", fieldList);
 
             // Open text input for new name.
-            String newField = view.getInputFromUser("Enter new field name: ");
+            String newField = handleExceptions("New field name: ", "Invalid field name");
             // Old field. 
             String[] att = field.split(" ");
             // Rename the field.
             controller.renameField(className, att[2], newField);
 
             
-        } else if (cmd.equals("ChangeFieldType")) {
+        } else if (cmdArr[0].equals("ChangeFieldType")) {
             // Get class from storage.
             Class classToChangeTypeFrom = store.findClass(className);
 
@@ -87,11 +87,11 @@ public class FieldClickController implements ActionListener {
             String field = view.getChoiceFromUser("Change this field's type", "Change Field Type", fieldList);
 
             // get the new type from the user and let the store know it can change.
-            String newType = view.getInputFromUser("New type: ");
+            String newType = handleExceptions("New field type: ", "Invalid field type");
             String[] att = field.split(" ");
             controller.changeFieldType(className, newType, att[1]);
 
-        } else if (cmd.equals("CreateMethod")) {
+        } else if (cmdArr[0].equals("CreateMethod")) {
             // Get the access level from the user.
             ArrayList<String> accessTypes = new ArrayList<String>();
             accessTypes.add("public");
@@ -101,12 +101,14 @@ public class FieldClickController implements ActionListener {
             String access = view.getChoiceFromUser("New access level", "New access level", accessTypes);
 
             // Get Type from user.
-            String returnType = view.getInputFromUser("Return Type: ");
+            String returnType = handleExceptions("Return Type: ", "Invalid return type");
             // Get name from user.
-            String name = view.getInputFromUser("Method Name: ");
+            String name = handleExceptions("Method Name: ", "Invalid method name");
             // Get number of parameters from user.
             boolean valid = false;
             int paramNum = getNumberFromInput(view.getInputFromUser("Number of Parameters: "));
+
+
             while(!valid)
             {
                 if(paramNum < 0)
@@ -123,14 +125,14 @@ public class FieldClickController implements ActionListener {
             ArrayList<String> params = new ArrayList<String>();
 
             for (int count = 0; count < paramNum; ++count) {
-                String paramType = view.getInputFromUser("Parameter Type: ");
-                String paramName = view.getInputFromUser("Parameter Name: ");
+                String paramType = handleExceptions("Parameter Type: ", "Invalid parameter type");
+                String paramName = handleExceptions("Parameter Name: ", "Invalid parameter name");
                 params.add(paramType + " " + paramName);
             }
             // Add field to the class using received params.
             controller.createMethod(className, returnType, name, params, access);
         } 
-        else if (cmd.equals("DeleteMethod")) {
+        else if (cmdArr[0].equals("DeleteMethod")) {
             // Get a list of methods to show user in a combo box.
             ArrayList<String> methods = store.getMethodList(store.findClass(className).getMethods());
             // Get their choice
@@ -143,20 +145,33 @@ public class FieldClickController implements ActionListener {
             
             controller.deleteMethod(className, returnType, methodName, store.getMethodParamString(className, methodString), access);
         } 
-        else if (cmd.equals("RenameMethod")) {
+        else if (cmdArr[0].equals("RenameMethod")) {
             ArrayList<String> methodList = store.getMethodList(store.findClass(className).getMethods());
             String methodString = view.getChoiceFromUser("Rename this method", "Rename method", methodList);
 
-            String newMethod = view.getInputFromUser("Enter new method name: ");
+            String newMethod = handleExceptions("Enter new method name: ", "Invalid method name");
             
             String[] splitStr = methodString.split(" ");
-            String access = splitStr[0];
-            String returnType = splitStr[1];
-            String methodName = splitStr[2];
+            String access = splitStr[1];
+            String returnType = splitStr[2];
+            String methodName = splitStr[3];
+            String accessString = "";
+            if(access.equals("+"))
+            {
+                accessString = "public";
+            }
+            else if(access.equals("-"))
+            {
+                accessString = "private";
+            }
+            else if(access.equals("*"))
+            {
+                accessString = "protected";
+            }
 
-            controller.renameMethod(className, returnType, methodName, store.getMethodParamString(className, methodString), access, newMethod);
+            controller.renameMethod(className, returnType, methodName, store.getMethodParamString(className, methodString), accessString, newMethod);
         }
-        else if(cmd.equals("ChangeFieldAccess"))
+        else if(cmdArr[0].equals("ChangeFieldAccess"))
         {
             // Get class from storage.
             Class aClass = store.findClass(className);
@@ -177,7 +192,7 @@ public class FieldClickController implements ActionListener {
             String newAccess = view.getChoiceFromUser("New access level", "New access level", accessTypes);
             controller.changeFieldAccess(className, fieldName, newAccess);
         }
-        else if(cmd.equals("ChangeMethodAccess"))
+        else if(cmdArr[0].equals("ChangeMethodAccess"))
         {
             ArrayList<String> methodList = store.getMethodList(store.findClass(className).getMethods());
             String methodString = view.getChoiceFromUser("Rename method access", "Method access", methodList);
@@ -199,9 +214,6 @@ public class FieldClickController implements ActionListener {
             }
             String returnType = splitStr[2];
             String methodName = splitStr[3];
-            System.out.println(accessString);
-            System.out.println(returnType);
-            System.out.println(methodName);
             ArrayList<String> accessTypes = new ArrayList<String>();
             accessTypes.add("public");
             accessTypes.add("private");
@@ -210,6 +222,33 @@ public class FieldClickController implements ActionListener {
             String newAccess = view.getChoiceFromUser("New access level", "New access level", accessTypes);
 
             controller.changeMethodAccess(className, returnType, methodName, store.getMethodParamString(className, methodString), accessString, newAccess);
+        }
+        else if(cmdArr[0].equals("ChangeMethodType"))
+        {
+            ArrayList<String> methodList = store.getMethodList(store.findClass(className).getMethods());
+            String methodString = view.getChoiceFromUser("Change this method's type", "Change method type", methodList);
+
+            String newMethod = handleExceptions("Enter new method type: ", "Invalid method type");
+            
+            String[] splitStr = methodString.split(" ");
+            String access = splitStr[1];
+            String returnType = splitStr[2];
+            String methodName = splitStr[3];
+            String accessString = "";
+            if(access.equals("+"))
+            {
+                accessString = "public";
+            }
+            else if(access.equals("-"))
+            {
+                accessString = "private";
+            }
+            else if(access.equals("*"))
+            {
+                accessString = "protected";
+            }
+
+            controller.changeMethodType(className, returnType, methodName, store.getMethodParamString(className, methodString), accessString, newMethod);
         }
     }
 
@@ -226,5 +265,26 @@ public class FieldClickController implements ActionListener {
             paramNum = 0;
         }
         return paramNum;
+    }
+
+    /**
+	 * Prevents exceptions given exceptional behavior.
+	 */
+	private String handleExceptions(String prompt, String error)
+    {
+        boolean canCreate = false;
+        String name = view.getInputFromUser(prompt);
+			while(!canCreate)
+			{
+				if(name.trim().equals("") || name.contains(" "))
+				{
+					view.showError(error);
+					name = view.getInputFromUser(prompt);
+					canCreate = !(name.trim().equals("") || name.contains(" "));
+				}
+				else
+					canCreate = true;
+            }
+        return name;
     }
 }
