@@ -34,7 +34,7 @@ public class FieldClickController implements ActionListener {
         String className = cmdArr[1];
 
         if (cmdArr[0].equals("CreateField")) {
-            String type = handleExceptions("Type: ", "Inavlid field name");
+            String type = handleExceptions("Type: ", "Inavlid field type");
             String name = handleExceptions("Name: ", "Invalid field name");
             
             ArrayList<String> accessTypes = new ArrayList<String>();
@@ -75,7 +75,7 @@ public class FieldClickController implements ActionListener {
             // Rename the field.
             controller.renameField(className, att[2], newField);
 
-            
+        
         } else if (cmdArr[0].equals("ChangeFieldType")) {
             // Get class from storage.
             Class classToChangeTypeFrom = store.findClass(className);

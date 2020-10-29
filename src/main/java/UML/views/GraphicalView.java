@@ -56,7 +56,7 @@ public class GraphicalView implements View {
 
     private JMenu fileMenu;
     private JMenu classMenu;
-    private JMenu fieldMenu;
+    private JMenu stateMenu;
     private JMenu relationshipMenu;
     private Graphics graphics;
     private DrawPanel dp;
@@ -332,7 +332,7 @@ public class GraphicalView implements View {
         mb = new JMenuBar();
         createFileMenu(mb);
         createClassMenu(mb);
-        //createAtrributeMenu(mb);
+        createStateMenu(mb);
         createRelationshipMenu(mb);
         mb.setVisible(true);
     }
@@ -401,43 +401,25 @@ public class GraphicalView implements View {
      * Creates the field menu options by taking in the menu bar and adding them to
      * it.
      */
-    private void createAtrributeMenu(JMenuBar mb)// change spelling later on
+    private void createStateMenu(JMenuBar mb)
     {
-        fieldMenu = new JMenu("Field");
+        stateMenu = new JMenu("State");
 
-        // Create field sub-menu.
-        JMenuItem crtField = new JMenuItem("Create field");
-        JMenuItem deleteField = new JMenuItem("Delete field");
-        JMenuItem rnField = new JMenuItem("Rename field");
-        // Add option to change the field's type.
-        JMenuItem chgFieldType = new JMenuItem("Change field type");
+    
+        JMenuItem undo = new JMenuItem("Undo");
 
-        // Create method buttons
-        JMenuItem crtMethod = new JMenuItem("Create method");
-        JMenuItem deleteMethod = new JMenuItem("Delete method");
-        JMenuItem rnMethod = new JMenuItem("Rename method");
-        JMenuItem chgMethodType = new JMenuItem("Change method type");
+        JMenuItem redo = new JMenuItem("Redo");
 
-        // Change the access of a field
-        JMenuItem chgFieldAccess = new JMenuItem("Change Field Access");
+        JMenuItem[] arr = {undo, redo};
+        String[] text = { "Undo", "Redo"};
+        String[] command = { "Undo", "Redo" };
 
-        // Change the access level of a method
-        JMenuItem chgMethodAccess = new JMenuItem("Change Method Access");
-
-        JMenuItem[] arr = { crtField, deleteField, rnField, chgFieldType, crtMethod, deleteMethod, rnMethod,
-                chgFieldAccess, chgMethodAccess, chgMethodType };
-        String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
-                "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method",
-                "Change field access level", "Change method access level", "Change method type" };
-        String[] command = { "CreateField", "DeleteField", "RenameField", "ChangeFieldType", "CreateMethod",
-                "DeleteMethod", "RenameMethod", "ChangeFieldAccess", "ChangeMethodAccess", "ChangeMethodType" };
-
-        for (int count = 0; count < 10; ++count) {
-            fieldMenu.add(arr[count]);
+        for (int count = 0; count < 2; ++count) {
+            stateMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
         }
-        mb.add(fieldMenu);
+        mb.add(stateMenu);
     }
 
     /**
@@ -581,11 +563,11 @@ public class GraphicalView implements View {
     /**
      * Adds action lisnters for buttons.
      */
-    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener,
             ActionListener relationshipListener) {
         addFileListeners(fileListener);
         addClassListeners(classListener);
-        //addFieldListeners(fieldListener);
+        addStateListeners(stateListener);
         addRelationshipListeners(relationshipListener);
     }
 
@@ -621,11 +603,11 @@ public class GraphicalView implements View {
     }
 
     /**
-     * Adds the listeners for the field buttons.
+     * Adds the listeners for the state buttons.
      */
-    private void addFieldListeners(ActionListener fieldListener) 
+    private void addStateListeners(ActionListener fieldListener) 
     {
-        for (Component item : fieldMenu.getMenuComponents()) {
+        for (Component item : stateMenu.getMenuComponents()) {
             JMenuItem menuItem = (JMenuItem) item;
             menuItem.addActionListener(fieldListener);
         }
