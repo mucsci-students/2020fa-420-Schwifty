@@ -105,7 +105,7 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
-    public void display(ArrayList<String> str) {
+    public void display(String str) {
         // Do nothing.
     }
 

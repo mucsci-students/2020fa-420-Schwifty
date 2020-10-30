@@ -136,7 +136,7 @@ public class Store {
 	public boolean deleteClass(String name)
 	{
 		Class temp = findClass(name);
-		if(findClass(name) != null)
+		if(findClass(name) != null) 
 		{
 			//Delete relationships before deleting class.
 			removeRelationships(temp);
@@ -154,6 +154,34 @@ public class Store {
 		if(findClass(newName) == null)
 		{
 			Class temp = findClass(oldName);
+			Map<String, RelationshipType> from = temp.getRelationshipsFromOther();
+			for(Map.Entry<String, RelationshipType> relate : from.entrySet())
+			{
+				Class c = findClass(relate.getKey());
+				Map<String, RelationshipType> inner = c.getRelationshipsToOther();
+				for(Map.Entry<String, RelationshipType> relate2 : inner.entrySet())
+				{
+					if(relate2.getKey().equals(oldName))
+					{
+						inner.remove(relate2.getKey());
+						inner.put(newName, relate2.getValue());
+					}
+				}
+			}
+			Map<String, RelationshipType> to = temp.getRelationshipsToOther();
+			for(Map.Entry<String, RelationshipType> relate : to.entrySet())
+			{
+				Class c = findClass(relate.getKey());
+				Map<String, RelationshipType> inner = c.getRelationshipsFromOther();
+				for(Map.Entry<String, RelationshipType> relate2 : inner.entrySet())
+				{
+					if(relate2.getKey().equals(oldName))
+					{
+						inner.remove(relate2.getKey());
+						inner.put(newName, relate2.getValue());
+					}
+				}
+			}
 			temp.setName(newName);
 			return true;
 		}

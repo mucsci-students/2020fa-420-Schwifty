@@ -27,12 +27,12 @@ public interface View
 	String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options);
     String getInputFromUser(String prompt);
 	
-	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener, ActionListener relationshipListener);
+	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener, ActionListener relationshipListener);
 	void addListener(ActionListener listener);
 	void addListener(MouseClickAndDragController mouseListener, String className);
 	void addPanelListener(FieldClickController fieldController, String classText);
 
-	void display(ArrayList<String> str);
+	void display(String str);
 	void showError(String error);
 	String save();
 	String load();
