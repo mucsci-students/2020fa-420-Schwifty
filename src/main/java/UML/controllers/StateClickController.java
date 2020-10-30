@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import UML.model.Class;
 import UML.model.Store;
+import UML.views.CommandlineView;
 import UML.views.View;
 
 public class StateClickController implements ActionListener {
@@ -30,6 +31,13 @@ public class StateClickController implements ActionListener {
         else if(cmd.equals("Redo"))
         {
             controller.redo();
+        }
+        else if(cmd.equals("CLI"))
+        {
+            controller.setGUIInvisible();
+            View v = new CommandlineView();
+            Controller c = new Controller(store, v);
+            CLI cli = new CLI(store, v, c);
         }
     }
     

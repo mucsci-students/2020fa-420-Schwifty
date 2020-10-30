@@ -35,6 +35,9 @@ public class Controller
     private File currentState;
     // The state change count for unique file names.
     private int count;
+    // True if a GUI exists already, false otherwise.
+    private boolean GUIExists;
+
     /**
      * Contructs a controller object.  Assigns action listeners to the correct buttons.
      */
@@ -42,6 +45,7 @@ public class Controller
     {
         this.store = store;
         this.view = view;
+        GUIExists = false;
         count = 0;
         String current = "" + count;
         currentState = new File(current);
@@ -59,9 +63,47 @@ public class Controller
 
 
 //================================================================================================================================================
-//Class methods
+//Getters
 //================================================================================================================================================
 
+
+/**
+ * Returns the value of GUIExists.
+ */
+public boolean getGUIExists()
+{
+    return GUIExists;
+}
+
+
+//================================================================================================================================================
+//Setters
+//================================================================================================================================================
+
+
+/**
+ * Sets the value of GUIExists to true.
+ */
+public void setGUIExists()
+{
+    GUIExists = true;
+}
+
+/**
+ * Sets GUI to be invisible.
+ */
+public void setGUIInvisible()
+{
+    view.setGUIInvisible();
+}
+
+/**
+ * Sets GUI to be invisible.
+ */
+public void setGUIVisible()
+{
+    view.setGUIVisible();
+}
 
 //================================================================================================================================================
 //Class methods

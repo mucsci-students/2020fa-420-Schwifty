@@ -149,7 +149,7 @@ public class CommandlineView implements View {
         System.out.println(
                 "load [fileName]:                                                                                            Loads the passed in file name");
         System.out.println(
-                "display [className]:                                                                                         Displays a class");
+                "display [(Optional) className]:                                                                             Displays a class");
     }
 
 
@@ -238,6 +238,18 @@ public class CommandlineView implements View {
 
     @Override
     public void addPanelListener(FieldClickController fieldController, String classText) 
+    {
+        //Do nothing.
+    }
+
+    @Override
+    public void setGUIInvisible()
+    {
+        //Do nothing.
+    }
+
+    @Override
+    public void setGUIVisible()
     {
         //Do nothing.
     }

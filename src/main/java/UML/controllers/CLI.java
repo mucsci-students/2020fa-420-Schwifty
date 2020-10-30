@@ -253,32 +253,47 @@ public class CLI
      */
     private void showGUI() 
     {
-        try 
+        if(controller.getGUIExists())
         {
-            controller.save("toLoad");
-        } 
-        catch (IOException e) 
-        {
-            e.printStackTrace();
+            view.setGUIVisible();
+            try
+            {
+                terminal.close();
+            }
+            catch(Exception e)
+            {
+
+            }
         }
-        
-        Store s = new Store();
-        GraphicalView v = new GraphicalView();
-        Controller c = new Controller(s, v);
-        v.start();
-        c.addListeners();
-        try 
+        else
         {
-            terminal.close();
-            c.load("toLoad.JSON");
-        } 
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        } 
-        catch (org.json.simple.parser.ParseException e) 
-        {
-            e.printStackTrace();
+            try 
+            {
+                controller.save("toLoad");
+            } 
+            catch (IOException e) 
+            {
+                e.printStackTrace();
+            }
+            
+            Store s = new Store();
+            GraphicalView v = new GraphicalView();
+            Controller c = new Controller(s, v);
+            v.start();
+            c.addListeners();
+            try 
+            {
+                terminal.close();
+                c.load("toLoad.JSON");
+            } 
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            } 
+            catch (org.json.simple.parser.ParseException e) 
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -577,7 +592,7 @@ public class CLI
      * Prints a thicc boi.
      */
     private void chungus() {
-        System.out.println("THICCC BOY void");
+        System.out.println("THICCC BOY");
     }
 
     /**

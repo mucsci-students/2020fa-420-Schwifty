@@ -57,6 +57,7 @@ import java.awt.FlowLayout;
                     //Opens the CLI version of the app.
                     v.start();
                     c.addListeners();
+                    controller.setGUIExists();
                 }
             }
             else 
