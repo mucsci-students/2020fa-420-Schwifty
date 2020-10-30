@@ -54,12 +54,8 @@ public class CommandlineView implements View {
      * Print out each class.
      */
     @Override
-    public void display(ArrayList<String> str) {
-        for (String s : str) {
-            System.out.println("-------------------------------");
-            System.out.println(s);
-            System.out.println("-------------------------------");
-        }
+    public void display(String str) {
+        System.out.println(str);
     }
 
     /**
@@ -111,42 +107,51 @@ public class CommandlineView implements View {
     @Override
     public void showHelp() {
         System.out.println(
-                "exit:                                                                                            Close CLI");
+                "exit:                                                                                                       Close CLI");
         System.out.println(
-                "help:                                                                                            Show all options");
+                "help:                                                                                                       Show all options");
         System.out.println(
-                "display:                                                                                         Display all classes");
+                "display:                                                                                                    Display all classes");
         System.out.println(
-                "showgui:                                                                                         Displays the GUI");
+                "showgui:                                                                                                    Displays the GUI");
         System.out.println(
-                "addc [class]:                                                                                    Create a class");
+                "addc [class]:                                                                                               Create a class");
         System.out.println(
-                "renamec [oldName] [newName]:                                                                     Rename a class");
+                "renamec [oldName] [newName]:                                                                                Rename a class");
         System.out.println(
-                "deletec [class]:                                                                                 Delete a class");
+                "deletec [class]:                                                                                            Delete a class");
         System.out.println(
-                "addf [class] [type] [name] [public or private or protected]:                                                                      Create a field");
+                "addf [class] [type] [name] [public or private or protected]:                                                Create a field");
         System.out.println(
-                "renamef [className] [oldName][newName]:                                                          Rename a field");
+                "renamef [className] [oldName][newName]:                                                                     Rename a field");
         System.out.println(
-                "deletef [class] [FieldName]:                                                                     Delete a field");
+                "deletef [class] [FieldName]:                                                                                Delete a field");
         System.out.println(
-                "changefa [class] [fieldName] [public or private or protected]:                                   Change field access");
+                "changefa [class] [fieldName] [public or private or protected]:                                              Change field access");
         System.out.println(
-                "addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                            Add a method");
+                "changeft [class] [fieldName] [newType]:                                                                     Change field type");
         System.out.println(
-                "renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:      Rename a method");
+                "addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                                       Add a method");
         System.out.println(
-                "deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                         Delete a method");
+                "renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:                 Rename a method");
         System.out.println(
-                "addr [classFrom] [classTo] [relateType]:                                                         Add a relationship");
+                "deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                                    Delete a method");
         System.out.println(
-                "deleter [classFrom] [classTo]:                                                                   Delete a relationship");
+                "changema [class] [methodType] [methodName] [[paramType] [paramName] ...] [public or private or protected]:  Change method access");
         System.out.println(
-                "save [fileName]:                                                                                 Saves to passed in file name");
+                "changemt [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType]:                         Change method type");
         System.out.println(
-                "load [fileName]:                                                                                 Loads the passed in file name");
+                "addr [classFrom] [classTo] [relateType]:                                                                    Add a relationship");
+        System.out.println(
+                "deleter [classFrom] [classTo]:                                                                              Delete a relationship");
+        System.out.println(
+                "save [fileName]:                                                                                            Saves to passed in file name");
+        System.out.println(
+                "load [fileName]:                                                                                            Loads the passed in file name");
+        System.out.println(
+                "display [className]:                                                                                         Displays a class");
     }
+
 
     /**
      * Prints the cli header.

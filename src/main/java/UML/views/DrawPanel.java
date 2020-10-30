@@ -129,6 +129,26 @@ public class DrawPanel extends JPanel
      */
     private void drawTriangle(Graphics g2d, int x, int y, int r, int s)
     {
+        double theta = Math.atan2(s - y, r - x);
+        if(theta < 0)
+            theta+= 2 * Math.PI;
+        int[] xValues = {0, 15, 15};
+        int[] yValues = {0, 15, -15};
+        int[][] pointMatrix = {xValues, yValues};
+        int[][] resultMatrix = new int[pointMatrix.length][pointMatrix[0].length];
+        int size = 3;
+        for(int count = 0; count < size; count++)
+        {
+            resultMatrix[0][count] = (int)Math.round(Math.cos(theta) * pointMatrix[0][count]) - (int)Math.round(Math.sin(theta) * pointMatrix[1][count]);
+            resultMatrix[1][count] = (int)Math.round(Math.sin(theta) * pointMatrix[0][count]) + (int)Math.round(Math.cos(theta) * pointMatrix[1][count]);
+        }
+        for(int count = 0; count < size; count++)
+        {
+            resultMatrix[0][count] += x;
+            resultMatrix[1][count] += y;
+        }
+        g2d.drawPolygon(resultMatrix[0], resultMatrix[1], 3);
+        /**
         //Above
         if(y > s)
         {
@@ -149,12 +169,40 @@ public class DrawPanel extends JPanel
         {
             g2d.drawPolygon(new int[] {x, x + 15, x + 15}, new int[] {y, y + 15, y - 15}, 3);
         }
+        */
     }
     /**
      * Draws a diamond attached to the class panel.
      */
     private void drawDiamond(Graphics g2d, int x, int y, int r, int s, boolean fill)
     {
+        double theta = Math.atan2(s - y, r - x);
+        if(theta < 0)
+            theta+= 2 * Math.PI;
+        int[] xValues = {0, 15, 30, 15};
+        int[] yValues = {0, 15, 0, -15};
+        int[][] pointMatrix = {xValues, yValues};
+        int[][] resultMatrix = new int[pointMatrix.length][pointMatrix[0].length];
+        int size = 4;
+        for(int count = 0; count < size; count++)
+        {
+            resultMatrix[0][count] = (int)Math.round(Math.cos(theta) * pointMatrix[0][count]) - (int)Math.round(Math.sin(theta) * pointMatrix[1][count]);
+            resultMatrix[1][count] = (int)Math.round(Math.sin(theta) * pointMatrix[0][count]) + (int)Math.round(Math.cos(theta) * pointMatrix[1][count]);
+        }
+        for(int count = 0; count < size; count++)
+        {
+            resultMatrix[0][count] += x;
+            resultMatrix[1][count] += y;
+        }
+        if(fill)
+        {
+            g2d.fillPolygon(resultMatrix[0], resultMatrix[1], 4);
+        }
+        else
+        {
+            g2d.drawPolygon(resultMatrix[0], resultMatrix[1], 4);
+        }
+        /**
         if(!fill)
         {
             //Above
@@ -201,6 +249,7 @@ public class DrawPanel extends JPanel
                 g2d.fillPolygon(new int[] {x, x + 15, x + 30, x + 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
             }
         }
+        */
 
     }
 

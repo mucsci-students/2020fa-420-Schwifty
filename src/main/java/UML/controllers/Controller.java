@@ -339,21 +339,19 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void load(String fileName) throws IOException, ParseException
     {
-        for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
+        if(view.getPanels() != null)
         {
-            view.deleteClass(entry.getKey());
+            for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
+            {
+                view.deleteClass(entry.getKey());
+            }
         }
-        /**
-        for(Class c : store.getClassStore())
-        {
-            view.deleteClass(c.toString());
-        }
-        */
         store.getClassStore().clear();
         
         SaveAndLoad sl = new SaveAndLoad(store, view, this);
         File currentFile = sl.load(fileName);
         store.setCurrentLoadedFile(currentFile);
+        
         for(Class c : store.getClassStore())
         {
             view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
@@ -367,7 +365,6 @@ public void deleteParameter(String className, String methodType, String methodNa
                 view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
             }
         }
-        //view.display(toStrings);
     }
 
     public void loadFromMenu(String fileName) throws IOException, ParseException
@@ -376,12 +373,6 @@ public void deleteParameter(String className, String methodType, String methodNa
         {
             view.deleteClass(entry.getKey());
         }
-        /**
-        for(Class c : store.getClassStore())
-        {
-            view.deleteClass(c.toString());
-        }
-        */
         store.getClassStore().clear();
         
         SaveAndLoad sl = new SaveAndLoad(store, view, this);
@@ -406,7 +397,6 @@ public void deleteParameter(String className, String methodType, String methodNa
         currentState = new File(toSave);
         save(toSave);
         load(toSave + ".json");
-        //view.display(toStrings);
     }
 
     /**
@@ -470,7 +460,7 @@ public void deleteParameter(String className, String methodType, String methodNa
         }
         catch(Exception e)
         {
-            System.out.println(e.getMessage());
+            view.showError("ERROR");
         }
     }
 
@@ -488,7 +478,6 @@ public void deleteParameter(String className, String methodType, String methodNa
                 undo.push(currentState);
                 save(currentState.getName());
                 currentState = redo.pop();
-                System.out.println(currentState.getName());
                 load(currentState.getName() + ".json");
             }
             catch(Exception e)
@@ -513,13 +502,10 @@ public void deleteParameter(String className, String methodType, String methodNa
                 redo.push(currentState);
                 save(currentState.getName());
                 currentState = undo.pop();
-                System.out.println(currentState.getName());
                 load(currentState.getName() + ".json");
             }
             catch (Exception e)
             {
-                System.out.println(e.getMessage() + "\n\n\n");
-                e.printStackTrace();
                 view.showError("ERROR");
             }
         }

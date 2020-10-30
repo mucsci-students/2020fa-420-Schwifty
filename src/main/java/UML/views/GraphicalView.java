@@ -230,23 +230,6 @@ public class GraphicalView implements View {
         return strToRtn;
     }
 
-    /**
-     * Refreshes class panel window.
-     */
-    @Override
-    public void display(ArrayList<String> toStrings) {
-
-        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
-            dp.remove(panel.getValue());
-        }
-
-        classPanels.clear();
-
-        for (String s : toStrings) {
-            makeNewClassPanel(s);
-        }
-        refresh();
-    }
 
     // ================================================================================================================================================
     // Save and Load.
@@ -670,6 +653,11 @@ public class GraphicalView implements View {
     @Override
     public void addListener(ActionListener listener) {
         // Do nothing.
+    }
+
+    @Override
+    public void display(String toStrings) {
+        //Do nothing.
     }
 
 }

@@ -32,7 +32,7 @@ public interface View
 	void addListener(MouseClickAndDragController mouseListener, String className);
 	void addPanelListener(FieldClickController fieldController, String classText);
 
-	void display(ArrayList<String> str);
+	void display(String str);
 	void showError(String error);
 	String save();
 	String load();

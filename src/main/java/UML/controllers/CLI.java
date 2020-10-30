@@ -131,10 +131,6 @@ public class CLI
         {
             help();
         } 
-        else if (line[0].equals(("display"))) 
-        {
-            display();
-        } 
         else if (line[0].equals(("showgui"))) 
         {
             showGUI();
@@ -221,6 +217,10 @@ public class CLI
         {
             deleteRelationship(line);
         } 
+        else if(line[0].equals(("display")))
+        {
+            display(line);
+        }
         else 
         {
             System.out.println("That is not a valid command.");
@@ -246,14 +246,6 @@ public class CLI
     private void help() 
     {
         helpPage();
-    }
-
-    /**
-     * Displays the current structure of the models.
-     */
-    private void display() 
-    {
-        view.display(store.stringOfClasses());
     }
 
     /**
@@ -572,10 +564,14 @@ public class CLI
     private void load(String[] args) {
         try {
             controller.load(args[1]);
-        } catch (Exception e) {
-            System.out.println("Invalid arguments");
+            view.load();
+            makeReader();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            view.showError("Invalid file name");
         }
-        view.load();
     }
     /**
      * Prints a thicc boi.
@@ -630,29 +626,32 @@ public class CLI
         return toReturn;
     }
 
-
-    private List<String> buildCandidateList()
+    /**
+     * Displays a specified class.
+     */
+    private void display(String[] args)
     {
-        List<String> candidates = new LinkedList<String>();
-        candidates.add("addc");
-        candidates.add("deletec");
-        candidates.add("renamec");
-        candidates.add("addf");
-        candidates.add("deletef");
-        candidates.add("renamef");
-        candidates.add("changefa");
-        candidates.add("changeft");
-        candidates.add("addm");
-        candidates.add("deletem");
-        candidates.add("renamem");
-        candidates.add("changema");
-        candidates.add("changemt");
-        candidates.add("addr");
-        candidates.add("deleter");
-        candidates.add("exit");
-        candidates.add("help");
-
-        return candidates;
+        if(args.length == 1)
+        {
+            String classes = "";
+            for(UML.model.Class c : store.getClassStore())
+            {
+                classes+= c.toString() + "\n";
+            }
+            view.display(classes);
+        }
+        else
+        {
+            UML.model.Class aClass = store.findClass(args[1]);
+            if(aClass == null)
+            {
+                view.showError("Class does not exist");
+            }
+            else
+            {
+                view.display(aClass.toString());
+            }
+        }
     }
 
     /**
@@ -667,9 +666,10 @@ public class CLI
         }
         else
         {
+            
             StringsCompleter classes = new StringsCompleter(store.getClassList());
             String[] str = reader.getHistory().get(reader.getHistory().last()).split(" ");
-            if(store.findClass(str[1]).getFields().isEmpty() && store.findClass(str[1]).getMethods().isEmpty())
+            if(str[0].equals("load") || store.findClass(str[1]).getFields().isEmpty() && store.findClass(str[1]).getMethods().isEmpty())
             {
                 completer = new TreeCompleter(
                                     node("addc"),
@@ -696,7 +696,9 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load")
+                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("display",
+                                        node(classes))
                                     );
             }
             else if(store.findClass(str[1]).getFields().isEmpty())
@@ -744,7 +746,9 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load")
+                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("display",
+                                        node(classes))
                                     );
             }
             else if(store.findClass(str[1]).getMethods().isEmpty())
@@ -792,7 +796,9 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load")
+                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("display",
+                                        node(classes))
                                     );
             }
             else 
@@ -858,7 +864,9 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load")
+                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("display",
+                                        node(classes))
                                     );
             }
         }
