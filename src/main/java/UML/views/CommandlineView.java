@@ -150,6 +150,7 @@ public class CommandlineView implements View {
                 "load [fileName]:                                                                                            Loads the passed in file name");
         System.out.println(
                 "display [(Optional) className]:                                                                             Displays a class");
+                "display [className]:                                                                                        Displays a class");
     }
 
 

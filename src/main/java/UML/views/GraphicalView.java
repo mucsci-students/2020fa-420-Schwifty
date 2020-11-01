@@ -664,15 +664,4 @@ public class GraphicalView implements View {
     public void display(String toStrings) {
         //Do nothing.
     }
-
-
-
-
-
-
-
-
-
-
-
 }

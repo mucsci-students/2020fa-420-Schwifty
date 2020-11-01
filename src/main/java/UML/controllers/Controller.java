@@ -37,7 +37,6 @@ public class Controller
     private int count;
     // True if a GUI exists already, false otherwise.
     private boolean GUIExists;
-
     /**
      * Contructs a controller object.  Assigns action listeners to the correct buttons.
      */
