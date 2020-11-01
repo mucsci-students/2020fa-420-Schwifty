@@ -20,7 +20,9 @@ Selecting class and clicking the okay button will open a prompt to rename the cl
 
 ## State 
 **Undo:** Reverses the last change made to the GUI.
+
 **Redo:** Redo a change that was undone by undo.
+
 **CLI**: Shows the CLI 
 
 ## Relate
@@ -30,6 +32,7 @@ Selecting class and clicking the okay button will open a prompt to rename the cl
 
 ## Class Menu
 Menu within a class panel
+
 **Create field:** Select from a drop-box of created classes. Selecting class and clicking the okay button will open two prompts to create an attribute under this class. This prompt includes a **type** and a **name**.  
 
 **Delete field:** Select from a drop-box of created classes. Selecting class and clicking the okay button will open a drop-box of attributes under that class. Clicking okay after selecting an attribute will delete it.  
