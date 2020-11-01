@@ -151,36 +151,46 @@ public class InterfaceChoiceView implements View {
 
     @Override
     public void addRelationship(String from, String to, String type) {
-        // TODO Auto-generated method stub
+        //Do nothing.
 
     }
 
     @Override
     public void deleteRelationship(String from, String to) {
-        // TODO Auto-generated method stub
-        
+        //DO nothing.
     }
 
     @Override
     public Map<ArrayList<String>, String> getRelationships() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public JFrame getMainWindow() {
-        // TODO Auto-generated method stub
+        //Do nothing.
         return null;
     }
 
     @Override
     public Map<String, JPanel> getPanels() {
-        // TODO Auto-generated method stub
+        //Do nothing.
         return null;
     }
 
     @Override
     public void addPanelListener(FieldClickController fieldController, String classText) 
+    {
+        //Do nothing.
+    }
+    
+    @Override
+    public void setGUIInvisible()
+    {
+        //Do nothing.
+    }
+
+    @Override
+    public void setGUIVisible()
     {
         //Do nothing.
     }

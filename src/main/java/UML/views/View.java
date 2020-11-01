@@ -43,4 +43,6 @@ public interface View
 	Map<ArrayList<String>, String> getRelationships();
 	JFrame getMainWindow();
 	Map<String, JPanel> getPanels();
+	void setGUIInvisible();
+	void setGUIVisible();
 }

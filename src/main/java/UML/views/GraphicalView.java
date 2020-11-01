@@ -34,7 +34,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import java.awt.GridLayout;
-import java.awt.FlowLayout;
 import UML.controllers.FieldClickController;
 import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
@@ -264,7 +263,7 @@ public class GraphicalView implements View {
         JFileChooser fc = new JFileChooser();
         int returnValue = fc.showOpenDialog(dp);
         // If the user selected to open this file, open it.
-        // TODO: Consider filtering this information to only inlcude JSON filetypes
+        // Consider filtering this information to only inlcude JSON filetypes
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             return fc.getSelectedFile().getName();
         }
@@ -280,6 +279,31 @@ public class GraphicalView implements View {
         // Get rid of window. Make sure call save and load in controller.
 
     }
+
+
+    // ================================================================================================================================================
+    // Visibility setting.
+    // ================================================================================================================================================
+
+    /**
+     * Sets the GUI window to no longer be visible. 
+     */
+    @Override
+    public void setGUIInvisible() 
+    {
+        // TODO Auto-generated method stub
+        window.setVisible(false);
+	}
+
+    /**
+     * Sets the GUI window visible. 
+     */
+	@Override
+    public void setGUIVisible() 
+    {
+		window.setVisible(true);
+    }
+    
 
     // ================================================================================================================================================
     // Window setup.
@@ -393,11 +417,13 @@ public class GraphicalView implements View {
 
         JMenuItem redo = new JMenuItem("Redo");
 
-        JMenuItem[] arr = {undo, redo};
-        String[] text = { "Undo", "Redo"};
-        String[] command = { "Undo", "Redo" };
+        JMenuItem CLI = new JMenuItem("CLI");
 
-        for (int count = 0; count < 2; ++count) {
+        JMenuItem[] arr = {undo, redo, CLI};
+        String[] text = { "Undo", "Redo", "Show CLI"};
+        String[] command = { "Undo", "Redo", "CLI"};
+
+        for (int count = 0; count < 3; ++count) {
             stateMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
@@ -508,27 +534,6 @@ public class GraphicalView implements View {
             ++counter;
         }
     }
-    
-    /**
-     * Updates the relationships visually in the window .
-     */
-
-    /**
-    public void updateDisplayRelationship(String classOne, String classTwo) {
-        JPanel panelOne = classPanels.get(classOne);
-        JTextArea textArea = (JTextArea) panelOne.getComponents()[0];
-        textArea.setText(classOne.toString());
-        classPanels.remove(classOne);
-        classPanels.put(classOne, panelOne);
-
-        JPanel panelTwo = classPanels.get(classTwo);
-        JTextArea textAreaTwo = (JTextArea) panelTwo.getComponents()[0];
-        textAreaTwo.setText(classTwo.toString());
-        classPanels.remove(classTwo);
-        classPanels.put(classTwo, panelTwo);
-        refresh();
-    }
-    */
     
     /**
      * Displays an error message.
@@ -659,5 +664,4 @@ public class GraphicalView implements View {
     public void display(String toStrings) {
         //Do nothing.
     }
-
 }
