@@ -7,8 +7,20 @@ package UML.views;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import UML.controllers.FieldClickController;
+import UML.controllers.MouseClickAndDragController;
+import java.awt.Dimension;
 
 public class CommandlineView implements View {
+
+    // ================================================================================================================================================
+    // Class changing methods.
+    // ================================================================================================================================================
 
     /**
      * Print updated class.
@@ -22,7 +34,7 @@ public class CommandlineView implements View {
      * Print new class.
      */
     @Override
-    public void createClass(String name) {
+    public void createClass(String name, int x, int y) {
         System.out.println("New class:\n" + name);
     }
 
@@ -34,35 +46,16 @@ public class CommandlineView implements View {
         System.out.println("Class deleted");
     }
 
-    @Override
-    public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) {
-        //Do nothing.
-        return null;
-    }
-
-    @Override
-    public String getInputFromUser(String prompt) {
-        //Do nothing.
-        return null;
-    }
-
-    @Override
-    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
-            ActionListener relationshipListener) {
-        //Do nothing.
-    }
+    // ================================================================================================================================================
+    // Information displaying methods.
+    // ================================================================================================================================================
 
     /**
      * Print out each class.
      */
     @Override
-    public void display(ArrayList<String> str) {
-        for(String s : str)
-        {
-            System.out.println("-------------------------------");
-            System.out.println(s);    
-            System.out.println("-------------------------------");
-        }       
+    public void display(String str) {
+        System.out.println(str);
     }
 
     /**
@@ -96,7 +89,7 @@ public class CommandlineView implements View {
      */
     @Override
     public void exit() {
-        //Needs implmented in controller, here, and GUI.
+        // Needs implmented in controller, here, and GUI.
         System.out.println("Closing application.");
     }
 
@@ -105,40 +98,67 @@ public class CommandlineView implements View {
      */
     @Override
     public void start() {
-        //Maybe not needed for either?
         printHeader();
     }
 
     /**
-     * Print command list. 
+     * Print command list.
      */
-    @Override 
-    public void showHelp()
-    {
-        System.out.println("exit:                                                                                            Close CLI");
-        System.out.println("help:                                                                                            Show all options");
-        System.out.println("display:                                                                                         Display all classes");
-        System.out.println("showgui:                                                                                         Displays the GUI");
-        System.out.println("addc [class]:                                                                                    Create a class");
-        System.out.println("renamec [oldName] [newName]:                                                                     Rename a class");
-        System.out.println("deletec [class]:                                                                                 Delete a class");
-        System.out.println("addf [class] [type] [name]:                                                                      Create a field");
-        System.out.println("renamef [className] [oldName][newName]:                                                          Rename a field");
-        System.out.println("deletef [class] [FieldName]:                                                                     Delete a field");
-        System.out.println("addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                            Add a method");
-        System.out.println("renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:      Rename a method");
-        System.out.println("deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                         Delete a method");
-        System.out.println("addr [classFrom] [classTo] [relateType]:                                                         Add a relationship");
-        System.out.println("deleter [classFrom] [classTo]:                                                                   Delete a relationship");
-        System.out.println("save [fileName]:                                                                                 Saves to passed in file name");
-        System.out.println("load [fileName]:                                                                                 Loads the passed in file name");        
+    @Override
+    public void showHelp() {
+        System.out.println(
+                "exit:                                                                                                       Close CLI");
+        System.out.println(
+                "help:                                                                                                       Show all options");
+        System.out.println(
+                "display:                                                                                                    Display all classes");
+        System.out.println(
+                "showgui:                                                                                                    Displays the GUI");
+        System.out.println(
+                "addc [class]:                                                                                               Create a class");
+        System.out.println(
+                "renamec [oldName] [newName]:                                                                                Rename a class");
+        System.out.println(
+                "deletec [class]:                                                                                            Delete a class");
+        System.out.println(
+                "addf [class] [type] [name] [public or private or protected]:                                                Create a field");
+        System.out.println(
+                "renamef [className] [oldName][newName]:                                                                     Rename a field");
+        System.out.println(
+                "deletef [class] [FieldName]:                                                                                Delete a field");
+        System.out.println(
+                "changefa [class] [fieldName] [public or private or protected]:                                              Change field access");
+        System.out.println(
+                "changeft [class] [fieldName] [newType]:                                                                     Change field type");
+        System.out.println(
+                "addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                                       Add a method");
+        System.out.println(
+                "renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:                 Rename a method");
+        System.out.println(
+                "deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                                    Delete a method");
+        System.out.println(
+                "changema [class] [methodType] [methodName] [[paramType] [paramName] ...] [public or private or protected]:  Change method access");
+        System.out.println(
+                "changemt [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType]:                         Change method type");
+        System.out.println(
+                "addr [classFrom] [classTo] [relateType]:                                                                    Add a relationship");
+        System.out.println(
+                "deleter [classFrom] [classTo]:                                                                              Delete a relationship");
+        System.out.println(
+                "save [fileName]:                                                                                            Saves to passed in file name");
+        System.out.println(
+                "load [fileName]:                                                                                            Loads the passed in file name");
+        System.out.println(
+                "display [(Optional) className]:                                                                             Displays a class");
+        System.out.println(
+                "display [className]:                                                                                        Displays a class");
     }
-    
+
+
     /**
      * Prints the cli header.
      */
-    private void printHeader() 
-    {
+    private void printHeader() {
         System.out.println("  _____      _             _  __ _");
         System.out.println(" /  ___|    | |           (_)/ _| |");
         System.out.println(" \\ `--.  ___| |____      ___| |_| |_ _   _");
@@ -146,11 +166,93 @@ public class CommandlineView implements View {
         System.out.println(" /\\__/ / (__| | | \\ V  V /| | | | |_| |_| |");
         System.out.println(" \\____/ \\___|_| |_|\\_/\\_/ |_|_|  \\__|\\__, |");
         System.out.println("                                      __/ |");
-        System.out.println("                                     |___ /");
+        System.out.println("                                     |___/ ");
     }
+
+    // ================================================================================================================================================
+    // "Do Nothing" methods
+    // ================================================================================================================================================
 
     @Override
     public void addListener(ActionListener listener) {
+        // Do nothing.
+    }
+
+    @Override
+    public void addListener(MouseClickAndDragController mouseListener, String classText) {
+        // Do nothing.
+    }
+
+    @Override
+    public Dimension getLoc(String name) {
+        // Do nothing.
+        return null;
+    }
+
+    @Override
+    public void addRelationship(String from, String to, String type) {
+        // Do nothing.
+    }
+
+    @Override
+    public void deleteRelationship(String from, String to) {
+        // Do nothing.
+    }
+
+    @Override
+    public Map<ArrayList<String>, String> getRelationships() {
+        // Do nothing.
+        return null;
+    }
+
+    @Override
+    public JFrame getMainWindow() {
+        // Do nothing.
+        return null;
+    }
+
+    @Override
+    public Map<String, JPanel> getPanels() {
+        // Do nothing.
+        return null;
+    }
+
+    @Override
+    public String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options) 
+    {
+        // Do nothing.
+        return null;
+    }
+
+    @Override
+    public String getInputFromUser(String prompt) 
+    {
+        // Do nothing.
+        return null;
+    }
+
+    @Override
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
+            ActionListener relationshipListener) 
+    {
+        // Do nothing.
+    }
+
+    @Override
+    public void addPanelListener(FieldClickController fieldController, String classText) 
+    {
+        //Do nothing.
+    }
+
+    @Override
+    public void setGUIInvisible()
+    {
+        //Do nothing.
+    }
+
+    @Override
+    public void setGUIVisible()
+    {
         //Do nothing.
     }
 }

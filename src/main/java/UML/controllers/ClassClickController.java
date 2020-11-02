@@ -23,17 +23,20 @@ public class ClassClickController implements ActionListener
 		this.store = s;
 		this.controller = c;
 	}
-	
+	/**
+	* Handles actions performed on a class 
+	 */
 	public void actionPerformed(ActionEvent e)
 	{
 		String cmd = e.getActionCommand();
 		if(cmd.equals("Create"))
 		{
 			//Load text input box to get the name of the new class to be created.
-			String className = view.getInputFromUser("Class name: ");
+			String className = handleExceptions("Class Name: ", "Invalid class name");
 			//Create the class.
 			controller.createClass(className);
-			
+			String classText = store.findClass(className).toString();
+			//view.addListener(new MouseClickAndDragController(store, view, controller), classText);
 		}
 		else if(cmd.equals("Delete"))
 		{
@@ -53,10 +56,31 @@ public class ClassClickController implements ActionListener
 
 			String toBeRenamed = view.getChoiceFromUser("Rename this class", "Rename a class", classList);
 			//Open text dialog to get the new class name. 
-			String newClassName = view.getInputFromUser("New Class Name");
+			String newClassName = handleExceptions("New Class Name: ", "Invalid class name");
 			//Rename that class.
 			//This is done so that we don't give a class a name that is already taken.
 			controller.renameClass(toBeRenamed, newClassName);
 		}
 	}
+
+	/**
+	 * Prevents exceptions given exceptional behavior.
+	 */
+	private String handleExceptions(String prompt, String error)
+    {
+        boolean canCreate = false;
+        String name = view.getInputFromUser(prompt);
+			while(!canCreate)
+			{
+				if(name.trim().equals("") || name.contains(" "))
+				{
+					view.showError(error);
+					name = view.getInputFromUser(prompt);
+					canCreate = !(name.trim().equals("") || name.contains(" "));
+				}
+				else
+					canCreate = true;
+            }
+        return name;
+    }
 }

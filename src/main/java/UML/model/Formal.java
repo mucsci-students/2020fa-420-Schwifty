@@ -103,6 +103,6 @@ abstract class Formal {
     @Override
     public int hashCode() 
     { 
-          return this.name.hashCode() + this.type.hashCode();
+        return this.name.hashCode() + this.type.hashCode();
     } 
 }

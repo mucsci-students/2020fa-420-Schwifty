@@ -10,14 +10,95 @@ public class Method extends Formal
 {
     //The parameters of the method.
     private ArrayList<Parameter> params;
+    //Stores public +, private -, or protected *
+    private char access;
 
     /**
      * Contructs a method object.
      */
-    public Method(String type, String name, ArrayList<Parameter> params) throws IllegalArgumentException
+    public Method(String type, String name, ArrayList<Parameter> params, String access) throws IllegalArgumentException
     {
         super(type, name);
         this.params = params;
+        this.access = getCharFromString(access);
+    }
+
+
+     /**
+     * Sets access to specified char given a String.  Defaults to '+'.
+     */
+    public boolean setAccess(String access)
+    {
+        boolean isSet;
+        if(access.equals("public"))
+        {
+            this.access = '+';
+            isSet = true;
+        }
+        else if(access.equals("private"))
+        {
+            this.access = '-';
+            isSet = true;
+        }
+        else if(access.equals("protected"))
+        {
+            this.access = '*';
+            isSet = true;
+        }
+        else
+            isSet = false;
+        return isSet;
+    }
+
+    /**
+     * Returns a char that represents the access of this method.
+     * public:    +
+     * private:   -
+     * protected: *
+     */
+    public char getAccessChar()
+    {
+        return this.access;
+    }
+
+    /**
+     * Returns string representation of access char.
+     */
+    public String getAccessString()
+    {
+        String result = "";
+        if(access == '+')
+            result = "public";
+        else if(access == '-')
+            result = "private";
+        else if(access == '*')
+            result = "protected";
+        else
+            result = "public";
+
+        return result;
+    }    
+    /**
+     * 
+     * Returns a char for the requested level of access of this method.
+     * public:    +
+     * private:   - 
+     * protected: *
+     */
+    private char getCharFromString(String accessString)
+    {
+        char temp;
+        if(accessString.equals("public"))
+            temp = '+';
+        else if(accessString.equals("private"))
+            temp = '-';
+        else if(accessString.equals("protected"))
+            temp = '*';
+        //Default to public.
+        else
+            temp = '+';
+        
+        return temp;
     }
 
     /**
@@ -27,15 +108,14 @@ public class Method extends Formal
     {
         return this.params;
     }
-
-    /**
-     * Sets the params ArrayList equal to the parameter.
-     */
-    public void setParams(ArrayList<Parameter> toSet) 
-    {
-        this.params = toSet;
-    }
     
+    /**
+     * Sets params to given array list of Parameter.
+     */
+    public void setParams(ArrayList<Parameter> parameters)
+    {
+        this.params = parameters;
+    }
     /**
      * Adds a parameter to the method's ArrayList of parameters.
      */
@@ -77,6 +157,7 @@ public class Method extends Formal
     /**
      * Returns true if the objects are equal, false otherwise.
      */
+    @Override
     public boolean equals(Object other) {
         boolean result = false;
         if(this == other) {
@@ -102,7 +183,7 @@ public class Method extends Formal
                     equal = false;
                 }
             }
-            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType()) && equal) {
+            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType()) && object.getAccessChar() == this.getAccessChar() && equal) {
                 result = true;
             }
         }
@@ -117,7 +198,7 @@ public class Method extends Formal
     {
         String result = "";
         result += "Method: ";
-        result += this.getType() + " " + this.getName();
+        result += this.getAccessChar() + " " + this.getType() + " " + this.getName();
         result += " ( ";
 
         for(int counter = 0; counter < params.size() - 1; counter++)
@@ -133,6 +214,6 @@ public class Method extends Formal
     @Override
     public int hashCode()
     {
-        return this.getName().hashCode() + this.getType().hashCode();
+        return this.getName().hashCode() + this.getType().hashCode() + this.getParams().hashCode() + this.getAccessString().hashCode();
     }
 }

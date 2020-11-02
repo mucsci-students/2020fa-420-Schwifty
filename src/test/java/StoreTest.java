@@ -52,7 +52,7 @@ public class StoreTest {
         
         //add a class and a field to the store
         store.addClass("TestClass");
-        store.addField("TestClass","int", "num");
+        store.addField("TestClass","int", "num", "public");
         
         //Find the test class in the store
         Class testClass = store.findClass("TestClass");
@@ -61,7 +61,7 @@ public class StoreTest {
         ArrayList<String> stringFields = store.getFieldList(testClass.getFields());
         
         //Test the correct thing was added.
-        assertTrue(stringFields.contains("int num"));
+        assertTrue(stringFields.contains("+ int num"));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class StoreTest {
         Store store = new Store();
         
         //create a field. 
-        Field f = new Field("int", "num"); 
+        Field f = new Field("int", "num", "public"); 
         
         //create a field set. 
         Set<Field> fieldSet = new HashSet<Field>();
@@ -81,7 +81,7 @@ public class StoreTest {
         ArrayList<String> stringFields = store.getFieldList(fieldSet);
         
         //Test that an ArrayList was returned with field int num. 
-        assertTrue(stringFields.contains("int num")); 
+        assertTrue(stringFields.contains("+ int num")); 
     }
     
     @Test
@@ -93,7 +93,7 @@ public class StoreTest {
         //add a class to the store.
         store.addClass("Test");
         //add a field to that class.
-        store.addField("Test", "int", "num");
+        store.addField("Test", "int", "num", "public");
         //Delete that field.
         store.deleteField("Test", "num");
 
@@ -102,7 +102,7 @@ public class StoreTest {
         Set<Field> fields = testClass.getFields();
         
         //Validate the field has been removed. 
-        assertFalse(store.getFieldList(fields).contains("int num"));
+        assertFalse(store.getFieldList(fields).contains("int num public"));
     }
     
     @Test
@@ -118,13 +118,13 @@ public class StoreTest {
         Class test = store.findClass("Test");
         
         //add field to Test class.
-        store.addField("Test", "int", "num");
+        store.addField("Test", "int", "num", "public");
 
         //rename num field in Test class.
         store.renameField("Test", "num", "num2");
 
         //checks if the field has been renamed.  
-        assertTrue(store.getFieldList(test.getFields()).contains("int num2"));
+        assertTrue(store.getFieldList(test.getFields()).contains("+ int num2"));
 
     }
 
@@ -141,13 +141,13 @@ public class StoreTest {
         Class test = store.findClass("Test");
 
         //adds a field to the test class.
-        store.addField("Test", "int", "name");
+        store.addField("Test", "int", "name", "public");
 
         //changes the type of a field in the test class.
-        store.changeFieldType("Test", "String", "name");
+        store.changeFieldType("Test", "name", "String");
 
         //checks if the field's type was changed. 
-        assertTrue(store.getFieldList(test.getFields()).contains("String name"));
+        assertTrue(store.getFieldList(test.getFields()).contains("+ String name"));
     }
     
     @Test
@@ -199,10 +199,10 @@ public class StoreTest {
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         
         //Add a method to the store
-        store.addMethod("Test", "int", "testMethod", params);
+        store.addMethod("Test", "int", "testMethod", params, "private");
 
         //Create a test method
-        Method m = new Method("int", "testMethod", params2);
+        Method m = new Method("int", "testMethod", params2, "private");
 
         //get the list of methods from the class
         Set<Method> classMethods = store.findClass("Test").getMethods();
@@ -228,16 +228,16 @@ public class StoreTest {
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         
         //add method to test class.
-        store.addMethod("Test", "int", "testMethod", params);
+        store.addMethod("Test", "int", "testMethod", params, "public");
         
         //delete method to test class.
-        store.deleteMethod("Test", "int", "testMethod", params);
+        store.deleteMethod("Test", "int", "testMethod", params, "public");
         
         //get the set of methods from test class.
         Set<Method> classMethods = test.getMethods();
         
         //create a method with same parameters as when we added a method to test class.
-        Method m = new Method("int", "testMethod", params2);
+        Method m = new Method("int", "testMethod", params2, "public");
 
         //check to see is the method has been deleted.
         assertFalse(classMethods.contains(m));
@@ -259,14 +259,14 @@ public class StoreTest {
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
                 
         //Add a method to the store
-        store.addMethod("Test", "int", "testMethod", params);
+        store.addMethod("Test", "int", "testMethod", params, "private");
         
         //Rename that method
-        store.renameMethod("Test", "int", "testMethod", params, "testMethodTwo");
+        store.renameMethod("Test", "int", "testMethod", params, "private", "testMethodTwo");
 
         //Create a test method
-        Method m = new Method("int", "testMethodTwo", params2);
-        Method m2 = new Method("int", "testMethod", params2);
+        Method m = new Method("int", "testMethodTwo", params2, "private");
+        Method m2 = new Method("int", "testMethod", params2, "private");
         
         //get the list of methods from the class
         Set<Method> classMethods = store.findClass("Test").getMethods();
@@ -291,23 +291,23 @@ public class StoreTest {
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         
         //add a method to test class.
-        store.addMethod("Test", "int", "testMethod", params);
+        store.addMethod("Test", "int", "testMethod", params, "private");
         
         //change the return type of testMethod.
-        store.changeMethodType("Test", "int", "testMethod", params, "String");
+        store.changeMethodType("Test", "int", "testMethod", params, "private", "String");
         
         //get a set of methods from the test class.
         Set<Method> classMethods = store.findClass("Test").getMethods();
         
         //made a method that should be the updated method.
-        Method m = new Method("String", "testMethod", params2);
+        Method m = new Method("String", "testMethod", params2, "private");
         
         //check to see if the return type of the method has changed. 
         assertTrue(classMethods.contains(m));
 
         //Should throw an exception for empty type name.
         assertThrows(IllegalArgumentException.class, () -> {
-            store.changeMethodType("Test", "String", "testMethod", params, " ");
+            store.changeMethodType("Test", "String", "testMethod", params, "private", " ");
         });
     }
 
@@ -323,13 +323,13 @@ public class StoreTest {
         params2.add(new Parameter("String", "str"));
         
         //Add a method
-        store.addMethod("Test", "int", "testMethod", params);
+        store.addMethod("Test", "int", "testMethod", params, "private");
 
         //add a param to that method
-        store.addParam("Test", "int", "testMethod",  params, "String", "str");
+        store.addParam("Test", "int", "testMethod", params, "private", "String", "str");
 
         //Test that the param was added
-        Method m = store.findMethod("Test", "int", "testMethod", params2);
+        Method m = store.findMethod("Test", "int", "testMethod", params2, "private");
 
         //Get the actual params
         ArrayList<Parameter> actualParams = m.getParams();
@@ -356,17 +356,17 @@ public class StoreTest {
         params.add("int param");
 
         //add method to test class.
-        store.addMethod("Test", "int", "testMethod", params);
+        store.addMethod("Test", "int", "testMethod", params, "protected");
 
         //add parameter to test method.
-        store.addParam("Test", "int", "testMethod", params, "int", "param");
+        store.addParam("Test", "int", "testMethod", params, "protected", "int", "param");
 
         //delete parameter from test method.
-        store.deleteParam("Test", "int", "testMethod", params, "int", "param");
+        store.deleteParam("Test", "int", "testMethod", params, "protected", "int", "param");
 
         //find method we deleted from.
         ArrayList<Parameter> params3 = new ArrayList<Parameter>();
-        Method m = store.findMethod("Test", "int", "testMethod", params3);
+        Method m = store.findMethod("Test", "int", "testMethod", params3, "protected");
 
         //get ArrayList of parameters from test method.
         ArrayList<Parameter> paramList = m.getParams();
@@ -390,8 +390,8 @@ public class StoreTest {
         //create ArrayList of parameters for creating a method.
         ArrayList<String> params = new ArrayList<String>();
         //add method to test class.
-        store.addMethod("Test", "int", "testMethod", params);
-        store.addMethod("Test1", "String", "method", params);
+        store.addMethod("Test", "int", "testMethod", params, "protected");
+        store.addMethod("Test1", "String", "method", params, "protected");
         //Shouldn't allow relationship between class and itself.
         assertThrows(IllegalArgumentException.class, () -> {
             store.addRelationship("Test", "Test", RelationshipType.REALIZATION);
@@ -413,8 +413,8 @@ public class StoreTest {
         //create ArrayList of parameters for creating a method.
         ArrayList<String> params = new ArrayList<String>();
         //add method to test class.
-        store.addMethod("Test", "int", "testMethod", params);
-        store.addMethod("Test1", "String", "method", params);
+        store.addMethod("Test", "int", "testMethod", params, "protected");
+        store.addMethod("Test1", "String", "method", params, "protected");
         //Should return false when there is no relationship to delete.
         //assertFalse(store.deleteRelationship("Test", "Test1"));
         store.addRelationship("Test", "Test1", RelationshipType.REALIZATION);
@@ -434,12 +434,20 @@ public class StoreTest {
         
         //add a test class to store.
         store.addClass("Test");
-
+        store.addClass("Test1");
+        //Add fields to the classes.
+        store.addField("Test", "int", "num", "public");
+        store.addField("Test1", "int", "number", "protected");
         //create ArrayList of parameters for creating a method.
         ArrayList<String> params = new ArrayList<String>();
-
-        //add method to test class.
-        store.addMethod("Test", "int", "testMethod", params);
+        //add methods to classes.
+        store.addMethod("Test", "int", "testMethod", params, "protected");
+        store.addMethod("Test1", "int", "methodTest", params, "private");
+        store.addRelationship("Test", "Test1", RelationshipType.GENERALIZATION);
+        store.removeRelationships(store.findClass("Test"));
+        //Relationship should no longer exist.
+        assertTrue(store.findClass("Test").getRelationshipsToOther().size() == 0);
+        assertTrue(store.findClass("Test1").getRelationshipsFromOther().size() == 0);
     }
 
     @Test
@@ -461,12 +469,12 @@ public class StoreTest {
         store.addClass("name");
         ArrayList<String> params = new ArrayList<String>();
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
-        Method aMethod = new Method("int", "testMethod", params2);
-        store.addMethod("name", "int", "testMethod", params);
+        Method aMethod = new Method("int", "testMethod", params2, "protected");
+        store.addMethod("name", "int", "testMethod", params, "protected");
         //The store object should be able to return the method of a given name.
-        assertEquals(aMethod, store.findMethod("name", "int", "testMethod", params2));
+        assertEquals(aMethod, store.findMethod("name", "int", "testMethod", params2, "protected"));
         //Should return null when that class isn't found.
-        assertEquals(null, store.findMethod("name", "int", "TestMethod", params2));
+        assertEquals(null, store.findMethod("name", "int", "TestMethod", params2, "private"));
     }
 
     
@@ -475,11 +483,11 @@ public class StoreTest {
     {
         Store store = new Store();
         store.addClass("name");
-        store.addMethod("name","int", "num", new ArrayList<String>());
+        store.addMethod("name", "int", "num", new ArrayList<String>(), "private");
         //Should return true if method deleted.
-        assertTrue(store.removeMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>()).toString(), "name"));
+        assertTrue(store.removeMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private").toString(), "name"));
         //Method should no longer exist.
-        assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>()));
+        assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private"));
     }
 
     @Test
@@ -487,13 +495,12 @@ public class StoreTest {
     {
         Store store = new Store();
         store.addClass("name");
-        store.addMethod("name","int", "num", new ArrayList<String>());
+        store.addMethod("name", "int", "num", new ArrayList<String>(), "private");
+
         //Should return true if method deleted.
-        assertTrue(store.renameMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>()).toString(), "name", "newName"));
-        //Method of old name should no longer exist.
-        assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>()));
-        //Method with new name should exist.
-        assertFalse(store.findMethod("name", "int", "newName", new ArrayList<Parameter>()) == null);
+        assertEquals(true,store.renameMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private").toString(), "name", "newName", "private"));
+        assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private"));
+        assertEquals("Method: - int newName (  )",store.findMethod("name", "int", "newName", new ArrayList<Parameter>(), "private").toString());
     }
 
     @Test
@@ -528,13 +535,13 @@ public class StoreTest {
 
         //Add methods to class in store.
         ArrayList<String> params = new ArrayList<String>();
-        store.addMethod("name", "int", "m1", params);
-        store.addMethod("name", "int", "m2", params);
+        store.addMethod("name", "int", "m1", params, "private");
+        store.addMethod("name", "int", "m2", params, "private");
 
         //Get methods in store.
         ArrayList<Parameter> findParams = new ArrayList<Parameter>();
-        Method m1 = store.findMethod("name", "int", "m1", findParams);
-        Method m2 = store.findMethod("name", "int", "m2", findParams);
+        Method m1 = store.findMethod("name", "int", "m1", findParams, "private");
+        Method m2 = store.findMethod("name", "int", "m2", findParams, "private");
 
         //Get class in store.
         Class test = store.findClass("name");

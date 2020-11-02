@@ -6,12 +6,96 @@ package UML.model;
  */
 public class Field extends Formal 
 {   
+    //Stores public +, private -, or protected *
+    private char access;
+    
     /**
      * Contructs a new field object.
      */
-    public Field(String type, String name) throws IllegalArgumentException 
+    public Field(String type, String name, String access) throws IllegalArgumentException 
     {
         super(type, name);
+        this.access = getCharFromString(access);
+    }
+
+    /**
+     * Sets access to specified char given a String.  Defaults to '+'.
+     */
+    public boolean setAccess(String access)
+    {
+        boolean isSet;
+        if(access.equals("public"))
+        {
+            this.access = '+';
+            isSet = true;
+        }
+        else if(access.equals("private"))
+        {
+            this.access = '-';
+            isSet = true;
+        }
+        else if(access.equals("protected"))
+        {
+            this.access = '*';
+            isSet = true;
+        }
+        else
+        {
+            this.access = '+';
+            isSet = false;
+        }
+        return isSet;
+    }
+
+    /**
+     * Returns a char that represents the access of this field.
+     * public:    +
+     * private:   -
+     * protected: *
+     */
+    public char getAccessChar()
+    {
+        return this.access;
+    }
+
+    /**
+     * Returns string representation of access char.
+     */
+    public String getAccessString()
+    {
+        String result = "";
+        if(access == '+')
+            result = "public";
+        else if(access == '-')
+            result = "private";
+        else if(access == '*')
+            result = "protected";
+        else
+            result = "public";
+
+        return result;
+    }    
+    /**
+     * 
+     * Returns a char for the requested level of access of this field.
+     * public:    +
+     * private:   - 
+     * protected: *
+     */
+    private char getCharFromString(String accessString)
+    {
+        char temp;
+        if(accessString.equals("public"))
+            temp = '+';
+        else if(accessString.equals("private"))
+            temp = '-';
+        else if(accessString.equals("protected"))
+            temp = '*';
+        //Default to public.
+        else
+            temp = '+';
+        
+        return temp;
     }
 
     /**
@@ -30,10 +114,19 @@ public class Field extends Formal
         }
         else {
             Field object = (Field) other;
-            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) {
+            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType()) && object.getAccessChar() == this.getAccessChar()) {
                 result = true;
             }
         }
         return result;
+    }
+
+    /**
+     * Returns a string reppresentation of a formal parameter.
+     */
+    @Override
+    public String toString()
+    {
+        return this.getAccessChar() + " " + this.getType() + " " + this.getName();
     }
 } 

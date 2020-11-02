@@ -13,7 +13,7 @@ public class MethodTest {
     public void testGetName() 
     {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
-        Method test = new Method("type", "name", params);
+        Method test = new Method("type", "name", params, "public");
         //Test attribute's name should equal "name".
         assertEquals("name", test.getName());
     }
@@ -22,7 +22,7 @@ public class MethodTest {
     public void testGetType() 
     {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
-        Method test = new Method("type", "name", params);
+        Method test = new Method("type", "name", params, "public");
         //Test attribute's type should equal "type".
         assertEquals("type", test.getType());
     }
@@ -32,7 +32,7 @@ public class MethodTest {
     {
         //Simple name change.
         ArrayList<Parameter> params = new ArrayList<Parameter>();
-        Method test = new Method("type", "name", params);
+        Method test = new Method("type", "name", params, "public");
         test.setName("newName");
         assertEquals("newName", test.getName());
         //Don't allow empty/whitespace name.
@@ -46,11 +46,11 @@ public class MethodTest {
     {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
         //Simple type change.
-        Method test = new Method("type", "name", params);
+        Method test = new Method("type", "name", params, "public");
         test.setType("newType");
         assertEquals("newType", test.getType());
         //Change to empty string/white spaces.
-        Method test2 = new Method("type", "name", params);
+        Method test2 = new Method("type", "name", params, "public");
         //Don't allow empty/whitespace type.
         assertThrows(IllegalArgumentException.class, () -> {
             test2.setType(" ");
@@ -65,8 +65,8 @@ public class MethodTest {
         params.add(new Parameter("double", "number"));
         params1.add(new Parameter("double", "number"));
         //Equals method works for equal attributes.
-        Method test1 = new Method("type", "name", params);
-        Method test2 = new Method("type", "name", params1);
+        Method test1 = new Method("type", "name", params, "public");
+        Method test2 = new Method("type", "name", params1, "public");
         assertTrue(test1.equals(test2));
         test1.addParam(new Parameter("int", "num"));
         test2.addParam(new Parameter("int", "num"));
@@ -74,20 +74,28 @@ public class MethodTest {
         assertTrue(test1.equals(test2));
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         ArrayList<Parameter> params3 = new ArrayList<Parameter>();
-        Method testA = new Method("type", "name", params2);
-        Method testB = new Method("type", "name", params3);
+        Method testA = new Method("type", "name", params2, "public");
+        Method testB = new Method("type", "name", params3, "public");
         testA.addParam(new Parameter("String", "name"));
         testB.addParam(new Parameter("String", "name2"));
         assertFalse(testA.equals(testB));
         //Equals method does not work for unequal attributes.
         //Deiffrent names.
-        Method test3 = new Method("type", "name", params);
-        Method test4 = new Method("type", "name1", params1);
+        Method test3 = new Method("type", "name", params, "protected");
+        Method test4 = new Method("type", "name1", params1, "protected");
         assertFalse(test3.equals(test4));
         //Different types.
-        Method test5 = new Method("type", "name", params);
-        Method test6 = new Method("type1", "name", params1);
+        Method test5 = new Method("type", "name", params, "private");
+        Method test6 = new Method("type1", "name", params1, "private");
         assertFalse(test5.equals(test6));
+        //Different parameters.
+        Method test7 = new Method("type", "name", params, "private");
+        Method test8 = new Method("type", "name", params3, "private");
+        assertFalse(test7.equals(test8));
+        //Different access types.
+        Method test9 = new Method("type", "name", params, "public");
+        Method test10 = new Method("type", "name", params1, "private");
+        assertFalse(test9.equals(test10));
     }
 
     @Test
@@ -95,17 +103,17 @@ public class MethodTest {
     {
         ArrayList<Parameter> params = new ArrayList<Parameter>(); 
         params.add(new Parameter("String", "param"));
-        Method test = new Method("type", "name", params);
+        Method test = new Method("type", "name", params, "public");
         test.addParam(new Parameter("int", "num"));
         //The toString() output should be equal to the string below.
-        assertEquals("Method: type name ( String param , int num )", test.toString());
+        assertEquals("Method: + type name ( String param , int num )", test.toString());
     }
 
     @Test
     public void testSetAndGetParams() 
     {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
-        Method test = new Method("type", "name", params);
+        Method test = new Method("type", "name", params, "private");
         ArrayList<Parameter> list = new ArrayList<Parameter>();
         list.add(new Parameter("String", "hello"));
         list.add(new Parameter("int", "num"));
@@ -118,7 +126,7 @@ public class MethodTest {
     public void testAddParam()
     {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
-        Method test = new Method("type", "name", params);
+        Method test = new Method("type", "name", params, "protected");
         assertEquals(0, test.getParams().size());
         test.addParam(new Parameter("int", "param"));
         //The method should contain the added parameter and therefore not be empty.
@@ -139,7 +147,7 @@ public class MethodTest {
     public void testDeleteParam()
     {
         ArrayList<Parameter> params = new ArrayList<Parameter>();
-        Method test = new Method("type", "name", params);
+        Method test = new Method("type", "name", params, "public");
         //Disallow deleting a parameter that doesn't exist.
         assertFalse(test.deleteParam(new Parameter("int", "param")));
         test.addParam(new Parameter("int", "param"));
@@ -151,6 +159,18 @@ public class MethodTest {
         assertTrue(!test.getParams().contains(new Parameter("int", "param")));
         test.deleteParam(new Parameter("String", "name"));
         assertTrue(test.getParams().isEmpty());
+    }
+
+    @Test
+    public void testSetandGetAccessChar()
+    {
+
+    }
+
+    @Test
+    public void testSetandGetAccessString()
+    {
+        
     }
 }
 

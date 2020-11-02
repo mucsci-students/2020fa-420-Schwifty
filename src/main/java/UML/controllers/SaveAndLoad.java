@@ -44,6 +44,7 @@ import UML.model.Field;
 import UML.model.Method;
 import UML.model.Store;
 import UML.model.RelationshipType;
+import java.awt.Dimension;
 
 
 public class SaveAndLoad
@@ -118,6 +119,7 @@ public class SaveAndLoad
                 loadMethods(jsonObject, (String)className[i]);
                 loadRelationsTo(jsonObject, (String)className[i]);
                 loadRelationsFrom(jsonObject, (String)className[i]);
+                loadLocation(jsonObject, (String)className[i]);
                 i++;
             }  
         }
@@ -138,7 +140,7 @@ public class SaveAndLoad
             JSONObject jobct = (JSONObject)jsonObject;
             className[i] = (String)jobct.get("ClassName");
             //create the class from the name
-            controller.createClass((String)className[i]);
+            store.addClass((String)className[i]);
             i++;
         }
 
@@ -157,7 +159,7 @@ public class SaveAndLoad
         for (Field f : fields) 
         {
             //Get the current fields and put in the JSONObject
-            String nameAndType = f.getType() + " " + f.getName();
+            String nameAndType = f.getAccessChar() + " " + f.getType() + " " + f.getName();
             fieldsToBeAdded.add(nameAndType);
         }
 
@@ -177,11 +179,12 @@ public class SaveAndLoad
         {
             JSONObject methObject = new JSONObject();
             //Get the current fields and put in the JSONObject
+            String access = String.valueOf(m.getAccessChar());
             String methodName = m.getName();
             String methodType = m.getType();
             ArrayList<String> params  = store.getMethodParamString(aClass.getName(), m.toString());
 
-            String methodString = methodType + " " + methodName + "[ ";
+            String methodString = access + " " + methodType + " " + methodName + "[ ";
             for(String s : params)
             {
                 methodString += s;
@@ -264,6 +267,14 @@ public class SaveAndLoad
         {
             //Get the deails about the class    
             JSONObject classDetails = new JSONObject();
+
+            //Add location of the class
+
+            Dimension location = aClass.getLocation();
+            JSONArray locationArray = new JSONArray();
+            locationArray.add(Integer.toString((int)location.getWidth()));
+            locationArray.add(Integer.toString((int)location.getHeight()));
+            classDetails.put("Location", locationArray);
             
             //Add the relations from others
             JSONArray relationsFrom = getRelationFromArray(aClass);
@@ -306,7 +317,17 @@ public class SaveAndLoad
         while(it.hasNext())
         {
             String[] field = it.next().split(" ");
-            aClass.addField(field[0], field[1]);
+            String access = "";
+            if(field[0].equals("+"))
+                access = "public";
+            else if(field[0].equals("-"))
+                access = "private";
+            else if(field[0].equals("*"))
+                access = "protected";
+            else
+                access = "public";
+            
+            aClass.addField(field[1], field[2], access);
         }
     }
 
@@ -325,17 +346,27 @@ public class SaveAndLoad
         {
             String nextElement = it.next().replace("[", "");
             String[] methodString = nextElement.split(" ");
-            String type = methodString[0];
-            String name = methodString[1];
-            //void testMethod ( int num )
-            //void testMethod int num 
+            String access = methodString[0];
+            String accessStr = "";
+            if(methodString[0].equals("+"))
+                accessStr = "public";
+            else if(methodString[0].equals("-"))
+                accessStr = "private";
+            else if(methodString[0].equals("*"))
+                accessStr = "protected";
+            else
+                accessStr = "public";
+
+            String type = methodString[1];
+            String name = methodString[2];
+
             ArrayList<String> params = new ArrayList<String>();
             
-            for(int count = 2; count < methodString.length - 1; count += 2)
+            for(int count = 3; count < methodString.length - 1; count += 2)
             {
                 params.add(methodString[count] + " " + methodString[count + 1]);    
             }
-            store.addMethod(className, type, name, params);
+            store.addMethod(className, type, name, params, accessStr);
         }
     }
 
@@ -375,5 +406,23 @@ public class SaveAndLoad
             Class relatedClass = store.findClass(relatedClassName);
             relatedClass.addRelationshipToOther(RelationshipType.valueOf(relationship[0]), aClass);
         }
+    }
+
+    /**
+     * Loads location of a class.
+     */
+    public void loadLocation(Object jsonObject, String className)
+    {
+        JSONObject jobct = (JSONObject)jsonObject;
+        JSONArray arr = (JSONArray)jobct.get("Location");
+        Iterator<String> it = arr.iterator();
+        int[] toAdd = new int[2];
+        Class aClass = store.findClass(className);
+        for(int count = 0; count < 2; count++)
+        {
+            String str = it.next();
+            toAdd[count] = Integer.parseInt(str);
+        }
+        aClass.setLocation(new Dimension(toAdd[0], toAdd[1]));
     }
 }
