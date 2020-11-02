@@ -738,6 +738,12 @@ public class CLI
                                             )
                                         )
                                     ),   
+                                    node("deletem",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ),   
                                     node("changemt",
                                         node(classes,
                                             node(new StringsCompleter(getMethodNames(str[1]))
@@ -783,6 +789,12 @@ public class CLI
                                         node(classes)
                                     ),
                                     node("renamef",
+                                        node(classes,
+                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            )
+                                        )
+                                    ),   
+                                    node("deletef",
                                         node(classes,
                                             node(new StringsCompleter(getFieldNames(str[1]))
                                             )
@@ -835,6 +847,12 @@ public class CLI
                                             )
                                         )
                                     ), 
+                                    node("deletef",
+                                        node(classes,
+                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            )
+                                        )
+                                    ),   
                                     node("changeft",
                                         node(classes,
                                             node(new StringsCompleter(getFieldNames(str[1]))
@@ -851,6 +869,12 @@ public class CLI
                                         node(classes)
                                     ),
                                     node("renamem",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ),   
+                                    node("deletem",
                                         node(classes,
                                             node(new StringsCompleter(getMethodNames(str[1]))
                                             )
