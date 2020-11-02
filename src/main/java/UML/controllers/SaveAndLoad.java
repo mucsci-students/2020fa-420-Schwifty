@@ -317,7 +317,17 @@ public class SaveAndLoad
         while(it.hasNext())
         {
             String[] field = it.next().split(" ");
-            aClass.addField(field[1], field[2], field[0]);
+            String access = "";
+            if(field[0].equals("+"))
+                access = "public";
+            else if(field[0].equals("-"))
+                access = "private";
+            else if(field[0].equals("*"))
+                access = "protected";
+            else
+                access = "public";
+            
+            aClass.addField(field[1], field[2], access);
         }
     }
 
@@ -337,17 +347,26 @@ public class SaveAndLoad
             String nextElement = it.next().replace("[", "");
             String[] methodString = nextElement.split(" ");
             String access = methodString[0];
+            String accessStr = "";
+            if(methodString[0].equals("+"))
+                accessStr = "public";
+            else if(methodString[0].equals("-"))
+                accessStr = "private";
+            else if(methodString[0].equals("*"))
+                accessStr = "protected";
+            else
+                accessStr = "public";
+
             String type = methodString[1];
             String name = methodString[2];
-            //void testMethod ( int num )
-            //void testMethod int num 
+
             ArrayList<String> params = new ArrayList<String>();
             
             for(int count = 3; count < methodString.length - 1; count += 2)
             {
                 params.add(methodString[count] + " " + methodString[count + 1]);    
             }
-            store.addMethod(className, type, name, params, access);
+            store.addMethod(className, type, name, params, accessStr);
         }
     }
 

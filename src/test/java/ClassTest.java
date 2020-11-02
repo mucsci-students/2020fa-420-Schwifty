@@ -133,14 +133,14 @@ public class ClassTest {
     {
         Class test = new Class("name");
         test.addField("int", "att", "public"); 
-        test.changeFieldType("String", "att");
+        test.changeFieldType("att", "String");
         Field newAtt = new Field("String", "att", "public");
         assertTrue(test.getFields().contains(newAtt));
         //Changing a field type that doesn't exist should return false.
         assertFalse(test.changeFieldType("double", "att2"));
         //Rename to empty or whitespace expects exception.
         assertThrows(IllegalArgumentException.class, () -> {
-            test.changeFieldType("", "att");
+            test.changeFieldType("att", "");
         });
     }
 

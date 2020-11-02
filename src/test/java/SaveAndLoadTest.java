@@ -62,10 +62,10 @@ public class SaveAndLoadTest {
         params.add("int num");
         c.createClass("Test");
         c.createField("Test", "int", "num", "public");
-        c.createMethod("Test", "void", "testMethod", params, "public");
+        c.createMethod("Test", "void", "testMethod", params, "private");
 
         c.createClass("TestTwo");
-        c.createField("TestTwo", "string", "aStr", "private");
+        c.createField("TestTwo", "string", "aStr", "public");
         c.createMethod( "TestTwo","void", "testMethod", params, "private");
         
         c.addRelationship("Test", "TestTwo", RelationshipType.REALIZATION);
@@ -133,7 +133,7 @@ public class SaveAndLoadTest {
             ArrayList<Parameter> params = new ArrayList<>();
             params.add(new Parameter("int","num"));
 
-            Method testMethod = new Method("void", "testMethod", params, "public");
+            Method testMethod = new Method("void", "testMethod", params, "private");
             for(Method m : methods)
             {
                 assertEquals(testMethod, m);

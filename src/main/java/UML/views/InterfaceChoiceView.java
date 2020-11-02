@@ -53,7 +53,6 @@ public class InterfaceChoiceView implements View {
     private void windowSetup() {
         // add the action commands where needed.
         okButton.setActionCommand("OK");
-        // okButton.addActionListener(new ButtonClickListener());
         closeButton.setActionCommand("Close");
         cliChoice.setSelected(true);
         buttonGroup.add(cliChoice);

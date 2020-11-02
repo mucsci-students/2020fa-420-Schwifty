@@ -144,7 +144,7 @@ public class StoreTest {
         store.addField("Test", "int", "name", "public");
 
         //changes the type of a field in the test class.
-        store.changeFieldType("Test", "String", "name");
+        store.changeFieldType("Test", "name", "String");
 
         //checks if the field's type was changed. 
         assertTrue(store.getFieldList(test.getFields()).contains("+ String name"));
@@ -199,10 +199,10 @@ public class StoreTest {
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         
         //Add a method to the store
-        store.addMethod("Test", "int", "testMethod", params, "public");
+        store.addMethod("Test", "int", "testMethod", params, "private");
 
         //Create a test method
-        Method m = new Method("int", "testMethod", params2, "public");
+        Method m = new Method("int", "testMethod", params2, "private");
 
         //get the list of methods from the class
         Set<Method> classMethods = store.findClass("Test").getMethods();
