@@ -4,7 +4,7 @@ package UML.views;
     Date: 10/06/2020
     Purpose: Provides an interface for the views.
  */
-import java.io.File;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 import UML.controllers.MouseClickAndDragController;

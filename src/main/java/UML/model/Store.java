@@ -47,6 +47,14 @@ public class Store {
 //================================================================================================================================================
 //Getters
 //===============================================================================================================================================
+/** 
+	public Store getState()
+	{
+		
+	}
+	*/
+
+
 
 	/**
 	 * Returns ArrayList of classes in the store.
@@ -101,6 +109,17 @@ public class Store {
 		}
 
 		return methodsToReturn;
+
+	}
+
+
+//================================================================================================================================================
+//Setters
+//================================================================================================================================================
+
+	//Sprint 4.
+	public void setState(Store s)
+	{
 
 	}
 
@@ -224,11 +243,11 @@ public class Store {
 	/**
 	 * Changes the type of a field of a class in the store.
 	 */
-	public boolean changeFieldType(String className, String newType, String name) throws IllegalArgumentException
+	public boolean changeFieldType(String className, String name, String newType) throws IllegalArgumentException
 	{
 		//Class always exists if this method is called; guarenteed by controller.
 		Class toChange = findClass(className);
-		return toChange.changeFieldType(newType, name);
+		return toChange.changeFieldType(name, newType);
 	}
 
 	/**
@@ -252,7 +271,7 @@ public class Store {
 	public boolean addMethod(String className, String type, String name, ArrayList<String> params, String access) throws IllegalArgumentException
 	{
 		Class toAdd = findClass(className);
-		
+
 		ArrayList<Parameter> newParams = new ArrayList<Parameter>();
 
 		for(String param : params)

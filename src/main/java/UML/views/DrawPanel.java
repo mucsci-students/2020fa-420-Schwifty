@@ -1,51 +1,18 @@
 package UML.views;
+/*
+    Author: Chris, Dominic, Tyler, Cory and Drew
+    Date: 10/25/2020
+    Purpose: Handles drawing lines and shapes for relationships.
+ */
 
-import UML.model.Class;
-import javax.swing.JTextArea;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JMenuBar;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import java.awt.event.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import javax.swing.JTextField;
-import javax.swing.Spring;
-import javax.swing.SpringLayout;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.LayoutManager;
-import javax.swing.border.Border;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.lang.model.util.ElementScanner6;
-import javax.swing.BorderFactory;
-import java.awt.GridLayout;
-import UML.controllers.MouseClickAndDragController; 
 import java.awt.Dimension;
-import javax.swing.SwingUtilities;
 import java.awt.Graphics;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.ImageIcon;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.*;
-import java.awt.image.AffineTransformOp;
 
 
 public class DrawPanel extends JPanel 
@@ -62,29 +29,40 @@ public class DrawPanel extends JPanel
         g.setColor(Color.BLACK);
         for(Map.Entry<ArrayList<String>, String> relationship : view.getRelationships().entrySet())
         {
+            //Get the locations of the two related panels.
             Dimension fromLoc = view.getLoc(relationship.getKey().get(0));
             Dimension toLoc = view.getLoc(relationship.getKey().get(1));
+            
+            //Get the panels from the view to get the sizes.
             Map<String, JPanel> panels = view.getPanels();
             Dimension fromSize = panels.get(relationship.getKey().get(0)).getSize();
             Dimension toSize = panels.get(relationship.getKey().get(1)).getSize();
+
+            //Find the points that make up a line that connects the closesst points on the two panels in question.
             int[] line = getClosest((int)fromLoc.getWidth(), (int)(fromLoc.getWidth() + fromSize.getWidth()), 
                                                 (int)fromLoc.getHeight(), (int)(fromLoc.getHeight() + fromSize.getHeight()), 
                                                 (int)toLoc.getWidth(), (int)(toLoc.getWidth() + toSize.getWidth()),
                                                 (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));                            
             if(relationship.getValue().equals("REALIZATION"))
             {
-                //Do a dotted line
+                //Do a dotted line for realizatioon.
                 g.setColor(Color.BLACK);
+
+                //Must use Graphics2D to make line dashed.
                 Graphics2D g2d = (Graphics2D)g;
+
+                //To make line dashed, need to set stroke.
                 BasicStroke defaultStroke = (BasicStroke) g2d.getStroke();
                 BasicStroke dashLine = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 10 }, 0);
                 g2d.setStroke(dashLine);
                 g.drawLine(line[0], line[1], line[2], line[3]);
+                //Set back to basic stroke
                 g2d.setStroke(defaultStroke);
                 drawCorrectShape(g2d, line[0], line[1], line[2], line[3], relationship.getValue());
             }
             else
             {
+                //Do a basic line for all other types of relationships.
                 g.setColor(Color.BLACK);
                 g.drawLine(line[0], line[1], line[2], line[3]);
                 drawCorrectShape(g, line[0], line[1], line[2], line[3], relationship.getValue());
@@ -110,13 +88,13 @@ public class DrawPanel extends JPanel
             g.setColor(Color.BLACK);
             drawDiamond(g, x, y, r, s, true);
         }
-        //Open arrow
+        //Open arrow.
         else if(relationship.equals("GENERALIZATION"))
         {
             g.setColor(Color.BLACK);
             drawTriangle(g, x, y, r, s);
         }
-        //Filled arrow
+        //Filled arrow.
         else if(relationship.equals("REALIZATION"))
         {
             g.setColor(Color.BLACK);
@@ -129,71 +107,73 @@ public class DrawPanel extends JPanel
      */
     private void drawTriangle(Graphics g2d, int x, int y, int r, int s)
     {
+        //Find theta using the arctan.
         double theta = Math.atan2(s - y, r - x);
+
+        //Theta may be negative, so we adjust accordingly.
         if(theta < 0)
             theta+= 2 * Math.PI;
         int[] xValues = {0, 15, 15};
         int[] yValues = {0, 15, -15};
+
+        //This matrix holds the x values in the top row and the y values in the bottom.
         int[][] pointMatrix = {xValues, yValues};
+
+        //The matrix in which to store the result.
         int[][] resultMatrix = new int[pointMatrix.length][pointMatrix[0].length];
         int size = 3;
+
+        //Just multiply to get the same affect as doing a matric multiplication with the rotation matrix.
         for(int count = 0; count < size; count++)
         {
             resultMatrix[0][count] = (int)Math.round(Math.cos(theta) * pointMatrix[0][count]) - (int)Math.round(Math.sin(theta) * pointMatrix[1][count]);
             resultMatrix[1][count] = (int)Math.round(Math.sin(theta) * pointMatrix[0][count]) + (int)Math.round(Math.cos(theta) * pointMatrix[1][count]);
         }
+        
+        //Add x and y appropriately to get the absolute positions for the shapes.
         for(int count = 0; count < size; count++)
         {
             resultMatrix[0][count] += x;
             resultMatrix[1][count] += y;
         }
         g2d.drawPolygon(resultMatrix[0], resultMatrix[1], 3);
-        /**
-        //Above
-        if(y > s)
-        {
-            g2d.drawPolygon(new int[] {x, x - 15, x + 15}, new int[] {y, y - 15, y - 15}, 3);
-        }
-        //Right
-        else if(x > r)
-        {
-            g2d.drawPolygon(new int[] {x, x - 15, x - 15}, new int[] {y, y + 15, y - 15}, 3);
-        }
-        //Below
-        else if(s > y)
-        {
-            g2d.drawPolygon(new int[] {x, x - 15, x + 15}, new int[] {y, y + 15, y + 15}, 3);
-        }
-        //Left
-        else
-        {
-            g2d.drawPolygon(new int[] {x, x + 15, x + 15}, new int[] {y, y + 15, y - 15}, 3);
-        }
-        */
     }
     /**
      * Draws a diamond attached to the class panel.
      */
     private void drawDiamond(Graphics g2d, int x, int y, int r, int s, boolean fill)
     {
+        //Find theta using the arctan.
         double theta = Math.atan2(s - y, r - x);
+
+        //Theta may be negative, so we adjust accordingly.
         if(theta < 0)
             theta+= 2 * Math.PI;
         int[] xValues = {0, 15, 30, 15};
         int[] yValues = {0, 15, 0, -15};
+
+        //This matrix holds the x values in the top row and the y values in the bottom.
         int[][] pointMatrix = {xValues, yValues};
+
+        //The matrix in which to store the result.
         int[][] resultMatrix = new int[pointMatrix.length][pointMatrix[0].length];
         int size = 4;
+
+        //Just multiply to get the same affect as doing a matric multiplication with the rotation matrix.
         for(int count = 0; count < size; count++)
         {
             resultMatrix[0][count] = (int)Math.round(Math.cos(theta) * pointMatrix[0][count]) - (int)Math.round(Math.sin(theta) * pointMatrix[1][count]);
             resultMatrix[1][count] = (int)Math.round(Math.sin(theta) * pointMatrix[0][count]) + (int)Math.round(Math.cos(theta) * pointMatrix[1][count]);
         }
+
+        //Add x and y appropriately to get the absolute positions for the shapes.
         for(int count = 0; count < size; count++)
         {
             resultMatrix[0][count] += x;
             resultMatrix[1][count] += y;
         }
+
+        //Fill the shape for composition, and leave it open for aggregation.
         if(fill)
         {
             g2d.fillPolygon(resultMatrix[0], resultMatrix[1], 4);
@@ -202,55 +182,6 @@ public class DrawPanel extends JPanel
         {
             g2d.drawPolygon(resultMatrix[0], resultMatrix[1], 4);
         }
-        /**
-        if(!fill)
-        {
-            //Above
-            if(s > y)
-            {
-                g2d.drawPolygon(new int[] {x - 15, x, x + 15, x}, new int[] {y + 15, y, y + 15, y + 30}, 4);
-            }
-            //Right
-            else if(x > r)
-            {
-                g2d.drawPolygon(new int[] {x - 30, x - 15, x, x - 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
-            }
-            //Below
-            else if(y > s)
-            {
-                g2d.drawPolygon(new int[] {x - 15, x, x + 15, x}, new int[] {y - 15, y - 30, y - 15, y}, 4);
-            }
-            //Left
-            else
-            {
-                g2d.drawPolygon(new int[] {x, x + 15, x + 30, x + 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
-            }
-        }   
-        else
-        {
-            //Above
-            if(s > y)
-            {
-                g2d.fillPolygon(new int[] {x - 15, x, x + 15, x}, new int[] {y + 15, y, y + 15, y + 30}, 4);
-            }
-            //Right
-            else if(x > r)
-            {
-                g2d.fillPolygon(new int[] {x - 30, x - 15, x, x - 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
-            }
-            //Below
-            else if(y > s)
-            {
-                g2d.fillPolygon(new int[] {x - 15, x, x + 15, x}, new int[] {y - 15, y - 30, y - 15, y}, 4);
-            }
-            //Left
-            else
-            {
-                g2d.fillPolygon(new int[] {x, x + 15, x + 30, x + 15}, new int[] {y + 15, y + 30, y + 15, y}, 4);
-            }
-        }
-        */
-
     }
 
     /**

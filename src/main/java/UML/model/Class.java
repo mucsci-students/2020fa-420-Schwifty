@@ -205,7 +205,7 @@ public class Class {
     /**
      * Changes the type of a field of the class object.  If the field cannot be found, return false.
      */
-    public boolean changeFieldType(String newType, String name) throws IllegalArgumentException 
+    public boolean changeFieldType(String name, String newType) throws IllegalArgumentException 
     {
         for (Field f : fields) 
         {

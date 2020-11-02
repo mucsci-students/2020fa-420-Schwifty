@@ -65,7 +65,7 @@ public class SaveAndLoadTest {
         c.createMethod("Test", "void", "testMethod", params, "public");
 
         c.createClass("TestTwo");
-        c.createField("TestTwo", "string", "aStr", "private");
+        c.createField("TestTwo", "string", "aStr", "public");
         c.createMethod( "TestTwo","void", "testMethod", params, "private");
         
         c.addRelationship("Test", "TestTwo", RelationshipType.REALIZATION);

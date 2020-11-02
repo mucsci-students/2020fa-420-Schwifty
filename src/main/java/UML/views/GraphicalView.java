@@ -5,39 +5,26 @@ package UML.views;
     Date: 10/06/2020
     Purpose: Provides an implementation of the GUI view.
  */
-import UML.model.Class;
 import javax.swing.JTextArea;
-import javax.swing.MenuElement;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JMenuBar;
 import javax.swing.JFrame;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.*;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.LayoutManager;
 import javax.swing.border.Border;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
-import java.awt.GridLayout;
 import UML.controllers.FieldClickController;
 import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
-import javax.swing.SwingUtilities;
 import java.awt.Graphics;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
@@ -324,7 +311,6 @@ public class GraphicalView implements View {
         window.add(dp);
         window.setVisible(true);
         dp.setVisible(true);
-        // dp.setBackground(Color.BLUE);
         dp.setPreferredSize(new Dimension(800, 800));
         graphics = dp.getGraphics();
         graphics.setColor(Color.WHITE);
@@ -496,6 +482,7 @@ public class GraphicalView implements View {
     public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
         Scanner lineScanner = new Scanner(classToString);
+        //Scan the string to get a general idea for its size.
         int longest = 0;
         int height = 0;
         while (lineScanner.hasNextLine()) {
@@ -513,6 +500,7 @@ public class GraphicalView implements View {
         }
         lineScanner.close();
         panel.setLocation(x, y);
+        //Set the bounds of the panel to be some multiple of the size of the String to make the panel size make sense.
         panel.setBounds(x, y, (longest * 20) + 150, height * 20);
         refresh();
     }
