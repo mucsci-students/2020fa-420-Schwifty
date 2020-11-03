@@ -23,7 +23,7 @@ jobs:
     - name: Build with Gradle
       run: gradle build
  
-    - name: Code Coverage
-      uses: codecov/codecov-action@v1.0.6
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
