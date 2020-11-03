@@ -24,7 +24,7 @@ jobs:
       run: gradle build
       
     - name: Build Test
-      run: ./gradlew jacocoRootReport coveralls
+      run: gradle jacocoRootReport coveralls
       
     - name: Coveralls
       uses: coverallsapp/github-action@master
