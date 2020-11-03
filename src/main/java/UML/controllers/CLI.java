@@ -71,9 +71,7 @@ public class CLI
         history = new DefaultHistory();
         //The parser
         parser = new DefaultParser();
-        //LineReader.Option.AUTO_REMOVE_SLASH
-        //Command completer for tab completion
-        StringsCompleter s2 = new StringsCompleter("test");
+        
         //completer = new ArgumentCompleter(new StringsCompleter(buildCandidateList()), s2);
         completer = new TreeCompleter(
             node("addc", "exit", "help", "showgui", "load"));
@@ -93,6 +91,9 @@ public class CLI
         //unset default tab behavior
         reader.unsetOpt(LineReader.Option.INSERT_TAB);
         history.attach(reader);
+
+        //Make sure the correct tab completions are used.
+        makeReader();
 
         boolean go = true;
         while(go) 
@@ -681,10 +682,27 @@ public class CLI
         }
         else
         {
-            
+            history.add(store.getClassStore().get(0).getName());
             StringsCompleter classes = new StringsCompleter(store.getClassList());
             String[] str = reader.getHistory().get(reader.getHistory().last()).split(" ");
-            if(str[0].equals("load") || store.findClass(str[1]).getFields().isEmpty() && store.findClass(str[1]).getMethods().isEmpty())
+
+            boolean hasFields = false;
+            //Check if the class store has fields.
+            for(UML.model.Class c : store.getClassStore())
+            {
+                if(!c.getFields().isEmpty())
+                    hasFields = true;
+            }
+
+            //Check if the class store has methods.
+            boolean hasMethods = false;
+            for(UML.model.Class c : store.getClassStore())
+            {
+                if(!c.getMethods().isEmpty())
+                    hasMethods = true;
+            }
+
+            if(str[0].equals("load") || (!hasFields && !hasMethods))
             {
                 completer = new TreeCompleter(
                                     node("addc"),
@@ -716,7 +734,7 @@ public class CLI
                                         node(classes))
                                     );
             }
-            else if(store.findClass(str[1]).getFields().isEmpty())
+            else if(!hasFields)
             {
                 completer = new TreeCompleter(
                                     node("addc"),
@@ -772,7 +790,7 @@ public class CLI
                                         node(classes))
                                     );
             }
-            else if(store.findClass(str[1]).getMethods().isEmpty())
+            else if(!hasMethods)
             {
                 completer = new TreeCompleter(
                                     node("addc"),
