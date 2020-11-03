@@ -82,3 +82,10 @@ sourceSets {
 jacoco {
     reportsDir = file("$buildDir/customJacocoReportDir")
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
