@@ -24,12 +24,12 @@ jobs:
       run: gradle build
       
     - name: Grant execute permission for gradlew
-      run: chmod +x ${{ github.workspace }}gradlew
+      run: chmod +x ${{ github.workspace }}/gradlew
     - name: check with gradle
-      run: ${{ github.workspace }}./gradlew check
+      run: .${{ github.workspace }}/gradlew check
 
     - name: Run report
-      run: ${{ github.workspace }}./gradlew jacocoTestReport 
+      run: .${{ github.workspace }}/gradlew jacocoTestReport 
       
     - name: Coveralls
       uses: coverallsapp/github-action@master
