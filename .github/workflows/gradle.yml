@@ -23,9 +23,6 @@ jobs:
     - name: Build with Gradle
       run: gradle build
       
-    - name: Build Test
-      run: gradle jacocoTestReport coveralls
-      
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
