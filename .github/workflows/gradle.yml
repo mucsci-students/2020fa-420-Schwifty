@@ -28,4 +28,4 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         base-path: ${{ github.workspace }}
-        path-to-lcov: ${{ github.workspace }}/coverage/lcov.info/test/
+        path-to-lcov: ${{ github.workspace }}/coverage/
