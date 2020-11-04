@@ -80,7 +80,7 @@ sourceSets {
 }
 
 jacoco {
-    reportsDir = file("/coverage/lcov.info")
+    reportsDir = file("./coverage/lcov.info")
 }
 
 jacocoTestReport {
