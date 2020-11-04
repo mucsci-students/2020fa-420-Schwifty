@@ -27,5 +27,4 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        base-path: ${{ github.workspace }}
-        path-to-lcov: ${{ github.workspace }}/coverage/test/jacocoTestReport
+        path-to-lcov: ${{ github.workspace }}/coverage/test/
