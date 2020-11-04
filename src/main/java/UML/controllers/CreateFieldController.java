@@ -15,6 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
+import java.awt.LayoutManager;
+import java.awt.FlowLayout;
 
 public class CreateFieldController implements ActionListener {
 
@@ -49,6 +51,7 @@ public class CreateFieldController implements ActionListener {
         
         
         JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
         String[] accessTypes = new String[3];
         accessTypes[0] = "public";
         accessTypes[1] = "private";
@@ -57,10 +60,10 @@ public class CreateFieldController implements ActionListener {
         JComboBox accessBox = new JComboBox(accessTypes);
         panel.add(accessBox);
         
-        JTextArea typeArea = new JTextArea(5, 20);
+        JTextArea typeArea = new JTextArea(1, 12);
         panel.add(typeArea);
 
-        JTextArea nameArea = new JTextArea(5, 20);
+        JTextArea nameArea = new JTextArea(1, 12);
         panel.add(nameArea);
         
         int result = JOptionPane.showConfirmDialog(null, panel,
