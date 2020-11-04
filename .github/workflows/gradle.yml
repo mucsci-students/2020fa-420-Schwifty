@@ -21,11 +21,11 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      run: gradle clean build
+      run: gradle build
       
 
     - name: Run report
-      run: gradle build jacocoTestReport 
+      run: gradle test jacocoTestReport 
       
     - name: Coveralls
       uses: coverallsapp/github-action@master
