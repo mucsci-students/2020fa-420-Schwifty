@@ -23,7 +23,6 @@ jobs:
     - name: Build with Gradle
       run: gradle build
       
-
     - name: Run report
       run: gradle test jacocoTestReport 
 
