@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/mucsci-students/2020fa-420-Schwifty/branch/develop/graph/badge.svg?token=M2M786YASI)](https://codecov.io/gh/mucsci-students/2020fa-420-Schwifty)
 # UML Editor
 
 ## Description
