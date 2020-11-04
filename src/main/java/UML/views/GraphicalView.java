@@ -615,7 +615,7 @@ public class GraphicalView implements View {
      * Adds listener for editing a class panel.
      */
     @Override
-    public void addPanelListener(FieldClickController fieldController, String classText) 
+    public void addPanelListener(ActionListener listener, String classText) 
     {
         JPanel panel = classPanels.get(classText);
         JMenuBar menuBar = null;
@@ -627,10 +627,10 @@ public class GraphicalView implements View {
             }
         }
         JMenu menu = (JMenu) menuBar.getMenu(0);
-        for(int count = 0; count < 10; count++)
+        for(int count = 0; count < 7; count++)
         {
             JMenuItem menuItem = (JMenuItem) menu.getItem(count);
-            menuItem.addActionListener(fieldController);
+            menuItem.addActionListener(listener);
         }
     }
 

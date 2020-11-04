@@ -183,30 +183,68 @@ public class ClassPanelBuilder implements PanelBuilder
         JMenu miniMenu = new JMenu("+"); 
         miniMenu.setBackground(Color.darkGray);
         
-        JMenuItem crtField = new JMenuItem("Create field");
-        JMenuItem crtMethod = new JMenuItem("Create method");
-        JMenuItem delField = new JMenuItem("Delete field");
-        JMenuItem delMethod = new JMenuItem("Delete method");
-        JMenuItem rnField = new JMenuItem("Rename field");
-        JMenuItem rnMethod = new JMenuItem("Rename method");
-        JMenuItem chgFieldType = new JMenuItem("Change field type");
-        JMenuItem chgMethodType = new JMenuItem("Change method type");
-        JMenuItem chgFieldAccess = new JMenuItem("Change Field Access");
-        JMenuItem chgMethodAccess = new JMenuItem("Change Method Access");
+        //Field
+        JMenuItem crtField = new JMenuItem("Create field");//1
 
+        //Make these "Edit Field" //2
+        /**
+        JMenuItem rnField = new JMenuItem("Rename field");
+        JMenuItem delField = new JMenuItem("Delete field");
+        JMenuItem chgFieldType = new JMenuItem("Change field type");
+        JMenuItem chgFieldAccess = new JMenuItem("Change Field Access");
+        */
+        JMenuItem editField = new JMenuItem("Edit Field");
+
+        //Method
+        JMenuItem crtMethod = new JMenuItem("Create method"); //3
+
+        //Make these "Edit Method" //4
+        /*
+        JMenuItem delMethod = new JMenuItem("Delete method");
+        JMenuItem rnMethod = new JMenuItem("Rename method");
+        JMenuItem chgMethodType = new JMenuItem("Change method type");
+        JMenuItem chgMethodAccess = new JMenuItem("Change Method Access");
+        */
+        //edit also counts as delete
+        JMenuItem editMethod = new JMenuItem("Edit method");
+        
+        //Relationship
+        JMenuItem crtRelationship = new JMenuItem("Create relationship"); //5
+        JMenuItem delRelationship = new JMenuItem("Delete relationship"); //6
+
+        //Class
+        //JMenuItem renameClass = new JMenuItem("Rename Class");
+        //JMenuItem deleteClass = new JMenuItem("Delete Class"); 
+        JMenuItem editClass = new JMenuItem("Edit Class"); //7
+        /**
         JMenuItem[] arr = { crtField, delField, rnField, chgFieldType, crtMethod, delMethod, rnMethod,
-            chgFieldAccess, chgMethodAccess, chgMethodType };
+            chgFieldAccess, chgMethodAccess, chgMethodType, crtRelationship, delRelationship, renameClass, deleteClass};
         String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
             "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method",
             "Change field access level", "Change method access level", "Change method type" };
         String[] command = { "CreateField " + concat, "DeleteField " + concat, "RenameField " + concat, "ChangeFieldType " + concat, "CreateMethod " + concat,
-            "DeleteMethod " + concat, "RenameMethod "+ concat, "ChangeFieldAccess "+ concat, "ChangeMethodAccess "+concat, "ChangeMethodType " };
+            "DeleteMethod " + concat, "RenameMethod "+ concat, "ChangeFieldAccess "+ concat, "ChangeMethodAccess "+concat, "ChangeMethodType ", 
+            "CreateRelationship " + concat, "DeleteRelationship " + concat, "RenameClass " + concat, "DeleteClass " + concat };
 
         for (int count = 0; count < 10; ++count) {
             miniMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
         }
+        */
+        
+        JMenuItem[] arr = { crtField, editField, crtMethod, editMethod, crtRelationship, delRelationship, editClass};
+        String[] text = { "Create new field", "Edit a field", "Create a method", "Edit a method", "Create a relationship", "Delete a relationship",
+                          "Rename a classs", "Delete a class" };
+        String[] command = { "CreateField " + concat, "EditField " + concat, "CreateMethod " + concat, "EditMethod" + concat, 
+            "CreateRelationship " + concat, "DeleteRelationship " + concat, "EditClass " + concat };
+
+        for (int count = 0; count < 7; ++count) {
+            miniMenu.add(arr[count]);
+            arr[count].setToolTipText(text[count]);
+            arr[count].setActionCommand(command[count]);
+        }
+        
         miniBar.add(miniMenu);
 
         return miniBar;

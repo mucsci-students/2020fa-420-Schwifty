@@ -239,7 +239,7 @@ public class CommandlineView implements View {
     }
 
     @Override
-    public void addPanelListener(FieldClickController fieldController, String classText) 
+    public void addPanelListener(ActionListener listener, String classText) 
     {
         //Do nothing.
     }
