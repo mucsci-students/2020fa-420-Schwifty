@@ -236,7 +236,7 @@ public class ClassPanelBuilder implements PanelBuilder
         JMenuItem[] arr = { crtField, editField, crtMethod, editMethod, crtRelationship, delRelationship, editClass};
         String[] text = { "Create new field", "Edit a field", "Create a method", "Edit a method", "Create a relationship", "Delete a relationship",
                           "Rename a classs", "Delete a class" };
-        String[] command = { "CreateField " + concat, "EditField " + concat, "CreateMethod " + concat, "EditMethod" + concat, 
+        String[] command = { "CreateField " + concat, "EditField " + concat, "CreateMethod " + concat, "EditMethod " + concat, 
             "CreateRelationship " + concat, "DeleteRelationship " + concat, "EditClass " + concat };
 
         for (int count = 0; count < 7; ++count) {

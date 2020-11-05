@@ -22,6 +22,15 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
+
+import UML.controllers.CreateFieldController;
+import UML.controllers.CreateMethodController;
+import UML.controllers.EditClassController;
+import UML.controllers.CreateRelationshipController;
+import UML.controllers.DeleteRelationshipController;
+import UML.controllers.EditFieldController;
+import UML.controllers.EditMethodController;
+
 import UML.controllers.FieldClickController;
 import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
@@ -627,9 +636,41 @@ public class GraphicalView implements View {
             }
         }
         JMenu menu = (JMenu) menuBar.getMenu(0);
-        for(int count = 0; count < 7; count++)
+        
+        //Add the listener to the correct MenuItem.
+        if(listener instanceof CreateFieldController)
         {
-            JMenuItem menuItem = (JMenuItem) menu.getItem(count);
+            JMenuItem menuItem = (JMenuItem) menu.getItem(0);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof EditFieldController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(1);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof CreateMethodController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(2);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof EditMethodController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(3);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof CreateRelationshipController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(4);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof DeleteRelationshipController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(5);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof EditClassController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(6);
             menuItem.addActionListener(listener);
         }
     }

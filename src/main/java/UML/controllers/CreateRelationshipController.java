@@ -6,13 +6,13 @@ import java.awt.event.ActionListener;
 import UML.views.*;
 import UML.model.*;
 
-public class CreateRelationshipConrtroller implements ActionListener {
+public class CreateRelationshipController implements ActionListener {
 
     private Store store;
     private View view;
     private Controller controller;
 
-    public CreateRelationshipConrtroller(Store s, View v, Controller c) {
+    public CreateRelationshipController(Store s, View v, Controller c) {
         this.view = v;
         this.store = s;
         this.controller = c;

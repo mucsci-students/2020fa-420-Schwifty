@@ -540,11 +540,9 @@ public void deleteParameter(String className, String methodType, String methodNa
         listeners[1] = new EditFieldController(store, view, this);
         listeners[2]= new CreateMethodController(store, view, this);
         listeners[3] = new EditMethodController(store, view, this);
-        listeners[4] = new CreateRelationshipConrtroller(store, view, this);
+        listeners[4] = new CreateRelationshipController(store, view, this);
         listeners[5] = new DeleteRelationshipController(store,view, this);
         listeners[6] = new EditClassController(store, view, this);
-
-
 
         //Add the approprate panels and listeners to the view.
         for(Class c : store.getClassStore())
