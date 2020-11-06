@@ -89,6 +89,10 @@ public class ParameterTest {
         Parameter test5 = new Parameter("type", "name");
         Parameter test6 = new Parameter("type1", "name");
         assertFalse(test5.equals(test6));
+
+        //Make sure null and other types are not equal ever.
+        assertFalse(test5.equals(null));
+        assertFalse(test5.equals("test"));
     }
 
      @Test

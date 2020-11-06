@@ -87,6 +87,12 @@ public class FieldTest {
         assertFalse(test.setAccess("nonsense"));
         //The field should not have changed.
         assertEquals('+', test.getAccessChar());
+
+        //Test setting access for private and protected.
+        test.setAccess("private");
+        assertEquals('-', test.getAccessChar());
+        test.setAccess("protected");
+        assertEquals('*', test.getAccessChar());
     }
 
     @Test
