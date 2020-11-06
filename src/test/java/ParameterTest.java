@@ -17,6 +17,27 @@ public class ParameterTest {
     }
 
     @Test
+    public void testConstruct()
+    {
+        //These should all throw excpetions for different reasons.
+        assertThrows(IllegalArgumentException.class, () -> {
+            Parameter test = new Parameter("", "name");
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Parameter test = new Parameter("type", "");
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Parameter test = new Parameter("type with space", "name");
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Parameter test = new Parameter("type", "name with space");
+        });
+    }
+
+    @Test
     public void testGetType() 
     {
         Parameter test = new Parameter("type", "name");
