@@ -22,3 +22,13 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: gradle build
+      
+    - name: Run report
+      run: gradle test jacocoTestReport 
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+          file: ${{ github.workspace }}/coverage/test/jacocoTestReport.xml
+          name: codecov-umbrella
+          fail_ci_if_error: false

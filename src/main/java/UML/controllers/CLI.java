@@ -72,7 +72,6 @@ public class CLI
         //The parser
         parser = new DefaultParser();
         
-        //completer
         completer = new TreeCompleter(
             node("addc", "exit", "help", "showgui", "load"));
 
