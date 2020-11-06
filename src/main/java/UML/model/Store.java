@@ -277,7 +277,7 @@ public class Store {
 		for(String param : params)
 		{
 			String[] splitStr = param.split(" ");
-			Parameter newParam = new Parameter(splitStr[0], splitStr[1]);
+			Parameter newParam = new Parameter(splitStr[0].trim(), splitStr[1].trim());
 			newParams.add(newParam);
 		}
 
@@ -315,7 +315,7 @@ public class Store {
 		for(String param : params)
 		{
 			String[] splitParam = param.split(" ");
-			Parameter newParam = new Parameter(splitParam[0], splitParam[1]);
+			Parameter newParam = new Parameter(splitParam[0].trim(), splitParam[1].trim());
 			newParams.add(newParam);
 		}
 
@@ -334,7 +334,7 @@ public class Store {
 		for(String param : params)
 		{
 			String[] splitParam = param.split(" ");
-			Parameter newParam = new Parameter(splitParam[0], splitParam[1]);
+			Parameter newParam = new Parameter(splitParam[0].trim(), splitParam[1].trim());
 			newParams.add(newParam);
 		}
 
@@ -350,7 +350,7 @@ public class Store {
 		for(String param: params)
 		{
 			String[] splitParam = param.split(" ");
-			Parameter newParam = new Parameter(splitParam[0], splitParam[1]);
+			Parameter newParam = new Parameter(splitParam[0].trim(), splitParam[1].trim());
 			newParams.add(newParam);
 		}
 		

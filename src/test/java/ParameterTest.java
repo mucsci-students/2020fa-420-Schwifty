@@ -17,6 +17,27 @@ public class ParameterTest {
     }
 
     @Test
+    public void testConstruct()
+    {
+        //These should all throw excpetions for different reasons.
+        assertThrows(IllegalArgumentException.class, () -> {
+            Parameter test = new Parameter("", "name");
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Parameter test = new Parameter("type", "");
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Parameter test = new Parameter("type with space", "name");
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            Parameter test = new Parameter("type", "name with space");
+        });
+    }
+
+    @Test
     public void testGetType() 
     {
         Parameter test = new Parameter("type", "name");
@@ -68,6 +89,10 @@ public class ParameterTest {
         Parameter test5 = new Parameter("type", "name");
         Parameter test6 = new Parameter("type1", "name");
         assertFalse(test5.equals(test6));
+
+        //Make sure null and other types are not equal ever.
+        assertFalse(test5.equals(null));
+        assertFalse(test5.equals("test"));
     }
 
      @Test

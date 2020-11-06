@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Stack;
 import javax.swing.JPanel;
+import java.awt.event.ActionListener;
 
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
@@ -532,13 +533,26 @@ public void deleteParameter(String className, String methodType, String methodNa
         File currentFile = sl.load(fileName);
         store.setCurrentLoadedFile(currentFile);
 
-        FieldClickController fcc = new FieldClickController(store, view, this);
+        ActionListener[] listeners = new ActionListener[7];
+
+        //Create Listeners
+        listeners[0] = new CreateFieldController(store, view, this);
+        listeners[1] = new EditFieldController(store, view, this);
+        listeners[2]= new CreateMethodController(store, view, this);
+        listeners[3] = new EditMethodController(store, view, this);
+        listeners[4] = new CreateRelationshipController(store, view, this);
+        listeners[5] = new DeleteRelationshipController(store,view, this);
+        listeners[6] = new EditClassController(store, view, this);
+
         //Add the approprate panels and listeners to the view.
         for(Class c : store.getClassStore())
         {
             view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
             view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
-            view.addPanelListener(fcc, c.toString());
+            for(int count = 0; count < 7; count++)
+            {
+                view.addPanelListener(listeners[count], c.toString());
+            }
         }
         //Add relationships to the view.
         for(Class c : store.getClassStore())
@@ -585,7 +599,7 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void addListeners()
     {
-        view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new StateClickController(store, view, this), new RelationshipClickController(store, view, this));
+        view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new StateClickController(store, view, this));
     }
 
     /**

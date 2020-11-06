@@ -98,8 +98,7 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
-    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
-            ActionListener relationshipListener) {
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener) {
         // Do nothing.
     }
 
@@ -177,7 +176,7 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
-    public void addPanelListener(FieldClickController fieldController, String classText) 
+    public void addPanelListener(ActionListener listener, String classText) 
     {
         //Do nothing.
     }

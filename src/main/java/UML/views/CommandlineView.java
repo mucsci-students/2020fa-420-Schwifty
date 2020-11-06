@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import UML.controllers.FieldClickController;
 import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
 
@@ -232,14 +231,13 @@ public class CommandlineView implements View {
     }
 
     @Override
-    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
-            ActionListener relationshipListener) 
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener) 
     {
         // Do nothing.
     }
 
     @Override
-    public void addPanelListener(FieldClickController fieldController, String classText) 
+    public void addPanelListener(ActionListener listener, String classText) 
     {
         //Do nothing.
     }
