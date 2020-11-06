@@ -59,6 +59,10 @@ public class EditFieldController implements ActionListener
        
         String field = view.getChoiceFromUser("Edit this class", "Edit class", fieldList);
 
+        //Handle cancelling.
+        if(field == null)
+            return;
+
         String[] fieldSplit = field.split(" ");
         //Get selected access
         String accessString = getStringVersion(fieldSplit[0]);
@@ -86,12 +90,15 @@ public class EditFieldController implements ActionListener
             nameArea.setText(fieldSplit[2]);
             panel.add(nameArea);
             
+            Object[] options = { "OK", "Delete" };
 
-            int result = JOptionPane.showConfirmDialog(null, panel,
-                "Create field", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-
-            if (result == JOptionPane.OK_OPTION) {
+            int result = JOptionPane.showOptionDialog(null, panel, "Edit Field",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                null, options, options[0]);
+            
+    
+            if (result == 0) 
+            {
                 //Get access String.
                 access = (String) ((JComboBox)panel.getComponent(0)).getSelectedItem();
 
@@ -101,6 +108,12 @@ public class EditFieldController implements ActionListener
                 //Get name String.
                 name = (String) ((JTextArea) panel.getComponent(2)).getText();
 
+            }
+            //Delete field
+            else if (result == 1)
+            {
+                controller.deleteField(className, fieldSplit[2]);
+                return;
             }
             //Handle canceling out.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)

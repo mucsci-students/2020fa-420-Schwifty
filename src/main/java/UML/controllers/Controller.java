@@ -599,7 +599,7 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void addListeners()
     {
-        view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new StateClickController(store, view, this), new RelationshipClickController(store, view, this));
+        view.addListeners(new FileClickController(store, view, this), new ClassClickController(store, view, this), new StateClickController(store, view, this));
     }
 
     /**

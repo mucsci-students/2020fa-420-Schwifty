@@ -31,7 +31,6 @@ import UML.controllers.DeleteRelationshipController;
 import UML.controllers.EditFieldController;
 import UML.controllers.EditMethodController;
 
-import UML.controllers.FieldClickController;
 import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -335,7 +334,6 @@ public class GraphicalView implements View {
         createFileMenu(mb);
         createClassMenu(mb);
         createStateMenu(mb);
-        createRelationshipMenu(mb);
         mb.setVisible(true);
     }
 
@@ -384,18 +382,10 @@ public class GraphicalView implements View {
 
         // Create sub menus.
         JMenuItem crtClass = new JMenuItem("Create class");
-        JMenuItem deleteClass = new JMenuItem("Delete class");
-        JMenuItem rnClass = new JMenuItem("Rename class");
 
-        JMenuItem[] arr = { crtClass, deleteClass, rnClass };
-        String[] text = { "Create Class", "Delete Class", "Rename Class" };
-        String[] command = { "Create", "Delete", "Rename" };
-
-        for (int count = 0; count < 3; ++count) {
-            classMenu.add(arr[count]);
-            arr[count].setToolTipText(text[count]);
-            arr[count].setActionCommand(command[count]);
-        }
+        classMenu.add(crtClass);
+        crtClass.setToolTipText("Create Class");
+        crtClass.setActionCommand("Create");
         mb.add(classMenu);
     }
 
@@ -424,35 +414,6 @@ public class GraphicalView implements View {
             arr[count].setActionCommand(command[count]);
         }
         mb.add(stateMenu);
-    }
-
-    /**
-     * Creates the relationship menu options by taking in the menu bar and adding
-     * them to it.
-     */
-    private void createRelationshipMenu(JMenuBar mb) {
-        relationshipMenu = new JMenu("Relate");
-        // Create JMenuItems for each type of relationship and deleting a relationship.
-        JMenuItem realization = new JMenuItem("Realization");
-        JMenuItem aggregation = new JMenuItem("Aggregation");
-        JMenuItem composition = new JMenuItem("Composition");
-        JMenuItem generalization = new JMenuItem("Generalization");
-        JMenuItem deleteRelate = new JMenuItem("Delete Relationship");
-        // Create arrays of JMenuItems and Strings to use for loop for setting up
-        // relationship menu.
-        JMenuItem[] arr = { realization, aggregation, composition, generalization, deleteRelate };
-        String[] names = { "Realization", "Aggregation", "Composition", "Generalization", "DeleteRelationship" };
-
-        for (int count = 0; count < 5; ++count) {
-            relationshipMenu.add(arr[count]);
-            if (count < 4)
-                arr[count].setToolTipText("Creates selected relationship between two classes");
-            else
-                arr[count].setToolTipText("Deletes selected relationship between two classes");
-
-            arr[count].setActionCommand(names[count]);
-        }
-        mb.add(relationshipMenu);
     }
 
     // ================================================================================================================================================
@@ -548,12 +509,10 @@ public class GraphicalView implements View {
     /**
      * Adds action lisnters for buttons.
      */
-    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener,
-            ActionListener relationshipListener) {
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener) {
         addFileListeners(fileListener);
         addClassListeners(classListener);
         addStateListeners(stateListener);
-        addRelationshipListeners(relationshipListener);
     }
 
     /**
@@ -595,17 +554,6 @@ public class GraphicalView implements View {
         for (Component item : stateMenu.getMenuComponents()) {
             JMenuItem menuItem = (JMenuItem) item;
             menuItem.addActionListener(fieldListener);
-        }
-    }
-
-    /**
-     * Adds the listeners for the relationship buttons.
-     */
-    private void addRelationshipListeners(ActionListener relationshipListener) 
-    {
-        for (Component item : relationshipMenu.getMenuComponents()) {
-            JMenuItem menuItem = (JMenuItem) item;
-            menuItem.addActionListener(relationshipListener);
         }
     }
 

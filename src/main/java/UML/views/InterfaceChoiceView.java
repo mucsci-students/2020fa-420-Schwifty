@@ -98,8 +98,7 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
-    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener,
-            ActionListener relationshipListener) {
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener fieldListener) {
         // Do nothing.
     }
 

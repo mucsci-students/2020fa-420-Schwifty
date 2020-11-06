@@ -51,12 +51,14 @@ public class EditMethodController implements ActionListener {
        
         String firstString = view.getChoiceFromUser("Edit this class", "Edit class", methodList).replace("( ", "");
 
+        //Handle cancel.
+        if(firstString == null)
+            return;
+
         String stringMethod = firstString.replace(" )", "");
 
         String[] methodSplit = stringMethod.split(" ");
 
-        System.out.println(stringMethod);
-        
         //Get selected access
         String accessString = getStringVersion(methodSplit[0]);
 
@@ -94,12 +96,13 @@ public class EditMethodController implements ActionListener {
 
             //Get the parameters.
             JTextArea paramArea = new JTextArea(1, 15);
-            String paramString = "";
+            //The string to add to the text area.
+            String allParams = "";
             panel.add(paramArea);
             
             for (int i = 4; i < methodSplit.length - 1; i += 2)
             {
-                paramString += methodSplit[i];
+                String paramString = methodSplit[i];
                 paramString += " ";
                 paramString += methodSplit[i + 1];
 
@@ -108,15 +111,21 @@ public class EditMethodController implements ActionListener {
                 oldParams.add(add);
 
                 if(i + 2 != methodSplit.length)
+                {
                     paramString += ",";
+                    allParams += paramString;
+                    i++;
+                }
             }
-            paramArea.setText(paramString);
+            paramArea.setText(allParams);
 
-            int result = JOptionPane.showConfirmDialog(view.getMainWindow(), panel,
-                "Edit Method", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
+            Object[] options = { "OK", "Delete" };
+            
+            int result = JOptionPane.showOptionDialog(null, panel, "Edit Field",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                null, options, options[0]);
 
-            if (result == JOptionPane.OK_OPTION) {
+            if (result == 0) {
                 //Get access String.
                 access = (String) ((JComboBox)panel.getComponent(0)).getSelectedItem();
             
@@ -128,6 +137,11 @@ public class EditMethodController implements ActionListener {
 
                 param = (String) ((JTextArea) panel.getComponent(3)).getText();
 
+            }
+            else if(result == 1)
+            {
+                controller.deleteMethod(className, methodSplit[2], methodSplit[3], oldParams, accessString);
+                return;
             }
             //Handle canceling out.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)

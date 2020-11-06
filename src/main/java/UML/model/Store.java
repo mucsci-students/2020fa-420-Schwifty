@@ -296,7 +296,7 @@ public class Store {
 		for(String param : params)
 		{
 			String[] splitStr = param.split(" ");
-			Parameter newParam = new Parameter(splitStr[0].trim(), splitStr[1].trim());
+			Parameter newParam = new Parameter(splitStr[0], splitStr[1]);
 			newParams.add(newParam);
 		}
 		
