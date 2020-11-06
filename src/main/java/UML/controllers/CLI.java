@@ -72,7 +72,6 @@ public class CLI
         //The parser
         parser = new DefaultParser();
         
-        //completer = new ArgumentCompleter(new StringsCompleter(buildCandidateList()), s2);
         completer = new TreeCompleter(
             node("addc", "exit", "help", "showgui", "load"));
 
@@ -682,7 +681,9 @@ public class CLI
         }
         else
         {
-            history.add(store.getClassStore().get(0).getName());
+            //Simulate an addc to allow node building to work in the case of loading a file from GUI.
+            history.add("addc " + store.getClassStore().get(0).getName());
+            
             StringsCompleter classes = new StringsCompleter(store.getClassList());
             String[] str = reader.getHistory().get(reader.getHistory().last()).split(" ");
 

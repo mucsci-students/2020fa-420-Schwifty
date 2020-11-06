@@ -164,13 +164,39 @@ public class MethodTest {
     @Test
     public void testSetandGetAccessChar()
     {
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        Method test = new Method("type", "name", params, "public");
+        test.setAccess("public");
+        //Test that the char is set correctly.
+        assertEquals('+', test.getAccessChar());
+        //Illegal type should not allow setting
+        assertFalse(test.setAccess("nonsense"));
+        //The method should not have changed.
+        assertEquals('+', test.getAccessChar());
 
+        //Test setting access for private and protected.
+        test.setAccess("private");
+        assertEquals('-', test.getAccessChar());
+        test.setAccess("protected");
+        assertEquals('*', test.getAccessChar());
     }
 
     @Test
     public void testSetandGetAccessString()
     {
-        
+        ArrayList<Parameter> params = new ArrayList<Parameter>();
+        Method test = new Method("type", "name", params, "public");
+        test.setAccess("public");
+        //Illegal type should not allow setting
+        assertFalse(test.setAccess("nonsense"));
+        //The method should not have changed.
+        assertEquals("public", test.getAccessString());
+
+        //Test setting access for private and protected.
+        test.setAccess("private");
+        assertEquals("private", test.getAccessString());
+        test.setAccess("protected");
+        assertEquals("protected", test.getAccessString());
     }
 }
 

@@ -38,29 +38,6 @@ public class ClassClickController implements ActionListener
 			String classText = store.findClass(className).toString();
 			//view.addListener(new MouseClickAndDragController(store, view, controller), classText);
 		}
-		else if(cmd.equals("Delete"))
-		{
-			//Gets ArrayList of classes to be chosen from.
-			ArrayList<String> classList = store.getClassList();
-			
-			//Get the class to be deleted. 
-			String toBeDeleted = view.getChoiceFromUser("Delete this class", "Delete a class", classList);
-
-			//Delete the class. 
-			controller.deleteClass(toBeDeleted);
-		}
-		else if(cmd.equals("Rename"))
-		{
-			//Load dropdown of created classes.
-			ArrayList<String> classList = store.getClassList();
-
-			String toBeRenamed = view.getChoiceFromUser("Rename this class", "Rename a class", classList);
-			//Open text dialog to get the new class name. 
-			String newClassName = handleExceptions("New Class Name: ", "Invalid class name");
-			//Rename that class.
-			//This is done so that we don't give a class a name that is already taken.
-			controller.renameClass(toBeRenamed, newClassName);
-		}
 	}
 
 	/**

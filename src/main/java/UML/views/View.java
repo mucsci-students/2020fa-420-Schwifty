@@ -12,7 +12,7 @@ import java.awt.Dimension;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import UML.controllers.FieldClickController;
+import java.awt.event.ActionListener;
 
 public interface View
 {
@@ -27,10 +27,10 @@ public interface View
 	String getChoiceFromUser(String msgOne, String msgTwo, ArrayList<String> options);
     String getInputFromUser(String prompt);
 	
-	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener, ActionListener relationshipListener);
+	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener);
 	void addListener(ActionListener listener);
 	void addListener(MouseClickAndDragController mouseListener, String className);
-	void addPanelListener(FieldClickController fieldController, String classText);
+	void addPanelListener(ActionListener controller, String classText);
 
 	void display(String str);
 	void showError(String error);
