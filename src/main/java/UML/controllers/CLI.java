@@ -222,6 +222,14 @@ public class CLI
         {
             display(line);
         }
+        else if(line[0].equals(("undo")))
+        {
+            undo();
+        }
+        else if(line[0].equals(("redo")))
+        {
+            redo();
+        }
         else 
         {
             System.out.println("That is not a valid command.");
@@ -246,7 +254,7 @@ public class CLI
      */
     private void help() 
     {
-        helpPage();
+        view.showHelp();
     }
 
     /**
@@ -602,11 +610,19 @@ public class CLI
     }
 
     /**
-     * Displays the help menu.
+     * Undo an action.
      */
-    public void helpPage()
+    private void undo()
     {
-        view.showHelp();
+        controller.undo();
+    }
+
+    /**
+     * Redo an action.
+     */
+    private void redo()
+    {
+        controller.redo();
     }
 
     /**
@@ -683,7 +699,7 @@ public class CLI
         if(store.getClassStore().isEmpty())
         {
             completer = new TreeCompleter(
-            node("addc", "exit", "help", "showgui", "save", "load"));
+            node("addc", "exit", "help", "showgui", "save", "load", "undo", "redo"));
         }
         else
         {
@@ -736,7 +752,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -792,7 +808,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -848,7 +864,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -928,7 +944,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
