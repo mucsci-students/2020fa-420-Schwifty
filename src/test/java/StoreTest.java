@@ -568,6 +568,7 @@ public class StoreTest {
         s.setCurrentLoadedFile(new File("TestFile"));
         Store testStore = (Store)s.clone();
 
+        //Make sure clone and original have same content.
         assertEquals(s.getClassList(), testStore.getClassList());
         assertEquals(s.getCurrentLoadedFile(), testStore.getCurrentLoadedFile());
     }

@@ -519,6 +519,7 @@ public class Store implements Cloneable {
 	{
 		//The clone
 		Store clone = new Store();
+		clone.setCurrentLoadedFile(this.getCurrentLoadedFile());
 		//will hold the new copy of the classStore
 		ArrayList<Class> storeCopy = clone.getClassStore();
 		for(Class c : classStore)

@@ -604,7 +604,6 @@ public void deleteParameter(String className, String methodType, String methodNa
             prepGUI();
             rebuild();
         }
-        
     }
 
      /**
