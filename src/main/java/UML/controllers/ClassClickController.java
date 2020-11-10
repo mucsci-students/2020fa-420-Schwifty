@@ -35,7 +35,7 @@ public class ClassClickController implements ActionListener
 			String className = handleExceptions("Class Name: ", "Invalid class name");
 			//Create the class.
 			controller.createClass(className);
-			String classText = store.findClass(className).toString();
+			//String classText = store.findClass(className).toString();
 			//view.addListener(new MouseClickAndDragController(store, view, controller), classText);
 		}
 	}

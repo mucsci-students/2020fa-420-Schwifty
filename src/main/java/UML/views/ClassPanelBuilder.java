@@ -22,6 +22,7 @@ public class ClassPanelBuilder implements PanelBuilder
     private String classData;
     private JPanel panel;
     private DrawPanel parentWindow;
+    private JMenuBar miniBar;
     Border blackline = BorderFactory.createLineBorder(Color.black);
 
     /**
@@ -179,7 +180,7 @@ public class ClassPanelBuilder implements PanelBuilder
      */
     private JMenuBar makeMiniBar(String concat)
     {
-        JMenuBar miniBar = new JMenuBar();
+        miniBar = new JMenuBar();
         JMenu miniMenu = new JMenu("+"); 
         miniMenu.setBackground(Color.darkGray);
         
@@ -249,4 +250,5 @@ public class ClassPanelBuilder implements PanelBuilder
 
         return miniBar;
     }
+
 }

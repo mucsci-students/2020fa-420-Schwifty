@@ -17,6 +17,25 @@ import UML.model.Store;
     // The file representing the current state.
     private Store currentState;
 
+    /**
+     * Default constructor
+     */
+    public StateController(Store s)
+    {
+        this.currentState = s;
+        undoStack = new Stack<Store>();
+        redoStack = new Stack<Store>();
+    }
+    /**
+     * 
+     */
+    public StateController(Store s, Stack<Store> undo, Stack<Store> redo)
+    {
+        currentState = s;
+        undoStack = undo;
+        redoStack = redo;
+    }
+
     //Getters
     public Stack<Store> getUndoStack() {
         return undoStack;
@@ -58,9 +77,9 @@ import UML.model.Store;
      */
     public Store Undo()
     {
-        Store s = undoStack.pop();
-        currentState = s;
-        return s;
+        Store newState = undoStack.pop();
+        currentState = newState;
+        return newState;
     }
 
     /**
@@ -68,9 +87,9 @@ import UML.model.Store;
      */
     public Store Redo()
     {
-        Store s = redoStack.pop();
-        currentState = s;
-        return s;
+        Store newState = redoStack.pop();
+        currentState = newState;
+        return newState;
     }
 
     /**

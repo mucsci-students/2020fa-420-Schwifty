@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.jline.reader.Candidate;
 import java.util.Set;
+import java.util.Stack;
 
 public class CLI
 {
@@ -278,7 +279,12 @@ public class CLI
             
             Store s = new Store();
             GraphicalView v = new GraphicalView();
+            StateController stateController = controller.getStateController();
+            Stack<Store> undoState = stateController.getUndoStack();
+            Stack<Store> redoState = stateController.getRedoStack();
+            Store currentState = stateController.getCurrentState();
             Controller c = new Controller(s, v);
+            StateController state = new StateController(currentState, undoState, redoState); 
             v.start();
             c.addListeners();
             try 

@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 import UML.controllers.MouseClickAndDragController;
+import UML.controllers.StateController;
 
 import java.awt.Dimension;
 
@@ -28,14 +29,9 @@ public class Controller
     private Store store;
     // Store the view
     private View view;
-    // The stack of all states to undo to.
-    private Stack<File> undo;
-    // The stack of all states to redo to.
-    private Stack<File> redo;  
-    // The file representing the current state.
-    private File currentState;
-    // The state change count for unique file names.
-    private int count;
+    //The state controller that handles undo and redo
+    private StateController stateController;
+
     // True if a GUI exists already, false otherwise.
     private boolean GUIExists;
     /**
@@ -46,20 +42,9 @@ public class Controller
         this.store = store;
         this.view = view;
         GUIExists = false;
-        count = 0;
-        String current = "" + count;
-        currentState = new File(current);
-        try
-        {
-            //Save to get the initial state of the UML editor.
-            save(currentState.getName());
-        }
-        catch(Exception e)
-        {
-            view.showError("ERROR");
-        }
-        undo = new Stack<File>();
-        redo = new Stack<File>();
+
+        //get the initial state of the UML editor.
+        stateController = new StateController(this.store);
     }
 
 
@@ -81,6 +66,10 @@ public boolean getGUIExists()
 //Setters
 //================================================================================================================================================
 
+public void setStore(Store newStore)
+{
+    this.store = newStore;
+}
 
 /**
  * Sets the value of GUIExists to true.
@@ -106,6 +95,13 @@ public void setGUIVisible()
     view.setGUIVisible();
 }
 
+/**
+ * Gets the state controller
+ */
+public StateController getStateController()
+{
+    return this.stateController;
+}
 //================================================================================================================================================
 //Class methods
 //================================================================================================================================================
@@ -116,10 +112,12 @@ public void setGUIVisible()
      */
     public void createClass(String name) 
     {
+        stateChange();
         boolean temp = store.addClass(name);
         if (temp)
         {   
-            stateChange(); 
+            prepGUI();
+            rebuild();
         }
     }
     
@@ -129,12 +127,14 @@ public void setGUIVisible()
     public void deleteClass(String name) 
     {
         Class aClass = findClass(name);
+        String oldString = aClass.toString();
+        stateChange();
         if(aClass != null)
         {
             boolean temp = store.deleteClass(name);
             if(temp)
             {
-                stateChange();
+                view.deleteClass(oldString);
             }
             else
             {
@@ -153,12 +153,19 @@ public void setGUIVisible()
     public void renameClass(String oldName, String newName) throws IllegalArgumentException
     {
         Class oldClass = findClass(oldName);
+        String oldString = oldClass.toString();
+        stateChange();
         if(oldClass != null)
         {
             boolean temp = store.renameClass(oldName, newName);
             if(temp)
             {
-                stateChange();
+                prepGUI();
+                Class newClass = findClass(newName);
+                String newString = newClass.toString();
+                //view.updateClass(oldString, newString);
+                //set the action command here
+                rebuild();
             }
             else
             {
@@ -182,13 +189,15 @@ public void setGUIVisible()
      */
     public void createField(String className, String type, String name, String access) throws IllegalArgumentException
     {
+        stateChange();
         Class aClass = findClass(className);
         if(aClass != null)
         {
             boolean temp = store.addField(className, type, name, access);
             if(temp)
             {
-                stateChange();
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -209,10 +218,12 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
+            stateChange();
             boolean temp = store.deleteField(className, name);
             if(temp)
             {
-                stateChange();
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -233,10 +244,12 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
+            stateChange();
             boolean temp = store.renameField(className, oldName, newName);
             if(temp)
             {
-                stateChange();
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -257,10 +270,11 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
+            stateChange();
             boolean temp = store.changeFieldType(className, fieldName, newType);
             if(temp)
             {
-                stateChange();
+                
             }
             else
             {
@@ -517,70 +531,15 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void load(String fileName) throws IOException, ParseException
     {
-        //If there are panels on the GUI, get red of them to prep for the new load.
-        if(view.getPanels() != null)
-        {
-            for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
-            {
-                view.deleteClass(entry.getKey());
-            }
-        }
+        stateChange();
+        prepGUI();
         //Also clear the class store.
         store.getClassStore().clear();
-        
         //Load the specified file in the store.
         SaveAndLoad sl = new SaveAndLoad(store, view, this);
         File currentFile = sl.load(fileName);
         store.setCurrentLoadedFile(currentFile);
-
-        ActionListener[] listeners = new ActionListener[7];
-
-        //Create Listeners
-        listeners[0] = new CreateFieldController(store, view, this);
-        listeners[1] = new EditFieldController(store, view, this);
-        listeners[2]= new CreateMethodController(store, view, this);
-        listeners[3] = new EditMethodController(store, view, this);
-        listeners[4] = new CreateRelationshipController(store, view, this);
-        listeners[5] = new DeleteRelationshipController(store,view, this);
-        listeners[6] = new EditClassController(store, view, this);
-
-        //Add the approprate panels and listeners to the view.
-        for(Class c : store.getClassStore())
-        {
-            view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
-            view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
-            for(int count = 0; count < 7; count++)
-            {
-                view.addPanelListener(listeners[count], c.toString());
-            }
-        }
-        //Add relationships to the view.
-        for(Class c : store.getClassStore())
-        {
-            for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
-            {
-                view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
-            }
-        }
-    }
-
-    /**
-     * Loads a selected file, but is not meant to be used for undo and redo.
-     */
-    public void loadFromMenu(String fileName) throws IOException, ParseException
-    {
-        load(fileName);
-        //This is the load that is used for normal loading so:
-        //Increment the count, push the old file onto the undo stack.
-        count++;
-        undo.push(currentState);
-
-        //Create a new file to save and set it as the currrent file.
-        String toSave = "" + count;
-        currentState = new File(toSave);
-        save(toSave);
-        //Load the file like a normal file now.
-        load(toSave + ".json");
+        rebuild();
     }
 
     /**
@@ -615,23 +574,9 @@ public void deleteParameter(String className, String methodType, String methodNa
      * Changes the state of the model and view
      */
     private void stateChange()
-    {
-        try
-        {
-            //When we change the state, we must add the old state to the undo state and increment the total number of stored states.
-            count++;
-            undo.push(currentState);
-            String toSave = "" + count;
-            currentState = new File(toSave);
-            //Save the new state and load it.
-            save(toSave);
-            load(toSave + ".json");
-        }
-        catch(Exception e)
-        {
-            //This should never occur.
-            view.showError("ERROR");
-        }
+    { 
+        //When we change the state, we must add the old state to the undo state and increment the total number of stored states.
+        stateController.addStateToUndo((Store)this.store.clone());
     }
 
     /**
@@ -639,25 +584,16 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void redo()
     {
+        Stack<Store> redoStack = stateController.getRedoStack();
         //If the redo stack is empty, tell the user they cannot perform a redo.
-        if(redo.isEmpty())
+        if(redoStack.isEmpty())
             view.showError("Cannot redo");
         else
         {
-            try
-            {
-                //Add the current file to the undo stack so that we can revisit it.
-                undo.push(currentState);
-                save(currentState.getName());
-                //Set the current state to be the first state on the redo stack.
-                currentState = redo.pop();
-                load(currentState.getName() + ".json");
-            }
-            catch(Exception e)
-            {
-                //This should never occur.
-                view.showError("ERROR");
-            }
+            stateChange();
+            this.store = stateController.Redo();
+            prepGUI();
+            rebuild();
         }
     }
 
@@ -667,25 +603,64 @@ public void deleteParameter(String className, String methodType, String methodNa
       */
       public void undo()
       {
+          Stack<Store> undoStack = stateController.getUndoStack();
           //If the undo stack is empty, tell the user they cannot perform a undo.
-        if(undo.isEmpty())
+        if(undoStack.isEmpty())
             view.showError("Cannot undo");
         else
         {
-            try
+            stateController.addStateToRedo((Store)this.store.clone());
+            this.store = stateController.Undo();
+            prepGUI();
+            rebuild();
+            for(Class c : store.getClassStore())
             {
-                //Add the current file to the redo stack so that we can revisit it.
-                redo.push(currentState);
-                save(currentState.getName());
-                //Set the current state to be the first state on the undo stack.
-                currentState = undo.pop();
-                load(currentState.getName() + ".json");
-            }
-            catch (Exception e)
-            {
-                //This should never occur.
-                view.showError("ERROR");
+                System.out.println(c.toString());
             }
         }
+      }
+
+      private void rebuild()
+      {
+          ActionListener[] listeners = new ActionListener[7];
+          //Create Listeners
+          listeners[0] = new CreateFieldController(store, view, this);
+          listeners[1] = new EditFieldController(store, view, this);
+          listeners[2]= new CreateMethodController(store, view, this);
+          listeners[3] = new EditMethodController(store, view, this);
+          listeners[4] = new CreateRelationshipController(store, view, this);
+          listeners[5] = new DeleteRelationshipController(store,view, this);
+          listeners[6] = new EditClassController(store, view, this);
+
+          //Add the approprate panels and listeners to the view.
+          for(Class c : store.getClassStore())
+          {
+              view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
+              view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
+              for(int count = 0; count < 7; count++)
+              {
+                  view.addPanelListener(listeners[count], c.toString());
+              }
+            }
+            //Add relationships to the view.
+            for(Class c : store.getClassStore())
+            {
+                for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
+                {
+                    view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
+                }
+            }
+      }
+
+      private void prepGUI()
+      {
+          //If there are panels on the GUI, get red of them to prep for the new load.
+          if(view.getPanels() != null)
+          {
+              for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
+              {
+                  view.deleteClass(entry.getKey());
+              }
+          }
       }
 }

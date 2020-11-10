@@ -526,9 +526,14 @@ public class Store implements Cloneable {
 		Store clone = null;
 		//will hold the new copy of the classStore
 		ArrayList<Class> storeCopy = new ArrayList<Class>();
+		for(Class c : classStore)
+		{
+			storeCopy.add(c);
+		}
 		try
 		{
 			clone = (Store)super.clone();
+			clone.setClassStore(storeCopy);
 		}
 		catch(CloneNotSupportedException e)
 		{
@@ -541,12 +546,6 @@ public class Store implements Cloneable {
 			s.setClassStore(storeCopy);
 			return s;
 		}
-
-		for(Class c : classStore)
-		{
-			storeCopy.add(c);
-		}
-		clone.setClassStore(storeCopy);
 
 		return clone;
 	}
