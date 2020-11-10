@@ -195,7 +195,8 @@ public class CLI
         else if (line[0].equals("deletep")) 
         {
             deleteParameter(line);
-        } else if (line[0].equals("deleter")) 
+        } 
+        else if (line[0].equals("deleter")) 
         {
             deleteRelationship(line);
         } 
@@ -206,7 +207,8 @@ public class CLI
         else if (line[0].equals("chungus")) 
         {
             chungus();
-        } else if (line[0].equals(("load"))) 
+        } 
+        else if (line[0].equals(("load"))) 
         {
             load(line);
         } 
@@ -539,6 +541,14 @@ public class CLI
      */
     private void deleteParameter(String[] args) 
     {
+        ArrayList<String> params = new ArrayList<String>();
+        if ((args.length - 7) % 2 != 0) {
+            System.out.println("Invalid arguments");
+        }
+        for (int counter = 5; counter < args.length - 2; counter += 2) {
+            params.add(args[counter] + " " + args[counter + 1]);
+        }
+        controller.deleteParameter(args[1], args[3], args[4], params, args[2], args[args.length - 2], args[args.length - 1]);
         makeReader();
     }
 
@@ -662,6 +672,27 @@ public class CLI
                     toAdd += " ";
             } 
             toReturn.add(toAdd);
+        }
+        return toReturn;
+    }
+
+
+    /**
+     * Gets a list of parameter strings.
+     */
+    private ArrayList<String> getParameters(String className)
+    {
+        UML.model.Class c = store.findClass(className);
+        Set<Method> methods = c.getMethods();
+        ArrayList<String> toReturn = new ArrayList<String>();
+        for(Method m : methods)
+        {
+            String toAdd = "";
+            for(Parameter param : m.getParams())
+            {
+                toAdd += param.toString();
+                toReturn.add(toAdd);
+            }
         }
         return toReturn;
     }
@@ -800,6 +831,19 @@ public class CLI
                                             )
                                         )
                                     ),
+                                    node("addp",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ), 
+                                    node("deletep",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(new StringsCompleter(getParameters(str[1])))
+                                            )
+                                        )
+                                    ), 
                                     node("addr",
                                         node(classes,
                                             node(classes, 
@@ -936,6 +980,19 @@ public class CLI
                                             )
                                         )
                                     ),
+                                    node("addp",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ), 
+                                    node("deletep",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(new StringsCompleter(getParameters(str[1])))
+                                            )
+                                        )
+                                    ), 
                                     node("addr",
                                         node(classes,
                                             node(classes, 

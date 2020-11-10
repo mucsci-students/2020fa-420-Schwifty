@@ -111,12 +111,23 @@ public StateController getStateController()
      */
     public void createClass(String name) 
     {
-        stateChange();
-        boolean temp = store.addClass(name);
-        if (temp)
-        {   
-            prepGUI();
-            rebuild();
+        try
+        {
+            stateChange();
+            boolean temp = store.addClass(name);  
+            if (temp)
+            {   
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Class could not be created");
+            }
+        }
+        catch (Exception e)
+        {
+            view.showError(e.getMessage());
         }
     }
     
@@ -127,17 +138,24 @@ public StateController getStateController()
     {
         Class aClass = findClass(name);
         String oldString = aClass.toString();
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.deleteClass(name);
-            if(temp)
+            try
             {
-                view.deleteClass(oldString);
+                stateChange();
+                boolean temp = store.deleteClass(name);  
+                if(temp)
+                {
+                    view.deleteClass(oldString);
+                }
+                else
+                {
+                    view.showError("Class could not be deleted");
+                }
             }
-            else
+            catch (Exception e)
             {
-                view.showError("Class could not be deleted");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -152,18 +170,25 @@ public StateController getStateController()
     public void renameClass(String oldName, String newName) throws IllegalArgumentException
     {
         Class oldClass = findClass(oldName);
-        stateChange();
         if(oldClass != null)
         {
-            boolean temp = store.renameClass(oldName, newName);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();    
+                boolean temp = store.renameClass(oldName, newName); 
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Class could not be renamed");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Class could not be renamed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -184,18 +209,25 @@ public StateController getStateController()
     public void createField(String className, String type, String name, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.addField(className, type, name, access);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.addField(className, type, name, access);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be created");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Field could not be created");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -210,18 +242,26 @@ public StateController getStateController()
     public void deleteField(String className, String name) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.deleteField(className, name);
-            if(temp)
+            try 
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.deleteField(className, name); 
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be deleted");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Field could not be deleted");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -238,16 +278,24 @@ public StateController getStateController()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            stateChange();
-            boolean temp = store.renameField(className, oldName, newName);
-            if(temp)
+            try 
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.renameField(className, oldName, newName);   
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be renamed");
+                }
             }
-            else
+            catch (Exception e)
             {
-                view.showError("Field could not be renamed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -263,17 +311,25 @@ public StateController getStateController()
     {
         Class aClass = findClass(className);
         if(aClass != null)
-        {
-            stateChange();
-            boolean temp = store.changeFieldType(className, fieldName, newType);
-            if(temp)
+        {  
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.changeFieldType(className, fieldName, newType);
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field type could not be changed");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Field type could not be changed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -288,18 +344,25 @@ public StateController getStateController()
     public void changeFieldAccess(String className, String fieldName, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.changeFieldAccess(className, fieldName, access);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.changeFieldAccess(className, fieldName, access); 
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field access could not be changed");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Field access could not be changed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -319,19 +382,27 @@ public StateController getStateController()
     public void createMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.addMethod(className, returnType, methodName, params, access);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.addMethod(className, returnType, methodName, params, access);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be created");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Method could not be created");
+                view.showError(e.getMessage());
             }
+           
         }
         else
         {
@@ -345,18 +416,26 @@ public StateController getStateController()
     public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be deleted");
+                }
             }
-            else
+            catch (Exception e)
             {
-                view.showError("Method could not be deleted");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -371,18 +450,26 @@ public StateController getStateController()
     public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String access, String newName)
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
+             
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be renamed");
+                }
             }
-            else
+            catch (Exception e)
             {
-                view.showError("Method could not be renamed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -398,20 +485,28 @@ public StateController getStateController()
     public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String access, String newType)
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
-            }
+                stateChange();
+                boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
 
-            else
-            {
-                view.showError("Method type could not be changed");
+                else
+                {
+                    view.showError("Method type could not be changed");
+                }
             }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
+            
         }
         else
         {
@@ -428,16 +523,25 @@ public StateController getStateController()
         stateChange();
         if(aClass != null)
         {
-            boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method access could not be changed");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Method access could not be changed");
+                view.showError(e.getMessage());
             }
+           
         }
         else
         {
@@ -458,11 +562,32 @@ public void addParameter(String className, String methodType, String methodName,
 {
     //Implemet in sprint 4.
     Class aClass = findClass(className);
-    String oldClassStr = aClass.toString();
-    boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
-    stateChange(); 
+    if(aClass != null)
+    {
+        try
+        {
+            stateChange();
+            boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
+            if(temp)
+            {
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Parameter could not be added");
+            }
+        }
+        catch(Exception e)
+        {
+            view.showError(e.getMessage());
+        }
+    }   
+    else
+    {
+        view.showError("Class does not exist");
+    }
 }
-
 
 /**
  * Deletes an parameter from a given method.
@@ -471,9 +596,31 @@ public void deleteParameter(String className, String methodType, String methodNa
 {
     //Implemet in sprint 4.
     Class aClass = findClass(className);
-    String oldClassStr = aClass.toString();
-    boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
-    stateChange(); 
+    if(aClass != null)
+    {
+        try 
+        {    
+            stateChange();
+            boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
+            if(temp)
+            {
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Method access could not be changed");
+            }
+        }
+        catch (Exception e) 
+        {
+            view.showError(e.getMessage());
+        }
+    }
+    else
+    {
+        view.showError("Class does not exist");
+    }
 }
 
     
@@ -488,14 +635,17 @@ public void deleteParameter(String className, String methodType, String methodNa
     {   
         Class fromOld = findClass(from);
         Class toOld = findClass(to);
-        try{
+        try
+        {
+            stateChange();
             boolean temp = store.addRelationship(from, to, relation);
             //If the relationship could not be deleted, give the user and error and do not change the state.
             if(!temp || fromOld == null || toOld == null)
                 view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
             else 
-            {
-                stateChange(); 
+            { 
+                prepGUI();
+                rebuild();
             }
         }
         catch(IllegalArgumentException e)
@@ -511,14 +661,22 @@ public void deleteParameter(String className, String methodType, String methodNa
     {
         Class fromOld = findClass(from);
         Class toOld = findClass(to);
-        boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
-
-        //If the relationship could not be deleted, give the user and error and do not change the state.
-        if(!temp || fromOld == null || toOld == null)
-            view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
-        else
+        try
         {
-            stateChange(); 
+            stateChange();
+            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
+            //If the relationship could not be deleted, give the user and error and do not change the state.
+            if(!temp || fromOld == null || toOld == null)
+                view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
+            else
+            { 
+                prepGUI();
+                rebuild();
+            }
+        } 
+        catch(Exception e)
+        {
+            view.showError(e.getMessage());
         }
     }
 
@@ -617,7 +775,6 @@ public void deleteParameter(String className, String methodType, String methodNa
             view.showError("Cannot undo");
         else
         {
-            //prepGUI();
             stateController.addStateToRedo((Store)this.store.clone());
             this.store = stateController.Undo();
             prepGUI();
