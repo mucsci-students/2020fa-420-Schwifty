@@ -111,8 +111,16 @@ public StateController getStateController()
      */
     public void createClass(String name) 
     {
-        stateChange();
-        boolean temp = store.addClass(name);
+        try
+        {
+            stateChange();
+            boolean temp = store.addClass(name);  
+        }
+        catch(Exception e)
+        {
+            view.showError(e.getMessage());
+        }
+       
         if (temp)
         {   
             prepGUI();
@@ -127,10 +135,17 @@ public StateController getStateController()
     {
         Class aClass = findClass(name);
         String oldString = aClass.toString();
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.deleteClass(name);
+            try
+            {
+                stateChange();
+                boolean temp = store.deleteClass(name);  
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 view.deleteClass(oldString);
@@ -152,10 +167,17 @@ public StateController getStateController()
     public void renameClass(String oldName, String newName) throws IllegalArgumentException
     {
         Class oldClass = findClass(oldName);
-        stateChange();
         if(oldClass != null)
         {
-            boolean temp = store.renameClass(oldName, newName);
+            try
+            {
+                stateChange();    
+                boolean temp = store.renameClass(oldName, newName);  
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -184,10 +206,17 @@ public StateController getStateController()
     public void createField(String className, String type, String name, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.addField(className, type, name, access);
+            try
+            {
+                stateChange();
+                boolean temp = store.addField(className, type, name, access);
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -210,10 +239,17 @@ public StateController getStateController()
     public void deleteField(String className, String name) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.deleteField(className, name);
+            try 
+            {
+                stateChange();
+                boolean temp = store.deleteField(className, name); 
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -238,8 +274,15 @@ public StateController getStateController()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            stateChange();
-            boolean temp = store.renameField(className, oldName, newName);
+            try 
+            {
+                stateChange();
+                boolean temp = store.renameField(className, oldName, newName);   
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -263,9 +306,16 @@ public StateController getStateController()
     {
         Class aClass = findClass(className);
         if(aClass != null)
-        {
-            stateChange();
-            boolean temp = store.changeFieldType(className, fieldName, newType);
+        {  
+            try
+            {
+                stateChange();
+                boolean temp = store.changeFieldType(className, fieldName, newType);
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -288,10 +338,17 @@ public StateController getStateController()
     public void changeFieldAccess(String className, String fieldName, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.changeFieldAccess(className, fieldName, access);
+            try
+            {
+                stateChange();
+                boolean temp = store.changeFieldAccess(className, fieldName, access);
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -319,10 +376,17 @@ public StateController getStateController()
     public void createMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.addMethod(className, returnType, methodName, params, access);
+            try
+            {
+                stateChange();
+                boolean temp = store.addMethod(className, returnType, methodName, params, access);
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -345,10 +409,18 @@ public StateController getStateController()
     public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
+            try
+            {
+                stateChange();
+                boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
+            
             if(temp)
             {
                 prepGUI();
@@ -371,10 +443,17 @@ public StateController getStateController()
     public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String access, String newName)
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
+            try
+            {
+                stateChange();
+                boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            } 
             if(temp)
             {
                 prepGUI();
@@ -398,10 +477,17 @@ public StateController getStateController()
     public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String access, String newType)
     {
         Class aClass = findClass(className);
-        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
+            try
+            {
+                stateChange();
+                boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -428,7 +514,15 @@ public StateController getStateController()
         stateChange();
         if(aClass != null)
         {
-            boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
+            try
+            {
+                stateChange();
+                boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
+            }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
             if(temp)
             {
                 prepGUI();
@@ -458,11 +552,32 @@ public void addParameter(String className, String methodType, String methodName,
 {
     //Implemet in sprint 4.
     Class aClass = findClass(className);
-    String oldClassStr = aClass.toString();
-    boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
-    stateChange(); 
-}
-
+    if(aClass != null)
+    {
+        try
+        {
+            stateChange();
+            boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
+        }
+        catch(Exception e)
+        {
+            view.showError(e.getMessage());
+        }
+        if(temp)
+            {
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Parameter could not be added");
+            }
+        }
+        else
+        {
+            view.showError("Class does not exist");
+        }
+    }
 
 /**
  * Deletes an parameter from a given method.
@@ -471,9 +586,31 @@ public void deleteParameter(String className, String methodType, String methodNa
 {
     //Implemet in sprint 4.
     Class aClass = findClass(className);
-    String oldClassStr = aClass.toString();
-    boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
-    stateChange(); 
+    if(aClass != null)
+    {
+        try 
+        {    
+            stateChange();
+            boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
+        }
+        catch (Exception e) 
+        {
+            view.showError(e.getMessage());
+        }
+        if(temp)
+        {
+            prepGUI();
+            rebuild();
+        }
+        else
+        {
+            view.showError("Method access could not be changed");
+        }
+    }
+    else
+    {
+        view.showError("Class does not exist");
+    }
 }
 
     
@@ -511,14 +648,20 @@ public void deleteParameter(String className, String methodType, String methodNa
     {
         Class fromOld = findClass(from);
         Class toOld = findClass(to);
-        boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
-
-        //If the relationship could not be deleted, give the user and error and do not change the state.
-        if(!temp || fromOld == null || toOld == null)
-            view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
-        else
+        try
         {
-            stateChange(); 
+            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
+            //If the relationship could not be deleted, give the user and error and do not change the state.
+            if(!temp || fromOld == null || toOld == null)
+                view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
+            else
+            {
+                stateChange(); 
+            }
+        } 
+        catch(Exception e)
+        {
+            view.showError(e.getMessage());
         }
     }
 
