@@ -366,7 +366,7 @@ public class CLI
     {
         if(args.length == 5 && store.findClass(args[1]) != null)
         {
-            controller.createField(args[1], args[2], args[3], args[4]);    
+            controller.createField(args[1], args[4], args[3], args[2]);    
             makeReader();        
         }
         else
@@ -449,10 +449,10 @@ public class CLI
             view.showError("Invalid arguments for adding method, please refer to help.");
         else
         {
-            for (int counter = 4; counter < args.length - 1; counter += 2) 
+            for (int counter = 5; counter < args.length; counter += 2) 
                 params.add(args[counter] + " " + args[counter + 1]);
 
-            controller.createMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+            controller.createMethod(args[1], args[3], args[4], params, args[2]);
             makeReader();  
         }
     }
@@ -465,10 +465,10 @@ public class CLI
         if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 2; counter += 2) {
+        for (int counter = 5; counter < args.length - 1; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.renameMethod(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
+        controller.renameMethod(args[1], args[3], args[4], params, args[2], args[args.length - 1]);
         makeReader();  
     }
 
@@ -480,12 +480,11 @@ public class CLI
         if (args.length < 5 || (args.length - 5) % 2 != 0 ) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 1; counter += 2) {
+        for (int counter = 5; counter < args.length; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.deleteMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+        controller.deleteMethod(args[1], args[3], args[4], params, args[2]);
         makeReader();  
-
     }
 
     /**
@@ -497,10 +496,10 @@ public class CLI
         if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 2; counter += 2) {
+        for (int counter = 5; counter < args.length - 1; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.changeMethodType(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
+        controller.changeMethodType(args[1], args[3], args[4], params, args[2], args[args.length - 1]);
         makeReader();  
     }
     
@@ -513,10 +512,10 @@ public class CLI
         if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 2; counter += 2) {
+        for (int counter = 5; counter < args.length - 1; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.changeMethodAccess(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
+        controller.changeMethodAccess(args[1], args[3], args[4], params, args[2], args[args.length - 1]);
         makeReader();  
     }
 
@@ -528,10 +527,10 @@ public class CLI
         if ((args.length - 7) % 2 != 0) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 3; counter += 2) {
+        for (int counter = 5; counter < args.length - 2; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.addParameter(args[1], args[2], args[3], params, args[args.length - 3], args[args.length - 2], args[args.length - 1]);
+        controller.addParameter(args[1], args[3], args[4], params, args[2], args[args.length - 2], args[args.length - 1]);
         makeReader();  
     }
 
@@ -651,13 +650,17 @@ public class CLI
         for(Method m : methods)
         {
             String toAdd = "";
+            toAdd += m.getAccessString() + " ";
             toAdd += m.getType() + " ";
             toAdd += m.getName() + " ";
+            int count = 0;
             for(Parameter param : m.getParams())
             {
-                toAdd += param.toString() + " ";
-            }
-            toAdd += m.getAccessString(); 
+                toAdd += param.toString();
+                count++;
+                if(!(count == m.getParams().size()))
+                    toAdd += " ";
+            } 
             toReturn.add(toAdd);
         }
         return toReturn;
