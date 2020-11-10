@@ -33,7 +33,6 @@ public class Controller
     private StateController stateController;
     // True if a GUI exists already, false otherwise.
     private boolean GUIExists;
-    private boolean toggle;
     /**
      * Contructs a controller object.  Assigns action listeners to the correct buttons.
      */
@@ -584,8 +583,7 @@ public void deleteParameter(String className, String methodType, String methodNa
     private void stateChange()
     { 
         //When we change the state, we must add the old state to the undo state and increment the total number of stored states.
-        //stateController.getRedoStack().clear();
-        toggle = false;
+        stateController.getRedoStack().clear();
         stateController.addStateToUndo((Store)this.store.clone());
     }
 
@@ -596,7 +594,7 @@ public void deleteParameter(String className, String methodType, String methodNa
     {
         Stack<Store> redoStack = stateController.getRedoStack();
         //If the redo stack is empty, tell the user they cannot perform a redo.
-        if(redoStack.isEmpty() || !toggle)
+        if(redoStack.isEmpty())
             view.showError("Cannot redo");
         else
         {
@@ -625,7 +623,6 @@ public void deleteParameter(String className, String methodType, String methodNa
             this.store = stateController.Undo();
             prepGUI();
             rebuild();
-            toggle = true;
         }
       }
 
