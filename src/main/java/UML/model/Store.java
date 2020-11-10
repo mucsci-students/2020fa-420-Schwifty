@@ -549,21 +549,22 @@ public class Store implements Cloneable {
 			storeCopy.add(aClass);
 		}
 		//Add all relationships in.
-		for(Class aClass : clone.getClassStore())
+		for(Class aClass : this.getClassStore())
 		{
+			Class newClass = clone.findClass(aClass.getName());
 			//Add the relations to others.
 			Map<String,RelationshipType> relationToOthers = aClass.getRelationshipsToOther();
 	
 			for (Map.Entry<String, RelationshipType> relation : relationToOthers.entrySet()) 
 			{
-				aClass.addRelationshipToOther(relation.getValue(), clone.findClass(relation.getKey()));
+				newClass.addRelationshipToOther(relation.getValue(), clone.findClass(relation.getKey()));
 			}
 			//Add the relations from otehrs
 			Map<String,RelationshipType> relationFromOthers = aClass.getRelationshipsFromOther();
 
 			for (Map.Entry<String, RelationshipType> relation : relationFromOthers.entrySet()) 
 			{
-				aClass.addRelationshipFromOther(relation.getValue(), clone.findClass(relation.getKey()));
+				newClass.addRelationshipFromOther(relation.getValue(), clone.findClass(relation.getKey()));
 			}
 		}
 		return clone;

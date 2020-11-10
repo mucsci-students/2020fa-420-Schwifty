@@ -635,14 +635,17 @@ public void deleteParameter(String className, String methodType, String methodNa
     {   
         Class fromOld = findClass(from);
         Class toOld = findClass(to);
-        try{
+        try
+        {
+            stateChange();
             boolean temp = store.addRelationship(from, to, relation);
             //If the relationship could not be deleted, give the user and error and do not change the state.
             if(!temp || fromOld == null || toOld == null)
                 view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
             else 
-            {
-                stateChange(); 
+            { 
+                prepGUI();
+                rebuild();
             }
         }
         catch(IllegalArgumentException e)
@@ -660,13 +663,15 @@ public void deleteParameter(String className, String methodType, String methodNa
         Class toOld = findClass(to);
         try
         {
+            stateChange();
             boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
             //If the relationship could not be deleted, give the user and error and do not change the state.
             if(!temp || fromOld == null || toOld == null)
                 view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
             else
-            {
-                stateChange(); 
+            { 
+                prepGUI();
+                rebuild();
             }
         } 
         catch(Exception e)
@@ -770,7 +775,6 @@ public void deleteParameter(String className, String methodType, String methodNa
             view.showError("Cannot undo");
         else
         {
-            //prepGUI();
             stateController.addStateToRedo((Store)this.store.clone());
             this.store = stateController.Undo();
             prepGUI();
