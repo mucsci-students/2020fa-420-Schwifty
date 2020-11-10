@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.jline.reader.Candidate;
 import java.util.Set;
+import java.util.Stack;
 
 public class CLI
 {
@@ -221,6 +222,14 @@ public class CLI
         {
             display(line);
         }
+        else if(line[0].equals(("undo")))
+        {
+            undo();
+        }
+        else if(line[0].equals(("redo")))
+        {
+            redo();
+        }
         else 
         {
             System.out.println("That is not a valid command.");
@@ -245,7 +254,7 @@ public class CLI
      */
     private void help() 
     {
-        helpPage();
+        view.showHelp();
     }
 
     /**
@@ -278,7 +287,12 @@ public class CLI
             
             Store s = new Store();
             GraphicalView v = new GraphicalView();
+            StateController stateController = controller.getStateController();
+            Stack<Store> undoState = stateController.getUndoStack();
+            Stack<Store> redoState = stateController.getRedoStack();
+            Store currentState = stateController.getCurrentState();
             Controller c = new Controller(s, v);
+            StateController state = new StateController(currentState, undoState, redoState); 
             v.start();
             c.addListeners();
             try 
@@ -595,11 +609,19 @@ public class CLI
     }
 
     /**
-     * Displays the help menu.
+     * Undo an action.
      */
-    public void helpPage()
+    private void undo()
     {
-        view.showHelp();
+        controller.undo();
+    }
+
+    /**
+     * Redo an action.
+     */
+    private void redo()
+    {
+        controller.redo();
     }
 
     /**
@@ -680,7 +702,7 @@ public class CLI
         if(store.getClassStore().isEmpty())
         {
             completer = new TreeCompleter(
-            node("addc", "exit", "help", "showgui", "save", "load"));
+            node("addc", "exit", "help", "showgui", "save", "load", "undo", "redo"));
         }
         else
         {
@@ -733,7 +755,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -789,7 +811,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -845,7 +867,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -925,7 +947,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );

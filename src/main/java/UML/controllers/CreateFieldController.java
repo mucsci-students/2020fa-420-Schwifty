@@ -46,7 +46,6 @@ public class CreateFieldController implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-       
         String cmd = e.getActionCommand();
         String[] cmdArr = cmd.split(" ");
         String className = cmdArr[1];

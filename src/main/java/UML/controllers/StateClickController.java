@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import UML.model.Store;
 import UML.views.CommandlineView;
 import UML.views.View;
+import java.util.Stack;
 
 public class StateClickController implements ActionListener {
 
@@ -42,7 +43,12 @@ public class StateClickController implements ActionListener {
             //Set the gui invisible when we switch to the CLI view.
             controller.setGUIInvisible();
             View v = new CommandlineView();
+            StateController stateController = controller.getStateController();
+            Stack<Store> undoState = stateController.getUndoStack();
+            Stack<Store> redoState = stateController.getRedoStack();
+            Store currentState = stateController.getCurrentState();
             Controller c = new Controller(store, v);
+            StateController state = new StateController(currentState, undoState, redoState);
             CLI cli = new CLI(store, v, c);
         }
     }
