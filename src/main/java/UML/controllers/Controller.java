@@ -115,16 +115,19 @@ public StateController getStateController()
         {
             stateChange();
             boolean temp = store.addClass(name);  
+            if (temp)
+            {   
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Class could not be created");
+            }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             view.showError(e.getMessage());
-        }
-       
-        if (temp)
-        {   
-            prepGUI();
-            rebuild();
         }
     }
     
@@ -141,18 +144,18 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.deleteClass(name);  
+                if(temp)
+                {
+                    view.deleteClass(oldString);
+                }
+                else
+                {
+                    view.showError("Class could not be deleted");
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 view.showError(e.getMessage());
-            }
-            if(temp)
-            {
-                view.deleteClass(oldString);
-            }
-            else
-            {
-                view.showError("Class could not be deleted");
             }
         }
         else
@@ -172,20 +175,20 @@ public StateController getStateController()
             try
             {
                 stateChange();    
-                boolean temp = store.renameClass(oldName, newName);  
+                boolean temp = store.renameClass(oldName, newName); 
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Class could not be renamed");
+                }
             }
             catch(Exception e)
             {
                 view.showError(e.getMessage());
-            }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Class could not be renamed");
             }
         }
         else
@@ -212,19 +215,19 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.addField(className, type, name, access);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be created");
+                }
             }
             catch(Exception e)
             {
                 view.showError(e.getMessage());
-            }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Field could not be created");
             }
         }
         else
@@ -245,19 +248,20 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.deleteField(className, name); 
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be deleted");
+                }
             }
             catch(Exception e)
             {
                 view.showError(e.getMessage());
-            }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Field could not be deleted");
             }
         }
         else
@@ -278,19 +282,20 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.renameField(className, oldName, newName);   
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be renamed");
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 view.showError(e.getMessage());
-            }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Field could not be renamed");
             }
         }
         else
@@ -311,19 +316,20 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.changeFieldType(className, fieldName, newType);
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field type could not be changed");
+                }
             }
             catch(Exception e)
             {
                 view.showError(e.getMessage());
-            }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Field type could not be changed");
             }
         }
         else
@@ -343,20 +349,20 @@ public StateController getStateController()
             try
             {
                 stateChange();
-                boolean temp = store.changeFieldAccess(className, fieldName, access);
+                boolean temp = store.changeFieldAccess(className, fieldName, access); 
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field access could not be changed");
+                }
             }
             catch(Exception e)
             {
                 view.showError(e.getMessage());
-            }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Field access could not be changed");
             }
         }
         else
@@ -382,20 +388,21 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.addMethod(className, returnType, methodName, params, access);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be created");
+                }
             }
             catch(Exception e)
             {
                 view.showError(e.getMessage());
             }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Method could not be created");
-            }
+           
         }
         else
         {
@@ -415,20 +422,20 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be deleted");
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 view.showError(e.getMessage());
-            }
-            
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Method could not be deleted");
             }
         }
         else
@@ -449,19 +456,20 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
+             
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be renamed");
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 view.showError(e.getMessage());
-            } 
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Method could not be renamed");
             }
         }
         else
@@ -483,21 +491,22 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+
+                else
+                {
+                    view.showError("Method type could not be changed");
+                }
             }
             catch(Exception e)
             {
                 view.showError(e.getMessage());
             }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-
-            else
-            {
-                view.showError("Method type could not be changed");
-            }
+            
         }
         else
         {
@@ -518,20 +527,21 @@ public StateController getStateController()
             {
                 stateChange();
                 boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method access could not be changed");
+                }
             }
             catch(Exception e)
             {
                 view.showError(e.getMessage());
             }
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Method access could not be changed");
-            }
+           
         }
         else
         {
@@ -558,12 +568,7 @@ public void addParameter(String className, String methodType, String methodName,
         {
             stateChange();
             boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
-        }
-        catch(Exception e)
-        {
-            view.showError(e.getMessage());
-        }
-        if(temp)
+            if(temp)
             {
                 prepGUI();
                 rebuild();
@@ -573,11 +578,16 @@ public void addParameter(String className, String methodType, String methodName,
                 view.showError("Parameter could not be added");
             }
         }
-        else
+        catch(Exception e)
         {
-            view.showError("Class does not exist");
+            view.showError(e.getMessage());
         }
+    }   
+    else
+    {
+        view.showError("Class does not exist");
     }
+}
 
 /**
  * Deletes an parameter from a given method.
@@ -592,19 +602,19 @@ public void deleteParameter(String className, String methodType, String methodNa
         {    
             stateChange();
             boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
+            if(temp)
+            {
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Method access could not be changed");
+            }
         }
         catch (Exception e) 
         {
             view.showError(e.getMessage());
-        }
-        if(temp)
-        {
-            prepGUI();
-            rebuild();
-        }
-        else
-        {
-            view.showError("Method access could not be changed");
         }
     }
     else
