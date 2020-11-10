@@ -43,11 +43,6 @@ public class Store implements Cloneable {
 	// ================================================================================================================================================
 	// Getters
 	// ===============================================================================================================================================
-	/**
-	 * public Store getState() {
-	 * 
-	 * }
-	 */
 
 	/**
 	 * Returns ArrayList of classes in the store.
@@ -523,30 +518,53 @@ public class Store implements Cloneable {
 	public Object clone() 
 	{
 		//The clone
-		Store clone = null;
+		Store clone = new Store();
 		//will hold the new copy of the classStore
-		ArrayList<Class> storeCopy = new ArrayList<Class>();
+		ArrayList<Class> storeCopy = clone.getClassStore();
 		for(Class c : classStore)
 		{
-			storeCopy.add(c);
-		}
-		try
-		{
-			clone = (Store)super.clone();
-			clone.setClassStore(storeCopy);
-		}
-		catch(CloneNotSupportedException e)
-		{
-			Store s = new Store();
-			s.setCurrentLoadedFile(this.currentLoadedFile);
-			for(Class c : classStore)
+			//For each class, add all relevant field.
+			//Make new class (use name and location).
+			Class aClass = new Class(c.getName());
+			aClass.setLocation(c.getLocation());
+			//Add fields.
+			Set<Field> fields = c.getFields();
+			for (Field f : fields)
 			{
-				storeCopy.add(c);
+				aClass.addField(f.getType(), f.getName(), f.getAccessString());	
 			}
-			s.setClassStore(storeCopy);
-			return s;
+			
+			//Add methods.
+			Set<Method> methods = c.getMethods();
+			for (Method m : methods) 
+			{
+				String access = m.getAccessString();
+				String methodName = m.getName();
+				String methodType = m.getType();
+				ArrayList<Parameter> params  = m.getParams();
+				aClass.addMethod(methodType, methodName, params, access);
+			}
+			//Add the class to the store.
+			storeCopy.add(aClass);
 		}
+		//Add all relationships in.
+		for(Class aClass : clone.getClassStore())
+		{
+			//Add the relations to others.
+			Map<String,RelationshipType> relationToOthers = aClass.getRelationshipsToOther();
+	
+			for (Map.Entry<String, RelationshipType> relation : relationToOthers.entrySet()) 
+			{
+				aClass.addRelationshipToOther(relation.getValue(), clone.findClass(relation.getKey()));
+			}
+			//Add the relations from otehrs
+			Map<String,RelationshipType> relationFromOthers = aClass.getRelationshipsFromOther();
 
+			for (Map.Entry<String, RelationshipType> relation : relationFromOthers.entrySet()) 
+			{
+				aClass.addRelationshipFromOther(relation.getValue(), clone.findClass(relation.getKey()));
+			}
+		}
 		return clone;
 	}
 }

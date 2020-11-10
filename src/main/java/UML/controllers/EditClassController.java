@@ -34,10 +34,8 @@ public class EditClassController implements ActionListener {
     public void actionPerformed(ActionEvent e) 
     {
         String cmd = e.getActionCommand();
-        System.out.println(cmd);  
         String[] cmdArr = cmd.split(" ");
         String className = cmdArr[1];
-        System.out.println(className); //
         //Initialize string for new name.
         String name = "";
         

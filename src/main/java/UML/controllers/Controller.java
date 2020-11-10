@@ -31,9 +31,9 @@ public class Controller
     private View view;
     //The state controller that handles undo and redo
     private StateController stateController;
-
     // True if a GUI exists already, false otherwise.
     private boolean GUIExists;
+    private boolean toggle;
     /**
      * Contructs a controller object.  Assigns action listeners to the correct buttons.
      */
@@ -153,7 +153,6 @@ public StateController getStateController()
     public void renameClass(String oldName, String newName) throws IllegalArgumentException
     {
         Class oldClass = findClass(oldName);
-        String oldString = oldClass.toString();
         stateChange();
         if(oldClass != null)
         {
@@ -161,10 +160,6 @@ public StateController getStateController()
             if(temp)
             {
                 prepGUI();
-                Class newClass = findClass(newName);
-                String newString = newClass.toString();
-                //view.updateClass(oldString, newString);
-                //set the action command here
                 rebuild();
             }
             else
@@ -189,8 +184,8 @@ public StateController getStateController()
      */
     public void createField(String className, String type, String name, String access) throws IllegalArgumentException
     {
-        stateChange();
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
             boolean temp = store.addField(className, type, name, access);
@@ -216,9 +211,9 @@ public StateController getStateController()
     public void deleteField(String className, String name) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
-            stateChange();
             boolean temp = store.deleteField(className, name);
             if(temp)
             {
@@ -274,7 +269,8 @@ public StateController getStateController()
             boolean temp = store.changeFieldType(className, fieldName, newType);
             if(temp)
             {
-                
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -293,12 +289,14 @@ public StateController getStateController()
     public void changeFieldAccess(String className, String fieldName, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
             boolean temp = store.changeFieldAccess(className, fieldName, access);
             if(temp)
             {
-                stateChange();
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -322,12 +320,14 @@ public StateController getStateController()
     public void createMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
             boolean temp = store.addMethod(className, returnType, methodName, params, access);
             if(temp)
             {
-                stateChange();
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -346,12 +346,14 @@ public StateController getStateController()
     public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
             boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
             if(temp)
             {
-                stateChange();
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -370,12 +372,14 @@ public StateController getStateController()
     public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String access, String newName)
     {
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
             boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
             if(temp)
             {
-                stateChange(); 
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -395,12 +399,14 @@ public StateController getStateController()
     public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String access, String newType)
     {
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
             boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
             if(temp)
             {
-                stateChange();
+                prepGUI();
+                rebuild();
             }
 
             else
@@ -420,12 +426,14 @@ public StateController getStateController()
     public void changeMethodAccess(String className, String type, String name, ArrayList<String> params, String access, String newAccess)
     {
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
             boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
             if(temp)
             {
-                stateChange(); 
+                prepGUI();
+                rebuild();
             }
             else
             {
@@ -576,6 +584,8 @@ public void deleteParameter(String className, String methodType, String methodNa
     private void stateChange()
     { 
         //When we change the state, we must add the old state to the undo state and increment the total number of stored states.
+        //stateController.getRedoStack().clear();
+        toggle = false;
         stateController.addStateToUndo((Store)this.store.clone());
     }
 
@@ -586,37 +596,36 @@ public void deleteParameter(String className, String methodType, String methodNa
     {
         Stack<Store> redoStack = stateController.getRedoStack();
         //If the redo stack is empty, tell the user they cannot perform a redo.
-        if(redoStack.isEmpty())
+        if(redoStack.isEmpty() || !toggle)
             view.showError("Cannot redo");
         else
         {
-            stateChange();
+            stateController.addStateToUndo((Store)this.store.clone());
+            //stateChange();
             this.store = stateController.Redo();
             prepGUI();
             rebuild();
         }
+        
     }
-
 
      /**
       * Does an undo.
       */
       public void undo()
       {
-          Stack<Store> undoStack = stateController.getUndoStack();
-          //If the undo stack is empty, tell the user they cannot perform a undo.
+        Stack<Store> undoStack = stateController.getUndoStack();
+        //If the undo stack is empty, tell the user they cannot perform a undo.
         if(undoStack.isEmpty())
             view.showError("Cannot undo");
         else
         {
+            //prepGUI();
             stateController.addStateToRedo((Store)this.store.clone());
             this.store = stateController.Undo();
             prepGUI();
             rebuild();
-            for(Class c : store.getClassStore())
-            {
-                System.out.println(c.toString());
-            }
+            toggle = true;
         }
       }
 
