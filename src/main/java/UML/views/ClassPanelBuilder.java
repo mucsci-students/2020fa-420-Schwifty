@@ -56,7 +56,8 @@ public class ClassPanelBuilder implements PanelBuilder
     /**
      * Gets the classData field which is the toString() value if the class.
      */
-    public String getClassData() {
+    public String getClassData() 
+    {
         return classData;
     }
 
@@ -64,42 +65,48 @@ public class ClassPanelBuilder implements PanelBuilder
      * Sets the classData field.
      */
     @Override
-    public void setClassData(String classData) {
+    public void setClassData(String classData) 
+    {
         this.classData = classData;
     }
 
     /**
      * Gets the JPanel.
      */
-    public JPanel getPanel() {
+    public JPanel getPanel() 
+    {
         return panel;
     }
 
     /**
      * Sets the JPanel to a given JPanel.
      */
-    public void setPanel(JPanel panel) {
+    public void setPanel(JPanel panel) 
+    {
         this.panel = panel;
     }
 
     /**
      * Gets parent window.
      */
-    public DrawPanel getParentWindow() {
+    public DrawPanel getParentWindow() 
+    {
         return parentWindow;
     }
 
     /**
      * Gets border for JPanel.
      */
-    public Border getBlackline() {
+    public Border getBlackline() 
+    {
         return blackline;
     }
     
     /**
      * Sets border for JPanel.
      */
-    public void setBlackline(Border blackline) {
+    public void setBlackline(Border blackline) 
+    {
         this.blackline = blackline;
     }
     
@@ -109,7 +116,7 @@ public class ClassPanelBuilder implements PanelBuilder
     private String getClassText(String data)
     {
         int stop = data.indexOf("Relationships To Others: ");
-        return data.substring(0, stop);
+        return data.substring(0, stop - 32);
     }
     
     /**
@@ -119,27 +126,6 @@ public class ClassPanelBuilder implements PanelBuilder
     {
         String newText = getClassText(classData);
         JTextArea classText = new JTextArea(newText);
-        //Uses Scanner to get width/height of Panel.
-        Scanner lineScanner = new Scanner(newText);
-        int longest = 0;
-        int height = 0;
-        while(lineScanner.hasNextLine())
-        {
-            String line = lineScanner.nextLine();
-            Scanner scanner = new Scanner(line);
-            int localBest = 0;
-            while(scanner.hasNext())
-            {
-                localBest++;
-                scanner.next();
-            }
-            scanner.close();
-            ++height;
-            if(localBest > longest)
-                longest = localBest;
-        }
-        lineScanner.close();
-        classText.setEditable(false);
 
         String[] firstLine = classText.getText().split("\n");
         String[] line = firstLine[0].split(" ");
@@ -154,7 +140,7 @@ public class ClassPanelBuilder implements PanelBuilder
         JMenuBar miniBar = makeMiniBar(concat);
 
         //Adds color to panels.
-        left.setBackground(Color.BLUE);
+        left.setBackground(Color.darkGray);
         top.setBackground(Color.darkGray);
         bottom.setBackground(Color.darkGray);
         panel.setBackground(Color.PINK);
@@ -165,10 +151,6 @@ public class ClassPanelBuilder implements PanelBuilder
         panel.add(top, BorderLayout.NORTH);
         panel.add(bottom, BorderLayout.SOUTH);
         
-        //Sets size of panel pieces and overall panel.
-        panel.setBounds(0, 500, longest * 90, height * 20);
-        left.setPreferredSize(new Dimension(25, height * 20));
-
         //Finishes panel construction.
         classText.setBorder(blackline);
         panel.setVisible(true);
@@ -184,56 +166,21 @@ public class ClassPanelBuilder implements PanelBuilder
         JMenu miniMenu = new JMenu("+"); 
         miniMenu.setBackground(Color.darkGray);
         
-        //Field
-        JMenuItem crtField = new JMenuItem("Create field");//1
-
-        //Make these "Edit Field" //2
-        /**
-        JMenuItem rnField = new JMenuItem("Rename field");
-        JMenuItem delField = new JMenuItem("Delete field");
-        JMenuItem chgFieldType = new JMenuItem("Change field type");
-        JMenuItem chgFieldAccess = new JMenuItem("Change Field Access");
-        */
+        //Field.
+        JMenuItem crtField = new JMenuItem("Create field");
         JMenuItem editField = new JMenuItem("Edit Field");
 
-        //Method
-        JMenuItem crtMethod = new JMenuItem("Create method"); //3
-
-        //Make these "Edit Method" //4
-        /*
-        JMenuItem delMethod = new JMenuItem("Delete method");
-        JMenuItem rnMethod = new JMenuItem("Rename method");
-        JMenuItem chgMethodType = new JMenuItem("Change method type");
-        JMenuItem chgMethodAccess = new JMenuItem("Change Method Access");
-        */
-        //edit also counts as delete
+        //Method.
+        JMenuItem crtMethod = new JMenuItem("Create method");
         JMenuItem editMethod = new JMenuItem("Edit method");
         
-        //Relationship
-        JMenuItem crtRelationship = new JMenuItem("Create relationship"); //5
-        JMenuItem delRelationship = new JMenuItem("Delete relationship"); //6
+        //Relationship.
+        JMenuItem crtRelationship = new JMenuItem("Create relationship");
+        JMenuItem delRelationship = new JMenuItem("Delete relationship");
 
-        //Class
-        //JMenuItem renameClass = new JMenuItem("Rename Class");
-        //JMenuItem deleteClass = new JMenuItem("Delete Class"); 
-        JMenuItem editClass = new JMenuItem("Edit Class"); //7
-        /**
-        JMenuItem[] arr = { crtField, delField, rnField, chgFieldType, crtMethod, delMethod, rnMethod,
-            chgFieldAccess, chgMethodAccess, chgMethodType, crtRelationship, delRelationship, renameClass, deleteClass};
-        String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
-            "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method",
-            "Change field access level", "Change method access level", "Change method type" };
-        String[] command = { "CreateField " + concat, "DeleteField " + concat, "RenameField " + concat, "ChangeFieldType " + concat, "CreateMethod " + concat,
-            "DeleteMethod " + concat, "RenameMethod "+ concat, "ChangeFieldAccess "+ concat, "ChangeMethodAccess "+concat, "ChangeMethodType ", 
-            "CreateRelationship " + concat, "DeleteRelationship " + concat, "RenameClass " + concat, "DeleteClass " + concat };
-
-        for (int count = 0; count < 10; ++count) {
-            miniMenu.add(arr[count]);
-            arr[count].setToolTipText(text[count]);
-            arr[count].setActionCommand(command[count]);
-        }
-        */
-        
+        //Class.
+        JMenuItem editClass = new JMenuItem("Edit Class");
+      
         JMenuItem[] arr = { crtField, editField, crtMethod, editMethod, crtRelationship, delRelationship, editClass};
         String[] text = { "Create new field", "Edit a field", "Create a method", "Edit a method", "Create a relationship", "Delete a relationship",
                           "Rename a classs", "Delete a class" };

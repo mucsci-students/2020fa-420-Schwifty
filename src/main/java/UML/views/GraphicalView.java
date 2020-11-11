@@ -491,8 +491,8 @@ public class GraphicalView implements View {
             Scanner scanner = new Scanner(line);
             int localBest = 0;
             while (scanner.hasNext()) {
+                localBest += scanner.next().length();
                 localBest++;
-                scanner.next();
             }
             scanner.close();
             ++height;
@@ -501,8 +501,10 @@ public class GraphicalView implements View {
         }
         lineScanner.close();
         panel.setLocation(x, y);
+        JTextArea text = (JTextArea) panel.getComponent(0);
+
         //Set the bounds of the panel to be some multiple of the size of the String to make the panel size make sense.
-        panel.setBounds(x, y, (longest * 20) + 150, height * 20);
+        panel.setBounds(x, y, (longest - 10) * 10, (text.getLineCount() + 3) * 15);
         refresh();
     }
 
