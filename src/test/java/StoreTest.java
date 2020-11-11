@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
 import java.util.ArrayList;
+import java.io.File;
 import java.util.Set;
 import java.util.HashSet;
 import UML.model.Store;
@@ -556,5 +557,19 @@ public class StoreTest {
         //store Method List equals testM.
         assertTrue(store.getMethodList(methods).equals(testM));
 
-    }  
+    }
+
+    @Test
+    public void testClone()
+    {
+        Store s = new Store();
+        s.addClass("Test1");
+        s.addClass("Test2");
+        s.setCurrentLoadedFile(new File("TestFile"));
+        Store testStore = (Store)s.clone();
+
+        //Make sure clone and original have same content.
+        assertEquals(s.getClassList(), testStore.getClassList());
+        assertEquals(s.getCurrentLoadedFile(), testStore.getCurrentLoadedFile());
+    }
 }

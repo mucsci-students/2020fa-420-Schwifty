@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 import UML.controllers.MouseClickAndDragController;
+import UML.controllers.StateController;
 
 import java.awt.Dimension;
 
@@ -28,14 +29,8 @@ public class Controller
     private Store store;
     // Store the view
     private View view;
-    // The stack of all states to undo to.
-    private Stack<File> undo;
-    // The stack of all states to redo to.
-    private Stack<File> redo;  
-    // The file representing the current state.
-    private File currentState;
-    // The state change count for unique file names.
-    private int count;
+    //The state controller that handles undo and redo
+    private StateController stateController;
     // True if a GUI exists already, false otherwise.
     private boolean GUIExists;
     /**
@@ -46,20 +41,9 @@ public class Controller
         this.store = store;
         this.view = view;
         GUIExists = false;
-        count = 0;
-        String current = "" + count;
-        currentState = new File(current);
-        try
-        {
-            //Save to get the initial state of the UML editor.
-            save(currentState.getName());
-        }
-        catch(Exception e)
-        {
-            view.showError("ERROR");
-        }
-        undo = new Stack<File>();
-        redo = new Stack<File>();
+
+        //get the initial state of the UML editor.
+        stateController = new StateController(this.store);
     }
 
 
@@ -81,6 +65,10 @@ public boolean getGUIExists()
 //Setters
 //================================================================================================================================================
 
+public void setStore(Store newStore)
+{
+    this.store = newStore;
+}
 
 /**
  * Sets the value of GUIExists to true.
@@ -106,6 +94,13 @@ public void setGUIVisible()
     view.setGUIVisible();
 }
 
+/**
+ * Gets the state controller
+ */
+public StateController getStateController()
+{
+    return this.stateController;
+}
 //================================================================================================================================================
 //Class methods
 //================================================================================================================================================
@@ -116,10 +111,23 @@ public void setGUIVisible()
      */
     public void createClass(String name) 
     {
-        boolean temp = store.addClass(name);
-        if (temp)
-        {   
-            stateChange(); 
+        try
+        {
+            stateChange();
+            boolean temp = store.addClass(name);  
+            if (temp)
+            {   
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Class could not be created");
+            }
+        }
+        catch (Exception e)
+        {
+            view.showError(e.getMessage());
         }
     }
     
@@ -129,16 +137,25 @@ public void setGUIVisible()
     public void deleteClass(String name) 
     {
         Class aClass = findClass(name);
+        String oldString = aClass.toString();
         if(aClass != null)
         {
-            boolean temp = store.deleteClass(name);
-            if(temp)
+            try
             {
                 stateChange();
+                boolean temp = store.deleteClass(name);  
+                if(temp)
+                {
+                    view.deleteClass(oldString);
+                }
+                else
+                {
+                    view.showError("Class could not be deleted");
+                }
             }
-            else
+            catch (Exception e)
             {
-                view.showError("Class could not be deleted");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -155,14 +172,23 @@ public void setGUIVisible()
         Class oldClass = findClass(oldName);
         if(oldClass != null)
         {
-            boolean temp = store.renameClass(oldName, newName);
-            if(temp)
+            try
             {
-                stateChange();
+                stateChange();    
+                boolean temp = store.renameClass(oldName, newName); 
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Class could not be renamed");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Class could not be renamed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -185,14 +211,23 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            boolean temp = store.addField(className, type, name, access);
-            if(temp)
+            try
             {
                 stateChange();
+                boolean temp = store.addField(className, type, name, access);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be created");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Field could not be created");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -209,14 +244,24 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            boolean temp = store.deleteField(className, name);
-            if(temp)
+            try 
             {
                 stateChange();
+                boolean temp = store.deleteField(className, name); 
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be deleted");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Field could not be deleted");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -233,14 +278,24 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            boolean temp = store.renameField(className, oldName, newName);
-            if(temp)
+            try 
             {
                 stateChange();
+                boolean temp = store.renameField(className, oldName, newName);   
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field could not be renamed");
+                }
             }
-            else
+            catch (Exception e)
             {
-                view.showError("Field could not be renamed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -256,15 +311,25 @@ public void setGUIVisible()
     {
         Class aClass = findClass(className);
         if(aClass != null)
-        {
-            boolean temp = store.changeFieldType(className, fieldName, newType);
-            if(temp)
+        {  
+            try
             {
                 stateChange();
+                boolean temp = store.changeFieldType(className, fieldName, newType);
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field type could not be changed");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Field type could not be changed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -281,14 +346,23 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            boolean temp = store.changeFieldAccess(className, fieldName, access);
-            if(temp)
+            try
             {
                 stateChange();
+                boolean temp = store.changeFieldAccess(className, fieldName, access); 
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Field access could not be changed");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Field access could not be changed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -310,15 +384,25 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            boolean temp = store.addMethod(className, returnType, methodName, params, access);
-            if(temp)
+            try
             {
                 stateChange();
+                boolean temp = store.addMethod(className, returnType, methodName, params, access);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be created");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Method could not be created");
+                view.showError(e.getMessage());
             }
+           
         }
         else
         {
@@ -334,14 +418,24 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
-            if(temp)
+            try
             {
                 stateChange();
+                boolean temp = store.deleteMethod(className, returnType, methodName, params, access);
+            
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be deleted");
+                }
             }
-            else
+            catch (Exception e)
             {
-                view.showError("Method could not be deleted");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -358,14 +452,24 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
-            if(temp)
+            try
             {
-                stateChange(); 
+                stateChange();
+                boolean temp = store.renameMethod(className, returnType, methodName, params, access, newName);
+             
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method could not be renamed");
+                }
             }
-            else
+            catch (Exception e)
             {
-                view.showError("Method could not be renamed");
+                view.showError(e.getMessage());
             }
         }
         else
@@ -383,16 +487,26 @@ public void setGUIVisible()
         Class aClass = findClass(className);
         if(aClass != null)
         {
-            boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
-            if(temp)
+            try
             {
                 stateChange();
-            }
+                boolean temp = store.changeMethodType(className, oldType, methodName, params, access, newType);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
 
-            else
-            {
-                view.showError("Method type could not be changed");
+                else
+                {
+                    view.showError("Method type could not be changed");
+                }
             }
+            catch(Exception e)
+            {
+                view.showError(e.getMessage());
+            }
+            
         }
         else
         {
@@ -406,17 +520,28 @@ public void setGUIVisible()
     public void changeMethodAccess(String className, String type, String name, ArrayList<String> params, String access, String newAccess)
     {
         Class aClass = findClass(className);
+        stateChange();
         if(aClass != null)
         {
-            boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
-            if(temp)
+            try
             {
-                stateChange(); 
+                stateChange();
+                boolean temp = store.changeMethodAccess(className, type, name, params, access, newAccess);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method access could not be changed");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Method access could not be changed");
+                view.showError(e.getMessage());
             }
+           
         }
         else
         {
@@ -437,11 +562,32 @@ public void addParameter(String className, String methodType, String methodName,
 {
     //Implemet in sprint 4.
     Class aClass = findClass(className);
-    String oldClassStr = aClass.toString();
-    boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
-    stateChange(); 
+    if(aClass != null)
+    {
+        try
+        {
+            stateChange();
+            boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
+            if(temp)
+            {
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Parameter could not be added");
+            }
+        }
+        catch(Exception e)
+        {
+            view.showError(e.getMessage());
+        }
+    }   
+    else
+    {
+        view.showError("Class does not exist");
+    }
 }
-
 
 /**
  * Deletes an parameter from a given method.
@@ -450,9 +596,31 @@ public void deleteParameter(String className, String methodType, String methodNa
 {
     //Implemet in sprint 4.
     Class aClass = findClass(className);
-    String oldClassStr = aClass.toString();
-    boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
-    stateChange(); 
+    if(aClass != null)
+    {
+        try 
+        {    
+            stateChange();
+            boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
+            if(temp)
+            {
+                prepGUI();
+                rebuild();
+            }
+            else
+            {
+                view.showError("Method access could not be changed");
+            }
+        }
+        catch (Exception e) 
+        {
+            view.showError(e.getMessage());
+        }
+    }
+    else
+    {
+        view.showError("Class does not exist");
+    }
 }
 
     
@@ -467,14 +635,17 @@ public void deleteParameter(String className, String methodType, String methodNa
     {   
         Class fromOld = findClass(from);
         Class toOld = findClass(to);
-        try{
+        try
+        {
+            stateChange();
             boolean temp = store.addRelationship(from, to, relation);
             //If the relationship could not be deleted, give the user and error and do not change the state.
             if(!temp || fromOld == null || toOld == null)
                 view.showError("Relationship could not be created.  Make sure both classes exist or check that there is no existing relationships between those classes.");
             else 
-            {
-                stateChange(); 
+            { 
+                prepGUI();
+                rebuild();
             }
         }
         catch(IllegalArgumentException e)
@@ -490,14 +661,22 @@ public void deleteParameter(String className, String methodType, String methodNa
     {
         Class fromOld = findClass(from);
         Class toOld = findClass(to);
-        boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
-
-        //If the relationship could not be deleted, give the user and error and do not change the state.
-        if(!temp || fromOld == null || toOld == null)
-            view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
-        else
+        try
         {
-            stateChange(); 
+            stateChange();
+            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
+            //If the relationship could not be deleted, give the user and error and do not change the state.
+            if(!temp || fromOld == null || toOld == null)
+                view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
+            else
+            { 
+                prepGUI();
+                rebuild();
+            }
+        } 
+        catch(Exception e)
+        {
+            view.showError(e.getMessage());
         }
     }
 
@@ -517,70 +696,15 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void load(String fileName) throws IOException, ParseException
     {
-        //If there are panels on the GUI, get red of them to prep for the new load.
-        if(view.getPanels() != null)
-        {
-            for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
-            {
-                view.deleteClass(entry.getKey());
-            }
-        }
+        stateChange();
+        prepGUI();
         //Also clear the class store.
         store.getClassStore().clear();
-        
         //Load the specified file in the store.
         SaveAndLoad sl = new SaveAndLoad(store, view, this);
         File currentFile = sl.load(fileName);
         store.setCurrentLoadedFile(currentFile);
-
-        ActionListener[] listeners = new ActionListener[7];
-
-        //Create Listeners
-        listeners[0] = new CreateFieldController(store, view, this);
-        listeners[1] = new EditFieldController(store, view, this);
-        listeners[2]= new CreateMethodController(store, view, this);
-        listeners[3] = new EditMethodController(store, view, this);
-        listeners[4] = new CreateRelationshipController(store, view, this);
-        listeners[5] = new DeleteRelationshipController(store,view, this);
-        listeners[6] = new EditClassController(store, view, this);
-
-        //Add the approprate panels and listeners to the view.
-        for(Class c : store.getClassStore())
-        {
-            view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
-            view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
-            for(int count = 0; count < 7; count++)
-            {
-                view.addPanelListener(listeners[count], c.toString());
-            }
-        }
-        //Add relationships to the view.
-        for(Class c : store.getClassStore())
-        {
-            for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
-            {
-                view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
-            }
-        }
-    }
-
-    /**
-     * Loads a selected file, but is not meant to be used for undo and redo.
-     */
-    public void loadFromMenu(String fileName) throws IOException, ParseException
-    {
-        load(fileName);
-        //This is the load that is used for normal loading so:
-        //Increment the count, push the old file onto the undo stack.
-        count++;
-        undo.push(currentState);
-
-        //Create a new file to save and set it as the currrent file.
-        String toSave = "" + count;
-        currentState = new File(toSave);
-        save(toSave);
-        //Load the file like a normal file now.
-        load(toSave + ".json");
+        rebuild();
     }
 
     /**
@@ -615,23 +739,10 @@ public void deleteParameter(String className, String methodType, String methodNa
      * Changes the state of the model and view
      */
     private void stateChange()
-    {
-        try
-        {
-            //When we change the state, we must add the old state to the undo state and increment the total number of stored states.
-            count++;
-            undo.push(currentState);
-            String toSave = "" + count;
-            currentState = new File(toSave);
-            //Save the new state and load it.
-            save(toSave);
-            load(toSave + ".json");
-        }
-        catch(Exception e)
-        {
-            //This should never occur.
-            view.showError("ERROR");
-        }
+    { 
+        //When we change the state, we must add the old state to the undo state and increment the total number of stored states.
+        stateController.getRedoStack().clear();
+        stateController.addStateToUndo((Store)this.store.clone());
     }
 
     /**
@@ -639,53 +750,79 @@ public void deleteParameter(String className, String methodType, String methodNa
      */
     public void redo()
     {
+        Stack<Store> redoStack = stateController.getRedoStack();
         //If the redo stack is empty, tell the user they cannot perform a redo.
-        if(redo.isEmpty())
+        if(redoStack.isEmpty())
             view.showError("Cannot redo");
         else
         {
-            try
-            {
-                //Add the current file to the undo stack so that we can revisit it.
-                undo.push(currentState);
-                save(currentState.getName());
-                //Set the current state to be the first state on the redo stack.
-                currentState = redo.pop();
-                load(currentState.getName() + ".json");
-            }
-            catch(Exception e)
-            {
-                //This should never occur.
-                view.showError("ERROR");
-            }
+            stateController.addStateToUndo((Store)this.store.clone());
+            //stateChange();
+            this.store = stateController.Redo();
+            prepGUI();
+            rebuild();
         }
     }
-
 
      /**
       * Does an undo.
       */
       public void undo()
       {
-          //If the undo stack is empty, tell the user they cannot perform a undo.
-        if(undo.isEmpty())
+        Stack<Store> undoStack = stateController.getUndoStack();
+        //If the undo stack is empty, tell the user they cannot perform a undo.
+        if(undoStack.isEmpty())
             view.showError("Cannot undo");
         else
         {
-            try
-            {
-                //Add the current file to the redo stack so that we can revisit it.
-                redo.push(currentState);
-                save(currentState.getName());
-                //Set the current state to be the first state on the undo stack.
-                currentState = undo.pop();
-                load(currentState.getName() + ".json");
-            }
-            catch (Exception e)
-            {
-                //This should never occur.
-                view.showError("ERROR");
-            }
+            stateController.addStateToRedo((Store)this.store.clone());
+            this.store = stateController.Undo();
+            prepGUI();
+            rebuild();
         }
+      }
+
+      private void rebuild()
+      {
+          ActionListener[] listeners = new ActionListener[7];
+          //Create Listeners
+          listeners[0] = new CreateFieldController(store, view, this);
+          listeners[1] = new EditFieldController(store, view, this);
+          listeners[2]= new CreateMethodController(store, view, this);
+          listeners[3] = new EditMethodController(store, view, this);
+          listeners[4] = new CreateRelationshipController(store, view, this);
+          listeners[5] = new DeleteRelationshipController(store,view, this);
+          listeners[6] = new EditClassController(store, view, this);
+
+          //Add the approprate panels and listeners to the view.
+          for(Class c : store.getClassStore())
+          {
+              view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
+              view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
+              for(int count = 0; count < 7; count++)
+              {
+                  view.addPanelListener(listeners[count], c.toString());
+              }
+            }
+            //Add relationships to the view.
+            for(Class c : store.getClassStore())
+            {
+                for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
+                {
+                    view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
+                }
+            }
+      }
+
+      private void prepGUI()
+      {
+          //If there are panels on the GUI, get red of them to prep for the new load.
+          if(view.getPanels() != null)
+          {
+              for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
+              {
+                  view.deleteClass(entry.getKey());
+              }
+          }
       }
 }

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.jline.reader.Candidate;
 import java.util.Set;
+import java.util.Stack;
 
 public class CLI
 {
@@ -194,7 +195,8 @@ public class CLI
         else if (line[0].equals("deletep")) 
         {
             deleteParameter(line);
-        } else if (line[0].equals("deleter")) 
+        } 
+        else if (line[0].equals("deleter")) 
         {
             deleteRelationship(line);
         } 
@@ -205,7 +207,8 @@ public class CLI
         else if (line[0].equals("chungus")) 
         {
             chungus();
-        } else if (line[0].equals(("load"))) 
+        } 
+        else if (line[0].equals(("load"))) 
         {
             load(line);
         } 
@@ -220,6 +223,14 @@ public class CLI
         else if(line[0].equals(("display")))
         {
             display(line);
+        }
+        else if(line[0].equals(("undo")))
+        {
+            undo();
+        }
+        else if(line[0].equals(("redo")))
+        {
+            redo();
         }
         else 
         {
@@ -245,7 +256,7 @@ public class CLI
      */
     private void help() 
     {
-        helpPage();
+        view.showHelp();
     }
 
     /**
@@ -278,7 +289,12 @@ public class CLI
             
             Store s = new Store();
             GraphicalView v = new GraphicalView();
+            StateController stateController = controller.getStateController();
+            Stack<Store> undoState = stateController.getUndoStack();
+            Stack<Store> redoState = stateController.getRedoStack();
+            Store currentState = stateController.getCurrentState();
             Controller c = new Controller(s, v);
+            StateController state = new StateController(currentState, undoState, redoState); 
             v.start();
             c.addListeners();
             try 
@@ -352,7 +368,7 @@ public class CLI
     {
         if(args.length == 5 && store.findClass(args[1]) != null)
         {
-            controller.createField(args[1], args[2], args[3], args[4]);    
+            controller.createField(args[1], args[4], args[3], args[2]);    
             makeReader();        
         }
         else
@@ -435,10 +451,10 @@ public class CLI
             view.showError("Invalid arguments for adding method, please refer to help.");
         else
         {
-            for (int counter = 4; counter < args.length - 1; counter += 2) 
+            for (int counter = 5; counter < args.length; counter += 2) 
                 params.add(args[counter] + " " + args[counter + 1]);
 
-            controller.createMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+            controller.createMethod(args[1], args[3], args[4], params, args[2]);
             makeReader();  
         }
     }
@@ -451,10 +467,10 @@ public class CLI
         if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 2; counter += 2) {
+        for (int counter = 5; counter < args.length - 1; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.renameMethod(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
+        controller.renameMethod(args[1], args[3], args[4], params, args[2], args[args.length - 1]);
         makeReader();  
     }
 
@@ -466,12 +482,11 @@ public class CLI
         if (args.length < 5 || (args.length - 5) % 2 != 0 ) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 1; counter += 2) {
+        for (int counter = 5; counter < args.length; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.deleteMethod(args[1], args[2], args[3], params, args[args.length - 1]);
+        controller.deleteMethod(args[1], args[3], args[4], params, args[2]);
         makeReader();  
-
     }
 
     /**
@@ -483,10 +498,10 @@ public class CLI
         if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 2; counter += 2) {
+        for (int counter = 5; counter < args.length - 1; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.changeMethodType(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
+        controller.changeMethodType(args[1], args[3], args[4], params, args[2], args[args.length - 1]);
         makeReader();  
     }
     
@@ -499,10 +514,10 @@ public class CLI
         if (args.length < 5 || (args.length - 5) % 2 != 0 || store.findClass(args[1]) == null) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 2; counter += 2) {
+        for (int counter = 5; counter < args.length - 1; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.changeMethodAccess(args[1], args[2], args[3], params, args[args.length - 2], args[args.length - 1]);
+        controller.changeMethodAccess(args[1], args[3], args[4], params, args[2], args[args.length - 1]);
         makeReader();  
     }
 
@@ -514,10 +529,10 @@ public class CLI
         if ((args.length - 7) % 2 != 0) {
             System.out.println("Invalid arguments");
         }
-        for (int counter = 4; counter < args.length - 3; counter += 2) {
+        for (int counter = 5; counter < args.length - 2; counter += 2) {
             params.add(args[counter] + " " + args[counter + 1]);
         }
-        controller.addParameter(args[1], args[2], args[3], params, args[args.length - 3], args[args.length - 2], args[args.length - 1]);
+        controller.addParameter(args[1], args[3], args[4], params, args[2], args[args.length - 2], args[args.length - 1]);
         makeReader();  
     }
 
@@ -526,6 +541,14 @@ public class CLI
      */
     private void deleteParameter(String[] args) 
     {
+        ArrayList<String> params = new ArrayList<String>();
+        if ((args.length - 7) % 2 != 0) {
+            System.out.println("Invalid arguments");
+        }
+        for (int counter = 5; counter < args.length - 2; counter += 2) {
+            params.add(args[counter] + " " + args[counter + 1]);
+        }
+        controller.deleteParameter(args[1], args[3], args[4], params, args[2], args[args.length - 2], args[args.length - 1]);
         makeReader();
     }
 
@@ -596,11 +619,19 @@ public class CLI
     }
 
     /**
-     * Displays the help menu.
+     * Undo an action.
      */
-    public void helpPage()
+    private void undo()
     {
-        view.showHelp();
+        controller.undo();
+    }
+
+    /**
+     * Redo an action.
+     */
+    private void redo()
+    {
+        controller.redo();
     }
 
     /**
@@ -629,14 +660,43 @@ public class CLI
         for(Method m : methods)
         {
             String toAdd = "";
+            toAdd += m.getAccessString() + " ";
             toAdd += m.getType() + " ";
-            toAdd += m.getName() + " ";
+            toAdd += m.getName();
+            if(!m.getParams().isEmpty())
+            {
+                toAdd += " ";
+                int count = 0;
+                for(Parameter param : m.getParams())
+                {
+                    toAdd += param.toString();
+                    count++;
+                    if(count != m.getParams().size())
+                        toAdd += " ";
+                } 
+            }
+            toReturn.add(toAdd);
+        }
+        return toReturn;
+    }
+
+
+    /**
+     * Gets a list of parameter strings.
+     */
+    private ArrayList<String> getParameters(String className)
+    {
+        UML.model.Class c = store.findClass(className);
+        Set<Method> methods = c.getMethods();
+        ArrayList<String> toReturn = new ArrayList<String>();
+        for(Method m : methods)
+        {
+            String toAdd = "";
             for(Parameter param : m.getParams())
             {
-                toAdd += param.toString() + " ";
+                toAdd += param.toString();
+                toReturn.add(toAdd);
             }
-            toAdd += m.getAccessString(); 
-            toReturn.add(toAdd);
         }
         return toReturn;
     }
@@ -677,7 +737,7 @@ public class CLI
         if(store.getClassStore().isEmpty())
         {
             completer = new TreeCompleter(
-            node("addc", "exit", "help", "showgui", "save", "load"));
+            node("addc", "exit", "help", "showgui", "save", "load", "undo", "redo"));
         }
         else
         {
@@ -703,6 +763,11 @@ public class CLI
                     hasMethods = true;
             }
 
+            //Make String completers for access and type.
+            StringsCompleter accesses = new StringsCompleter("public", "private", "protected");
+
+            StringsCompleter types = new StringsCompleter("boolean", "char", "double", "float", "int", "short", "size_t", "String", "unsigned");
+            
             if(str[0].equals("load") || (!hasFields && !hasMethods))
             {
                 completer = new TreeCompleter(
@@ -714,11 +779,19 @@ public class CLI
                                         node(classes)
                                         ),
                                     node("addf",
-                                        node(classes)
-                                        ),
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
+                                    ),
                                     node("addm",
-                                        node(classes)
-                                        ),
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
+                                    ),
                                         node("addr",
                                         node(classes,
                                             node(classes, 
@@ -730,7 +803,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -746,10 +819,18 @@ public class CLI
                                         node(classes)
                                     ),
                                     node("addf",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("addm",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("renamem",
                                         node(classes,
@@ -765,16 +846,31 @@ public class CLI
                                     ),   
                                     node("changemt",
                                         node(classes,
-                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(types)
                                             )
                                         )
                                     ),
                                     node("changema",
                                         node(classes,
-                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(accesses)
                                             )
                                         )
                                     ),
+                                    node("addp",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ), 
+                                    node("deletep",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(new StringsCompleter(getParameters(str[1])))
+                                            )
+                                        )
+                                    ), 
                                     node("addr",
                                         node(classes,
                                             node(classes, 
@@ -786,7 +882,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -802,10 +898,18 @@ public class CLI
                                         node(classes)
                                     ),
                                     node("addf",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("addm",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("renamef",
                                         node(classes,
@@ -821,13 +925,15 @@ public class CLI
                                     ),   
                                     node("changeft",
                                         node(classes,
-                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            node(new StringsCompleter(getFieldNames(str[1])),
+                                                node(types)
                                             )
                                         )
                                     ),
                                     node("changefa",
                                         node(classes,
-                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            node(new StringsCompleter(getFieldNames(str[1])),
+                                                node(accesses)
                                             )
                                         )
                                     ),
@@ -842,7 +948,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );
@@ -858,7 +964,11 @@ public class CLI
                                         node(classes)
                                     ),
                                     node("addf",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("renamef",
                                         node(classes,
@@ -874,18 +984,24 @@ public class CLI
                                     ),   
                                     node("changeft",
                                         node(classes,
-                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            node(new StringsCompleter(getFieldNames(str[1])),
+                                                node(types)
                                             )
                                         )
                                     ),
                                     node("changefa",
                                         node(classes,
-                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            node(new StringsCompleter(getFieldNames(str[1])),
+                                                node(accesses)
                                             )
                                         )
                                     ),
                                     node("addm",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("renamem",
                                         node(classes,
@@ -901,16 +1017,31 @@ public class CLI
                                     ),   
                                     node("changemt",
                                         node(classes,
-                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(types)
                                             )
                                         )
                                     ),
                                     node("changema",
                                         node(classes,
-                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(accesses)
                                             )
                                         )
                                     ),
+                                    node("addp",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            )
+                                        )
+                                    ), 
+                                    node("deletep",
+                                        node(classes,
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(new StringsCompleter(getParameters(str[1])))
+                                            )
+                                        )
+                                    ), 
                                     node("addr",
                                         node(classes,
                                             node(classes, 
@@ -922,7 +1053,7 @@ public class CLI
                                         node(classes,
                                             node(classes))
                                         ),
-                                    node("help", "exit", "showgui", "save", "load"),
+                                    node("help", "exit", "showgui", "save", "load", "undo", "redo"),
                                     node("display",
                                         node(classes))
                                     );

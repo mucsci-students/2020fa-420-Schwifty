@@ -151,6 +151,10 @@ public class CommandlineView implements View {
                 "display [(Optional) className]:                                                                             Displays a class");
         System.out.println(
                 "display [className]:                                                                                        Displays a class");
+        System.out.println(
+                "undo:                                                                                                       Reverts to a previous state");
+        System.out.println(
+                "redo:                                                                                                       Restores the latest undo");
     }
 
 
