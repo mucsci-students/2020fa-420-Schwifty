@@ -662,15 +662,19 @@ public class CLI
             String toAdd = "";
             toAdd += m.getAccessString() + " ";
             toAdd += m.getType() + " ";
-            toAdd += m.getName() + " ";
-            int count = 0;
-            for(Parameter param : m.getParams())
+            toAdd += m.getName();
+            if(!m.getParams().isEmpty())
             {
-                toAdd += param.toString();
-                count++;
-                if(!(count == m.getParams().size()))
-                    toAdd += " ";
-            } 
+                toAdd += " ";
+                int count = 0;
+                for(Parameter param : m.getParams())
+                {
+                    toAdd += param.toString();
+                    count++;
+                    if(count != m.getParams().size())
+                        toAdd += " ";
+                } 
+            }
             toReturn.add(toAdd);
         }
         return toReturn;
@@ -759,6 +763,11 @@ public class CLI
                     hasMethods = true;
             }
 
+            //Make String completers for access and type.
+            StringsCompleter accesses = new StringsCompleter("public", "private", "protected");
+
+            StringsCompleter types = new StringsCompleter("boolean", "char", "double", "float", "int", "short", "size_t", "String", "unsigned");
+            
             if(str[0].equals("load") || (!hasFields && !hasMethods))
             {
                 completer = new TreeCompleter(
@@ -770,11 +779,19 @@ public class CLI
                                         node(classes)
                                         ),
                                     node("addf",
-                                        node(classes)
-                                        ),
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
+                                    ),
                                     node("addm",
-                                        node(classes)
-                                        ),
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
+                                    ),
                                         node("addr",
                                         node(classes,
                                             node(classes, 
@@ -802,10 +819,18 @@ public class CLI
                                         node(classes)
                                     ),
                                     node("addf",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("addm",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("renamem",
                                         node(classes,
@@ -821,13 +846,15 @@ public class CLI
                                     ),   
                                     node("changemt",
                                         node(classes,
-                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(types)
                                             )
                                         )
                                     ),
                                     node("changema",
                                         node(classes,
-                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(accesses)
                                             )
                                         )
                                     ),
@@ -871,10 +898,18 @@ public class CLI
                                         node(classes)
                                     ),
                                     node("addf",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("addm",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("renamef",
                                         node(classes,
@@ -890,13 +925,15 @@ public class CLI
                                     ),   
                                     node("changeft",
                                         node(classes,
-                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            node(new StringsCompleter(getFieldNames(str[1])),
+                                                node(types)
                                             )
                                         )
                                     ),
                                     node("changefa",
                                         node(classes,
-                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            node(new StringsCompleter(getFieldNames(str[1])),
+                                                node(accesses)
                                             )
                                         )
                                     ),
@@ -927,7 +964,11 @@ public class CLI
                                         node(classes)
                                     ),
                                     node("addf",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("renamef",
                                         node(classes,
@@ -943,18 +984,24 @@ public class CLI
                                     ),   
                                     node("changeft",
                                         node(classes,
-                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            node(new StringsCompleter(getFieldNames(str[1])),
+                                                node(types)
                                             )
                                         )
                                     ),
                                     node("changefa",
                                         node(classes,
-                                            node(new StringsCompleter(getFieldNames(str[1]))
+                                            node(new StringsCompleter(getFieldNames(str[1])),
+                                                node(accesses)
                                             )
                                         )
                                     ),
                                     node("addm",
-                                        node(classes)
+                                        node(classes,
+                                            node(accesses,
+                                                node(types)
+                                            )
+                                        )
                                     ),
                                     node("renamem",
                                         node(classes,
@@ -970,13 +1017,15 @@ public class CLI
                                     ),   
                                     node("changemt",
                                         node(classes,
-                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(types)
                                             )
                                         )
                                     ),
                                     node("changema",
                                         node(classes,
-                                            node(new StringsCompleter(getMethodNames(str[1]))
+                                            node(new StringsCompleter(getMethodNames(str[1])),
+                                                node(accesses)
                                             )
                                         )
                                     ),
