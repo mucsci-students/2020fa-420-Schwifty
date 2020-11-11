@@ -23,7 +23,7 @@ import UML.controllers.StateController;
 
 import java.awt.Dimension;
 
-public class Controller 
+public class Controller implements IController
 {
     // Store the model
     private Store store;
@@ -60,7 +60,13 @@ public boolean getGUIExists()
     return GUIExists;
 }
 
-
+/**
+ * Returns the current store.
+ */
+public Store getStore()
+{
+    return this.store;
+}
 //================================================================================================================================================
 //Setters
 //================================================================================================================================================
@@ -109,6 +115,7 @@ public StateController getStateController()
     /**
      * Creates a class in the UML diagram.
      */
+    @Override
     public void createClass(String name) 
     {
         try
@@ -134,6 +141,7 @@ public StateController getStateController()
     /**
      * Deletes a class from the store and view.
      */
+    @Override
     public void deleteClass(String name) 
     {
         Class aClass = findClass(name);
@@ -167,6 +175,7 @@ public StateController getStateController()
     /**
      * Renames a class in the UML diagram.
      */
+    @Override
     public void renameClass(String oldName, String newName) throws IllegalArgumentException
     {
         Class oldClass = findClass(oldName);
@@ -206,6 +215,7 @@ public StateController getStateController()
     /**
      * Creates a field for a given class.
      */
+    @Override
     public void createField(String className, String type, String name, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
@@ -239,6 +249,7 @@ public StateController getStateController()
     /**
      * Deletes a field from a given class.
      */
+    @Override
     public void deleteField(String className, String name) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
@@ -273,6 +284,7 @@ public StateController getStateController()
     /**
      * Renames a field in a given class.
      */
+    @Override
     public void renameField(String className, String oldName, String newName) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
@@ -307,6 +319,7 @@ public StateController getStateController()
     /**
      * Chnages the type of a field in a given class.
      */
+    @Override
     public void changeFieldType(String className, String fieldName, String newType) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
@@ -341,6 +354,7 @@ public StateController getStateController()
     /**
      * Changes access type of a field.
      */
+    @Override
     public void changeFieldAccess(String className, String fieldName, String access) throws IllegalArgumentException
     {
         Class aClass = findClass(className);
@@ -379,6 +393,7 @@ public StateController getStateController()
     /**
      * Creates a method in a given class.
      */
+    @Override
     public void createMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
@@ -413,6 +428,7 @@ public StateController getStateController()
     /**
      * Deletes a method from a given class.
      */
+    @Override
     public void deleteMethod(String className, String returnType, String methodName, ArrayList<String> params, String access)
     {
         Class aClass = findClass(className);
@@ -447,6 +463,7 @@ public StateController getStateController()
     /**
      * Renames a method in a given class.
      */
+    @Override
     public void renameMethod(String className, String returnType, String methodName, ArrayList<String> params, String access, String newName)
     {
         Class aClass = findClass(className);
@@ -482,6 +499,7 @@ public StateController getStateController()
     /**
      * Changes the type of a given method.
      */
+    @Override
     public void changeMethodType(String className, String oldType, String methodName, ArrayList<String> params, String access, String newType)
     {
         Class aClass = findClass(className);
@@ -517,6 +535,7 @@ public StateController getStateController()
     /**
      * Changes the access type of a given method.
      */
+    @Override
     public void changeMethodAccess(String className, String type, String name, ArrayList<String> params, String access, String newAccess)
     {
         Class aClass = findClass(className);
@@ -555,73 +574,75 @@ public StateController getStateController()
 //================================================================================================================================================
 
 
-/**
- * Adds an parameter to a given method.
- */
-public void addParameter(String className, String methodType, String methodName, ArrayList<String> params, String access, String paramType, String paramName)
-{
-    //Implemet in sprint 4.
-    Class aClass = findClass(className);
-    if(aClass != null)
+    /**
+     * Adds an parameter to a given method.
+     */
+    @Override
+    public void addParameter(String className, String methodType, String methodName, ArrayList<String> params, String access, String paramType, String paramName)
     {
-        try
+        //Implemet in sprint 4.
+        Class aClass = findClass(className);
+        if(aClass != null)
         {
-            stateChange();
-            boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
-            if(temp)
+            try
             {
-                prepGUI();
-                rebuild();
+                stateChange();
+                boolean temp = store.addParam(className, methodType, methodName, params, access, paramType, paramName);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Parameter could not be added");
+                }
             }
-            else
+            catch(Exception e)
             {
-                view.showError("Parameter could not be added");
+                view.showError(e.getMessage());
             }
-        }
-        catch(Exception e)
+        }   
+        else
         {
-            view.showError(e.getMessage());
+            view.showError("Class does not exist");
         }
-    }   
-    else
-    {
-        view.showError("Class does not exist");
     }
-}
 
-/**
- * Deletes an parameter from a given method.
- */
-public void deleteParameter(String className, String methodType, String methodName, ArrayList<String> params, String access,  String paramType, String paramName)
-{
-    //Implemet in sprint 4.
-    Class aClass = findClass(className);
-    if(aClass != null)
+    /**
+     * Deletes an parameter from a given method.
+     */
+    @Override
+    public void deleteParameter(String className, String methodType, String methodName, ArrayList<String> params, String access,  String paramType, String paramName)
     {
-        try 
-        {    
-            stateChange();
-            boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
-            if(temp)
-            {
-                prepGUI();
-                rebuild();
-            }
-            else
-            {
-                view.showError("Method access could not be changed");
-            }
-        }
-        catch (Exception e) 
+        //Implemet in sprint 4.
+        Class aClass = findClass(className);
+        if(aClass != null)
         {
-            view.showError(e.getMessage());
+            try 
+            {    
+                stateChange();
+                boolean temp = store.deleteParam(className, methodType, methodName, params, access, paramType, paramName);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
+                else
+                {
+                    view.showError("Method access could not be changed");
+                }
+            }
+            catch (Exception e) 
+            {
+                view.showError(e.getMessage());
+            }
+        }
+        else
+        {
+            view.showError("Class does not exist");
         }
     }
-    else
-    {
-        view.showError("Class does not exist");
-    }
-}
 
     
 //================================================================================================================================================
@@ -631,6 +652,7 @@ public void deleteParameter(String className, String methodType, String methodNa
     /**
      * Adds a relationship between two classes.
      */
+    @Override
     public void addRelationship(String from, String to, RelationshipType relation)
     {   
         Class fromOld = findClass(from);
@@ -657,6 +679,7 @@ public void deleteParameter(String className, String methodType, String methodNa
     /**
      * Deletes a relationship between two classes.
      */
+    @Override
     public void deleteRelationship(String from, String to)
     {
         Class fromOld = findClass(from);
