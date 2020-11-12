@@ -60,7 +60,7 @@ public class EditMethodController implements ActionListener {
         String[] methodSplit = stringMethod.split(" ");
 
         //Get selected access
-        String accessString = getStringVersion(methodSplit[0]);
+        String accessString = getStringVersion(methodSplit[1]);
 
         //ArrayList of parameter Strings for new.
         ArrayList<String> params = new ArrayList<String>();
@@ -100,6 +100,7 @@ public class EditMethodController implements ActionListener {
             String allParams = "";
             panel.add(paramArea);
             
+            //Get params for setting text.
             for (int i = 4; i < methodSplit.length - 1; i += 2)
             {
                 String paramString = methodSplit[i];
@@ -113,15 +114,15 @@ public class EditMethodController implements ActionListener {
                 if(i + 2 != methodSplit.length)
                 {
                     paramString += ",";
-                    allParams += paramString;
                     i++;
                 }
+                allParams += paramString;
             }
             paramArea.setText(allParams);
 
             Object[] options = { "OK", "Delete" };
             
-            int result = JOptionPane.showOptionDialog(null, panel, "Edit Field",
+            int result = JOptionPane.showOptionDialog(null, panel, "Edit method",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, options, options[0]);
 

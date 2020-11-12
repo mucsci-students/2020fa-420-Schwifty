@@ -71,10 +71,8 @@ public class Method extends Formal
             result = "public";
         else if(access == '-')
             result = "private";
-        else if(access == '*')
-            result = "protected";
         else
-            result = "public";
+            result = "protected";
 
         return result;
     }    

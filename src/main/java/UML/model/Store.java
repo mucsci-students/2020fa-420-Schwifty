@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map;
 
-public class Store implements Cloneable {
+public class Store implements Cloneable, IStore {
 
 	// An array list to store the current classes.
 	private ArrayList<Class> classStore;
@@ -116,6 +116,7 @@ public class Store implements Cloneable {
 	/**
 	 * Adds a class to the store.
 	 */
+	@Override
 	public boolean addClass(String name) throws IllegalArgumentException {
 		Class temp = findClass(name);
 		if (temp == null) {
@@ -129,6 +130,7 @@ public class Store implements Cloneable {
 	/**
 	 * Deletes a class from the store.
 	 */
+	@Override
 	public boolean deleteClass(String name) {
 		Class temp = findClass(name);
 		if (findClass(name) != null) {
@@ -143,6 +145,7 @@ public class Store implements Cloneable {
 	/**
 	 * Renames a class in the store.
 	 */
+	@Override
 	public boolean renameClass(String oldName, String newName) throws IllegalArgumentException {
 		if (findClass(newName) == null) {
 			Class temp = findClass(oldName);
@@ -181,6 +184,7 @@ public class Store implements Cloneable {
 	/**
 	 * Adds a field to a class in the store.
 	 */
+	@Override
 	public boolean addField(String className, String type, String name, String access) throws IllegalArgumentException {
 		Class classToAddAttrTo = findClass(className);
 		return classToAddAttrTo.addField(type, name, access);
@@ -189,6 +193,7 @@ public class Store implements Cloneable {
 	/**
 	 * Deletes a field from a class in the store.
 	 */
+	@Override
 	public boolean deleteField(String className, String name) {
 		Class classToDeleteFrom = findClass(className);
 		return classToDeleteFrom.deleteField(name);
@@ -198,6 +203,7 @@ public class Store implements Cloneable {
 	 * Renames a field from a class in the store. Returns false if field cannot be
 	 * added.
 	 */
+	@Override
 	public boolean renameField(String className, String oldName, String newName) throws IllegalArgumentException {
 		Class toBeRenamed = findClass(className);
 		return toBeRenamed.renameField(oldName, newName);
@@ -206,6 +212,7 @@ public class Store implements Cloneable {
 	/**
 	 * Changes the type of a field of a class in the store.
 	 */
+	@Override
 	public boolean changeFieldType(String className, String name, String newType) throws IllegalArgumentException {
 		// Class always exists if this method is called; guarenteed by controller.
 		Class toChange = findClass(className);
@@ -215,6 +222,7 @@ public class Store implements Cloneable {
 	/**
 	 * Changes the access type of a field.
 	 */
+	@Override
 	public boolean changeFieldAccess(String className, String fieldName, String access) {
 		Class toChange = findClass(className);
 		return toChange.changeFieldAccess(fieldName, access);
@@ -227,6 +235,7 @@ public class Store implements Cloneable {
 	/**
 	 * Adds method to a class in the store.
 	 */
+	@Override
 	public boolean addMethod(String className, String type, String name, ArrayList<String> params, String access)
 			throws IllegalArgumentException {
 		Class toAdd = findClass(className);
@@ -245,6 +254,7 @@ public class Store implements Cloneable {
 	/**
 	 * Deletes a method from a class in the store.
 	 */
+	@Override
 	public boolean deleteMethod(String className, String type, String name, ArrayList<String> params, String access) {
 		Class toDelete = findClass(className);
 
@@ -262,6 +272,7 @@ public class Store implements Cloneable {
 	/**
 	 * Renames method of a class in the store.
 	 */
+	@Override
 	public boolean renameMethod(String className, String type, String oldName, ArrayList<String> params, String access,
 			String newName) throws IllegalArgumentException {
 		Class toRename = findClass(className);
@@ -280,6 +291,7 @@ public class Store implements Cloneable {
 	/**
 	 * Chnages the return type of a method of a class in the store.
 	 */
+	@Override
 	public boolean changeMethodType(String className, String oldType, String methodName, ArrayList<String> params,
 			String access, String newType) {
 		Class aClass = findClass(className);
@@ -295,6 +307,10 @@ public class Store implements Cloneable {
 		return aClass.changeMethodType(oldType, methodName, newParams, access, newType);
 	}
 
+	/**
+	 * Changes the access type of a method of a classs in this store.
+	 */
+	@Override
 	public boolean changeMethodAccess(String className, String type, String methodName, ArrayList<String> params,
 			String access, String newAccess) {
 		Class aClass = findClass(className);
@@ -317,6 +333,7 @@ public class Store implements Cloneable {
 	/**
 	 * Add parameter to a method of a class in the store.
 	 */
+	@Override
 	public boolean addParam(String className, String methodType, String methodName, ArrayList<String> params,
 			String access, String paramType, String paramName) throws IllegalArgumentException {
 		ArrayList<Parameter> theParams = new ArrayList<Parameter>();
@@ -333,6 +350,7 @@ public class Store implements Cloneable {
 	/**
 	 * Deletes parameter of a method of a class in the store.
 	 */
+	@Override
 	public boolean deleteParam(String className, String methodType, String methodName, ArrayList<String> params,
 			String access, String paramType, String paramName) {
 		ArrayList<Parameter> theParams = new ArrayList<Parameter>();
@@ -353,6 +371,7 @@ public class Store implements Cloneable {
 	/**
 	 * Adds a relationship between two classes in the store.
 	 */
+	@Override
 	public boolean addRelationship(String classFrom, String classTo, RelationshipType relation) {
 		Class class1 = findClass(classFrom);
 		Class class2 = findClass(classTo);
@@ -365,6 +384,7 @@ public class Store implements Cloneable {
 	/**
 	 * Deletes a relationship between two classes in the store.
 	 */
+	@Override
 	public boolean deleteRelationship(String classFrom, String classTo) {
 		Class class1 = findClass(classFrom);
 		Class class2 = findClass(classTo);
@@ -379,6 +399,7 @@ public class Store implements Cloneable {
 	/**
 	 * Removes relevant relationships when classes are deleted.
 	 */
+	@Override
 	public void removeRelationships(Class aClass) {
 		// Find the classes that the class in question has a relationship with
 		Map<String, RelationshipType> tempTo = aClass.getRelationshipsToOther();
