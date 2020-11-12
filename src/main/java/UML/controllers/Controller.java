@@ -145,7 +145,6 @@ public StateController getStateController()
     public void deleteClass(String name) 
     {
         Class aClass = findClass(name);
-        String oldString = aClass.toString();
         if(aClass != null)
         {
             try
@@ -154,6 +153,7 @@ public StateController getStateController()
                 boolean temp = store.deleteClass(name);  
                 if(temp)
                 {
+                    String oldString = aClass.toString();
                     view.deleteClass(oldString);
                 }
                 else
@@ -737,8 +737,9 @@ public StateController getStateController()
     {
         Class aClass = store.findClass(className);
         if (aClass == null)
-            throw new IllegalArgumentException("Class does not exist");
-        return aClass;
+            return null;
+        else
+            return aClass;
     }
 
     /**
