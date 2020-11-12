@@ -19,8 +19,6 @@ import UML.model.*;
 public class ControllerTest 
 {
     
-
-
     @Spy
     private Store store = new Store();
 

@@ -97,7 +97,7 @@ import UML.model.Store;
      */
     public void clearUndo()
     {
-        stackClear(redoStack);
+        stackClear(undoStack);
     }
 
     /**
