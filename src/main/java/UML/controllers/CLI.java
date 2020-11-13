@@ -691,9 +691,9 @@ public class CLI
         ArrayList<String> toReturn = new ArrayList<String>();
         for(Method m : methods)
         {
-            String toAdd = "";
             for(Parameter param : m.getParams())
             {
+                String toAdd = "";
                 toAdd += param.toString();
                 toReturn.add(toAdd);
             }
