@@ -136,7 +136,6 @@ public class ControllerTest
         controller.renameField("test", "name", "");
         controller.renameField("test", "name", "new name");
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "newName", "public")));
-        
     }
 
     @Test
@@ -271,7 +270,6 @@ public class ControllerTest
         //Should change now.
         controller.changeMethodType("test", "type", "name", params, "protected", "newType");
         assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("newType", "name", realParams, "protected")));
-
         //Nothing should change when using wrong type, name, access, or params.
         controller.changeMethodType("test", "wrongType", "name", params, "protected", "type2");
         assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("newType", "name", realParams, "protected")));
@@ -298,6 +296,7 @@ public class ControllerTest
 
         //Wrong class name, change nothing
         controller.changeMethodAccess("wrongName", "type", "name", params, "protected", "public");
+
         assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
         
         //Should change now
@@ -322,7 +321,6 @@ public class ControllerTest
     public void testAddParameter()
     {
         controller.createClass("test");
-        
         ArrayList<String> params = new ArrayList<String>();
         params.add("pType pName");
         
@@ -358,13 +356,13 @@ public class ControllerTest
 
         controller.addParameter("test", "wrongType", "name", params2, "private", "otherType", "otherName");
         assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
+
     }
 
     @Test
     public void testDeleteParameter()
     {
         controller.createClass("test");
-
         ArrayList<String> params = new ArrayList<String>();
         params.add("pType pName");
         ArrayList<Parameter> realParams = new ArrayList<Parameter>();
