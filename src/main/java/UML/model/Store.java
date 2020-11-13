@@ -340,11 +340,12 @@ public class Store implements Cloneable, IStore {
 
 		for (String p : params) {
 			String[] splitStr = p.split(" ");
-			Parameter newParam = new Parameter(splitStr[0], splitStr[1]);
+			Parameter newParam = new Parameter(splitStr[0].trim(), splitStr[1].trim());
 			theParams.add(newParam);
 		}
-		Method theMethod = findMethod(className, methodType, methodName, theParams, access);
-		return theMethod.addParam(new Parameter(paramType, paramName));
+
+		Class theClass = findClass(className);
+		return theClass.addParameter(methodType, methodName, theParams, access, paramType, paramName);
 	}
 
 	/**
@@ -356,12 +357,12 @@ public class Store implements Cloneable, IStore {
 		ArrayList<Parameter> theParams = new ArrayList<Parameter>();
 		for (String p : params) {
 			String[] splitStr = p.split(" ");
-			Parameter toBeDeleted = new Parameter(splitStr[0], splitStr[1]);
+			Parameter toBeDeleted = new Parameter(splitStr[0].trim(), splitStr[1].trim());
 			theParams.add(toBeDeleted);
 		}
 
-		Method theMethod = findMethod(className, methodType, methodName, theParams, access);
-		return theMethod.deleteParam(new Parameter(paramType, paramName));
+		Class theClass = findClass(className);
+		return theClass.deleteParameter(methodType, methodName, theParams, access, paramType, paramName);
 	}
 
 	// ================================================================================================================================================

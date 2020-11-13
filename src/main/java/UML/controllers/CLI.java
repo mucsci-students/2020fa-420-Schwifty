@@ -691,9 +691,12 @@ public class CLI {
         UML.model.Class c = store.findClass(className);
         Set<Method> methods = c.getMethods();
         ArrayList<String> toReturn = new ArrayList<String>();
-        for (Method m : methods) {
-            String toAdd = "";
-            for (Parameter param : m.getParams()) {
+
+        for(Method m : methods)
+        {
+            for(Parameter param : m.getParams())
+            {
+                String toAdd = "";
                 toAdd += param.toString();
                 toReturn.add(toAdd);
             }

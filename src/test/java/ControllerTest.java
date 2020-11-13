@@ -136,7 +136,6 @@ public class ControllerTest
         controller.renameField("test", "name", "");
         controller.renameField("test", "name", "new name");
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "newName", "public")));
-        
     }
 
     @Test
@@ -271,7 +270,6 @@ public class ControllerTest
         //Should change now.
         controller.changeMethodType("test", "type", "name", params, "protected", "newType");
         assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("newType", "name", realParams, "protected")));
-
         //Nothing should change when using wrong type, name, access, or params.
         controller.changeMethodType("test", "wrongType", "name", params, "protected", "type2");
         assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("newType", "name", realParams, "protected")));
@@ -298,7 +296,8 @@ public class ControllerTest
 
         //Wrong class name, change nothing
         controller.changeMethodAccess("wrongName", "type", "name", params, "protected", "public");
-        assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("atype", "name", realParams, "protected")));
+
+        assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
         
         //Should change now
         controller.changeMethodAccess("test", "type", "name", params, "protected", "public");
@@ -322,12 +321,84 @@ public class ControllerTest
     public void testAddParameter()
     {
         controller.createClass("test");
+        ArrayList<String> params = new ArrayList<String>();
+        params.add("pType pName");
+        
+        ArrayList<Parameter> realParams = new ArrayList<Parameter>();
+        realParams.add(new Parameter("pType", "pName"));
+        realParams.add(new Parameter("newType", "newName"));
+        
+        controller.createMethod("test", "type", "name", params, "public");
+
+        //Wrong class name, shouldn't chnage anything.
+        controller.addParameter("wrongName", "type", "name", params, "public", "newType", "newName");
+        assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
+
+        //Now the parameter should be added.
+        controller.addParameter("test", "type", "name", params, "public", "newType", "newName");
+        //assertEquals(controller.getStore().getClassStore().get(0).getMethods().contains(m), true);
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
+
+
+        ArrayList<String> params2 = new ArrayList<String>();
+        params2.add("pType pName");
+        params2.add("newType newName");
+        
+        //Nothing should change when the specified method is not correct.
+        controller.addParameter("test", "wrongType", "name", params2, "public", "otherType", "otherName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
+
+        controller.addParameter("test", "type", "newName", params2, "public", "otherType", "otherName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
+
+        controller.addParameter("test", "type", "name", new ArrayList<String>(), "public", "otherType", "otherName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
+
+        controller.addParameter("test", "wrongType", "name", params2, "private", "otherType", "otherName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "public")));
+
     }
 
     @Test
     public void testDeleteParameter()
     {
         controller.createClass("test");
+        ArrayList<String> params = new ArrayList<String>();
+        params.add("pType pName");
+        ArrayList<Parameter> realParams = new ArrayList<Parameter>();
+        realParams.add(new Parameter("pType", "pName"));
+        
+        controller.createMethod("test", "type", "name", params, "protected");    
+        //Test if the param has been removed
+
+        //Wrong class name.
+        controller.deleteParameter("wrongName", "type", "name", params, "protected", "pType", "pName");
+        assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method ("type", "name", new ArrayList<Parameter>(), "protected")));
+
+        //Should delete param.
+        controller.deleteParameter("test", "type", "name", params, "protected", "pType", "pName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", new ArrayList<Parameter>(), "protected")));
+        
+        //Add in a new set of params.
+        controller.addParameter("test", "type", "name", new ArrayList<String>(), "protected", "newType", "newName");
+        
+        ArrayList<Parameter> realParams2 = new ArrayList<Parameter>();
+        realParams2.add(new Parameter("newType", "newName"));
+        ArrayList<String> params2 = new ArrayList<String>();
+        params2.add("newType newName");
+
+        //Other wrong parameters.
+        controller.deleteParameter("test", "wrongType", "name", params2, "protected", "newType", "newName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method ("type", "name", realParams2, "protected")));
+
+        controller.deleteParameter("test", "type", "wrongName", params2, "protected", "newType", "newName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method ("type", "name", realParams2, "protected")));
+
+        controller.deleteParameter("test", "type", "name", new ArrayList<String>(), "protected", "newType", "newName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method ("type", "name", realParams2, "protected")));
+
+        controller.deleteParameter("test", "type", "name", params2, "private", "newType", "newName");
+        assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method ("type", "name", realParams2, "protected")));
     }
 
     @Test
@@ -336,8 +407,14 @@ public class ControllerTest
         controller.createClass("test");
         controller.createClass("test2");
 
+        //test to see if classes can form relationships
         controller.addRelationship("test", "test2", RelationshipType.REALIZATION);  
         assertTrue(controller.getStore().getClassStore().get(0).getRelationshipsToOther().containsValue(RelationshipType.REALIZATION));
+        
+        //test to see if classes can have more than one relationship
+        controller.createClass("test3");
+        controller.addRelationship("test2", "test3", RelationshipType.GENERALIZATION);  
+        assertTrue(controller.getStore().getClassStore().get(1).getRelationshipsToOther().containsValue(RelationshipType.GENERALIZATION));
     }
 
     @Test
