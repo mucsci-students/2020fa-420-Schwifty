@@ -364,6 +364,7 @@ public class ControllerTest
     public void testDeleteParameter()
     {
         controller.createClass("test");
+
         ArrayList<String> params = new ArrayList<String>();
         params.add("pType pName");
         ArrayList<Parameter> realParams = new ArrayList<Parameter>();
@@ -400,7 +401,6 @@ public class ControllerTest
 
         controller.deleteParameter("test", "type", "name", params2, "private", "newType", "newName");
         assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method ("type", "name", realParams2, "protected")));
-
     }
 
     @Test
@@ -408,7 +408,7 @@ public class ControllerTest
     {
         controller.createClass("test");
         controller.createClass("test2");
-        
+
         //test to see if classes can form relationships
         controller.addRelationship("test", "test2", RelationshipType.REALIZATION);  
         assertTrue(controller.getStore().getClassStore().get(0).getRelationshipsToOther().containsValue(RelationshipType.REALIZATION));
