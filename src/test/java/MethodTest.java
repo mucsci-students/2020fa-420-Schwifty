@@ -168,6 +168,7 @@ public class MethodTest {
         assertEquals(4, test.getParams().size());
     }
 
+
     @Test 
     public void testAddParamIAE()
     { 
@@ -176,6 +177,7 @@ public class MethodTest {
         assertEquals(0, test.getParams().size());
 
         //Test parameter type not being blank
+
         assertThrows(IllegalArgumentException.class, () -> {
             test.addParam(new Parameter(" ", "param"));
         });
@@ -197,6 +199,7 @@ public class MethodTest {
         assertThrows(IllegalArgumentException.class, () -> {
             test.addParam(new Parameter("int", "param name"));
         });
+
         assertTrue(test.getParams().isEmpty());
     }
 
