@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import java.util.Set;
 import java.util.ArrayList;
@@ -132,9 +133,9 @@ public class ClassTest {
     {
         Class test = new Class("name");
         //When field doesn't exist.
-        assertFalse(test.deleteField("name"));
         test.addField("int", "att", "private");
         test.addField("String", "att2", "protected");
+        assertFalse(test.deleteField("name"));
         test.deleteField("att");
         test.deleteField("att2");
         //Set should be empty.
@@ -285,9 +286,11 @@ public class ClassTest {
         //Tests that equals works for two classes that have had equal items added.
         assertTrue(test1.equals(test2));
         Class test3 = null;
+        assertNull(test3);
         assertFalse(test1.equals(test3));
         test3 = new Class("aClass");
         assertFalse(test1.equals(test3));
+        assertFalse(test3.equals(new Field("a", "b", "public")));
 
     }
 
@@ -334,16 +337,23 @@ public class ClassTest {
         Class test = new Class("Test");
         ArrayList<Parameter> params = new ArrayList<Parameter>();
         params.add(new Parameter("Type", "Name"));
+
         test.addMethod("int", "attribute", params, "private");
         assertTrue(test.getMethods().size() == 1);
+        
+        //We should not be able to add dulicate methods
         test.addMethod("int", "attribute", params, "private");
         assertFalse(test.addMethod("int", "attribute", params, "private"));
         assertTrue(test.getMethods().size() == 1);
+
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
+
         test.addMethod("int", "attribute", params2, "private");
         assertTrue(test.getMethods().size() == 2);
-        //We should not be able to add dulicate methods
-        
+
+        ArrayList<Parameter> params3 = new ArrayList<Parameter>();
+        params3.add(new Parameter("type", "ok"));
+        assertTrue(test.addMethod("int", "attribute", params3, "private"));
 
         //Shouldn't allow adding method with name containing space.
         assertThrows(IllegalArgumentException.class, () -> {
