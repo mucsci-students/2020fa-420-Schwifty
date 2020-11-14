@@ -153,9 +153,11 @@ public class ClassTest {
         Field newAtt = new Field("int", "newAtt", "public");
         //Should contain the new field.
         assertTrue(test.getFields().contains(newAtt));
+        
         //Renaming an field name that doesn't exist should return false.
         assertFalse(test.renameField("att", "att2"));
-        assertFalse(test.renameField("int", "newAtt"));
+
+        assertFalse(test.renameField("newAtt", "newAtt"));
         //Rename to empty or whitespace expects exception.
         assertThrows(IllegalArgumentException.class, () -> {
             test.renameField("newAtt", " ");
@@ -284,8 +286,8 @@ public class ClassTest {
         assertTrue(test1.equals(test2));
         Class test3 = null;
         assertFalse(test1.equals(test3));
-        Parameter param = new Parameter("int", "num");
-        assertFalse(test1.equals(param));
+        test3 = new Class("aClass");
+        assertFalse(test1.equals(test3));
 
     }
 
