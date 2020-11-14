@@ -264,7 +264,7 @@ public class CLI {
      */
     private void addField(String[] args) {
         if (args.length == 5 && store.findClass(args[1]) != null) {
-            controller.createField(args[1], args[4], args[3], args[2]);
+            controller.createField(args[1], args[3], args[4], args[2]);
             makeReader();
         } else {
             view.showError("Invalid arguments for adding a field, please refer to help.");

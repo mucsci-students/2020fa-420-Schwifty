@@ -97,10 +97,7 @@ public class Store implements Cloneable, IStore {
 	// Setters
 	// ================================================================================================================================================
 
-	// Sprint 4.
-	public void setState(Store s) {
 
-	}
 
 	// ********************************************************************************************************************
 	// ********************************************************************************************************************
@@ -146,8 +143,9 @@ public class Store implements Cloneable, IStore {
 	 * Renames a class in the store.
 	 */
 	@Override
-	public boolean renameClass(String oldName, String newName) throws IllegalArgumentException {
-		if (findClass(newName) == null) {
+	public boolean renameClass(String oldName, String newName) throws IllegalArgumentException 
+	{
+		if (findClass(newName) == null && findClass(oldName) != null) {
 			Class temp = findClass(oldName);
 			Map<String, RelationshipType> from = temp.getRelationshipsFromOther();
 			for (Map.Entry<String, RelationshipType> relate : from.entrySet()) {
