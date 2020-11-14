@@ -13,6 +13,8 @@ import UML.model.Field;
 import UML.model.Method;
 import UML.model.Parameter;
 import UML.model.RelationshipType;
+import UML.views.*;
+import UML.controllers.*;
 
 public class StoreTest {
     
@@ -25,10 +27,72 @@ public class StoreTest {
         //Add test classes
         store.addClass("Test");
         store.addClass("Test2");
+        
+        //Should not allow adding class of same name.
+        assertFalse(store.addClass("Test"));
 
         //Validate they are in the class list
         assertTrue(store.getClassList().contains("Test"));
         assertTrue(store.getClassList().contains("Test2"));
+    }
+
+    @Test
+    public void testDeleteClass()
+    {
+        //create a store.
+        Store store = new Store();
+        
+        //Add a class to the store
+        store.addClass("Test");
+
+        //Shoudl return false if class not deleted.
+        assertFalse(store.deleteClass("wrongName"));
+
+        //remove that class
+        store.deleteClass("Test");
+
+        //verify the class has been removed
+        assertFalse(store.getClassList().contains("Test"));
+    }
+
+    @Test
+    public void testRenameClass()
+    {
+        //create a store.
+        Store store = new Store();   
+        
+        //Add a new class to the store
+        store.addClass("Test");
+
+        //Rename class that doesn't exist returns false.
+        assertFalse(store.renameClass("wrongName", "newName"));
+        
+        //rename that class in the store
+        store.renameClass("Test", "NewTest");
+
+        //Test that new name is in the store
+        assertTrue(store.getClassList().contains("NewTest"));
+
+        //Ensure the old name is not
+        assertFalse(store.getClassList().contains("Test"));
+
+        //Add relationships to test renaming classes with relationships.
+        store.addClass("SecondTest");
+        store.addClass("Extra");
+
+        store.addRelationship("NewTest", "SecondTest", RelationshipType.AGGREGATION);
+        store.addRelationship("Extra", "NewTest", RelationshipType.GENERALIZATION);
+        store.addRelationship("Extra", "SecondTest", RelationshipType.COMPOSITION);
+
+        store.renameClass("NewTest", "TestAgain");
+        assertTrue(store.getClassList().contains("TestAgain"));
+
+        //Check that class still has its relationships.
+        Class theClass = store.findClass("TestAgain");
+
+        assertTrue(theClass.getRelationshipsFromOther().containsKey("Extra"));
+        assertTrue(theClass.getRelationshipsToOther().containsKey("SecondTest"));
+
     }
 
     @Test
@@ -150,40 +214,27 @@ public class StoreTest {
         //checks if the field's type was changed. 
         assertTrue(store.getFieldList(test.getFields()).contains("+ String name"));
     }
-    
-    @Test
-    public void testDeleteClass()
-    {
-        //create a store.
-        Store store = new Store();
-        
-        //Add a class to the store
-        store.addClass("Test");
-
-        //remove that class
-        store.deleteClass("Test");
-
-        //verify the class has been removed
-        assertFalse(store.getClassList().contains("Test"));
-    }
 
     @Test
-    public void testRenameClass()
+    public void testChangeFieldAccess()
     {
         //create a store.
-        Store store = new Store();   
-        
-        //Add a new class to the store
+        Store store = new Store(); 
+
+        //adds a test class to store and adds a field.
         store.addClass("Test");
-        
-        //rename that class in the store
-        store.renameClass("Test", "NewTest");
+        store.addField("Test", "int", "name", "public");
 
-        //Test that new name is in the store
-        assertTrue(store.getClassList().contains("NewTest"));
+        Class test = store.findClass("Test");
+        //Access should be changed to whatever is specified, and defaulted to public for nonsense.
+        store.changeFieldAccess("Test", "name", "private");
+        assertTrue(test.getFields().contains(new Field("int", "name", "private")));
 
-        //Ensure the old name is not
-        assertFalse(store.getClassList().contains("Test"));
+        store.changeFieldAccess("Test", "name", "protected");
+        assertTrue(test.getFields().contains(new Field("int", "name", "protected")));
+
+        store.changeFieldAccess("Test", "name", "nonsense");
+        assertTrue(test.getFields().contains(new Field("int", "name", "public")));
     }
 
     @Test
@@ -226,7 +277,9 @@ public class StoreTest {
         
         //create an ArrayList of params for a method.
         ArrayList<String> params = new ArrayList<String>();
+        params.add("pType pName");
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
+        params2.add(new Parameter("pType", "pName"));
         
         //add method to test class.
         store.addMethod("Test", "int", "testMethod", params, "public");
@@ -257,7 +310,9 @@ public class StoreTest {
                 
         //Create params for method      
         ArrayList<String> params = new ArrayList<String>();
+        params.add("pType pName");
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
+        params2.add(new Parameter("pType", "pName"));
                 
         //Add a method to the store
         store.addMethod("Test", "int", "testMethod", params, "private");
@@ -275,7 +330,15 @@ public class StoreTest {
         //Ensure classMethods contains the one we added.
         assertTrue(classMethods.contains(m));
         assertFalse(classMethods.contains(m2));
-        
+
+        //Throw excpetion for name that is blank or has space.
+        assertThrows(IllegalArgumentException.class, () -> {
+            store.renameMethod("Test", "int", "testMethod", params, "private", " ");
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            store.renameMethod("Test", "int", "testMethod", params, "private", "a space");
+        });
     }
 
     @Test
@@ -289,7 +352,9 @@ public class StoreTest {
         
         //Create an ArrayList of Parameters for adding a method.
         ArrayList<String> params = new ArrayList<String>();
+        params.add("pType pName");
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
+        params2.add(new Parameter("pType", "pName"));
         
         //add a method to test class.
         store.addMethod("Test", "int", "testMethod", params, "private");
@@ -306,10 +371,46 @@ public class StoreTest {
         //check to see if the return type of the method has changed. 
         assertTrue(classMethods.contains(m));
 
-        //Should throw an exception for empty type name.
+        //Should throw an exception for empty type name or name with space.
         assertThrows(IllegalArgumentException.class, () -> {
             store.changeMethodType("Test", "String", "testMethod", params, "private", " ");
         });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            store.changeMethodType("Test", "String", "testMethod", params, "private", "a space");
+        });
+    }
+
+    @Test
+    public void testChangeMethodAccess()
+    {
+        //create a store.
+        Store store = new Store();
+        
+        //add a test class to store.
+        store.addClass("Test");
+        
+        //Create an ArrayList of Parameters for adding a method.
+        ArrayList<String> params = new ArrayList<String>();
+        params.add("pType pName");
+        ArrayList<Parameter> params2 = new ArrayList<Parameter>();
+        params2.add(new Parameter("pType", "pName"));
+        
+        //add a method to test class.
+        store.addMethod("Test", "int", "testMethod", params, "private");
+        
+        //change the return type of testMethod.
+        store.changeMethodAccess("Test", "int", "testMethod", params, "private", "protected");
+        
+        //get a set of methods from the test class.
+        Set<Method> classMethods = store.findClass("Test").getMethods();
+        
+        //made a method that should be the updated method.
+        Method m = new Method("int", "testMethod", params2, "protected");
+        
+        //check to see if the access type of the method has changed. 
+        assertTrue(classMethods.contains(m));
+
     }
 
     @Test
@@ -401,6 +502,9 @@ public class StoreTest {
         //Should be rtelationships in Test's to, and Test1's from.
         assertTrue(store.findClass("Test").getRelationshipsToOther().containsKey("Test1"));
         assertTrue(store.findClass("Test1").getRelationshipsFromOther().containsKey("Test"));
+
+        //Adding relationship when a class doesn't exist should return false.
+        assertFalse(store.addRelationship("Test", "NoExist", RelationshipType.REALIZATION));
     }
 
     @Test
@@ -419,12 +523,17 @@ public class StoreTest {
         //Should return false when there is no relationship to delete.
         //assertFalse(store.deleteRelationship("Test", "Test1"));
         store.addRelationship("Test", "Test1", RelationshipType.REALIZATION);
+
+        //Deleting relationship when a class doesn't exist should return false.
+        assertFalse(store.deleteRelationship("Test", "NoExist"));
+
         store.deleteRelationship("Test", "Test1");
         //Neither class should contain relationships now.
         assertTrue(store.findClass("Test").getRelationshipsToOther().isEmpty());
         assertTrue(store.findClass("Test").getRelationshipsFromOther().isEmpty());
         assertTrue(store.findClass("Test1").getRelationshipsToOther().isEmpty());
         assertTrue(store.findClass("Test1").getRelationshipsFromOther().isEmpty());
+
     }
 
     @Test
@@ -436,6 +545,8 @@ public class StoreTest {
         //add a test class to store.
         store.addClass("Test");
         store.addClass("Test1");
+        store.addClass("Extra1");
+        store.addClass("Extra2");
         //Add fields to the classes.
         store.addField("Test", "int", "num", "public");
         store.addField("Test1", "int", "number", "protected");
@@ -445,10 +556,14 @@ public class StoreTest {
         store.addMethod("Test", "int", "testMethod", params, "protected");
         store.addMethod("Test1", "int", "methodTest", params, "private");
         store.addRelationship("Test", "Test1", RelationshipType.GENERALIZATION);
+        store.addRelationship("Extra1", "Test", RelationshipType.REALIZATION);
+        store.addRelationship("Extra2", "Test", RelationshipType.REALIZATION);
         store.removeRelationships(store.findClass("Test"));
         //Relationship should no longer exist.
         assertTrue(store.findClass("Test").getRelationshipsToOther().size() == 0);
         assertTrue(store.findClass("Test1").getRelationshipsFromOther().size() == 0);
+        assertTrue(store.findClass("Extra1").getRelationshipsToOther().size() == 0);
+        assertTrue(store.findClass("Extra2").getRelationshipsToOther().size() == 0);
     }
 
     @Test
@@ -484,11 +599,20 @@ public class StoreTest {
     {
         Store store = new Store();
         store.addClass("name");
-        store.addMethod("name", "int", "num", new ArrayList<String>(), "private");
+        ArrayList<String> params = new ArrayList<String>();
+        params.add("type name");
+        ArrayList<Parameter> realParams = new ArrayList<Parameter>();
+        realParams.add(new Parameter("type", "name"));
+
+        store.addMethod("name", "int", "num", params, "private");
+
+        //Non-existen method => false.
+        assertFalse(store.removeMethodByString(store.findClass("name").getMethods(), "Method: + wrong wrongAgain", "name"));
+
         //Should return true if method deleted.
-        assertTrue(store.removeMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private").toString(), "name"));
+        assertTrue(store.removeMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", realParams, "private").toString(), "name"));
         //Method should no longer exist.
-        assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private"));
+        assertEquals(null, store.findMethod("name", "int", "num", realParams, "private"));
     }
 
     @Test
@@ -496,12 +620,19 @@ public class StoreTest {
     {
         Store store = new Store();
         store.addClass("name");
-        store.addMethod("name", "int", "num", new ArrayList<String>(), "private");
+        ArrayList<String> params = new ArrayList<String>();
+        params.add("type name");
+        ArrayList<Parameter> realParams = new ArrayList<Parameter>();
+        realParams.add(new Parameter("type", "name"));
+        store.addMethod("name", "int", "num", params, "private");
 
-        //Should return true if method deleted.
-        assertEquals(true,store.renameMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private").toString(), "name", "newName", "private"));
-        assertEquals(null, store.findMethod("name", "int", "num", new ArrayList<Parameter>(), "private"));
-        assertEquals("Method: - int newName (  )",store.findMethod("name", "int", "newName", new ArrayList<Parameter>(), "private").toString());
+        //Non-existen method => false.
+        assertFalse(store.renameMethodByString(store.findClass("name").getMethods(), "Method: + wrong wrongAgain", "name", "newName", "private"));
+
+        //Should return true if method renamed.
+        assertEquals(true,store.renameMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", realParams, "private").toString(), "name", "newName", "private"));
+        assertEquals(null, store.findMethod("name", "int", "num", realParams, "private"));
+        assertEquals("Method: - int newName ( type name )",store.findMethod("name", "int", "newName", realParams, "private").toString());
     }
 
     @Test
@@ -571,5 +702,52 @@ public class StoreTest {
         //Make sure clone and original have same content.
         assertEquals(s.getClassList(), testStore.getClassList());
         assertEquals(s.getCurrentLoadedFile(), testStore.getCurrentLoadedFile());
+    }
+
+    @Test
+    public void testGetCurrentLoadedFile()
+    {
+        Store s = new Store();
+        View v = new CommandlineView();
+        Controller c = new Controller(s, v);
+        try
+        {
+            c.save("test");
+        }
+        catch(Exception e)
+        {
+
+        }
+        try
+        {
+            c.load("test");
+        }
+        catch(Exception e)
+        {
+
+        }
+        File file = s.getCurrentLoadedFile();
+        assertEquals(file.getName(), "test.json");
+    }
+
+    @Test
+    public void testStringOfClasses()
+    {
+        //Test we get equal strings for separate stores (toString for each class tested in class).
+        Store s = new Store();
+        s.addClass("Test1");
+        s.addField("Test1", "fType", "fName", "public");
+        s.addClass("Test2");
+        s.addMethod("Test2", "mType", "mName", new ArrayList<String>(), "private");
+        s.addRelationship("Test1", "Test2", RelationshipType.AGGREGATION);
+
+        Store s2 = new Store();
+        s2.addClass("Test1");
+        s2.addField("Test1", "fType", "fName", "public");
+        s2.addClass("Test2");
+        s2.addMethod("Test2", "mType", "mName", new ArrayList<String>(), "private");
+        s2.addRelationship("Test1", "Test2", RelationshipType.AGGREGATION);
+
+        assertEquals(s.stringOfClasses(), s2.stringOfClasses());
     }
 }
