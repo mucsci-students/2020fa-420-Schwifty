@@ -259,7 +259,7 @@ public class ClassTest {
 
         //Deleting relationship where relationship doesn't exist returns false.
         Class extra = new Class("extra");
-        Class extra = new Class("extra2");
+        Class extra2 = new Class("extra2");
         assertFalse(test.deleteRelationshipToOther(RelationshipType.REALIZATION, extra));
         assertFalse(extra.deleteRelationshipToOther(RelationshipType.REALIZATION, test));
         assertFalse(extra.deleteRelationshipToOther(RelationshipType.REALIZATION, extra2));
@@ -280,7 +280,7 @@ public class ClassTest {
 
         //Deleting relationship where relationship doesn't exist returns false.
         Class extra = new Class("extra");
-        Class extra = new Class("extra2");
+        Class extra2 = new Class("extra2");
         assertFalse(test.deleteRelationshipFromOther(RelationshipType.REALIZATION, extra));
         assertFalse(extra.deleteRelationshipFromOther(RelationshipType.REALIZATION, test));
         assertFalse(extra.deleteRelationshipFromOther(RelationshipType.REALIZATION, extra2));
