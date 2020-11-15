@@ -67,6 +67,10 @@ public class MethodTest {
         params1.add(new Parameter("double", "number"));
         //Equals method works for equal attributes.
         Method test1 = new Method("type", "name", params, "public");
+
+        //method should be equal to istelf.
+        assertTrue(test1.equals(test1));
+
         Method test2 = new Method("type", "name", params1, "public");
         assertTrue(test1.equals(test2));
         if (test1.equals(test2))
