@@ -41,13 +41,26 @@ public class ViewTest
         System.setOut(originalOut);
         System.setErr(originalErr);
     }
+
     @Spy
     CommandlineView view = new CommandlineView();
-
 
     @Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+    }
+
+    
+    @Test
+    public void testUpdateClass()
+    {
+        view.createClass("Test", 0, 0);
+        outContent.reset();
+        view.updateClass("Test", "NotATest");
+        assertEquals("Updated class:\n" + "NotATest", outContent.toString().trim());
+        verify(view).createClass("Test", 0, 0);
+        verify(view).updateClass("Test", "NotATest");
+        reset(view);
     }
 
     @Test
@@ -59,17 +72,6 @@ public class ViewTest
         verify(view).createClass("Test", 0, 0);
         verify(view).createClass("Te st", 0, 0);
         
-        reset(view);
-    }
-
-    @Test
-    public void testUpdateClass()
-    {
-        view.createClass("Test", 0, 0);
-        outContent.reset();
-        view.updateClass("Test", "NotATest");
-        assertEquals("Updated class:\n" + "NotATest", outContent.toString().trim());
-        verify(view).updateClass("Test", "NotATest");
         reset(view);
     }
 
