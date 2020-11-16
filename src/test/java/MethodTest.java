@@ -65,8 +65,13 @@ public class MethodTest {
         ArrayList<Parameter> params1 = new ArrayList<Parameter>();
         params.add(new Parameter("double", "number"));
         params1.add(new Parameter("double", "number"));
+        assertTrue(params.equals(params1));
         //Equals method works for equal attributes.
         Method test1 = new Method("type", "name", params, "public");
+
+        //method should be equal to istelf.
+        assertTrue(test1.equals(test1));
+
         Method test2 = new Method("type", "name", params1, "public");
         assertTrue(test1.equals(test2));
         if (test1.equals(test2))
@@ -167,7 +172,8 @@ public class MethodTest {
         assertEquals(4, test.getParams().size());
     }
 
-    @Test (expected = IllegalArgumentException.class) 
+
+    @Test 
     public void testAddParamIAE()
     { 
         ArrayList<Parameter> params = new ArrayList<Parameter>();
@@ -175,19 +181,29 @@ public class MethodTest {
         assertEquals(0, test.getParams().size());
 
         //Test parameter type not being blank
-        test.addParam(new Parameter("", "param"));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.addParam(new Parameter(" ", "param"));
+        });
         assertTrue(test.getParams().isEmpty());
 
         //Test parameter name not being blank
-        test.addParam(new Parameter("int", ""));
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.addParam(new Parameter("int", " "));
+        });
         assertTrue(test.getParams().isEmpty());
 
         //Test parameter type not having spaces
-        test.addParam(new Parameter("int type", "param"));
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.addParam(new Parameter("int type", "param"));
+        });
         assertTrue(test.getParams().isEmpty());
 
         //Test parameter name having spaces
-        test.addParam(new Parameter("int", "param name"));
+        assertThrows(IllegalArgumentException.class, () -> {
+            test.addParam(new Parameter("int", "param name"));
+        });
+
         assertTrue(test.getParams().isEmpty());
     }
 

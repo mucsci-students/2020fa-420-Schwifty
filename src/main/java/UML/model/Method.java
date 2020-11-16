@@ -120,17 +120,6 @@ public class Method extends Formal
      */
     public boolean addParam(Parameter param) throws IllegalArgumentException
     {
-        if(param.getName().trim().isEmpty())
-            throw new IllegalArgumentException("The parameter name cannot be blank.");
-        
-        if(param.getType().trim().isEmpty()) 
-            throw new IllegalArgumentException("The parameter type cannot be blank.");
-            
-        if(param.getName().contains(" ")) 
-            throw new IllegalArgumentException("The parameter name cannot contain a space.");
-
-        if(param.getType().contains(" "))
-            throw new IllegalArgumentException("The parameter type cannot contain a space.");
         for(Parameter p : params)
         {
             if(p.getName().equals(param.getName()))
