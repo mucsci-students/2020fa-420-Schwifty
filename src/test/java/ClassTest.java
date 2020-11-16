@@ -213,8 +213,9 @@ public class ClassTest {
         //Should not have incorrectly oriented relationships in either class.
         assertTrue(test.getRelationshipsFromOther().isEmpty());
         assertTrue(test2.getRelationshipsToOther().isEmpty());
-        //Don't allow replacing the key's value.
+        //Don't allow replacing the key's value or adding second relationship between two classes.
         assertFalse(test.addRelationshipToOther(RelationshipType.AGGREGATION, test2));
+        assertFalse(test2.addRelationshipToOther(RelationshipType.GENERALIZATION, test));
     }
 
     @Test
@@ -235,6 +236,7 @@ public class ClassTest {
         assertTrue(test2.getRelationshipsFromOther().isEmpty());
         //Don't allow replacing the key's value.
         assertFalse(test.addRelationshipFromOther(RelationshipType.AGGREGATION, test2));
+        assertFalse(test2.addRelationshipFromOther(RelationshipType.GENERALIZATION, test));
 
         assertThrows(IllegalArgumentException.class, () -> {
             test.addRelationshipFromOther(RelationshipType.REALIZATION, test);
@@ -254,6 +256,13 @@ public class ClassTest {
         //Relationship should be gone from both classes.
         assertTrue(test.getRelationshipsToOther().isEmpty());
         assertTrue(test2.getRelationshipsFromOther().isEmpty());
+
+        //Deleting relationship where relationship doesn't exist returns false.
+        Class extra = new Class("extra");
+        Class extra2 = new Class("extra2");
+        assertFalse(test.deleteRelationshipToOther(RelationshipType.REALIZATION, extra));
+        assertFalse(extra.deleteRelationshipToOther(RelationshipType.REALIZATION, test));
+        assertFalse(extra.deleteRelationshipToOther(RelationshipType.REALIZATION, extra2));
     }
 
     @Test
@@ -268,6 +277,13 @@ public class ClassTest {
         //Relationship should be gone from both classes
         assertTrue(test.getRelationshipsFromOther().isEmpty());
         assertTrue(test2.getRelationshipsToOther().isEmpty());
+
+        //Deleting relationship where relationship doesn't exist returns false.
+        Class extra = new Class("extra");
+        Class extra2 = new Class("extra2");
+        assertFalse(test.deleteRelationshipFromOther(RelationshipType.REALIZATION, extra));
+        assertFalse(extra.deleteRelationshipFromOther(RelationshipType.REALIZATION, test));
+        assertFalse(extra.deleteRelationshipFromOther(RelationshipType.REALIZATION, extra2));
     }
 
     @Test
@@ -292,6 +308,39 @@ public class ClassTest {
         assertFalse(test1.equals(test3));
         assertFalse(test3.equals(new Field("a", "b", "public")));
 
+        //Fail on equals if name, fields, mothods or relationships are not equal.
+        //Name
+        Class name1 = new Class("name1");
+        Class name2 = new Class("name2");
+        assertFalse(name1.equals(name2));
+
+        //Field
+        Class field1 = new Class("field");
+        Class field2 = new Class("field");
+        field1.addField("type", "name", "public");
+        assertFalse(field1.equals(field2));
+
+        //Method
+        Class method1 = new Class("method");
+        Class method2 = new Class("method");
+        method1.addMethod("type", "name", new ArrayList<Parameter>(), "private");
+        assertFalse(method1.equals(method2));
+
+        //Relationships to
+        Class relateTo1 = new Class("relateTo");
+        Class relateTo2 = new Class("relateTo");
+        Class relatedTo = new Class("relatedTo");
+        relateTo1.addRelationshipToOther(RelationshipType.REALIZATION, relatedTo);
+        relateTo2.addRelationshipToOther(RelationshipType.GENERALIZATION, relatedTo);
+        assertFalse(relateTo1.equals(relateTo2));
+
+        //Relationships from
+        Class relateFrom1 = new Class("relateFrom");
+        Class relateFrom2 = new Class("relateFrom");
+        Class relatedFrom = new Class("relatedFrom");
+        relatedFrom.addRelationshipFromOther(RelationshipType.AGGREGATION, relateFrom1);
+        relatedFrom.addRelationshipFromOther(RelationshipType.COMPOSITION, relateFrom2);
+        assertFalse(relateFrom1.equals(relateFrom2));
     }
 
     @Test
@@ -346,6 +395,7 @@ public class ClassTest {
         assertFalse(test.addMethod("int", "attribute", params, "private"));
         assertTrue(test.getMethods().size() == 1);
 
+
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
 
         test.addMethod("int", "attribute", params2, "private");
@@ -359,6 +409,10 @@ public class ClassTest {
         assertThrows(IllegalArgumentException.class, () -> {
             test.addMethod("int", "new method", params, "private");
         });
+
+        //Should be able to add method with same type or name as another.
+        assertTrue(test.addMethod("int", "differentName", params3, "private"));
+        assertTrue(test.addMethod("differentType", "attribute", params3, "private"));
     }
 
     @Test
@@ -372,6 +426,12 @@ public class ClassTest {
         test.addMethod("int", "attribute", params, "private");
         ArrayList<Parameter> params2 = new ArrayList<Parameter>();
         params2.add(new Parameter("type", "name"));
+
+        //Should fail to delete method if type, name, or params are wrong.
+        assertFalse(test.deleteMethod("wrongType", "attribute", params2, "private"));
+        assertFalse(test.deleteMethod("int", "wrongName", params2, "private"));
+        assertFalse(test.deleteMethod("int", "attribute", new ArrayList<Parameter>(), "private"));
+
         test.deleteMethod("int", "attribute", params2, "private");
         //Call to delete method with wrong params shouldn't change methods set.
         assertTrue(test.getMethods().size() == 1);

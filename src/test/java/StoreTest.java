@@ -76,6 +76,10 @@ public class StoreTest {
         //Ensure the old name is not
         assertFalse(store.getClassList().contains("Test"));
 
+        //Renaming class to name that exist should return false.
+        store.addClass("doNotUseThisName");
+        assertFalse(store.renameClass("NewTest", "doNotUseThisName"));
+
         //Add relationships to test renaming classes with relationships.
         store.addClass("SecondTest");
         store.addClass("Extra");
@@ -494,17 +498,20 @@ public class StoreTest {
         //add method to test class.
         store.addMethod("Test", "int", "testMethod", params, "protected");
         store.addMethod("Test1", "String", "method", params, "protected");
+
         //Shouldn't allow relationship between class and itself.
         assertThrows(IllegalArgumentException.class, () -> {
             store.addRelationship("Test", "Test", RelationshipType.REALIZATION);
         });
         store.addRelationship("Test", "Test1", RelationshipType.REALIZATION);
+
         //Should be rtelationships in Test's to, and Test1's from.
         assertTrue(store.findClass("Test").getRelationshipsToOther().containsKey("Test1"));
         assertTrue(store.findClass("Test1").getRelationshipsFromOther().containsKey("Test"));
 
         //Adding relationship when a class doesn't exist should return false.
         assertFalse(store.addRelationship("Test", "NoExist", RelationshipType.REALIZATION));
+        assertFalse(store.addRelationship("NoExist", "Test", RelationshipType.REALIZATION));
     }
 
     @Test
@@ -526,6 +533,7 @@ public class StoreTest {
 
         //Deleting relationship when a class doesn't exist should return false.
         assertFalse(store.deleteRelationship("Test", "NoExist"));
+        assertFalse(store.deleteRelationship("NoExist", "Test"));
 
         store.deleteRelationship("Test", "Test1");
         //Neither class should contain relationships now.
