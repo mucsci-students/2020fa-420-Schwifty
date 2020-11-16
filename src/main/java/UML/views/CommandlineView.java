@@ -172,6 +172,17 @@ public class CommandlineView implements View {
         System.out.println("                                     |___/ ");
     }
 
+    @Override
+    public void addRelationship(String from, String to, String type) {
+        System.out.println("Added " + type + " between " + from + " and " + to);
+    }
+
+    @Override
+    public void deleteRelationship(String from, String to) {
+        System.out.println("Deleted relationship between " + from + " and " + to);
+    }
+
+
     // ================================================================================================================================================
     // "Do Nothing" methods
     // ================================================================================================================================================
@@ -190,16 +201,6 @@ public class CommandlineView implements View {
     public Dimension getLoc(String name) {
         // Do nothing.
         return null;
-    }
-
-    @Override
-    public void addRelationship(String from, String to, String type) {
-        // Do nothing.
-    }
-
-    @Override
-    public void deleteRelationship(String from, String to) {
-        // Do nothing.
     }
 
     @Override
