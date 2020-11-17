@@ -2,6 +2,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.io.File;
@@ -699,6 +700,23 @@ public class StoreTest {
     }
 
     @Test
+    public void testGetMethodParamString ()
+    {
+        Store s = new Store();
+        s.addClass("test");
+        ArrayList<String> params = new ArrayList<String>();
+        params.add("int num");
+        ArrayList<Parameter> p = new ArrayList<Parameter>();
+        p.add(new Parameter ("int", "num"));
+        s.addMethod("test", "int", "name", params, "public");
+        Method m = s.findMethod("test", "int", "name", p, "public");
+        ArrayList<String> paramList = s.getMethodParamString("test", m.toString());
+
+        //The moethod should return an ArrayList with the correct param.
+        assertEquals(paramList, params);
+    }
+
+    @Test
     public void testClone()
     {
         Store s = new Store();
@@ -758,4 +776,53 @@ public class StoreTest {
 
         assertEquals(s.stringOfClasses(), s2.stringOfClasses());
     }
+
+    @Test
+    public void testEquals()
+    {
+        Store s = new Store();
+        s.addClass("Test1");
+        s.addField("Test1", "fType", "fName", "public");
+        s.addMethod("Test1", "mType", "mName", new ArrayList<String>(), "private");
+
+        Store s2 = new Store();
+        s2.addClass("Test1");
+        s2.addField("Test1", "fType", "fName", "public");
+        s2.addMethod("Test1", "mType", "mName", new ArrayList<String>(), "private");
+
+        //The above two stores should be equal.
+        assertTrue(s.equals(s2));
+               
+        //Stores should equal themselves.
+        assertTrue(s.equals(s));
+
+        //Not equal when a store is null.
+        assertFalse(s.equals(null));
+        
+        Store s3 = new Store();
+        s3.addClass("Test1");
+        s3.addField("Test1", "fType", "fName", "public");
+        s3.addMethod("Test1", "mType", "mName", new ArrayList<String>(), "public");
+        //Classes are not equal.
+        assertFalse(s.equals(s3));
+        assertFalse(s3.equals(s));
+
+        s.setCurrentLoadedFile(new File("test.json"));
+
+        //If one of the files is null then not equal.
+        assertFalse(s.equals(s2));
+        assertFalse(s2.equals(s));
+        
+        s2.setCurrentLoadedFile(new File("WRONG.json"));
+
+        //Different files should return false.
+        assertFalse(s.equals(s2));
+        assertFalse(s2.equals(s));
+
+        s2.setCurrentLoadedFile(new File("test.json"));
+
+        assertTrue(s.equals(s2));
+
+    }
+
 }

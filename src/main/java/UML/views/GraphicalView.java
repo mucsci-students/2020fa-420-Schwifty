@@ -51,7 +51,6 @@ public class GraphicalView implements View {
     private JMenu fileMenu;
     private JMenu classMenu;
     private JMenu stateMenu;
-    private JMenu relationshipMenu;
     private Graphics graphics;
     private DrawPanel dp;
     private ConcurrentHashMap<ArrayList<String>, String> relationships;

@@ -510,8 +510,8 @@ public boolean deleteParameter(String methodType, String methodName, ArrayList<P
 //Other methods
 //================================================================================================================================================
     /**
-     * Returns true if two class object are equal and false otehrwise.
-     */
+    * Returns true if two class object are equal and false otehrwise.
+    */
     public boolean equals(Object other) 
     {
         boolean result = false;

@@ -74,7 +74,7 @@ public class DrawPanel extends JPanel
     /**
      * Draws the correct shape based on the relationship.
      */
-    public void drawCorrectShape(Graphics g, int x, int y, int r, int s, String relationship)
+    private void drawCorrectShape(Graphics g, int x, int y, int r, int s, String relationship)
     {
         //Open diamond.
         if(relationship.equals("AGGREGATION"))
