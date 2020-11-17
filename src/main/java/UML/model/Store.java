@@ -8,6 +8,7 @@ package UML.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
+
 import java.util.Map;
 
 public class Store implements Cloneable, IStore {
@@ -515,8 +516,7 @@ public class Store implements Cloneable, IStore {
 	// ===============================================================================================================================================
 
 	/**
-	 * Creates an ArrayList<String> of a methods parameters from className and
-	 * methodToString.
+	 * Creates an ArrayList<String> of a methods parameters from className and methodToString.
 	 */
 	public ArrayList<String> getMethodParamString(String className, String methodString) {
 		Class aClass = findClass(className);
@@ -588,5 +588,68 @@ public class Store implements Cloneable, IStore {
 			}
 		}
 		return clone;
+	}
+
+	/**
+	* Returns whether or not a store object is equal to this store.
+	*/
+	public boolean equals(Object other)
+	{
+		boolean result = false;
+		if(this == other)
+		{
+			result = true;
+		}
+		else if(other == null)
+		{
+			result = false;
+		}
+		else if (!(other instanceof Store))
+		{
+			result = false;
+		}
+		else
+		{
+			Store object = (Store)other;
+			boolean classesEqual = true;
+			for(Class c : classStore)
+			{
+				if(!object.classStore.contains(c))
+				{
+					classesEqual = false;
+				}
+			}
+			for(Class c : object.classStore)
+			{
+				if(!classStore.contains(c))
+				{
+					classesEqual = false;
+				}
+			}
+
+			boolean filesMatch;
+			if(currentLoadedFile == null && object.currentLoadedFile == null)
+			{
+				filesMatch = true;
+			}
+			else if(currentLoadedFile == null && object.currentLoadedFile != null || currentLoadedFile != null && object.currentLoadedFile == null)
+			{
+				filesMatch = false;
+			}
+			else if(!currentLoadedFile.equals(object.currentLoadedFile))
+			{
+				filesMatch = false;
+			}
+			else
+			{
+				filesMatch = true;
+			}
+			
+			if(classesEqual && filesMatch)
+			{
+				result = true;
+			}
+		}
+		return result;
 	}
 }

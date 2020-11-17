@@ -16,6 +16,7 @@ import java.util.Scanner;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 public class ClassPanelBuilder implements PanelBuilder
 {
     

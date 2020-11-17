@@ -170,6 +170,8 @@ public class MethodTest {
         assertTrue(test.getParams().contains(new Parameter("size_t", "number2")));
         //Should add two new parameters
         assertEquals(4, test.getParams().size());
+        //Check if adding a parameter that already exists fails. 
+        assertFalse(test.addParam(new Parameter("size_t", "number2")));
     }
 
 

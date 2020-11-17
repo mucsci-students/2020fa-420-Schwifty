@@ -4,7 +4,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Before;
-
+import static org.junit.Assert.assertNotNull;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
@@ -69,6 +69,9 @@ public class ControllerTest
     public void testRenameClass()
     {
         controller.createClass("test");
+        controller.renameClass("WRONGGG", "oops");
+        assertEquals(controller.getStore().getClassStore().get(0).getName(), "test");
+        //Wrong class name should not change anything.
         controller.renameClass("test","newTest");
         //Name should have changed.
         assertEquals(controller.getStore().getClassStore().get(0).getName(), "newTest");
@@ -110,6 +113,11 @@ public class ControllerTest
         controller.deleteField("wrongClass", "name");
         //No field should be deleted
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "name", "private")));
+
+        controller.deleteField("test", "THEWRONGNAME");
+         //No field should be deleted for wrong field name.
+         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "name", "private")));
+
         controller.deleteField("test", "name");
         assertEquals(controller.getStore().getClassStore().get(0).getFields().size(), 0);
     }
@@ -427,5 +435,76 @@ public class ControllerTest
         controller.deleteRelationship("test","test2");
         
         assertFalse(controller.getStore().getClassStore().get(0).getRelationshipsToOther().containsValue(RelationshipType.REALIZATION));
+    }
+
+    @Test
+    public void testUndo()
+    {
+        Store state1 = controller.getStore();
+        controller.undo();
+
+        //State should not change if there is nothing to undo.
+        assertEquals(controller.getStore(), state1);
+
+        controller.createClass("Test");
+
+        UML.model.Class aClass = new UML.model.Class(controller.getStore().getClassStore().get(0).getName());
+
+        //Current store should have one class.
+        assertEquals(controller.getStore().getClassStore().size(), 1);
+
+        controller.undo();
+
+        //Current store should have no classes.
+        assertEquals(controller.getStore().getClassStore().size(), 0);
+
+        assertFalse(controller.getStore().getClassStore().contains(aClass));
+        
+    }
+
+    @Test
+    public void testRedo()
+    {
+        Store state1 = controller.getStore();
+        controller.redo();
+
+        //State should not change if there is nothing to undo.
+        assertEquals(controller.getStore(), state1);
+
+        controller.createClass("test");
+        controller.createClass("test2");
+        Store state2 = controller.getStore();
+
+        //Current store should have two classes.
+        assertEquals(controller.getStore().getClassStore().size(), 2);
+
+        controller.undo();
+
+        //Current store should have one class.
+        assertEquals(controller.getStore().getClassStore().size(), 1);
+        
+        controller.redo();
+
+        //Current store should have two classes.
+        assertEquals(controller.getStore().getClassStore().size(), 2);
+    }
+
+    @Test
+    public void testSetStore()
+    {
+        Store testStore = new Store();
+        controller.setStore(testStore);
+        assertEquals(testStore, controller.getStore());
+    }
+
+    @Test
+    public void testGetGUIExists()
+    {
+        assertFalse(controller.getGUIExists());
+    }
+
+    public void testGetStateController()
+    {
+        assertNotNull(controller.getStateController());
     }
 }

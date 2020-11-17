@@ -150,16 +150,10 @@ public StateController getStateController()
             try
             {
                 stateChange();
-                boolean temp = store.deleteClass(name);  
-                if(temp)
-                {
-                    String oldString = aClass.toString();
-                    view.deleteClass(oldString);
-                }
-                else
-                {
-                    view.showError("Class could not be deleted");
-                }
+                store.deleteClass(name);  
+                
+                String oldString = aClass.toString();
+                view.deleteClass(oldString);
             }
             catch (Exception e)
             {

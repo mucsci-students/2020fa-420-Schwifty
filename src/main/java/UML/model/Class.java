@@ -192,8 +192,8 @@ public class Class {
                 // Must remove and add so that the Field has correct hashcode.
                 String type = f.getType();
                 String access = f.getAccessString();
-                this.fields.remove(f);
                 Field toAdd = new Field(type, newName, access);
+                this.fields.remove(f);
                 this.fields.add(toAdd);
                 return true;
             }
@@ -510,8 +510,8 @@ public boolean deleteParameter(String methodType, String methodName, ArrayList<P
 //Other methods
 //================================================================================================================================================
     /**
-     * Returns true if two class object are equal and false otehrwise.
-     */
+    * Returns true if two class object are equal and false otehrwise.
+    */
     public boolean equals(Object other) 
     {
         boolean result = false;
