@@ -126,12 +126,8 @@ public class Method extends Formal
                 return false;
         }
 
-        if(!this.params.contains(param))
-        {
-            this.params.add(param);
-            return true;
-        }
-        return false;
+        this.params.add(param);
+        return true;
     }
     
     /**
