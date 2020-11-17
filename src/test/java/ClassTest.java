@@ -260,8 +260,8 @@ public class ClassTest {
         //Deleting relationship where relationship doesn't exist returns false.
         Class extra = new Class("extra");
         Class extra2 = new Class("extra2");
+        extra.addRelationshipToOther(RelationshipType.REALIZATION, test);
         assertFalse(test.deleteRelationshipToOther(RelationshipType.REALIZATION, extra));
-        assertFalse(extra.deleteRelationshipToOther(RelationshipType.REALIZATION, test));
         assertFalse(extra.deleteRelationshipToOther(RelationshipType.REALIZATION, extra2));
     }
 
@@ -281,8 +281,8 @@ public class ClassTest {
         //Deleting relationship where relationship doesn't exist returns false.
         Class extra = new Class("extra");
         Class extra2 = new Class("extra2");
+        extra.addRelationshipFromOther(RelationshipType.REALIZATION, test);
         assertFalse(test.deleteRelationshipFromOther(RelationshipType.REALIZATION, extra));
-        assertFalse(extra.deleteRelationshipFromOther(RelationshipType.REALIZATION, test));
         assertFalse(extra.deleteRelationshipFromOther(RelationshipType.REALIZATION, extra2));
     }
 
@@ -338,8 +338,8 @@ public class ClassTest {
         Class relateFrom1 = new Class("relateFrom");
         Class relateFrom2 = new Class("relateFrom");
         Class relatedFrom = new Class("relatedFrom");
-        relatedFrom.addRelationshipFromOther(RelationshipType.AGGREGATION, relateFrom1);
-        relatedFrom.addRelationshipFromOther(RelationshipType.COMPOSITION, relateFrom2);
+        relateFrom1.addRelationshipFromOther(RelationshipType.AGGREGATION, relatedFrom);
+        relateFrom2.addRelationshipFromOther(RelationshipType.COMPOSITION, relatedFrom);
         assertFalse(relateFrom1.equals(relateFrom2));
     }
 
