@@ -192,8 +192,8 @@ public class Class {
                 // Must remove and add so that the Field has correct hashcode.
                 String type = f.getType();
                 String access = f.getAccessString();
-                this.fields.remove(f);
                 Field toAdd = new Field(type, newName, access);
+                this.fields.remove(f);
                 this.fields.add(toAdd);
                 return true;
             }
