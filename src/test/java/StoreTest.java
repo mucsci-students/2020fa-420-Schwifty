@@ -714,6 +714,9 @@ public class StoreTest {
 
         //The moethod should return an ArrayList with the correct param.
         assertEquals(paramList, params);
+
+        assertFalse(params.equals(s.getMethodParamString("test", "Oops the wrnmg string")));
+
     }
 
     @Test
@@ -821,7 +824,11 @@ public class StoreTest {
 
         s2.setCurrentLoadedFile(new File("test.json"));
 
+        //Same files means true.
         assertTrue(s.equals(s2));
+
+        //Different type means false.
+        assertFalse(s.equals("DUMBSTRIUNG"));
 
     }
 
