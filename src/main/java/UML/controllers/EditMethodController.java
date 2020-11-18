@@ -67,6 +67,18 @@ public class EditMethodController implements ActionListener {
 
         //The ArrayList of Strings for deleting the old method.
         ArrayList<String> oldParams = new ArrayList<String>();
+
+        //Get params for old params.
+        for (int i = 4; i < methodSplit.length - 1; i += 2)
+        {
+            String paramString = methodSplit[i];
+            paramString += " ";
+            paramString += methodSplit[i + 1];
+
+            //Add to the ArrayList for deleting the old method.
+            String add = paramString;
+            oldParams.add(add);
+        }
         
         boolean valid = false;
         while(!valid)
@@ -106,10 +118,6 @@ public class EditMethodController implements ActionListener {
                 String paramString = methodSplit[i];
                 paramString += " ";
                 paramString += methodSplit[i + 1];
-
-                //Add to the ArrayList for deleting the old method.
-                String add = paramString;
-                oldParams.add(add);
 
                 if(i + 2 != methodSplit.length)
                 {
