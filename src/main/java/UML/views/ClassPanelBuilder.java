@@ -127,7 +127,7 @@ public class ClassPanelBuilder implements PanelBuilder
     {
         String newText = getClassText(classData);
         JTextArea classText = new JTextArea(newText);
-
+        classText.setEditable(false);
         String[] firstLine = classText.getText().split("\n");
         String[] line = firstLine[0].split(" ");
         String concat = line[2];

@@ -120,7 +120,7 @@ public class CommandlineView implements View {
         System.out.println(
                 "deletec [class]:                                                                                            Delete a class");
         System.out.println(
-                "addf [class] [type] [name] [public or private or protected]:                                                Create a field");
+                "addf [class] [public or private or protected] [type] [name]:                                                Create a field");
         System.out.println(
                 "renamef [className] [oldName][newName]:                                                                     Rename a field");
         System.out.println(
