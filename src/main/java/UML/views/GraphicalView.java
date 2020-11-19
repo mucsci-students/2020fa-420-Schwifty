@@ -481,12 +481,22 @@ public class GraphicalView implements View {
      */
     public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
-        Scanner lineScanner = new Scanner(classToString);
-        //Scan the string to get a general idea for its size.
-        int longest = 0;
-        int height = 0;
-        while (lineScanner.hasNextLine()) {
-            String line = lineScanner.nextLine();
+
+        //Get class name length.
+        int start = classToString.indexOf("name: ") + 6;
+        int stop = classToString.indexOf("Field ");
+        int nameLength = stop - 32 - start;
+
+        //Get field length and height.
+        int fStart = classToString.indexOf("Field Names: ");
+        int fStop = classToString.indexOf("Methods: ");
+        String fieldScan = classToString.substring(fStart, fStop - 32);
+        Scanner fieldScanner = new Scanner(fieldScan);
+
+        int fLongest = 0;
+        int fHeight = 0;
+        while (fieldScanner.hasNextLine()) {
+            String line = fieldScanner.nextLine();
             Scanner scanner = new Scanner(line);
             int localBest = 0;
             while (scanner.hasNext()) {
@@ -494,16 +504,66 @@ public class GraphicalView implements View {
                 localBest++;
             }
             scanner.close();
-            ++height;
-            if (localBest > longest)
-                longest = localBest;
+            ++fHeight;
+            if (localBest > fLongest)
+                fLongest = localBest;
         }
-        lineScanner.close();
+        fieldScanner.close();
+
+
+        //Get method length and height.
+        int mStart = classToString.indexOf("Methods: ");
+        int mStop = classToString.indexOf("Relationships To Others: ");
+        String methodScan = classToString.substring(mStart, mStop - 32);
+        Scanner methodScanner = new Scanner(methodScan);
+
+        int mLongest = 0;
+        int mHeight = 0;
+        while (methodScanner.hasNextLine()) {
+            String line = methodScanner.nextLine();
+            Scanner scanner = new Scanner(line);
+            int localBest = 0;
+            while (scanner.hasNext()) {
+                localBest += scanner.next().length();
+                localBest++;
+            }
+            scanner.close();
+            ++mHeight;
+            if (localBest > mLongest)
+                mLongest = localBest;
+        }
+        methodScanner.close();
+
+
         panel.setLocation(x, y);
-        JTextArea text = (JTextArea) panel.getComponent(0);
+        JPanel innerPanel = (JPanel)panel.getComponent(4);
+        JTextArea name = (JTextArea) innerPanel.getComponent(0);
+        JTextArea fields = (JTextArea) innerPanel.getComponent(1);
+        JTextArea methods = (JTextArea) innerPanel.getComponent(2);
+
+        /**
+        innerPanel.setPreferredSize(new Dimension(400, 400));
+        name.setPreferredSize(new Dimension(nameLength * 10, 10));
+        fields.setPreferredSize(new Dimension(fLongest * 10, fHeight * 10));
+        methods.setPreferredSize(new Dimension(mLongest * 10, mHeight * 10));
+        */
+
+        int width = (Math.max(nameLength, Math.max(fLongest, mLongest)) - 1) * 10;
+
+        innerPanel.setPreferredSize(new Dimension((Math.max(nameLength, Math.max(fLongest, mLongest)) - 10) * 10, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30));
+        panel.setBounds(x, y, Math.max(fLongest, mLongest) * 10, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30);
+        
+        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
+        name.setPreferredSize(new Dimension(width, 20));
+
+        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fHeight + 3) * 15);
+        fields.setPreferredSize(new Dimension(width, (mHeight + 3) * 15));
+
+        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fHeight + 3) * 15 + 20, width, (mHeight + 3) * 15);
+        methods.setPreferredSize(new Dimension(width, (mHeight + 3) * 15));
 
         //Set the bounds of the panel to be some multiple of the size of the String to make the panel size make sense.
-        panel.setBounds(x, y, (longest - 10) * 10, (text.getLineCount() + 3) * 15);
+        //panel.setBounds(x, y, (longest - 10) * 10, (text.getLineCount() + 3) * 15);
         refresh();
     }
 

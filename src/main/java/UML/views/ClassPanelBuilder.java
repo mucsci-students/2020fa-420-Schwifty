@@ -9,6 +9,7 @@ import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Scanner;
@@ -112,12 +113,33 @@ public class ClassPanelBuilder implements PanelBuilder
     }
     
     /**
-     * Returns class toString without relationship information.
+     * Returns class name.
      */
-    private String getClassText(String data)
+    private String getClassName(String data)
     {
+        int start = data.indexOf("name: ") + 6;
+        int stop = data.indexOf("Field ");
+        return data.substring(start, stop - 32);
+    }
+
+    /**
+     * Returns fields string.
+     */
+    private String getClassFields(String data)
+    {
+        int start = data.indexOf("Field Names: ");
+        int stop = data.indexOf("Methods: ");
+        return data.substring(start, stop - 32);
+    }
+
+    /**
+     * Returns methods string.
+     */
+    private String getClassMethods(String data)
+    {
+        int start = data.indexOf("Methods: ");
         int stop = data.indexOf("Relationships To Others: ");
-        return data.substring(0, stop - 32);
+        return data.substring(start, stop - 32);
     }
     
     /**
@@ -125,16 +147,33 @@ public class ClassPanelBuilder implements PanelBuilder
      */
     public JPanel makeNewClassPanel() 
     {
-        String newText = getClassText(classData);
-        JTextArea classText = new JTextArea(newText);
+        //String newText = getClassText(classData);
+        JTextArea className = new JTextArea(getClassName(classData));
+        className.setEditable(false);
+        JTextArea fields = new JTextArea(getClassFields(classData));
+        fields.setEditable(false);
+        JTextArea methods = new JTextArea(getClassMethods(classData));
+        methods.setEditable(false);
 
+        className.setBorder(blackline);
+        fields.setBorder(blackline);
+        methods.setBorder(blackline);
+
+        /**
         String[] firstLine = classText.getText().split("\n");
         String[] line = firstLine[0].split(" ");
         String concat = line[2];
+        */
+
+        String concat = className.getText().trim();
+
+        JPanel centerPanel = new JPanel();
+        //centerPanel.setLayout(new FlowLayout());
+
 
         //Sets the layout and creates panels to be added.
         panel.setLayout(new BorderLayout());
-        panel.add(classText, BorderLayout.CENTER);
+        //panel.add(classText, BorderLayout.CENTER);
         JPanel left = new JPanel();
         JPanel top = new JPanel();
         JPanel bottom = new JPanel();
@@ -151,9 +190,17 @@ public class ClassPanelBuilder implements PanelBuilder
         panel.add(miniBar, BorderLayout.EAST);
         panel.add(top, BorderLayout.NORTH);
         panel.add(bottom, BorderLayout.SOUTH);
+
+        centerPanel.add(className);
+        centerPanel.add(fields);
+        centerPanel.add(methods);
+        centerPanel.setVisible(true);
+        panel.add(centerPanel, BorderLayout.CENTER);
+
+        centerPanel.setLayout(null);
         
         //Finishes panel construction.
-        classText.setBorder(blackline);
+        //classText.setBorder(blackline);
         panel.setVisible(true);
         return panel;
     }
