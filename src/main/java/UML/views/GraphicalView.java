@@ -541,13 +541,6 @@ public class GraphicalView implements View {
         JTextArea fields = (JTextArea) innerPanel.getComponent(1);
         JTextArea methods = (JTextArea) innerPanel.getComponent(2);
 
-        /**
-        innerPanel.setPreferredSize(new Dimension(400, 400));
-        name.setPreferredSize(new Dimension(nameLength * 10, 10));
-        fields.setPreferredSize(new Dimension(fLongest * 10, fHeight * 10));
-        methods.setPreferredSize(new Dimension(mLongest * 10, mHeight * 10));
-        */
-
         int width = (Math.max(nameLength, Math.max(fLongest, mLongest)) - 1) * 10;
 
         innerPanel.setPreferredSize(new Dimension(width, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30));
@@ -563,7 +556,6 @@ public class GraphicalView implements View {
         methods.setPreferredSize(new Dimension(width, (mHeight + 3) * 15));
 
         //Set the bounds of the panel to be some multiple of the size of the String to make the panel size make sense.
-        //panel.setBounds(x, y, (longest - 10) * 10, (text.getLineCount() + 3) * 15);
         refresh();
     }
 

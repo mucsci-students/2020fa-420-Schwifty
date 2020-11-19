@@ -155,25 +155,19 @@ public class ClassPanelBuilder implements PanelBuilder
         JTextArea methods = new JTextArea(getClassMethods(classData));
         methods.setEditable(false);
 
+        //Make borders for the text areas visible.
         className.setBorder(blackline);
         fields.setBorder(blackline);
         methods.setBorder(blackline);
 
-        /**
-        String[] firstLine = classText.getText().split("\n");
-        String[] line = firstLine[0].split(" ");
-        String concat = line[2];
-        */
-
+        //Concat used to know which class is being changed in listeners.
         String concat = className.getText().trim();
 
+        //Initalize the center panel.
         JPanel centerPanel = new JPanel();
-        //centerPanel.setLayout(new FlowLayout());
-
 
         //Sets the layout and creates panels to be added.
         panel.setLayout(new BorderLayout());
-        //panel.add(classText, BorderLayout.CENTER);
         JPanel left = new JPanel();
         JPanel top = new JPanel();
         JPanel bottom = new JPanel();
@@ -191,6 +185,7 @@ public class ClassPanelBuilder implements PanelBuilder
         panel.add(top, BorderLayout.NORTH);
         panel.add(bottom, BorderLayout.SOUTH);
 
+        //Add necessary text areas to the center panel.
         centerPanel.add(className);
         centerPanel.add(fields);
         centerPanel.add(methods);
@@ -200,7 +195,6 @@ public class ClassPanelBuilder implements PanelBuilder
         centerPanel.setLayout(null);
         
         //Finishes panel construction.
-        //classText.setBorder(blackline);
         panel.setVisible(true);
         return panel;
     }
