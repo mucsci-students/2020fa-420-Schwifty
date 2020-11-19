@@ -181,7 +181,6 @@ public class Method extends Formal
     public String toString() 
     {
         String result = "";
-        result += "Method: ";
         result += this.getAccessChar() + " " + this.getType() + " " + this.getName();
         result += " ( ";
 

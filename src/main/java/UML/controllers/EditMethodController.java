@@ -60,7 +60,7 @@ public class EditMethodController implements ActionListener {
         String[] methodSplit = stringMethod.split(" ");
 
         //Get selected access
-        String accessString = getStringVersion(methodSplit[1]);
+        String accessString = getStringVersion(methodSplit[0]);
 
         //ArrayList of parameter Strings for new.
         ArrayList<String> params = new ArrayList<String>();
@@ -69,7 +69,7 @@ public class EditMethodController implements ActionListener {
         ArrayList<String> oldParams = new ArrayList<String>();
 
         //Get params for old params.
-        for (int i = 4; i < methodSplit.length - 1; i += 2)
+        for (int i = 3; i < methodSplit.length - 1; i += 2)
         {
             String paramString = methodSplit[i];
             paramString += " ";
@@ -98,12 +98,12 @@ public class EditMethodController implements ActionListener {
             
             //Get the type String.
             JTextArea typeArea = new JTextArea(1, 12);
-            typeArea.setText(methodSplit[2]);
+            typeArea.setText(methodSplit[1]);
             panel.add(typeArea);
             
             //Get the name Stirng.
             JTextArea nameArea = new JTextArea(1, 12);
-            nameArea.setText(methodSplit[3]);
+            nameArea.setText(methodSplit[2]);
             panel.add(nameArea);
 
             //Get the parameters.
@@ -113,7 +113,7 @@ public class EditMethodController implements ActionListener {
             panel.add(paramArea);
             
             //Get params for setting text.
-            for (int i = 4; i < methodSplit.length - 1; i += 2)
+            for (int i = 3; i < methodSplit.length - 1; i += 2)
             {
                 String paramString = methodSplit[i];
                 paramString += " ";
@@ -149,7 +149,7 @@ public class EditMethodController implements ActionListener {
             }
             else if(result == 1)
             {
-                controller.deleteMethod(className, methodSplit[2], methodSplit[3], oldParams, accessString);
+                controller.deleteMethod(className, methodSplit[1], methodSplit[2], oldParams, accessString);
                 return;
             }
             //Handle canceling out.
@@ -196,7 +196,7 @@ public class EditMethodController implements ActionListener {
         }
 
         //Delete the old field and create the new corret one.
-        controller.deleteMethod(className, methodSplit[2], methodSplit[3], oldParams, methodSplit[methodSplit.length - 1]);
+        controller.deleteMethod(className, methodSplit[1], methodSplit[2], oldParams, methodSplit[methodSplit.length - 1]);
         controller.createMethod(className, type, name, params, access);
 
     }

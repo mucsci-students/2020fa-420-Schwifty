@@ -641,7 +641,7 @@ public class StoreTest {
         //Should return true if method renamed.
         assertEquals(true,store.renameMethodByString(store.findClass("name").getMethods(), store.findMethod("name", "int", "num", realParams, "private").toString(), "name", "newName", "private"));
         assertEquals(null, store.findMethod("name", "int", "num", realParams, "private"));
-        assertEquals("Method: - int newName ( type name )",store.findMethod("name", "int", "newName", realParams, "private").toString());
+        assertEquals("- int newName ( type name )",store.findMethod("name", "int", "newName", realParams, "private").toString());
     }
 
     @Test
