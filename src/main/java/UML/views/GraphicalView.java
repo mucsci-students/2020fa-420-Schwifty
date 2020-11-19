@@ -550,8 +550,8 @@ public class GraphicalView implements View {
 
         int width = (Math.max(nameLength, Math.max(fLongest, mLongest)) - 1) * 10;
 
-        innerPanel.setPreferredSize(new Dimension((Math.max(nameLength, Math.max(fLongest, mLongest)) - 10) * 10, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30));
-        panel.setBounds(x, y, Math.max(fLongest, mLongest) * 10, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30);
+        innerPanel.setPreferredSize(new Dimension(width, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30));
+        panel.setBounds(x, y, width, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30);
         
         name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
         name.setPreferredSize(new Dimension(width, 20));
