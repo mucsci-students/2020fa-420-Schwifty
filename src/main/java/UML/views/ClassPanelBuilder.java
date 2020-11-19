@@ -147,7 +147,6 @@ public class ClassPanelBuilder implements PanelBuilder
      */
     public JPanel makeNewClassPanel() 
     {
-        //String newText = getClassText(classData);
         JTextArea className = new JTextArea(getClassName(classData));
         className.setEditable(false);
         JTextArea fields = new JTextArea(getClassFields(classData));

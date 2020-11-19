@@ -121,35 +121,34 @@ public class ViewTest
     @Test
     public void testHelp()
     {
-
-        view.showHelp();
+        outContent.reset();
         String result = "";
         result += "exit:                                                                                                       Close CLI\n";
         result += "help:                                                                                                       Show all options\n";
-        result += "display:                                                                                                    Display all classes\n";
         result += "showgui:                                                                                                    Displays the GUI\n";
         result += "addc [class]:                                                                                               Create a class\n";
         result += "renamec [oldName] [newName]:                                                                                Rename a class\n";
         result += "deletec [class]:                                                                                            Delete a class\n";
-        result += "addf [class] [type] [name] [public or private or protected]:                                                Create a field\n";
+        result += "addf [class] [public or private or protected] [type] [name]:                                                Create a field\n";
         result += "renamef [className] [oldName][newName]:                                                                     Rename a field\n";
         result += "deletef [class] [FieldName]:                                                                                Delete a field\n";
         result += "changefa [class] [fieldName] [public or private or protected]:                                              Change field access\n";
         result += "changeft [class] [fieldName] [newType]:                                                                     Change field type\n";
-        result += "addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                                       Add a method\n";
-        result += "renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:                 Rename a method\n";
-        result += "deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                                    Delete a method\n";
-        result += "changema [class] [methodType] [methodName] [[paramType] [paramName] ...] [public or private or protected]:  Change method access\n";
-        result += "changemt [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType]:                         Change method type\n";
+        result += "addm [class] [public or private or protected] [methodType] [methodName] [[paramType] [paramName] ...]:                                       Add a method\n";
+        result += "renamem [class] [public or private or protected] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:                 Rename a method\n";
+        result += "deletem [class] [public or private or protected] [methodType] [methodName] [[paramType] [paramName] ...]:                                    Delete a method\n";
+        result += "changema [class] [public or private or protected] [methodType] [methodName] [[paramType] [paramName] ...] [public or private or protected]:  Change method access\n";
+        result += "changemt [class] [public or private or protected] [methodType] [methodName] [[paramType] [paramName] ...] [newType]:                         Change method type\n";
         result += "addr [classFrom] [classTo] [relateType]:                                                                    Add a relationship\n";
         result += "deleter [classFrom] [classTo]:                                                                              Delete a relationship\n";
         result += "save [fileName]:                                                                                            Saves to passed in file name\n";
         result += "load [fileName]:                                                                                            Loads the passed in file name\n";
-        result += "display [(Optional) className]:                                                                             Displays a class\n";
+        result += "display [(Optional) className]:                                                                             Displays all classes\n";
         result += "display [className]:                                                                                        Displays a class\n";
         result += "undo:                                                                                                       Reverts to a previous state\n";
         result += "redo:                                                                                                       Restores the latest undo\n";
-        assertEquals(outContent.toString(), result);
+        view.showHelp();
+        assertEquals(outContent.toString(),result);
     }
 
     @Test
