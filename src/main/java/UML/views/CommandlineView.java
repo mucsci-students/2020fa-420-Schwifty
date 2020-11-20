@@ -110,8 +110,6 @@ public class CommandlineView implements View {
         System.out.println(
                 "help:                                                                                                       Show all options");
         System.out.println(
-                "display:                                                                                                    Display all classes");
-        System.out.println(
                 "showgui:                                                                                                    Displays the GUI");
         System.out.println(
                 "addc [class]:                                                                                               Create a class");
@@ -120,7 +118,7 @@ public class CommandlineView implements View {
         System.out.println(
                 "deletec [class]:                                                                                            Delete a class");
         System.out.println(
-                "addf [class] [type] [name] [public or private or protected]:                                                Create a field");
+                "addf [class] [public or private or protected] [type] [name]:                                                Create a field");
         System.out.println(
                 "renamef [className] [oldName][newName]:                                                                     Rename a field");
         System.out.println(
@@ -130,15 +128,15 @@ public class CommandlineView implements View {
         System.out.println(
                 "changeft [class] [fieldName] [newType]:                                                                     Change field type");
         System.out.println(
-                "addm [class] [methodType] [methodName] [[paramType] [paramName] ...]:                                       Add a method");
+                "addm [class] [public or private or protected] [methodType] [methodName] [[paramType] [paramName] ...]:                                       Add a method");
         System.out.println(
-                "renamem [class] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:                 Rename a method");
+                "renamem [class] [public or private or protected] [methodType] [oldMethodName] [[ParamType] [paramName] ...] [newMethodName]:                 Rename a method");
         System.out.println(
-                "deletem [class] [methodType] [methodName] [[paramType] [paramName] ...]:                                    Delete a method");
+                "deletem [class] [public or private or protected] [methodType] [methodName] [[paramType] [paramName] ...]:                                    Delete a method");
         System.out.println(
-                "changema [class] [methodType] [methodName] [[paramType] [paramName] ...] [public or private or protected]:  Change method access");
+                "changema [class] [public or private or protected] [methodType] [methodName] [[paramType] [paramName] ...] [public or private or protected]:  Change method access");
         System.out.println(
-                "changemt [class] [methodType] [methodName] [[paramType] [paramName] ...] [newType]:                         Change method type");
+                "changemt [class] [public or private or protected] [methodType] [methodName] [[paramType] [paramName] ...] [newType]:                         Change method type");
         System.out.println(
                 "addr [classFrom] [classTo] [relateType]:                                                                    Add a relationship");
         System.out.println(
@@ -148,7 +146,7 @@ public class CommandlineView implements View {
         System.out.println(
                 "load [fileName]:                                                                                            Loads the passed in file name");
         System.out.println(
-                "display [(Optional) className]:                                                                             Displays a class");
+                "display [(Optional) className]:                                                                             Displays all classes");
         System.out.println(
                 "display [className]:                                                                                        Displays a class");
         System.out.println(

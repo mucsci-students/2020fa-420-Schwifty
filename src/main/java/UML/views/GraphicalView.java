@@ -503,11 +503,11 @@ public class GraphicalView implements View {
 
         panel.setBounds(x, y, width, (fieldSize[1] + 3) * 15 + (methodSize[1] + 3) * 15 + 30);
         
-        //name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
+        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
 
-        //fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 15);
+        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 15);
 
-        //methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 15 + 20, width, (methodSize[1] + 3) * 15);
+        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 15 + 20, width, (methodSize[1] + 3) * 15);
 
         refresh();
     }
