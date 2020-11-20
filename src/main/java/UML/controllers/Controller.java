@@ -60,6 +60,10 @@ public boolean getGUIExists()
     return GUIExists;
 }
 
+public View getCurrentView()
+{
+    return this.view;
+}
 /**
  * Returns the current store.
  */
