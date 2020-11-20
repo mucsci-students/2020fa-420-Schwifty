@@ -6,7 +6,7 @@ package UML.views;
     Purpose: Provides an implementation of the GUI view.
  */
 import javax.swing.JTextArea;
-
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -481,31 +481,68 @@ public class GraphicalView implements View {
      */
     public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
-        Scanner lineScanner = new Scanner(classToString);
-        //Scan the string to get a general idea for its size.
+
+        //Get class name length.
+        int start = classToString.indexOf("name: ") + 6;
+        int stop = classToString.indexOf("Field ");
+        int nameLength = stop - 32 - start;
+
+        //Get field length and height.
+        int[] fieldSize = getSizes("Field Names: ","Methods: ", classToString);
+
+        //Get method length and height.
+        int[] methodSize = getSizes("Methods: ","Relationships To Others: ", classToString);
+
+        panel.setLocation(x, y);
+        JPanel innerPanel = (JPanel)panel.getComponent(4);
+        JLabel name = (JLabel) innerPanel.getComponent(0);
+        JLabel fields = (JLabel) innerPanel.getComponent(1);
+        JLabel methods = (JLabel) innerPanel.getComponent(2);
+
+        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) - 1) * 10;
+
+        panel.setBounds(x, y, width, (fieldSize[1] + 3) * 15 + (methodSize[1] + 3) * 15 + 30);
+        
+        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
+
+        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 15);
+
+        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 15 + 20, width, (methodSize[1] + 3) * 15);
+
+        refresh();
+    }
+
+    /**
+     * Returns the max length and the height of a blcok of text.
+     */
+    private int[] getSizes(String begin, String end, String classToString)
+    {
+        //Specify the block we care about by giving beginning and end substrings.
+        int start = classToString.indexOf(begin);
+        int stop = classToString.indexOf(end);
+        String scan = classToString.substring(start, stop - 32);
+        Scanner scanner = new Scanner(scan);
+
         int longest = 0;
         int height = 0;
-        while (lineScanner.hasNextLine()) {
-            String line = lineScanner.nextLine();
-            Scanner scanner = new Scanner(line);
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            Scanner lineScanner = new Scanner(line);
             int localBest = 0;
-            while (scanner.hasNext()) {
-                localBest += scanner.next().length();
+            while (lineScanner.hasNext()) {
+                localBest += lineScanner.next().length();
                 localBest++;
             }
-            scanner.close();
+            lineScanner.close();
             ++height;
             if (localBest > longest)
                 longest = localBest;
         }
-        lineScanner.close();
-        panel.setLocation(x, y);
-        JTextArea text = (JTextArea) panel.getComponent(0);
-
-        //Set the bounds of the panel to be some multiple of the size of the String to make the panel size make sense.
-        panel.setBounds(x, y, (longest - 10) * 10, (text.getLineCount() + 3) * 15);
-        refresh();
+        scanner.close();
+        int[] toReturn = {longest, height};
+        return toReturn;
     }
+
 
     /**
      * Refreshes the window.

@@ -129,7 +129,7 @@ public class MethodTest {
         Method test = new Method("type", "name", params, "public");
         test.addParam(new Parameter("int", "num"));
         //The toString() output should be equal to the string below.
-        assertEquals("Method: + type name ( String param , int num )", test.toString());
+        assertEquals("+ type name ( String param , int num )", test.toString());
     }
 
     @Test
