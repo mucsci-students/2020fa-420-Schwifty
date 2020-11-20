@@ -6,7 +6,7 @@ package UML.views;
     Purpose: Provides an implementation of the GUI view.
  */
 import javax.swing.JTextArea;
-
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -488,76 +488,61 @@ public class GraphicalView implements View {
         int nameLength = stop - 32 - start;
 
         //Get field length and height.
-        int fStart = classToString.indexOf("Field Names: ");
-        int fStop = classToString.indexOf("Methods: ");
-        String fieldScan = classToString.substring(fStart, fStop - 32);
-        Scanner fieldScanner = new Scanner(fieldScan);
-
-        int fLongest = 0;
-        int fHeight = 0;
-        while (fieldScanner.hasNextLine()) {
-            String line = fieldScanner.nextLine();
-            Scanner scanner = new Scanner(line);
-            int localBest = 0;
-            while (scanner.hasNext()) {
-                localBest += scanner.next().length();
-                localBest++;
-            }
-            scanner.close();
-            ++fHeight;
-            if (localBest > fLongest)
-                fLongest = localBest;
-        }
-        fieldScanner.close();
-
+        int[] fieldSize = getSizes("Field Names: ","Methods: ", classToString);
 
         //Get method length and height.
-        int mStart = classToString.indexOf("Methods: ");
-        int mStop = classToString.indexOf("Relationships To Others: ");
-        String methodScan = classToString.substring(mStart, mStop - 32);
-        Scanner methodScanner = new Scanner(methodScan);
-
-        int mLongest = 0;
-        int mHeight = 0;
-        while (methodScanner.hasNextLine()) {
-            String line = methodScanner.nextLine();
-            Scanner scanner = new Scanner(line);
-            int localBest = 0;
-            while (scanner.hasNext()) {
-                localBest += scanner.next().length();
-                localBest++;
-            }
-            scanner.close();
-            ++mHeight;
-            if (localBest > mLongest)
-                mLongest = localBest;
-        }
-        methodScanner.close();
-
+        int[] methodSize = getSizes("Methods: ","Relationships To Others: ", classToString);
 
         panel.setLocation(x, y);
         JPanel innerPanel = (JPanel)panel.getComponent(4);
-        JTextArea name = (JTextArea) innerPanel.getComponent(0);
-        JTextArea fields = (JTextArea) innerPanel.getComponent(1);
-        JTextArea methods = (JTextArea) innerPanel.getComponent(2);
+        JLabel name = (JLabel) innerPanel.getComponent(0);
+        JLabel fields = (JLabel) innerPanel.getComponent(1);
+        JLabel methods = (JLabel) innerPanel.getComponent(2);
 
-        int width = (Math.max(nameLength, Math.max(fLongest, mLongest)) - 1) * 10;
+        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) - 1) * 10;
 
-        innerPanel.setPreferredSize(new Dimension(width, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30));
-        panel.setBounds(x, y, width, (fHeight + 3) * 15 + (mHeight + 3) * 15 + 30);
+        panel.setBounds(x, y, width, (fieldSize[1] + 3) * 15 + (methodSize[1] + 3) * 15 + 30);
         
-        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
-        name.setPreferredSize(new Dimension(width, 20));
+        //name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
 
-        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fHeight + 3) * 15);
-        fields.setPreferredSize(new Dimension(width, (mHeight + 3) * 15));
+        //fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 15);
 
-        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fHeight + 3) * 15 + 20, width, (mHeight + 3) * 15);
-        methods.setPreferredSize(new Dimension(width, (mHeight + 3) * 15));
+        //methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 15 + 20, width, (methodSize[1] + 3) * 15);
 
-        //Set the bounds of the panel to be some multiple of the size of the String to make the panel size make sense.
         refresh();
     }
+
+    /**
+     * Returns the max length and the height of a blcok of text.
+     */
+    private int[] getSizes(String begin, String end, String classToString)
+    {
+        //Specify the block we care about by giving beginning and end substrings.
+        int start = classToString.indexOf(begin);
+        int stop = classToString.indexOf(end);
+        String scan = classToString.substring(start, stop - 32);
+        Scanner scanner = new Scanner(scan);
+
+        int longest = 0;
+        int height = 0;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            Scanner lineScanner = new Scanner(line);
+            int localBest = 0;
+            while (lineScanner.hasNext()) {
+                localBest += lineScanner.next().length();
+                localBest++;
+            }
+            lineScanner.close();
+            ++height;
+            if (localBest > longest)
+                longest = localBest;
+        }
+        scanner.close();
+        int[] toReturn = {longest, height};
+        return toReturn;
+    }
+
 
     /**
      * Refreshes the window.

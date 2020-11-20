@@ -7,6 +7,7 @@ package UML.views;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -147,21 +148,32 @@ public class ClassPanelBuilder implements PanelBuilder
      */
     public JPanel makeNewClassPanel() 
     {
-        //String newText = getClassText(classData);
+        /**
         JTextArea className = new JTextArea(getClassName(classData));
         className.setEditable(false);
         JTextArea fields = new JTextArea(getClassFields(classData));
         fields.setEditable(false);
         JTextArea methods = new JTextArea(getClassMethods(classData));
         methods.setEditable(false);
+        */
 
+
+
+        JLabel name = new JLabel(getClassName(classData));
+
+        JLabel fields = new JLabel("<html>" + getClassFields(classData).replaceAll("\n", "<br/>") + "<html>");
+
+        JLabel methods = new JLabel("<html>" + getClassMethods(classData).replaceAll("\n", "<br/>") + "<html>");
+
+        /**
         //Make borders for the text areas visible.
         className.setBorder(blackline);
         fields.setBorder(blackline);
         methods.setBorder(blackline);
+        */
 
         //Concat used to know which class is being changed in listeners.
-        String concat = className.getText().trim();
+        String concat = name.getText().trim();
 
         //Initalize the center panel.
         JPanel centerPanel = new JPanel();
@@ -186,7 +198,7 @@ public class ClassPanelBuilder implements PanelBuilder
         panel.add(bottom, BorderLayout.SOUTH);
 
         //Add necessary text areas to the center panel.
-        centerPanel.add(className);
+        centerPanel.add(name);
         centerPanel.add(fields);
         centerPanel.add(methods);
         centerPanel.setVisible(true);

@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import UML.views.DrawPanel;
 import UML.views.PanelBuilder;
+import javax.swing.JLabel;
 
 import java.awt.Dimension;
 import UML.model.*;
@@ -48,7 +49,7 @@ public class MouseClickAndDragController implements MouseListener, MouseMotionLi
         {
             JPanel found = (JPanel)source;
             JPanel panel = (JPanel)found.getComponent(4);
-            JTextArea text = (JTextArea)panel.getComponent(0);
+            JLabel text = (JLabel)panel.getComponent(0);
             /**
             String[] rows = text.getText().split("\n");
             String[] classString = rows[0].split(" ");
