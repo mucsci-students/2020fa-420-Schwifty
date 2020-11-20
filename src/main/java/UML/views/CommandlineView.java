@@ -25,23 +25,30 @@ public class CommandlineView implements View {
      * Print updated class.
      */
     @Override
-    public void updateClass(String oldName, String newName) {
-        System.out.println("Updated class:\n" + newName);
+    public void updateClass(String oldName, String newName) 
+    {
+        int stop = newName.toString().indexOf("Relationships To Others: ");
+        String s = newName.toString().substring(0, stop - 32);
+        System.out.println("\n" + s);
     }
 
     /**
      * Print new class.
      */
     @Override
-    public void createClass(String name, int x, int y) {
-        System.out.println("New class:\n" + name);
+    public void createClass(String name, int x, int y) 
+    {
+        int stop = name.toString().indexOf("Relationships To Others: ");
+        String s = name.toString().substring(0, stop - 32);
+        System.out.println("\n" + s);
     }
 
     /**
      * Print deleted class message.
      */
     @Override
-    public void deleteClass(String name) {
+    public void deleteClass(String name) 
+    {
         System.out.println("Class deleted");
     }
 
@@ -53,7 +60,8 @@ public class CommandlineView implements View {
      * Print out each class.
      */
     @Override
-    public void display(String str) {
+    public void display(String str) 
+    {
         System.out.println(str);
     }
 
@@ -61,7 +69,8 @@ public class CommandlineView implements View {
      * Print error message.
      */
     @Override
-    public void showError(String error) {
+    public void showError(String error) 
+    {
         System.out.println(error);
     }
 
@@ -69,7 +78,8 @@ public class CommandlineView implements View {
      * Print save message.
      */
     @Override
-    public String save() {
+    public String save() 
+    {
         System.out.println("Your file has been saved.");
         return "";
     }
@@ -78,7 +88,8 @@ public class CommandlineView implements View {
      * Print load message.
      */
     @Override
-    public String load() {
+    public String load()
+    {
         System.out.println("Your file has been loaded.");
         return "";
     }
@@ -87,7 +98,8 @@ public class CommandlineView implements View {
      * Print exit message.
      */
     @Override
-    public void exit() {
+    public void exit() 
+    {
         // Needs implmented in controller, here, and GUI.
         System.out.println("Closing application.");
     }
@@ -96,7 +108,8 @@ public class CommandlineView implements View {
      * Run printHeader the cli header.
      */
     @Override
-    public void start() {
+    public void start() 
+    {
         printHeader();
     }
 
@@ -104,7 +117,8 @@ public class CommandlineView implements View {
      * Print command list.
      */
     @Override
-    public void showHelp() {
+    public void showHelp() 
+    {
         System.out.println(
                 "exit:                                                                                                       Close CLI");
         System.out.println(
@@ -159,7 +173,8 @@ public class CommandlineView implements View {
     /**
      * Prints the cli header.
      */
-    private void printHeader() {
+    private void printHeader() 
+    {
         System.out.println("  _____      _             _  __ _");
         System.out.println(" /  ___|    | |           (_)/ _| |");
         System.out.println(" \\ `--.  ___| |____      ___| |_| |_ _   _");
@@ -171,13 +186,25 @@ public class CommandlineView implements View {
     }
 
     @Override
-    public void addRelationship(String from, String to, String type) {
-        System.out.println("Added " + type + " between " + from + " and " + to);
+    public void addRelationship(String from, String to, String type) 
+    {
+        int stop = from.toString().indexOf("Relationships To Others: ");
+        String s = from.toString().substring(0, stop - 32);
+
+        int stop2 = to.toString().indexOf("Relationships To Others: ");
+        String s2 = to.toString().substring(0, stop2 - 32);
+
+        System.out.println("\nAdded " + type + " between:\n" + s + "\n\n and \n\n" + s2);
     }
 
     @Override
     public void deleteRelationship(String from, String to) {
-        System.out.println("Deleted relationship between " + from + " and " + to);
+        int stop = from.toString().indexOf("Relationships To Others: ");
+        String s = from.toString().substring(0, stop - 32);
+
+        int stop2 = to.toString().indexOf("Relationships To Others: ");
+        String s2 = to.toString().substring(0, stop2 - 32);
+        System.out.println("\nDeleted relationship between:\n" + s + "\n\n and \n\n" + s2);
     }
 
     /**

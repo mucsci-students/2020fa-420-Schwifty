@@ -570,8 +570,14 @@ public class CLI {
     private void display(String[] args) {
         if (args.length == 1) {
             String classes = "";
-            for (UML.model.Class c : store.getClassStore()) {
-                classes += c.toString() + "\n";
+            for (UML.model.Class c : store.getClassStore()) 
+            {
+                /**
+                int stop = c.toString().indexOf("Relationships To Others: ");
+                //classes += c.toString() + "\n";
+                classes += c.toString().substring(0, stop - 32) + "\n";
+                */
+                classes += "Class Name: " + c.getName() + "\n";
             }
             view.display(classes);
         } else {
@@ -579,7 +585,8 @@ public class CLI {
             if (aClass == null) {
                 view.showError("Class does not exist");
             } else {
-                view.display(aClass.toString());
+                int stop = aClass.toString().indexOf("Relationships To Others: ");
+                view.display(aClass.toString().substring(0, stop - 32));
             }
         }
     }

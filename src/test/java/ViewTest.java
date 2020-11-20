@@ -58,27 +58,37 @@ public class ViewTest
 		MockitoAnnotations.initMocks(this);
     }
 
-    
+    private String getOutput(String theString)
+    {
+        int stop = theString.indexOf("Relationships To Others: ");
+        return theString.substring(0, stop - 32);
+    }
+
+
     @Test
     public void testUpdateClass()
     {
-        view.createClass("Test", 0, 0);
+        UML.model.Class c = new UML.model.Class("Test");
+        view.createClass(c.toString(), 0, 0);
         outContent.reset();
-        view.updateClass("Test", "NotATest");
-        assertEquals("Updated class:\n" + "NotATest", outContent.toString().trim());
-        verify(view).createClass("Test", 0, 0);
-        verify(view).updateClass("Test", "NotATest");
+        
+        UML.model.Class c2 = new UML.model.Class("NotATest");
+        view.updateClass(c.toString(), c2.toString());
+        assertEquals("\n" + getOutput(c2.toString()) + "\n", outContent.toString());
+        verify(view).createClass(c.toString(), 0, 0);
+        verify(view).updateClass(c.toString(), c2.toString());
         reset(view);
     }
 
     @Test
     public void testCreateClass()
     {
-        view.createClass("Test", 0, 0);
-        assertEquals("New class:\n" + "Test", outContent.toString().trim());
-        view.createClass("Te st", 0, 0);
-        verify(view).createClass("Test", 0, 0);
-        verify(view).createClass("Te st", 0, 0);
+        UML.model.Class c = new UML.model.Class("Test");
+        
+        view.createClass(c.toString(), 0, 0);
+        assertEquals("\n" + getOutput(c.toString()) + "\n", outContent.toString());
+
+        verify(view).createClass(c.toString(), 0, 0);
         
         reset(view);
     }
@@ -86,36 +96,42 @@ public class ViewTest
     @Test
     public void testDeleteClass()
     {
-        view.createClass("Test", 0, 0);
+        UML.model.Class c = new UML.model.Class("Test");
+        view.createClass(c.toString(), 0, 0);
         outContent.reset();
         view.deleteClass("Test");
         assertEquals("Class deleted", outContent.toString().trim());
         verify(view).deleteClass("Test");
         reset(view);
     }
+    
 
     @Test
     public void testAddRelationship()
     {
-        view.createClass("Test", 0, 0);
-        view.createClass("Test2", 0, 0);
+        UML.model.Class c = new UML.model.Class("Test");
+        UML.model.Class c2 = new UML.model.Class("Test2");
+        view.createClass(c.toString(), 0, 0);
+        view.createClass(c2.toString(), 0, 0);
         outContent.reset();
-        view.addRelationship("Test", "Test2", "Realization");
-        assertEquals("Added " + "Realization" + " between " + "Test"+ " and " + "Test2", outContent.toString().trim());
-        verify(view).addRelationship("Test", "Test2", "Realization");
+        view.addRelationship(c.toString(), c2.toString(), "Realization");
+        assertEquals("\nAdded " + "Realization" + " between:\n" + getOutput(c.toString()) + "\n\n and \n\n" + getOutput(c2.toString()) + "\n", outContent.toString());
+        verify(view).addRelationship(c.toString(), c2.toString(), "Realization");
     }
 
     @Test
     public void testDeleteRelationship()
     {
-        view.createClass("Test", 0, 0);
-        view.createClass("Test2", 0, 0);
-        view.addRelationship("Test", "Test2", "Realization");
+        UML.model.Class c = new UML.model.Class("Test");
+        UML.model.Class c2 = new UML.model.Class("Test2");
+        view.createClass(c.toString(), 0, 0);
+        view.createClass(c2.toString(), 0, 0);
+        view.addRelationship(c.toString(), c2.toString(), "Realization");
         outContent.reset();
-        view.deleteRelationship("Test", "Test2");
-        assertEquals("Deleted relationship between " + "Test" + " and " + "Test2", outContent.toString().trim());
+        view.deleteRelationship(c.toString(), c2.toString());
+        assertEquals("\nDeleted relationship between:\n" + getOutput(c.toString()) + "\n\n and \n\n" + getOutput(c2.toString()) + "\n", outContent.toString());
 
-        verify(view).deleteRelationship("Test", "Test2");
+        verify(view).deleteRelationship(c.toString(), c2.toString());
     }
 
     @Test
