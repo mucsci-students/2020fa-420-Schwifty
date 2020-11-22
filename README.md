@@ -8,7 +8,7 @@ UML Editor is an open-source tool with a simple user interface. It allows users 
 UML Editor is available under the [MIT License.](https://github.com/mucsci-students/2020fa-420-Schwifty/blob/develop/LICENSE)
 
 ## Running the UML Editor
-To run the application, navigate to the project directory. Using Gradle, run the command **gradle install**,followed by pasting or typing **./build/install/UML/bin/UML** to start the application. An interface will load asking you to choose between a graphical or command line view. Instructions for each can be found [here](https://github.com/mucsci-students/2020fa-420-Schwifty/blob/develop/UserGuide.md).
+To run the application, navigate to the project directory. Using Gradle, run the command **gradle install**,followed by pasting or typing **./build/install/UML/bin/UML** to start the application. An interface will load asking you to choose between a graphical or command line view. Instructions for each can be found [here](https://github.com/mucsci-students/2020fa-420-Schwifty/blob/develop/UserGuide.md). Alternatively one can run the command **./build/install/UML/bin/UML cli** or **./build/install/UML/bin/UML gui** to run the application in its cli or gui state respecitively.
 
 ## Requirements
 * Java 8
