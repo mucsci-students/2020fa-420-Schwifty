@@ -64,22 +64,6 @@ public class ViewTest
         return theString.substring(0, stop - 32);
     }
 
-
-    @Test
-    public void testUpdateClass()
-    {
-        UML.model.Class c = new UML.model.Class("Test");
-        view.createClass(c.toString(), 0, 0);
-        outContent.reset();
-        
-        UML.model.Class c2 = new UML.model.Class("NotATest");
-        view.updateClass(c.toString(), c2.toString());
-        assertEquals("\n" + getOutput(c2.toString()) + "\n", outContent.toString());
-        verify(view).createClass(c.toString(), 0, 0);
-        verify(view).updateClass(c.toString(), c2.toString());
-        reset(view);
-    }
-
     @Test
     public void testCreateClass()
     {

@@ -17,7 +17,6 @@ import java.awt.event.ActionListener;
 public interface View
 {
 	//updates every part of the class, including attributes within
-    void updateClass(String oldName, String newName);
 	void createClass(String name, int x, int y);
 	void deleteClass(String name);
 

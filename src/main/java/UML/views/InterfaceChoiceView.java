@@ -69,11 +69,6 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
-    public void updateClass(String oldName, String newName) {
-        // Do nothing.
-    }
-
-    @Override
     public void createClass(String name, int x, int y) {
         // Do nothing.
     }

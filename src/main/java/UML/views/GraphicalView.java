@@ -30,8 +30,8 @@ import UML.controllers.CreateRelationshipController;
 import UML.controllers.DeleteRelationshipController;
 import UML.controllers.EditFieldController;
 import UML.controllers.EditMethodController;
-
 import UML.controllers.MouseClickAndDragController;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.Scanner;
@@ -47,7 +47,6 @@ public class GraphicalView implements View {
 
     // The window for the GUI.
     private JFrame window;
-
     private JMenu fileMenu;
     private JMenu classMenu;
     private JMenu stateMenu;
@@ -129,6 +128,7 @@ public class GraphicalView implements View {
 
     /**
      * Deletes a relationship between two class panels.
+     * TODO: Maybe make a do nothing method.
      */
     @Override
     public void deleteRelationship(String from, String to) {
@@ -151,85 +151,7 @@ public class GraphicalView implements View {
             }
         }
     }
-
-    /**
-     * Updates a class panel that is already being displayed on the window.
-     */
-    @Override
-    public void updateClass(String oldString, String newString) 
-    {
-        JPanel panel = classPanels.get(oldString);
-
-        JMenu miniMenu = getMenuBarFromPanel(panel);
-        
-        String[] firstLine = newString.split("\n");
-        String[] line = firstLine[0].split(" ");
-        String concat = line[2];
-        
-        String[] command = { "CreateField " + concat, "EditField " + concat, "CreateMethod " + concat, "EditMethod " + concat, 
-        "CreateRelationship " + concat, "DeleteRelationship " + concat, "EditClass " + concat };
-
-        for (int count = 0; count < 7; ++count)
-        {
-            miniMenu.setActionCommand(command[count]);
-        }
-
-        for (ArrayList<String> classes : getRelationships().keySet()) {
-            if (classes.get(0).equals(oldString)) {
-                String value = relationships.get(classes);
-                relationships.remove(classes);
-                ArrayList<String> toPut = new ArrayList<String>();
-                toPut.add(newString);
-                toPut.add(classes.get(1));
-                relationships.put(toPut, value);
-            } else if (classes.get(1).equals(oldString)) {
-                String value = relationships.get(classes);
-                relationships.remove(classes);
-                ArrayList<String> toPut = new ArrayList<String>();
-                toPut.add(classes.get(0));
-                toPut.add(newString);
-                relationships.put(toPut, value);
-            }
-        }
-
-        
-        int x = panel.getX();
-        int y = panel.getY();
-        Dimension loc = getLoc(oldString);
-        classPanels.remove(oldString);
-        classPanels.put(newString, panel);
-        // Just sets TextArea.
-        windowUpdateHelper(newString, loc);
-        resizePanel(newString, (int) loc.getWidth(), (int) loc.getHeight());
-        resizePanel(newString, x, y);
-
-        refresh();
-    }
-    private JMenu getMenuBarFromPanel(JPanel panel)
-    {
-        JMenuBar panelBar = null;
-        for(Component c : panel.getComponents())
-        {
-            if(c instanceof JMenuBar)
-            {
-                panelBar = (JMenuBar)c;
-            }
-        }
-        JMenu menu = (JMenu) panelBar.getMenu(0);
-        return menu;
-    }
     
-    /**
-     * Helps update the window.
-     */
-    private void windowUpdateHelper(String classInfo, Dimension loc) {
-        JPanel aPanel = classPanels.get(classInfo);
-        JTextArea textArea = (JTextArea) aPanel.getComponents()[0];
-        int stop = classInfo.indexOf("Relationships To Others: ");
-        String newText =  classInfo.substring(0, stop);
-        textArea.setText(newText);
-    }
-
     // ================================================================================================================================================
     // Getting user input.
     // ================================================================================================================================================
@@ -300,9 +222,9 @@ public class GraphicalView implements View {
      * Will exit the window but not close application.
      */
     @Override
-    public void exit() {
+    public void exit() 
+    {
         // Get rid of window. Make sure call save and load in controller.
-
     }
 
 
@@ -316,7 +238,6 @@ public class GraphicalView implements View {
     @Override
     public void setGUIInvisible() 
     {
-        // TODO Auto-generated method stub
         window.setVisible(false);
 	}
 
@@ -426,12 +347,9 @@ public class GraphicalView implements View {
     private void createStateMenu(JMenuBar mb)
     {
         stateMenu = new JMenu("State");
-
     
         JMenuItem undo = new JMenuItem("Undo");
-
         JMenuItem redo = new JMenuItem("Redo");
-
         JMenuItem CLI = new JMenuItem("CLI");
 
         JMenuItem[] arr = {undo, redo, CLI};
@@ -452,6 +370,7 @@ public class GraphicalView implements View {
 
     /**
      * Creates a panel on the window to display information about a class.
+     * TODO: Discuss removal of this method, appears to no longer be needed. 
      */
     public void makeNewClassPanel(String aClass) {
         JPanel classPanel = new JPanel();
@@ -547,28 +466,19 @@ public class GraphicalView implements View {
     /**
      * Refreshes the window.
      */
-    public void refresh() {
-        ArrayList<Dimension> dimensions = new ArrayList<Dimension>();
-        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
-            dimensions.add(new Dimension(panel.getValue().getX(), panel.getValue().getY()));
-        }
+    public void refresh() 
+    {
         dp.revalidate();
         dp.repaint();
-        int counter = 0;
-        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
-            panel.getValue().setLocation((int) dimensions.get(counter).getWidth(),
-                    (int) dimensions.get(counter).getHeight());
-            ++counter;
-        }
     }
     
     /**
      * Displays an error message.
      */
     @Override
-    public void showError(String error) {
+    public void showError(String error) 
+    {
         JOptionPane.showMessageDialog(new JFrame(), error, "Error", JOptionPane.ERROR_MESSAGE);
-
     }
 
     // ================================================================================================================================================
