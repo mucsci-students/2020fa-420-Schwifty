@@ -37,8 +37,8 @@ public class TestGraphicalView
     @Spy
     Store s = new Store();
 
-    @Mock
-    GraphicalView gv;
+    @Spy
+    GraphicalView gv = new GraphicalView();
 
     @InjectMocks Controller c;
 
@@ -48,9 +48,9 @@ public class TestGraphicalView
         gv.start();
         verify(gv).start();
         gv.makeWindow();
-        verify(gv).makeWindow();
+        verify(gv, atLeastOnce()).makeWindow();
         gv.createMenu();
-        verify(gv).createMenu();
+        verify(gv, atLeastOnce()).createMenu();
     }
 
     @Test

@@ -30,8 +30,8 @@ import UML.controllers.CreateRelationshipController;
 import UML.controllers.DeleteRelationshipController;
 import UML.controllers.EditFieldController;
 import UML.controllers.EditMethodController;
-
 import UML.controllers.MouseClickAndDragController;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.Scanner;
