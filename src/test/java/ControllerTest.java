@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import UML.views.*;
 import UML.controllers.*;
 import UML.model.*;
+import java.io.File;
 
 import java.util.ArrayList;
 
@@ -56,10 +57,13 @@ public class ControllerTest
     public void testDeleteClass()
     {
         controller.createClass("test");
-        controller.deleteClass("test1");
+        UML.model.Class testClass = controller.getStore().getClassStore().get(0);
+        controller.deleteClass("te st");
+        controller.deleteClass("Test");
+        controller.deleteClass(" t e s t ");
         //Class should still exist.
         assertEquals(controller.getStore().getClassStore().size(), 1);
-
+        assertTrue(controller.getStore().getClassStore().contains(testClass));
         controller.deleteClass("test");
         //Now class should be gone.
         assertEquals(controller.getStore().getClassStore().size(), 0);
@@ -498,6 +502,21 @@ public class ControllerTest
     }
 
     @Test
+    public void testSetGUIExists()
+    {
+        controller.setGUIExists();
+        assertTrue(controller.getGUIExists());
+    }
+
+    @Test
+    public void testSetGUIVisible()
+    {
+        controller.setGUIExists();
+        controller.setGUIVisible();
+        assertTrue(controller.getGUIExists());
+    }
+
+    @Test
     public void testGetGUIExists()
     {
         assertFalse(controller.getGUIExists());
@@ -507,4 +526,23 @@ public class ControllerTest
     {
         assertNotNull(controller.getStateController());
     }
+
+    @Test
+    public void testLoad()
+    {
+        try 
+        {
+            controller.createClass("Blah");
+            controller.save("blahtest.json");
+            controller.undo();
+            controller.load("blahtest.json");
+            File file = store.getCurrentLoadedFile();
+            assertEquals("blahtest.json", file.getName());
+        } 
+        catch (Exception e) {
+            //TODO: handle exception
+        }
+
+    }
+
 }
