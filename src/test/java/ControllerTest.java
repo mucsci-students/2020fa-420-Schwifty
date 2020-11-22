@@ -16,7 +16,7 @@ import UML.views.*;
 import UML.controllers.*;
 import UML.model.*;
 import java.io.File;
-
+import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 
 public class ControllerTest 
@@ -67,15 +67,17 @@ public class ControllerTest
         controller.deleteClass("test");
         //Now class should be gone.
         assertEquals(controller.getStore().getClassStore().size(), 0);
+        
     }
 
     @Test
     public void testRenameClass()
     {
         controller.createClass("test");
+        controller.renameClass("test", "oo ps");
         controller.renameClass("WRONGGG", "oops");
-        assertEquals(controller.getStore().getClassStore().get(0).getName(), "test");
         //Wrong class name should not change anything.
+        assertEquals(controller.getStore().getClassStore().get(0).getName(), "test");
         controller.renameClass("test","newTest");
         //Name should have changed.
         assertEquals(controller.getStore().getClassStore().get(0).getName(), "newTest");
@@ -113,7 +115,7 @@ public class ControllerTest
     public void testDeleteField()
     {
         controller.createClass("test");
-        controller.createField("test", "type","name","private" );
+        controller.createField("test", "type","name","private");
         controller.deleteField("wrongClass", "name");
         //No field should be deleted
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "name", "private")));
@@ -158,6 +160,7 @@ public class ControllerTest
 
         //Wrong name, shouldn't change anything.
         controller.changeFieldType("wrongName", "name", "String");
+        controller.changeFieldType("test", "nam e", " S t ri ng");
         //Test class should have the field.
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "name", "private")));
 
@@ -198,7 +201,9 @@ public class ControllerTest
         ArrayList<Parameter> realParams = new ArrayList<Parameter>();
         realParams.add(new Parameter("pType", "pName"));
         params.add("pType pName");
-        controller.createMethod("wrongName", "type", "name", params, "protected");
+
+        controller.createMethod("wrongName", "type", "na me", params, "protected");
+        controller.createMethod("test", "type", "n ame", params, "protected");
         //Wrong name, nothing should change.
         assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "protected")));
 
@@ -428,6 +433,7 @@ public class ControllerTest
 
         //test to see if classes can form relationships
         controller.addRelationship("test", "test2", RelationshipType.REALIZATION);  
+        controller.addRelationship("test", "test5", RelationshipType.REALIZATION);  
         assertTrue(controller.getStore().getClassStore().get(0).getRelationshipsToOther().containsValue(RelationshipType.REALIZATION));
         
         //test to see if classes can have more than one relationship
@@ -549,7 +555,5 @@ public class ControllerTest
         catch (Exception e) {
             //TODO: handle exception
         }
-
     }
-
 }
