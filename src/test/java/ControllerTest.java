@@ -179,8 +179,11 @@ public class ControllerTest
         //changeFieldAccess(String className, String fieldName, String access)
         controller.createClass("test");
         controller.createField("test", "type", "name", "private");
+
         //Access type should not change
         controller.changeFieldAccess("wrongName", "name", "public");
+        controller.changeFieldAccess("test", "nameeeeee", "public");
+        controller.changeFieldAccess("test", "na me", "private");
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "name", "private")));
         //Change should now occur
         controller.changeFieldAccess("test", "name", "protected");
@@ -222,6 +225,9 @@ public class ControllerTest
         controller.createMethod("test", "type", "name", params, "protected");
 
         controller.deleteMethod("wrongName", "type", "name", params, "protected");
+        controller.deleteMethod("test", "ty pe", "name", params, "protected");
+        controller.deleteMethod("test", "type", "na me", params, "protected");
+        controller.deleteMethod("test", "not", "right", params, "protected");
         //Wrong class name, change nothing.
         assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "protected")));
 
@@ -277,6 +283,7 @@ public class ControllerTest
 
         //Wrong class name, change nothing
         controller.changeMethodType("wrongName", "type", "name", params, "protected", "aType");
+        controller.changeMethodType("Test", "type", "name", params, "protected", " a Typ e ");
         assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("atype", "name", realParams, "protected")));
         
         //Should change now.
