@@ -15,7 +15,8 @@ import org.mockito.MockitoAnnotations;
 import UML.views.*;
 import UML.controllers.*;
 import UML.model.*;
-
+import java.io.File;
+import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 
 public class ControllerTest 
@@ -56,22 +57,27 @@ public class ControllerTest
     public void testDeleteClass()
     {
         controller.createClass("test");
-        controller.deleteClass("test1");
+        UML.model.Class testClass = controller.getStore().getClassStore().get(0);
+        controller.deleteClass("te st");
+        controller.deleteClass("Test");
+        controller.deleteClass(" t e s t ");
         //Class should still exist.
         assertEquals(controller.getStore().getClassStore().size(), 1);
-
+        assertTrue(controller.getStore().getClassStore().contains(testClass));
         controller.deleteClass("test");
         //Now class should be gone.
         assertEquals(controller.getStore().getClassStore().size(), 0);
+        
     }
 
     @Test
     public void testRenameClass()
     {
         controller.createClass("test");
+        controller.renameClass("test", "oo ps");
         controller.renameClass("WRONGGG", "oops");
-        assertEquals(controller.getStore().getClassStore().get(0).getName(), "test");
         //Wrong class name should not change anything.
+        assertEquals(controller.getStore().getClassStore().get(0).getName(), "test");
         controller.renameClass("test","newTest");
         //Name should have changed.
         assertEquals(controller.getStore().getClassStore().get(0).getName(), "newTest");
@@ -109,7 +115,7 @@ public class ControllerTest
     public void testDeleteField()
     {
         controller.createClass("test");
-        controller.createField("test", "type","name","private" );
+        controller.createField("test", "type","name","private");
         controller.deleteField("wrongClass", "name");
         //No field should be deleted
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "name", "private")));
@@ -154,6 +160,7 @@ public class ControllerTest
 
         //Wrong name, shouldn't change anything.
         controller.changeFieldType("wrongName", "name", "String");
+        controller.changeFieldType("test", "nam e", " S t ri ng");
         //Test class should have the field.
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "name", "private")));
 
@@ -175,8 +182,11 @@ public class ControllerTest
         //changeFieldAccess(String className, String fieldName, String access)
         controller.createClass("test");
         controller.createField("test", "type", "name", "private");
+
         //Access type should not change
         controller.changeFieldAccess("wrongName", "name", "public");
+        controller.changeFieldAccess("test", "nameeeeee", "public");
+        controller.changeFieldAccess("test", "na me", "private");
         assertTrue(controller.getStore().getClassStore().get(0).getFields().contains(new Field("type", "name", "private")));
         //Change should now occur
         controller.changeFieldAccess("test", "name", "protected");
@@ -191,7 +201,9 @@ public class ControllerTest
         ArrayList<Parameter> realParams = new ArrayList<Parameter>();
         realParams.add(new Parameter("pType", "pName"));
         params.add("pType pName");
-        controller.createMethod("wrongName", "type", "name", params, "protected");
+
+        controller.createMethod("wrongName", "type", "na me", params, "protected");
+        controller.createMethod("test", "type", "n ame", params, "protected");
         //Wrong name, nothing should change.
         assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "protected")));
 
@@ -218,6 +230,9 @@ public class ControllerTest
         controller.createMethod("test", "type", "name", params, "protected");
 
         controller.deleteMethod("wrongName", "type", "name", params, "protected");
+        controller.deleteMethod("test", "ty pe", "name", params, "protected");
+        controller.deleteMethod("test", "type", "na me", params, "protected");
+        controller.deleteMethod("test", "not", "right", params, "protected");
         //Wrong class name, change nothing.
         assertTrue(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("type", "name", realParams, "protected")));
 
@@ -273,6 +288,7 @@ public class ControllerTest
 
         //Wrong class name, change nothing
         controller.changeMethodType("wrongName", "type", "name", params, "protected", "aType");
+        controller.changeMethodType("Test", "type", "name", params, "protected", " a Typ e ");
         assertFalse(controller.getStore().getClassStore().get(0).getMethods().contains(new Method("atype", "name", realParams, "protected")));
         
         //Should change now.
@@ -417,6 +433,7 @@ public class ControllerTest
 
         //test to see if classes can form relationships
         controller.addRelationship("test", "test2", RelationshipType.REALIZATION);  
+        controller.addRelationship("test", "test5", RelationshipType.REALIZATION);  
         assertTrue(controller.getStore().getClassStore().get(0).getRelationshipsToOther().containsValue(RelationshipType.REALIZATION));
         
         //test to see if classes can have more than one relationship
@@ -498,6 +515,21 @@ public class ControllerTest
     }
 
     @Test
+    public void testSetGUIExists()
+    {
+        controller.setGUIExists();
+        assertTrue(controller.getGUIExists());
+    }
+
+    @Test
+    public void testSetGUIVisible()
+    {
+        controller.setGUIExists();
+        controller.setGUIVisible();
+        assertTrue(controller.getGUIExists());
+    }
+
+    @Test
     public void testGetGUIExists()
     {
         assertFalse(controller.getGUIExists());
@@ -506,5 +538,22 @@ public class ControllerTest
     public void testGetStateController()
     {
         assertNotNull(controller.getStateController());
+    }
+
+    @Test
+    public void testLoad()
+    {
+        try 
+        {
+            controller.createClass("Blah");
+            controller.save("blahtest.json");
+            controller.undo();
+            controller.load("blahtest.json");
+            File file = store.getCurrentLoadedFile();
+            assertEquals("blahtest.json", file.getName());
+        } 
+        catch (Exception e) {
+            //TODO: handle exception
+        }
     }
 }
