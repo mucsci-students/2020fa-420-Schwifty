@@ -22,17 +22,6 @@ public class CommandlineView implements View {
     // ================================================================================================================================================
 
     /**
-     * Print updated class.
-     */
-    @Override
-    public void updateClass(String oldName, String newName) 
-    {
-        int stop = newName.toString().indexOf("Relationships To Others: ");
-        String s = newName.toString().substring(0, stop - 32);
-        System.out.println("\n" + s);
-    }
-
-    /**
      * Print new class.
      */
     @Override
