@@ -47,7 +47,6 @@ public class GraphicalView implements View {
 
     // The window for the GUI.
     private JFrame window;
-
     private JMenu fileMenu;
     private JMenu classMenu;
     private JMenu stateMenu;
@@ -129,6 +128,7 @@ public class GraphicalView implements View {
 
     /**
      * Deletes a relationship between two class panels.
+     * TODO: Maybe make a do nothing method.
      */
     @Override
     public void deleteRelationship(String from, String to) {
@@ -154,6 +154,7 @@ public class GraphicalView implements View {
 
     /**
      * Updates a class panel that is already being displayed on the window.
+     * TODO: Discuss removal of this method. Can not locate it being used?
      */
     @Override
     public void updateClass(String oldString, String newString) 
@@ -205,6 +206,8 @@ public class GraphicalView implements View {
 
         refresh();
     }
+
+    //TODO: Remove code
     private JMenu getMenuBarFromPanel(JPanel panel)
     {
         JMenuBar panelBar = null;
@@ -221,6 +224,8 @@ public class GraphicalView implements View {
     
     /**
      * Helps update the window.
+     * 
+     * TODO: Look into removing this. 
      */
     private void windowUpdateHelper(String classInfo, Dimension loc) {
         JPanel aPanel = classPanels.get(classInfo);
@@ -300,9 +305,9 @@ public class GraphicalView implements View {
      * Will exit the window but not close application.
      */
     @Override
-    public void exit() {
+    public void exit() 
+    {
         // Get rid of window. Make sure call save and load in controller.
-
     }
 
 
@@ -316,7 +321,6 @@ public class GraphicalView implements View {
     @Override
     public void setGUIInvisible() 
     {
-        // TODO Auto-generated method stub
         window.setVisible(false);
 	}
 
@@ -426,12 +430,9 @@ public class GraphicalView implements View {
     private void createStateMenu(JMenuBar mb)
     {
         stateMenu = new JMenu("State");
-
     
         JMenuItem undo = new JMenuItem("Undo");
-
         JMenuItem redo = new JMenuItem("Redo");
-
         JMenuItem CLI = new JMenuItem("CLI");
 
         JMenuItem[] arr = {undo, redo, CLI};
@@ -452,6 +453,7 @@ public class GraphicalView implements View {
 
     /**
      * Creates a panel on the window to display information about a class.
+     * TODO: Discuss removal of this method, appears to no longer be needed. 
      */
     public void makeNewClassPanel(String aClass) {
         JPanel classPanel = new JPanel();
@@ -547,28 +549,19 @@ public class GraphicalView implements View {
     /**
      * Refreshes the window.
      */
-    public void refresh() {
-        ArrayList<Dimension> dimensions = new ArrayList<Dimension>();
-        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
-            dimensions.add(new Dimension(panel.getValue().getX(), panel.getValue().getY()));
-        }
+    public void refresh() 
+    {
         dp.revalidate();
         dp.repaint();
-        int counter = 0;
-        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
-            panel.getValue().setLocation((int) dimensions.get(counter).getWidth(),
-                    (int) dimensions.get(counter).getHeight());
-            ++counter;
-        }
     }
     
     /**
      * Displays an error message.
      */
     @Override
-    public void showError(String error) {
+    public void showError(String error) 
+    {
         JOptionPane.showMessageDialog(new JFrame(), error, "Error", JOptionPane.ERROR_MESSAGE);
-
     }
 
     // ================================================================================================================================================

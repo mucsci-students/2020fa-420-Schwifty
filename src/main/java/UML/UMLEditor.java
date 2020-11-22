@@ -30,7 +30,15 @@ public class UMLEditor
             //Catch.
         }
         Store s = new Store();
-        if(args[0].equals("cli"))
+        //If no arguments passed, launch the interface selecter GUI version.
+        if(args.length == 0)
+        {
+            InterfaceChoiceView v = new InterfaceChoiceView();
+            Controller c = new Controller(s, v);
+            //Adds the action lsiteners for the interface choice controller.
+            c.addListener();
+        }
+        else if(args[0].equals("cli"))
         {
             View v = new CommandlineView();
             Controller c = new Controller(s, v);
@@ -42,13 +50,6 @@ public class UMLEditor
             Controller c = new Controller(s, v);
             v.start();
             c.addListeners();
-        }
-        else
-        {
-            InterfaceChoiceView v = new InterfaceChoiceView();
-            Controller c = new Controller(s, v);
-            //Adds the action lsiteners for the interface choice controller.
-            c.addListener();
         }
     }
 }
