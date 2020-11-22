@@ -89,7 +89,7 @@ public class CreateFieldController implements ActionListener {
                 name = (String) ((JTextArea) panel.getComponent(2)).getText();
 
             }
-            //Cancel
+            //Cancel.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)
             {
                 return;

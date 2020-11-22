@@ -90,7 +90,7 @@ public class CreateMethodController implements ActionListener  {
                 //Get param String.
                 param = (String) ((JTextArea) panel.getComponent(3)).getText();
             }
-            //Cancel
+            //Cancel.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)
             {
                 return;
