@@ -37,8 +37,8 @@ public class TestGraphicalView
     @Spy
     Store s = new Store();
 
-    @Spy
-    GraphicalView gv = new GraphicalView();
+    @Mock
+    GraphicalView gv;
 
     @InjectMocks Controller c;
 
