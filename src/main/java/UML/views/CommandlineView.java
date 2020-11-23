@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import UML.controllers.MouseClickAndDragController;
+import UML.controllers.VerticalScrollController;
 import java.awt.Dimension;
 
 public class CommandlineView implements View {
@@ -412,6 +413,12 @@ public class CommandlineView implements View {
 
     @Override
     public void setGUIInvisible()
+    {
+        //Do nothing.
+    }
+
+    @Override
+    public void addScrollListener(VerticalScrollController vsc)
     {
         //Do nothing.
     }

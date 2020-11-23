@@ -756,6 +756,10 @@ public StateController getStateController()
         view.addListener(new InterfaceChoiceClickController(store, view, this));
     }
 
+    public void addSrollListener()
+    {
+        view.addScrollListener(new VerticalScrollController(store, view, this));
+    }
 
     /**
      * Changes the state of the model and view

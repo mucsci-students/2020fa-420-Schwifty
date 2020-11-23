@@ -187,4 +187,10 @@ public class InterfaceChoiceView implements View {
     {
         //Do nothing.
     }
+
+    @Override
+    public void addScrollListener(VerticalScrollController vsc)
+    {
+        //Do nothing.
+    }
 }

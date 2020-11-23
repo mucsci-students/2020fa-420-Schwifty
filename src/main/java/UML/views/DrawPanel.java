@@ -13,9 +13,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 
 
-public class DrawPanel extends JPanel 
+public class DrawPanel extends JPanel
 {
     private View view;
 
@@ -42,7 +43,8 @@ public class DrawPanel extends JPanel
             int[] line = getClosest((int)fromLoc.getWidth(), (int)(fromLoc.getWidth() + fromSize.getWidth()), 
                                                 (int)fromLoc.getHeight(), (int)(fromLoc.getHeight() + fromSize.getHeight()), 
                                                 (int)toLoc.getWidth(), (int)(toLoc.getWidth() + toSize.getWidth()),
-                                                (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));                            
+                                                (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));                
+
             if(relationship.getValue().equals("REALIZATION"))
             {
                 //Do a dotted line for realizatioon.

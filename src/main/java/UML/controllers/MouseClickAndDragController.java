@@ -39,7 +39,6 @@ public class MouseClickAndDragController implements MouseListener, MouseMotionLi
     {
         startDragX = e.getX();
         startDragY = e.getY();
-        //JOptionPane.showMessageDialog(null,"mouse pressed!");
     }
     @Override
     public void mouseDragged(MouseEvent e) 
