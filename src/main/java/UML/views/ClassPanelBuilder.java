@@ -150,9 +150,9 @@ public class ClassPanelBuilder implements PanelBuilder
     {
         JLabel name = new JLabel(getClassName(classData));
 
-        JLabel fields = new JLabel("<html>" + getClassFields(classData).replaceAll("\n", "<br/>") + "<html>");
+        JLabel fields = new JLabel("<html>" + getClassFields(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
 
-        JLabel methods = new JLabel("<html>" + getClassMethods(classData).replaceAll("\n", "<br/>") + "<html>");
+        JLabel methods = new JLabel("<html>" + getClassMethods(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
 
         /**
         //Make borders for the text areas visible.

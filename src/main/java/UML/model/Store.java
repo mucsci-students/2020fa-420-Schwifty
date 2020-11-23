@@ -438,8 +438,7 @@ public class Store implements Cloneable, IStore {
 	 * Finds a method in a class in the storage and returns it. Returns null if
 	 * nothing found.
 	 */
-	public Method findMethod(String className, String methodType, String methodName, ArrayList<Parameter> params,
-			String access) {
+	public Method findMethod(String className, String methodType, String methodName, ArrayList<Parameter> params, String access) {
 		Method newMethod = new Method(methodType, methodName, params, access);
 		Class foundClass = findClass(className);
 		for (Method method : foundClass.getMethods()) {
@@ -481,8 +480,7 @@ public class Store implements Cloneable, IStore {
 	 * Rename a method from a class based on the method string. Takes in a class
 	 * name from which the method is to be removed and the method toString result.
 	 */
-	public boolean renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName,
-			String access) {
+	public boolean renameMethodByString(Set<Method> methods, String methodToBeRenamed, String className, String newName, String access) {
 		// Loop through the returned methods to find the method to be renamed.
 		for (Method m : methods) {
 			if (m.toString().equals(methodToBeRenamed)) {
