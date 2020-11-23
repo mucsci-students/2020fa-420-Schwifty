@@ -62,7 +62,7 @@ public class DeleteRelationshipController implements ActionListener {
                 controller.deleteRelationship(className, classTo);
                 return;
             }
-            //Cancel
+            //Cancel.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)
             {
                 return;

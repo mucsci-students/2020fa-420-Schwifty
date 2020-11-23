@@ -75,7 +75,7 @@ public class CLI {
         reader.option(LineReader.Option.RECOGNIZE_EXACT, true);
         reader.option(LineReader.Option.CASE_INSENSITIVE, true);
         reader.option(LineReader.Option.AUTO_REMOVE_SLASH, true);
-        // unset default tab behavior
+        // Unset default tab behavior.
         reader.unsetOpt(LineReader.Option.INSERT_TAB);
         history.attach(reader);
 
@@ -165,10 +165,7 @@ public class CLI {
         }
     }
 
-    //
-    // Abstract checking if class
-    // exists.******************************************************************************
-    //
+
     /**
      * Exits from the CLI.
      */
@@ -202,6 +199,7 @@ public class CLI {
                 e.printStackTrace();
             }
 
+            //Initialize verything needed for GUI transistion to work.
             Store s = new Store();
             GraphicalView v = new GraphicalView();
             StateController stateController = controller.getStateController();
@@ -568,23 +566,26 @@ public class CLI {
      * Displays a specified class.
      */
     private void display(String[] args) {
-        if (args.length == 1) {
+        if (args.length == 1) 
+        {
+            //With no arguments display all the classes.
             String classes = "";
             for (UML.model.Class c : store.getClassStore()) 
             {
-                /**
-                int stop = c.toString().indexOf("Relationships To Others: ");
-                //classes += c.toString() + "\n";
-                classes += c.toString().substring(0, stop - 32) + "\n";
-                */
                 classes += "Class Name: " + c.getName() + "\n";
             }
             view.display(classes);
-        } else {
+        }
+        else 
+        {
+            //With arguments, display a specified class.
             UML.model.Class aClass = store.findClass(args[1]);
-            if (aClass == null) {
+            if (aClass == null) 
+            {
                 view.showError("Class does not exist");
-            } else {
+            } 
+            else 
+            {
                 int stop = aClass.toString().indexOf("Relationships To Others: ");
                 view.display(aClass.toString().substring(0, stop - 32));
             }
@@ -707,6 +708,8 @@ public class CLI {
                         node("display", node(classes)));
             }
         }
+
+        //Make the new reader based on the new completer.
         reader = LineReaderBuilder.builder().terminal(terminal).history(history).completer(completer).parser(parser)
                 .variable(LineReader.MENU_COMPLETE, true).build();
 

@@ -67,7 +67,7 @@ public class CreateRelationshipController implements ActionListener {
                 controller.addRelationship(className, classTo, RelationshipType.valueOf(relateType));
                 return;
             }
-            //Cancel
+            //Cancel.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)
             {
                 return;

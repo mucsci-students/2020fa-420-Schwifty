@@ -59,7 +59,7 @@ public class ClassClickController implements ActionListener
 					//Get name String.
 					name = (String) ((JTextArea) panel.getComponent(0)).getText();
 				}
-				//Cancel
+				//Cancel.
 				else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)
 				{
 					return;
