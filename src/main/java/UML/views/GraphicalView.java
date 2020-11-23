@@ -418,9 +418,9 @@ public class GraphicalView implements View {
         JLabel fields = (JLabel) innerPanel.getComponent(1);
         JLabel methods = (JLabel) innerPanel.getComponent(2);
 
-        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) - 1) * 10;
+        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) + 10) * 7;
 
-        panel.setBounds(x, y, width, (fieldSize[1] + 3) * 15 + (methodSize[1] + 3) * 15 + 30);
+        panel.setBounds(x, y, width, (fieldSize[1] + 4) * 15 + (methodSize[1] + 3) * 15 + 30);
         
         name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
 
