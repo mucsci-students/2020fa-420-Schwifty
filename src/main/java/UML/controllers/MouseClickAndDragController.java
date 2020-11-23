@@ -14,6 +14,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import UML.views.DrawPanel;
+import UML.views.PanelBuilder;
+import javax.swing.JLabel;
+
 import java.awt.Dimension;
 import UML.model.*;
 
@@ -45,17 +48,24 @@ public class MouseClickAndDragController implements MouseListener, MouseMotionLi
         if(source instanceof JPanel)
         {
             JPanel found = (JPanel)source;
-            JTextArea text = (JTextArea)found.getComponent(0);
-            String[] rows = text.getText().split("\n");
-            String[] classString = rows[0].split(" ");
-            String className = classString[2];
+            JPanel panel = (JPanel)found.getComponent(4);
+            JLabel text = (JLabel)panel.getComponent(0);
+            //Get the class name from the test on the top panel.
+            String className = text.getText().trim();
+
             UML.model.Class c = store.findClass(className);
+
+            //Get new location.
             int newX = found.getX() + (e.getX() - startDragX);
             int newY = found.getY() + (e.getY() - startDragY);
             c.setLocation(new Dimension(newX, newY));
+
+            //Set the location of the panel.
             found.setLocation(newX, newY);
             view.getMainWindow().repaint();
             DrawPanel dp = new DrawPanel(view);
+
+            //Paint the panel.
             dp.paintComponent(view.getMainWindow().getGraphics());
         }
     }

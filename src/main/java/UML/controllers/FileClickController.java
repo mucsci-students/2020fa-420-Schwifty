@@ -67,7 +67,7 @@ public class FileClickController implements ActionListener {
 			try
 			{
 				String fileName = view.load();
-				controller.loadFromMenu(fileName);
+				controller.load(fileName);
 			}
 			catch(IOException io)
 			{

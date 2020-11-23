@@ -6,7 +6,7 @@ package UML.views;
     Purpose: Provides an implementation of the GUI view.
  */
 import javax.swing.JTextArea;
-
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -22,8 +22,16 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
-import UML.controllers.FieldClickController;
+
+import UML.controllers.CreateFieldController;
+import UML.controllers.CreateMethodController;
+import UML.controllers.EditClassController;
+import UML.controllers.CreateRelationshipController;
+import UML.controllers.DeleteRelationshipController;
+import UML.controllers.EditFieldController;
+import UML.controllers.EditMethodController;
 import UML.controllers.MouseClickAndDragController;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.Scanner;
@@ -39,11 +47,9 @@ public class GraphicalView implements View {
 
     // The window for the GUI.
     private JFrame window;
-
     private JMenu fileMenu;
     private JMenu classMenu;
     private JMenu stateMenu;
-    private JMenu relationshipMenu;
     private Graphics graphics;
     private DrawPanel dp;
     private ConcurrentHashMap<ArrayList<String>, String> relationships;
@@ -122,6 +128,7 @@ public class GraphicalView implements View {
 
     /**
      * Deletes a relationship between two class panels.
+     * TODO: Maybe make a do nothing method.
      */
     @Override
     public void deleteRelationship(String from, String to) {
@@ -144,53 +151,7 @@ public class GraphicalView implements View {
             }
         }
     }
-
-    /**
-     * Updates a class panel that is already being displayed on the window.
-     */
-    @Override
-    public void updateClass(String oldString, String newString) {
-        for (ArrayList<String> classes : getRelationships().keySet()) {
-            if (classes.get(0).equals(oldString)) {
-                String value = relationships.get(classes);
-                relationships.remove(classes);
-                ArrayList<String> toPut = new ArrayList<String>();
-                toPut.add(newString);
-                toPut.add(classes.get(1));
-                relationships.put(toPut, value);
-            } else if (classes.get(1).equals(oldString)) {
-                String value = relationships.get(classes);
-                relationships.remove(classes);
-                ArrayList<String> toPut = new ArrayList<String>();
-                toPut.add(classes.get(0));
-                toPut.add(newString);
-                relationships.put(toPut, value);
-            }
-        }
-        JPanel panel = classPanels.get(oldString);
-        int x = panel.getX();
-        int y = panel.getY();
-        Dimension loc = getLoc(oldString);
-        classPanels.remove(oldString);
-        classPanels.put(newString, panel);
-        // Just sets TextArea.
-        windowUpdateHelper(newString, loc);
-        resizePanel(newString, (int) loc.getWidth(), (int) loc.getHeight());
-        resizePanel(newString, x, y);
-        refresh();
-    }
-
-    /**
-     * Helps update the window.
-     */
-    private void windowUpdateHelper(String classInfo, Dimension loc) {
-        JPanel aPanel = classPanels.get(classInfo);
-        JTextArea textArea = (JTextArea) aPanel.getComponents()[0];
-        int stop = classInfo.indexOf("Relationships To Others: ");
-        String newText =  classInfo.substring(0, stop);
-        textArea.setText(newText);
-    }
-
+    
     // ================================================================================================================================================
     // Getting user input.
     // ================================================================================================================================================
@@ -212,7 +173,6 @@ public class GraphicalView implements View {
     @Override
     public String getInputFromUser(String prompt) {
         String strToRtn = JOptionPane.showInputDialog(dp, prompt, "", JOptionPane.PLAIN_MESSAGE);
-
         return strToRtn;
     }
 
@@ -262,9 +222,9 @@ public class GraphicalView implements View {
      * Will exit the window but not close application.
      */
     @Override
-    public void exit() {
+    public void exit() 
+    {
         // Get rid of window. Make sure call save and load in controller.
-
     }
 
 
@@ -278,7 +238,6 @@ public class GraphicalView implements View {
     @Override
     public void setGUIInvisible() 
     {
-        // TODO Auto-generated method stub
         window.setVisible(false);
 	}
 
@@ -326,7 +285,6 @@ public class GraphicalView implements View {
         createFileMenu(mb);
         createClassMenu(mb);
         createStateMenu(mb);
-        createRelationshipMenu(mb);
         mb.setVisible(true);
     }
 
@@ -375,18 +333,10 @@ public class GraphicalView implements View {
 
         // Create sub menus.
         JMenuItem crtClass = new JMenuItem("Create class");
-        JMenuItem deleteClass = new JMenuItem("Delete class");
-        JMenuItem rnClass = new JMenuItem("Rename class");
 
-        JMenuItem[] arr = { crtClass, deleteClass, rnClass };
-        String[] text = { "Create Class", "Delete Class", "Rename Class" };
-        String[] command = { "Create", "Delete", "Rename" };
-
-        for (int count = 0; count < 3; ++count) {
-            classMenu.add(arr[count]);
-            arr[count].setToolTipText(text[count]);
-            arr[count].setActionCommand(command[count]);
-        }
+        classMenu.add(crtClass);
+        crtClass.setToolTipText("Create Class");
+        crtClass.setActionCommand("Create");
         mb.add(classMenu);
     }
 
@@ -397,12 +347,9 @@ public class GraphicalView implements View {
     private void createStateMenu(JMenuBar mb)
     {
         stateMenu = new JMenu("State");
-
     
         JMenuItem undo = new JMenuItem("Undo");
-
         JMenuItem redo = new JMenuItem("Redo");
-
         JMenuItem CLI = new JMenuItem("CLI");
 
         JMenuItem[] arr = {undo, redo, CLI};
@@ -417,41 +364,13 @@ public class GraphicalView implements View {
         mb.add(stateMenu);
     }
 
-    /**
-     * Creates the relationship menu options by taking in the menu bar and adding
-     * them to it.
-     */
-    private void createRelationshipMenu(JMenuBar mb) {
-        relationshipMenu = new JMenu("Relate");
-        // Create JMenuItems for each type of relationship and deleting a relationship.
-        JMenuItem realization = new JMenuItem("Realization");
-        JMenuItem aggregation = new JMenuItem("Aggregation");
-        JMenuItem composition = new JMenuItem("Composition");
-        JMenuItem generalization = new JMenuItem("Generalization");
-        JMenuItem deleteRelate = new JMenuItem("Delete Relationship");
-        // Create arrays of JMenuItems and Strings to use for loop for setting up
-        // relationship menu.
-        JMenuItem[] arr = { realization, aggregation, composition, generalization, deleteRelate };
-        String[] names = { "Realization", "Aggregation", "Composition", "Generalization", "DeleteRelationship" };
-
-        for (int count = 0; count < 5; ++count) {
-            relationshipMenu.add(arr[count]);
-            if (count < 4)
-                arr[count].setToolTipText("Creates selected relationship between two classes");
-            else
-                arr[count].setToolTipText("Deletes selected relationship between two classes");
-
-            arr[count].setActionCommand(names[count]);
-        }
-        mb.add(relationshipMenu);
-    }
-
     // ================================================================================================================================================
     // Create, delete, resize class panels + refresh the window.
     // ================================================================================================================================================
 
     /**
      * Creates a panel on the window to display information about a class.
+     * TODO: Discuss removal of this method, appears to no longer be needed. 
      */
     public void makeNewClassPanel(String aClass) {
         JPanel classPanel = new JPanel();
@@ -481,55 +400,85 @@ public class GraphicalView implements View {
      */
     public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
-        Scanner lineScanner = new Scanner(classToString);
-        //Scan the string to get a general idea for its size.
-        int longest = 0;
-        int height = 0;
-        while (lineScanner.hasNextLine()) {
-            String line = lineScanner.nextLine();
-            Scanner scanner = new Scanner(line);
-            int localBest = 0;
-            while (scanner.hasNext()) {
-                localBest++;
-                scanner.next();
-            }
-            scanner.close();
-            ++height;
-            if (localBest > longest)
-                longest = localBest;
-        }
-        lineScanner.close();
+
+        //Get class name length.
+        int start = classToString.indexOf("name: ") + 6;
+        int stop = classToString.indexOf("Field ");
+        int nameLength = stop - 32 - start;
+
+        //Get field length and height.
+        int[] fieldSize = getSizes("Field Names: ","Methods: ", classToString);
+
+        //Get method length and height.
+        int[] methodSize = getSizes("Methods: ","Relationships To Others: ", classToString);
+
         panel.setLocation(x, y);
-        //Set the bounds of the panel to be some multiple of the size of the String to make the panel size make sense.
-        panel.setBounds(x, y, (longest * 20) + 150, height * 20);
+        JPanel innerPanel = (JPanel)panel.getComponent(4);
+        JLabel name = (JLabel) innerPanel.getComponent(0);
+        JLabel fields = (JLabel) innerPanel.getComponent(1);
+        JLabel methods = (JLabel) innerPanel.getComponent(2);
+
+        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) + 10) * 7;
+
+        panel.setBounds(x, y, width, (fieldSize[1] + 4) * 15 + (methodSize[1] + 3) * 15 + 30);
+        
+        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
+
+        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 15);
+
+        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 15 + 20, width, (methodSize[1] + 3) * 15);
+
         refresh();
     }
 
     /**
+     * Returns the max length and the height of a blcok of text.
+     */
+    private int[] getSizes(String begin, String end, String classToString)
+    {
+        //Specify the block we care about by giving beginning and end substrings.
+        int start = classToString.indexOf(begin);
+        int stop = classToString.indexOf(end);
+        String scan = classToString.substring(start, stop - 32);
+        Scanner scanner = new Scanner(scan);
+
+        int longest = 0;
+        int height = 0;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            Scanner lineScanner = new Scanner(line);
+            int localBest = 0;
+            while (lineScanner.hasNext()) {
+                localBest += lineScanner.next().length();
+                localBest++;
+            }
+            lineScanner.close();
+            ++height;
+            if (localBest > longest)
+                longest = localBest;
+        }
+        scanner.close();
+        int[] toReturn = {longest, height};
+        return toReturn;
+    }
+
+
+    /**
      * Refreshes the window.
      */
-    public void refresh() {
-        ArrayList<Dimension> dimensions = new ArrayList<Dimension>();
-        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
-            dimensions.add(new Dimension(panel.getValue().getX(), panel.getValue().getY()));
-        }
+    public void refresh() 
+    {
         dp.revalidate();
         dp.repaint();
-        int counter = 0;
-        for (Map.Entry<String, JPanel> panel : classPanels.entrySet()) {
-            panel.getValue().setLocation((int) dimensions.get(counter).getWidth(),
-                    (int) dimensions.get(counter).getHeight());
-            ++counter;
-        }
     }
     
     /**
      * Displays an error message.
      */
     @Override
-    public void showError(String error) {
+    public void showError(String error) 
+    {
         JOptionPane.showMessageDialog(new JFrame(), error, "Error", JOptionPane.ERROR_MESSAGE);
-
     }
 
     // ================================================================================================================================================
@@ -539,12 +488,10 @@ public class GraphicalView implements View {
     /**
      * Adds action lisnters for buttons.
      */
-    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener,
-            ActionListener relationshipListener) {
+    public void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener) {
         addFileListeners(fileListener);
         addClassListeners(classListener);
         addStateListeners(stateListener);
-        addRelationshipListeners(relationshipListener);
     }
 
     /**
@@ -590,17 +537,6 @@ public class GraphicalView implements View {
     }
 
     /**
-     * Adds the listeners for the relationship buttons.
-     */
-    private void addRelationshipListeners(ActionListener relationshipListener) 
-    {
-        for (Component item : relationshipMenu.getMenuComponents()) {
-            JMenuItem menuItem = (JMenuItem) item;
-            menuItem.addActionListener(relationshipListener);
-        }
-    }
-
-    /**
      * Adds listener for specified class panel.
      */
     @Override
@@ -615,7 +551,7 @@ public class GraphicalView implements View {
      * Adds listener for editing a class panel.
      */
     @Override
-    public void addPanelListener(FieldClickController fieldController, String classText) 
+    public void addPanelListener(ActionListener listener, String classText) 
     {
         JPanel panel = classPanels.get(classText);
         JMenuBar menuBar = null;
@@ -627,13 +563,45 @@ public class GraphicalView implements View {
             }
         }
         JMenu menu = (JMenu) menuBar.getMenu(0);
-        for(int count = 0; count < 10; count++)
+        
+        //Add the listener to the correct MenuItem.
+        if(listener instanceof CreateFieldController)
         {
-            JMenuItem menuItem = (JMenuItem) menu.getItem(count);
-            menuItem.addActionListener(fieldController);
+            JMenuItem menuItem = (JMenuItem) menu.getItem(0);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof EditFieldController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(1);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof CreateMethodController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(2);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof EditMethodController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(3);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof CreateRelationshipController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(4);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof DeleteRelationshipController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(5);
+            menuItem.addActionListener(listener);
+        }
+        else if(listener instanceof EditClassController)
+        {
+            JMenuItem menuItem = (JMenuItem) menu.getItem(6);
+            menuItem.addActionListener(listener);
         }
     }
-
+    
     // ================================================================================================================================================
     // "Do Nothing" methods
     // ================================================================================================================================================

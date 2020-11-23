@@ -1,15 +1,16 @@
 
 package UML.controllers;
 
-import UML.model.*;
-import UML.views.*;
-import java.util.Scanner;
 /**
     Author: Chris, Cory, Dominic, Drew, Tyler.
     Date: 09/24/2020
     Purpose: Provide the user a way to select between using the command line view
     or through the graphical interface. 
  */
+
+import UML.model.*;
+import UML.views.*;
+import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ButtonGroup;

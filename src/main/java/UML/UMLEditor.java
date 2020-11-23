@@ -12,6 +12,8 @@ import UML.controllers.Controller;
 import UML.controllers.CLI;
 import java.util.Scanner;
 
+import javax.swing.UIManager;
+
 public class UMLEditor 
 {
     /**
@@ -19,11 +21,36 @@ public class UMLEditor
      */
     public static void main(String[] args)
     {
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch(Exception e)
+        {
+            //Catch.
+        }
         Store s = new Store();
-        InterfaceChoiceView v = new InterfaceChoiceView();
-        Controller c = new Controller(s, v);
-        //Adds the action lsiteners for the interface choice controller.
-        c.addListener();
+        //If no arguments passed, launch the interface selecter GUI version.
+        if(args.length == 0)
+        {
+            InterfaceChoiceView v = new InterfaceChoiceView();
+            Controller c = new Controller(s, v);
+            //Adds the action lsiteners for the interface choice controller.
+            c.addListener();
+        }
+        else if(args[0].equals("cli"))
+        {
+            View v = new CommandlineView();
+            Controller c = new Controller(s, v);
+            CLI cli = new CLI(s, v, c);
+        }
+        else if(args[0].equals("gui"))
+        {    
+            GraphicalView v = new GraphicalView();
+            Controller c = new Controller(s, v);
+            v.start();
+            c.addListeners();
+        }
     }
 }
 

@@ -67,29 +67,6 @@ abstract class Formal {
     }
 
     /**
-     * Returns true if two formal parameters object are equal and false otehrwise.
-     */
-    public boolean equals(Object other) {
-        boolean result = false;
-        if(this == other) {
-            result = true;
-        }
-        else if (other == null) {
-            result = false;
-        }
-        else if(!(other instanceof Formal)) { 
-            result = false; 
-        }
-        else {
-            Formal object = (Formal) other;
-            if(object.getName().equals(this.getName()) && object.getType().equals(this.getType())) {
-                result = true;
-            }
-        }
-        return result;
-    }
-
-    /**
      * Returns a string reppresentation of a formal parameter.
      */
     public String toString()

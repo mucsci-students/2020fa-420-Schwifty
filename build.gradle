@@ -16,6 +16,9 @@ plugins {
     // Apply the application plugin to add support for building a CLI application.
     id 'application'
 
+    id "com.github.kt3k.coveralls" version "2.10.2"
+    
+     id 'jacoco'
 
 }
 
@@ -35,11 +38,13 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testCompileOnly 'junit:junit:4.13'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.6.0'
+    testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.6.0'
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
     compile group: 'org.jline', name: 'jline-terminal-jna', version: '3.16.0'
     compile 'org.jline:jline:3.14.1'
-
 }
+
 
 application {
     // Define the main class for the application.
@@ -59,6 +64,7 @@ test {
   testLogging {
     events "passed", "skipped", "failed"
   }
+  finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
 sourceSets {
@@ -73,4 +79,15 @@ sourceSets {
       srcDir 'src/test/java'
     }
   }
+}
+
+jacoco {
+    reportsDir = file("./coverage")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
 }

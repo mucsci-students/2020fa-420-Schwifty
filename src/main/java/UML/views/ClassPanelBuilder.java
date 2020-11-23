@@ -7,8 +7,10 @@ package UML.views;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Scanner;
@@ -16,12 +18,14 @@ import java.util.Scanner;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 public class ClassPanelBuilder implements PanelBuilder
 {
     
     private String classData;
     private JPanel panel;
     private DrawPanel parentWindow;
+    private JMenuBar miniBar;
     Border blackline = BorderFactory.createLineBorder(Color.black);
 
     /**
@@ -55,7 +59,8 @@ public class ClassPanelBuilder implements PanelBuilder
     /**
      * Gets the classData field which is the toString() value if the class.
      */
-    public String getClassData() {
+    public String getClassData() 
+    {
         return classData;
     }
 
@@ -63,52 +68,79 @@ public class ClassPanelBuilder implements PanelBuilder
      * Sets the classData field.
      */
     @Override
-    public void setClassData(String classData) {
+    public void setClassData(String classData) 
+    {
         this.classData = classData;
     }
 
     /**
      * Gets the JPanel.
      */
-    public JPanel getPanel() {
+    public JPanel getPanel() 
+    {
         return panel;
     }
 
     /**
      * Sets the JPanel to a given JPanel.
      */
-    public void setPanel(JPanel panel) {
+    public void setPanel(JPanel panel) 
+    {
         this.panel = panel;
     }
 
     /**
      * Gets parent window.
      */
-    public DrawPanel getParentWindow() {
+    public DrawPanel getParentWindow() 
+    {
         return parentWindow;
     }
 
     /**
      * Gets border for JPanel.
      */
-    public Border getBlackline() {
+    public Border getBlackline() 
+    {
         return blackline;
     }
     
     /**
      * Sets border for JPanel.
      */
-    public void setBlackline(Border blackline) {
+    public void setBlackline(Border blackline) 
+    {
         this.blackline = blackline;
     }
     
     /**
-     * Returns class toString without relationship information.
+     * Returns class name.
      */
-    private String getClassText(String data)
+    private String getClassName(String data)
     {
+        int start = data.indexOf("name: ") + 6;
+        int stop = data.indexOf("Field ");
+        return data.substring(start, stop - 32);
+    }
+
+    /**
+     * Returns fields string.
+     */
+    private String getClassFields(String data)
+    {
+        int start = data.indexOf("Field Names: ");
+        int stop = data.indexOf("Methods: ");
+        return data.substring(start, stop - 32);
+    }
+
+    /**
+     * Returns methods string.
+     */
+    private String getClassMethods(String data)
+    {
+        int start = data.indexOf("Methods: ");
         int stop = data.indexOf("Relationships To Others: ");
-        return data.substring(0, stop);
+        return data.substring(start, stop - 32);
     }
     
     /**
@@ -116,44 +148,34 @@ public class ClassPanelBuilder implements PanelBuilder
      */
     public JPanel makeNewClassPanel() 
     {
-        String newText = getClassText(classData);
-        JTextArea classText = new JTextArea(newText);
-        //Uses Scanner to get width/height of Panel.
-        Scanner lineScanner = new Scanner(newText);
-        int longest = 0;
-        int height = 0;
-        while(lineScanner.hasNextLine())
-        {
-            String line = lineScanner.nextLine();
-            Scanner scanner = new Scanner(line);
-            int localBest = 0;
-            while(scanner.hasNext())
-            {
-                localBest++;
-                scanner.next();
-            }
-            scanner.close();
-            ++height;
-            if(localBest > longest)
-                longest = localBest;
-        }
-        lineScanner.close();
-        classText.setEditable(false);
+        JLabel name = new JLabel(getClassName(classData));
 
-        String[] firstLine = classText.getText().split("\n");
-        String[] line = firstLine[0].split(" ");
-        String concat = line[2];
+        JLabel fields = new JLabel("<html>" + getClassFields(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
+
+        JLabel methods = new JLabel("<html>" + getClassMethods(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
+
+        /**
+        //Make borders for the text areas visible.
+        className.setBorder(blackline);
+        fields.setBorder(blackline);
+        methods.setBorder(blackline);
+        */
+
+        //Concat used to know which class is being changed in listeners.
+        String concat = name.getText().trim();
+
+        //Initalize the center panel.
+        JPanel centerPanel = new JPanel();
 
         //Sets the layout and creates panels to be added.
         panel.setLayout(new BorderLayout());
-        panel.add(classText, BorderLayout.CENTER);
         JPanel left = new JPanel();
         JPanel top = new JPanel();
         JPanel bottom = new JPanel();
         JMenuBar miniBar = makeMiniBar(concat);
 
         //Adds color to panels.
-        left.setBackground(Color.BLUE);
+        left.setBackground(Color.darkGray);
         top.setBackground(Color.darkGray);
         bottom.setBackground(Color.darkGray);
         panel.setBackground(Color.PINK);
@@ -163,13 +185,17 @@ public class ClassPanelBuilder implements PanelBuilder
         panel.add(miniBar, BorderLayout.EAST);
         panel.add(top, BorderLayout.NORTH);
         panel.add(bottom, BorderLayout.SOUTH);
-        
-        //Sets size of panel pieces and overall panel.
-        panel.setBounds(0, 500, longest * 90, height * 20);
-        left.setPreferredSize(new Dimension(25, height * 20));
 
+        //Add necessary text areas to the center panel.
+        centerPanel.add(name);
+        centerPanel.add(fields);
+        centerPanel.add(methods);
+        centerPanel.setVisible(true);
+        panel.add(centerPanel, BorderLayout.CENTER);
+
+        centerPanel.setLayout(null);
+        
         //Finishes panel construction.
-        classText.setBorder(blackline);
         panel.setVisible(true);
         return panel;
     }
@@ -179,36 +205,40 @@ public class ClassPanelBuilder implements PanelBuilder
      */
     private JMenuBar makeMiniBar(String concat)
     {
-        JMenuBar miniBar = new JMenuBar();
+        miniBar = new JMenuBar();
         JMenu miniMenu = new JMenu("+"); 
         miniMenu.setBackground(Color.darkGray);
         
+        //Field.
         JMenuItem crtField = new JMenuItem("Create field");
+        JMenuItem editField = new JMenuItem("Edit Field");
+
+        //Method.
         JMenuItem crtMethod = new JMenuItem("Create method");
-        JMenuItem delField = new JMenuItem("Delete field");
-        JMenuItem delMethod = new JMenuItem("Delete method");
-        JMenuItem rnField = new JMenuItem("Rename field");
-        JMenuItem rnMethod = new JMenuItem("Rename method");
-        JMenuItem chgFieldType = new JMenuItem("Change field type");
-        JMenuItem chgMethodType = new JMenuItem("Change method type");
-        JMenuItem chgFieldAccess = new JMenuItem("Change Field Access");
-        JMenuItem chgMethodAccess = new JMenuItem("Change Method Access");
+        JMenuItem editMethod = new JMenuItem("Edit method");
+        
+        //Relationship.
+        JMenuItem crtRelationship = new JMenuItem("Create relationship");
+        JMenuItem delRelationship = new JMenuItem("Delete relationship");
 
-        JMenuItem[] arr = { crtField, delField, rnField, chgFieldType, crtMethod, delMethod, rnMethod,
-            chgFieldAccess, chgMethodAccess, chgMethodType };
-        String[] text = { "Create new field", "Delete a named field", "Rename a selected field",
-            "Changes the field's type", "Create new method", "Delete a named method", "Rename a selected method",
-            "Change field access level", "Change method access level", "Change method type" };
-        String[] command = { "CreateField " + concat, "DeleteField " + concat, "RenameField " + concat, "ChangeFieldType " + concat, "CreateMethod " + concat,
-            "DeleteMethod " + concat, "RenameMethod "+ concat, "ChangeFieldAccess "+ concat, "ChangeMethodAccess "+concat, "ChangeMethodType " };
+        //Class.
+        JMenuItem editClass = new JMenuItem("Edit Class");
+      
+        JMenuItem[] arr = { crtField, editField, crtMethod, editMethod, crtRelationship, delRelationship, editClass};
+        String[] text = { "Create new field", "Edit a field", "Create a method", "Edit a method", "Create a relationship", "Delete a relationship",
+                          "Rename a classs", "Delete a class" };
+        String[] command = { "CreateField " + concat, "EditField " + concat, "CreateMethod " + concat, "EditMethod " + concat, 
+            "CreateRelationship " + concat, "DeleteRelationship " + concat, "EditClass " + concat };
 
-        for (int count = 0; count < 10; ++count) {
+        for (int count = 0; count < 7; ++count) {
             miniMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
         }
+        
         miniBar.add(miniMenu);
 
         return miniBar;
     }
+
 }

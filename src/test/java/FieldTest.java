@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Test;
 import UML.model.Field;
+import UML.model.Parameter;
+//import jdk.nashorn.internal.AssertsEnabled;
 
 public class FieldTest {
 
@@ -33,6 +35,10 @@ public class FieldTest {
         Field test1 = new Field("type", "name", "nonsense");
         //Test field's access type should default to public.
         assertEquals("public", test1.getAccessString());
+
+        Field test2 = new Field("type", "name", "protected");
+        //Test field's access type should be protected.
+        assertEquals("protected", test2.getAccessString());
     }
 
     @Test
@@ -45,6 +51,10 @@ public class FieldTest {
         Field test1 = new Field("type", "name", "nonsense");
         //Test field's access type should default to +.
         assertEquals('+', test1.getAccessChar());
+
+        //Test field's access type should be *.
+        Field test2 = new Field("type", "name", "protected");
+        assertEquals('*', test2.getAccessChar());
     }
 
     @Test
@@ -87,6 +97,12 @@ public class FieldTest {
         assertFalse(test.setAccess("nonsense"));
         //The field should not have changed.
         assertEquals('+', test.getAccessChar());
+
+        //Test setting access for private and protected.
+        test.setAccess("private");
+        assertEquals('-', test.getAccessChar());
+        test.setAccess("protected");
+        assertEquals('*', test.getAccessChar());
     }
 
     @Test
@@ -109,6 +125,14 @@ public class FieldTest {
         Field test7 = new Field("type", "name", "public");
         Field test8 = new Field("type", "name", "private");
         assertFalse(test7.equals(test8));
+        //Check if field equals itself.
+        Field test9 = new Field("type", "name", "protected");
+        assertTrue(test9.equals(test9));
+        //Check if field equals something null.
+        assertFalse(test9.equals(null));
+        //Check if a field is equal to something other than a field.
+        Parameter test10 = new Parameter("type", "name");
+        assertFalse(test9.equals(test10));
     }
 
     @Test

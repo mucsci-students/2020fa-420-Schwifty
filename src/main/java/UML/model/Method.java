@@ -71,10 +71,8 @@ public class Method extends Formal
             result = "public";
         else if(access == '-')
             result = "private";
-        else if(access == '*')
-            result = "protected";
         else
-            result = "public";
+            result = "protected";
 
         return result;
     }    
@@ -116,34 +114,20 @@ public class Method extends Formal
     {
         this.params = parameters;
     }
+    
     /**
      * Adds a parameter to the method's ArrayList of parameters.
      */
     public boolean addParam(Parameter param) throws IllegalArgumentException
     {
-        if(param.getName().trim().isEmpty())
-            throw new IllegalArgumentException("The parameter name cannot be blank.");
-        
-        if(param.getType().trim().isEmpty()) 
-            throw new IllegalArgumentException("The parameter type cannot be blank.");
-            
-        if(param.getName().contains(" ")) 
-            throw new IllegalArgumentException("The parameter name cannot contain a space.");
-
-        if(param.getType().contains(" "))
-            throw new IllegalArgumentException("The parameter type cannot contain a space.");
         for(Parameter p : params)
         {
             if(p.getName().equals(param.getName()))
                 return false;
         }
 
-        if(!this.params.contains(param))
-        {
-            this.params.add(param);
-            return true;
-        }
-        return false;
+        this.params.add(param);
+        return true;
     }
     
     /**
@@ -197,7 +181,6 @@ public class Method extends Formal
     public String toString() 
     {
         String result = "";
-        result += "Method: ";
         result += this.getAccessChar() + " " + this.getType() + " " + this.getName();
         result += " ( ";
 

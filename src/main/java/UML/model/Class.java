@@ -192,8 +192,8 @@ public class Class {
                 // Must remove and add so that the Field has correct hashcode.
                 String type = f.getType();
                 String access = f.getAccessString();
-                this.fields.remove(f);
                 Field toAdd = new Field(type, newName, access);
+                this.fields.remove(f);
                 this.fields.add(toAdd);
                 return true;
             }
@@ -374,6 +374,63 @@ public class Class {
 
 
 //================================================================================================================================================
+//Method methods
+//================================================================================================================================================
+
+
+/**
+ * Adds parameter to a method.
+ */
+public boolean addParameter(String returnType, String methodName, ArrayList<Parameter> params, String access, String paramType, String paramName)
+{
+    ArrayList<Parameter> params2 = (ArrayList<Parameter>)params.clone();
+    params2.add(new Parameter(paramType, paramName));
+    Method methodNew = new Method(returnType, methodName, params2, access);
+    for (Method m : methods) 
+    {
+        //If that exact method already exists, return false.
+        if (m.equals(methodNew)) 
+        {
+            return false;
+        }
+    }
+    Method method = new Method(returnType, methodName, params, access);
+    boolean deleted = methods.remove(method);
+    if (deleted) 
+    {
+        addMethod(returnType, methodName, params2, access);
+    }
+    return deleted;
+}
+
+
+ /**
+ * Deletes parameter from a method.
+ */
+public boolean deleteParameter(String methodType, String methodName, ArrayList<Parameter> params, String access, String paramType, String paramName)
+{
+    ArrayList<Parameter> params2 = (ArrayList<Parameter>)params.clone();
+    params2.remove(new Parameter(paramType, paramName));
+    Method methodNew = new Method(methodType, methodName, params2, access);
+    for (Method m : methods) 
+    {
+        //If that exact method already exists, return false.
+        if (m.equals(methodNew)) 
+        {
+            return false;
+        }
+    }
+    Method method = new Method(methodType, methodName, params, access);
+    boolean deleted = methods.remove(method);
+    if (deleted) 
+    {
+        addMethod(methodType, methodName, params2, access);
+    }
+    return deleted;
+}
+
+
+//================================================================================================================================================
 //Relationship methods
 //================================================================================================================================================
 
@@ -453,8 +510,8 @@ public class Class {
 //Other methods
 //================================================================================================================================================
     /**
-     * Returns true if two class object are equal and false otehrwise.
-     */
+    * Returns true if two class object are equal and false otehrwise.
+    */
     public boolean equals(Object other) 
     {
         boolean result = false;
