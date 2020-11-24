@@ -51,6 +51,10 @@ public class StateClickController implements ActionListener {
             StateController state = new StateController(currentState, undoState, redoState);
             CLI cli = new CLI(store, v, c);
         }
+        else if(cmd.equals("Color"))
+        {
+            view.changeBackground();
+        }
     }
     
 }

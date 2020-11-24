@@ -188,4 +188,10 @@ public class InterfaceChoiceView implements View {
         //Do nothing.
     }
 
+    @Override
+    public void changeBackground()
+    {
+        //Do nothing.
+    }
+
 }

@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 import java.awt.LayoutManager;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

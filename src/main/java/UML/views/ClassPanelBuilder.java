@@ -14,6 +14,7 @@ import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Scanner;
+import java.awt.Font;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -149,17 +150,15 @@ public class ClassPanelBuilder implements PanelBuilder
     public JPanel makeNewClassPanel() 
     {
         JLabel name = new JLabel(getClassName(classData));
+        name.setFont(new Font("Ariel", 0, 14));
+
+        name.setHorizontalAlignment(JLabel.CENTER);
 
         JLabel fields = new JLabel("<html>" + getClassFields(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
+        fields.setFont(new Font("Ariel", 0, 10));
 
         JLabel methods = new JLabel("<html>" + getClassMethods(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
-
-        /**
-        //Make borders for the text areas visible.
-        className.setBorder(blackline);
-        fields.setBorder(blackline);
-        methods.setBorder(blackline);
-        */
+        methods.setFont(new Font("Ariel", 0, 10));
 
         //Concat used to know which class is being changed in listeners.
         String concat = name.getText().trim();

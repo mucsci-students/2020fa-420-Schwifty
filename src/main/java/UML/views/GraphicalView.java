@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JMenuBar;
 import javax.swing.JFrame;
 import javax.swing.JFileChooser;
+import javax.swing.JColorChooser;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +56,8 @@ public class GraphicalView implements View {
     private JMenu fileMenu;
     private JMenu classMenu;
     private JMenu stateMenu;
-    private Graphics graphics;
     private DrawPanel dp;
+    JScrollPane jsp;
     private ConcurrentHashMap<ArrayList<String>, String> relationships;
 
     public GraphicalView() {
@@ -254,6 +255,20 @@ public class GraphicalView implements View {
     {
 		window.setVisible(true);
     }
+
+    /**
+     * Changes the background color of the gui.
+     */
+    @Override
+    public void changeBackground()
+    {
+        JColorChooser cc = new JColorChooser();
+        
+        Color color = cc.showDialog(window,"Choose a background color", Color.PINK);
+        
+        dp.setBackground(color);
+        jsp.setBackground(color);
+    }
     
 
     // ================================================================================================================================================
@@ -278,16 +293,16 @@ public class GraphicalView implements View {
         window.setVisible(true);
         dp.setVisible(true);
         dp.setPreferredSize(new Dimension(10000, 10000));
-        graphics = dp.getGraphics();
         dp.setLayout(null);
 
-        JScrollPane jsp = new JScrollPane(dp);
-        jsp.createHorizontalScrollBar();
+        //Initialize the scroll pane.
+        jsp = new JScrollPane(dp);
 
         JPanel newPanel = new JPanel(new BorderLayout());
         window.add(newPanel, BorderLayout.CENTER);
         newPanel.add(jsp, BorderLayout.CENTER);
 
+        //Repaint and revalidate.
         dp.repaint();;
         jsp.repaint();
         window.repaint();
@@ -295,9 +310,12 @@ public class GraphicalView implements View {
         jsp.revalidate();
         window.revalidate();
 
-        dp.setBackground(Color.LIGHT_GRAY);
-        jsp.setBackground(Color.LIGHT_GRAY);
-        window.setBackground(Color.LIGHT_GRAY);
+        dp.setBackground(Color.PINK);
+        jsp.setBackground(Color.PINK);
+
+        //Make the scroll bar scroll faster.
+        JScrollBar jBar = (JScrollBar) jsp.getVerticalScrollBar();
+        jBar.setUnitIncrement(10);
     }
 
     /**
@@ -375,12 +393,13 @@ public class GraphicalView implements View {
         JMenuItem undo = new JMenuItem("Undo");
         JMenuItem redo = new JMenuItem("Redo");
         JMenuItem CLI = new JMenuItem("CLI");
+        JMenuItem color = new JMenuItem("Color");
 
-        JMenuItem[] arr = {undo, redo, CLI};
-        String[] text = { "Undo", "Redo", "Show CLI"};
-        String[] command = { "Undo", "Redo", "CLI"};
+        JMenuItem[] arr = {undo, redo, CLI, color};
+        String[] text = { "Undo", "Redo", "Show CLI", "Change Color"};
+        String[] command = { "Undo", "Redo", "CLI", "Color"};
 
-        for (int count = 0; count < 3; ++count) {
+        for (int count = 0; count < 4; ++count) {
             stateMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
@@ -391,23 +410,6 @@ public class GraphicalView implements View {
     // ================================================================================================================================================
     // Create, delete, resize class panels + refresh the window.
     // ================================================================================================================================================
-
-    /**
-     * Creates a panel on the window to display information about a class.
-     * TODO: Discuss removal of this method, appears to no longer be needed. 
-     */
-    public void makeNewClassPanel(String aClass) {
-        JPanel classPanel = new JPanel();
-        JTextArea classText = new JTextArea(aClass);
-        classText.setEditable(false);
-        classPanel.add(classText);
-        classPanels.put(aClass, classPanel);
-        classPanel.setSize(classText.getSize());
-        Border blackline = BorderFactory.createLineBorder(Color.black);
-        classText.setBorder(blackline);
-        classPanel.setVisible(true);
-        dp.add(classPanel);
-    }
 
     /**
      * Deletes a class panel from the window.
@@ -442,15 +444,15 @@ public class GraphicalView implements View {
         JLabel fields = (JLabel) innerPanel.getComponent(1);
         JLabel methods = (JLabel) innerPanel.getComponent(2);
 
-        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) + 10) * 7;
+        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) + 10) * 5;
 
-        panel.setBounds(x, y, width, (fieldSize[1] + 4) * 15 + (methodSize[1] + 3) * 15 + 30);
+        panel.setBounds(x, y, width, (fieldSize[1] + 4) * 12 + (methodSize[1] + 3) * 12 + 30);
         
         name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
 
-        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 15);
+        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 12);
 
-        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 15 + 20, width, (methodSize[1] + 3) * 15);
+        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 12 + 20, width, (methodSize[1] + 3) * 12);
 
         refresh();
     }

@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 import java.awt.LayoutManager;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import javax.swing.JTextField;
 
 import UML.views.*;
 import UML.model.*;

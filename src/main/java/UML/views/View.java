@@ -45,4 +45,5 @@ public interface View
 	Map<String, JPanel> getPanels();
 	void setGUIInvisible();
 	void setGUIVisible();
+	void changeBackground();
 }

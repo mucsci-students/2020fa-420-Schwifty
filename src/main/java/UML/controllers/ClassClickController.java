@@ -19,6 +19,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import java.awt.LayoutManager;
 import java.awt.FlowLayout;
+import javax.swing.JTextField;
 
 import UML.model.Store;
 import UML.views.View;
@@ -48,7 +49,7 @@ public class ClassClickController implements ActionListener
         	{
 				JPanel panel = new JPanel();
 				panel.setLayout(new FlowLayout());
-				JTextArea nameArea = new JTextArea(1, 12);
+				JTextField nameArea = new JTextField(12);
 				panel.add(nameArea);
 				
 				int result = JOptionPane.showConfirmDialog(null, panel,
@@ -57,7 +58,7 @@ public class ClassClickController implements ActionListener
 
 				if (result == JOptionPane.OK_OPTION) {
 					//Get name String.
-					name = (String) ((JTextArea) panel.getComponent(0)).getText();
+					name = (String) ((JTextField) panel.getComponent(0)).getText();
 				}
 				//Cancel.
 				else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)
