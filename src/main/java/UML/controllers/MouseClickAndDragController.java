@@ -4,21 +4,17 @@ package UML.controllers;
     Date: 10/15/2020
     Purpose: Handles mouse click and drag events for the GUI.
  */
-import java.awt.*;
+
 import javax.swing.*;
 import UML.model.Store;
 import UML.views.View;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 import UML.views.DrawPanel;
-import UML.views.PanelBuilder;
 import javax.swing.JLabel;
 
 import java.awt.Dimension;
-import UML.model.*;
 
 public class MouseClickAndDragController implements MouseListener, MouseMotionListener
 {

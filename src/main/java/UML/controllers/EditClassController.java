@@ -2,29 +2,22 @@ package UML.controllers;
 
 import UML.views.*;
 import UML.model.*;
-
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
-import java.awt.LayoutManager;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EditClassController implements ActionListener {
+public class EditClassController implements ActionListener 
+{
 
     private Store store;
     private View view;
     private Controller controller;
 
-    public EditClassController(Store s, View v, Controller c) {
+    public EditClassController(Store s, View v, Controller c) 
+    {
         this.view = v;
         this.store = s;
         this.controller = c;
