@@ -285,7 +285,7 @@ public class GraphicalView implements View {
         jsp.createHorizontalScrollBar();
 
         JPanel newPanel = new JPanel(new BorderLayout());
-        window.add(newPanel);
+        window.add(newPanel, BorderLayout.CENTER);
         newPanel.add(jsp, BorderLayout.CENTER);
 
         dp.repaint();;
@@ -294,6 +294,10 @@ public class GraphicalView implements View {
         dp.revalidate();
         jsp.revalidate();
         window.revalidate();
+
+        dp.setBackground(Color.LIGHT_GRAY);
+        jsp.setBackground(Color.LIGHT_GRAY);
+        window.setBackground(Color.LIGHT_GRAY);
     }
 
     /**
