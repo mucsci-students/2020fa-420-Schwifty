@@ -20,10 +20,9 @@ import UML.model.Field;
 import UML.model.Method;
 import UML.model.Parameter;
 import UML.model.RelationshipType;
-import java.awt.Dimension;
 
-public class ClassTest {
-
+public class ClassTest 
+{
     @Test
     public void testClass()
     {

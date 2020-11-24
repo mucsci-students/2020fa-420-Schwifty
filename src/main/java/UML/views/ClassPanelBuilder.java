@@ -5,16 +5,11 @@ package UML.views;
     Purpose: Helper class to build class panels as needed.
  */
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.util.Scanner;
-
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;

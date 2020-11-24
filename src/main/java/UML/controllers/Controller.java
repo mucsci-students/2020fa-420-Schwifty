@@ -18,10 +18,6 @@ import java.awt.event.ActionListener;
 
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
-import UML.controllers.MouseClickAndDragController;
-import UML.controllers.StateController;
-
-import java.awt.Dimension;
 
 public class Controller implements IController
 {
@@ -110,6 +106,14 @@ public void setGUIVisible()
 public StateController getStateController()
 {
     return this.stateController;
+}
+
+/**
+ * Sets the state controller
+ */
+public void setStateController(StateController sc)
+{
+    this.stateController = sc;
 }
 //================================================================================================================================================
 //Class methods
@@ -804,6 +808,11 @@ public StateController getStateController()
         }
       }
 
+      public void rebuildHelper()
+      {
+          rebuild();
+      }
+      
       private void rebuild()
       {
           ActionListener[] listeners = new ActionListener[7];
