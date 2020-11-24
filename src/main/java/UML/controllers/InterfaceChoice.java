@@ -92,7 +92,6 @@ public class InterfaceChoice
                     window.setVisible(false);
                     v.start();
                     c.addListeners();
-                    c.addSrollListener();
                 }
             }
             else 

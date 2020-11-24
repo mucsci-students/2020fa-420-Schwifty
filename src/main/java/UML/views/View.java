@@ -8,7 +8,6 @@ package UML.views;
 import java.awt.event.*;
 import java.util.ArrayList;
 import UML.controllers.MouseClickAndDragController;
-import UML.controllers.VerticalScrollController;
 
 import java.awt.Dimension;
 import java.util.Map;
@@ -32,7 +31,6 @@ public interface View
 	void addListener(ActionListener listener);
 	void addListener(MouseClickAndDragController mouseListener, String className);
 	void addPanelListener(ActionListener controller, String classText);
-	void addScrollListener(VerticalScrollController vsc);
 
 	void display(String str);
 	void showError(String error);

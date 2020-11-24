@@ -35,15 +35,12 @@ import UML.controllers.DeleteRelationshipController;
 import UML.controllers.EditFieldController;
 import UML.controllers.EditMethodController;
 import UML.controllers.MouseClickAndDragController;
-import UML.controllers.VerticalScrollController;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
-import java.awt.geom.AffineTransform;
-import java.awt.Graphics2D;
 
 public class GraphicalView implements View {
 
@@ -61,8 +58,6 @@ public class GraphicalView implements View {
     private Graphics graphics;
     private DrawPanel dp;
     private ConcurrentHashMap<ArrayList<String>, String> relationships;
-    private JScrollBar vertical;
-    private JScrollBar horizontal;
 
     public GraphicalView() {
         this.classPanels = new ConcurrentHashMap<String, JPanel>();
@@ -271,12 +266,6 @@ public class GraphicalView implements View {
     public void makeWindow() {
         window = new JFrame("UML");
         window.setLayout(new BorderLayout());
-
-        vertical = new JScrollBar(JScrollBar.VERTICAL);
-        window.add(vertical, BorderLayout.WEST);
-
-        horizontal = new JScrollBar(JScrollBar.HORIZONTAL);
-        window.add(horizontal, BorderLayout.SOUTH);
         
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(800, 800);
@@ -288,12 +277,23 @@ public class GraphicalView implements View {
         window.add(dp);
         window.setVisible(true);
         dp.setVisible(true);
-        dp.setPreferredSize(new Dimension(800, 800));
+        dp.setPreferredSize(new Dimension(10000, 10000));
         graphics = dp.getGraphics();
-        graphics.setColor(Color.WHITE);
         dp.setLayout(null);
 
+        JScrollPane jsp = new JScrollPane(dp);
+        jsp.createHorizontalScrollBar();
 
+        JPanel newPanel = new JPanel(new BorderLayout());
+        window.add(newPanel);
+        newPanel.add(jsp, BorderLayout.CENTER);
+
+        dp.repaint();;
+        jsp.repaint();
+        window.repaint();
+        dp.revalidate();
+        jsp.revalidate();
+        window.revalidate();
     }
 
     /**
@@ -622,15 +622,6 @@ public class GraphicalView implements View {
         }
     }
 
-    /**
-     * Adds listener to vertical scroll bar.
-     */
-    @Override
-    public void addScrollListener(VerticalScrollController vsc)
-    {
-        vertical.addAdjustmentListener(vsc);
-    }
-    
     // ================================================================================================================================================
     // "Do Nothing" methods
     // ================================================================================================================================================
