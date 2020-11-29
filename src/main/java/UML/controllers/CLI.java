@@ -29,9 +29,6 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.AttributedStringBuilder;
 
 import org.jline.reader.impl.history.DefaultHistory;
-import java.util.List;
-import java.util.LinkedList;
-import org.jline.reader.Candidate;
 import java.util.Set;
 import java.util.Stack;
 
@@ -190,40 +187,43 @@ public class CLI {
     /**
      * Displays a GUI version of the app with all current changes loaded.
      */
-    private void showGUI() {
-        if (controller.getGUIExists()) {
+    private void showGUI() 
+    {
+        if (controller.getGUIExists()) 
+        {
             view.setGUIVisible();
-            try {
+            try 
+            { 
                 terminal.close();
-            } catch (Exception e) {
+            } 
+            catch (Exception e) 
+            {
 
             }
-        } else {
-            try {
-                controller.save("toLoad");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } 
 
-            //Initialize verything needed for GUI transistion to work.
-            Store s = new Store();
-            GraphicalView v = new GraphicalView();
-            StateController stateController = controller.getStateController();
-            Stack<Store> undoState = stateController.getUndoStack();
-            Stack<Store> redoState = stateController.getRedoStack();
-            Store currentState = stateController.getCurrentState();
-            Controller c = new Controller(s, v);
-            StateController state = new StateController(currentState, undoState, redoState);
-            v.start();
-            c.addListeners();
-            try {
-                terminal.close();
-                c.load("toLoad.JSON");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (org.json.simple.parser.ParseException e) {
-                e.printStackTrace();
-            }
+        //Initialize verything needed for GUI transistion to work.
+        GraphicalView v = new GraphicalView();
+
+        StateController stateController = controller.getStateController();
+        Stack<Store> undoState = stateController.getUndoStack();
+        Stack<Store> redoState = stateController.getRedoStack();
+        Store currentState = stateController.getCurrentState();
+
+        Controller c = new Controller(store, v);
+        StateController state = new StateController(currentState, undoState, redoState);
+        c.setStateController(state);
+        v.start();
+        c.addListeners();
+        c.rebuildHelper();
+         try 
+        {
+            terminal.close();
+            v.refresh();
+        }
+        catch (IOException e) 
+        {
+            e.printStackTrace();
         }
     }
 

@@ -10,7 +10,6 @@ package UML.controllers;
 
 import UML.model.*;
 import UML.views.*;
-import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ButtonGroup;

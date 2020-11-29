@@ -7,62 +7,53 @@ package UML.controllers;
  */
 import UML.model.*;
 import UML.views.*;
-import java.util.Scanner;
 import java.util.ArrayList;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JRadioButton;
-
 import java.awt.event.*;
-import java.awt.FlowLayout;
 
 
-    public class InterfaceChoiceClickController implements ActionListener
+public class InterfaceChoiceClickController implements ActionListener
+{
+    private Store store;
+    private View view;
+    private Controller controller;
+
+    public InterfaceChoiceClickController(Store s, View v, Controller c)
     {
-        private Store store;
-        private View view;
-        private Controller controller;
+        this.view = v;
+        this.store = store;
+        this.controller = c;
+    }
 
-        public InterfaceChoiceClickController(Store s, View v, Controller c)
+    public void actionPerformed(ActionEvent e)
+    {
+        String cmd = e.getActionCommand();
+        if(cmd.equals("OK"))
         {
-            this.view = v;
-            this.store = store;
-            this.controller = c;
+            //if the choice is cli, load it. otherwise, load the gui. 
+            if(view.getChoiceFromUser("", "", new ArrayList<String>()).equals("true"))
+            {
+                view.exit();
+                Store s = new Store();
+                CommandlineView v = new CommandlineView();
+                Controller c = new Controller(s, v);
+                //Opens the CLI version of the app.
+                CLI cli = new CLI(s, v, c);
+             }
+            else
+            {
+                view.exit();
+                Store s = new Store();
+                GraphicalView v = new GraphicalView();
+                Controller c = new Controller(s, v);
+                //Opens the CLI version of the app.
+                v.start();
+                c.addListeners();
+                controller.setGUIExists();
+            }
         }
-
-        public void actionPerformed(ActionEvent e)
+        else 
         {
-            String cmd = e.getActionCommand();
-            if(cmd.equals("OK"))
-            {
-                //if the choice is cli, load it. otherwise, load the gui. 
-                if(view.getChoiceFromUser("", "", new ArrayList<String>()).equals("true"))
-                {
-                    view.exit();
-                    Store s = new Store();
-                    CommandlineView v = new CommandlineView();
-                    Controller c = new Controller(s, v);
-                    //Opens the CLI version of the app.
-                    CLI cli = new CLI(s, v, c);
-                }
-                else
-                {
-                    view.exit();
-                    Store s = new Store();
-                    GraphicalView v = new GraphicalView();
-                    Controller c = new Controller(s, v);
-                    //Opens the CLI version of the app.
-                    v.start();
-                    c.addListeners();
-                    controller.setGUIExists();
-                }
-            }
-            else 
-            {
-                System.exit(0);
-            }
+            System.exit(0);
         }
     }
+}

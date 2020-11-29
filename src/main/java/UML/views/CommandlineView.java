@@ -5,15 +5,13 @@ package UML.views;
     Purpose: Provides an implementation of the CLI view.
  */
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import UML.controllers.MouseClickAndDragController;
 import java.awt.Dimension;
+import UML.model.Store;
 
 public class CommandlineView implements View {
 

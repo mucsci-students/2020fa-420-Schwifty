@@ -16,7 +16,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JColorChooser;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,7 +26,6 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
-
 import UML.controllers.CreateFieldController;
 import UML.controllers.CreateMethodController;
 import UML.controllers.EditClassController;
@@ -41,7 +39,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
-
 
 public class GraphicalView implements View {
 
@@ -221,7 +218,6 @@ public class GraphicalView implements View {
             return fc.getSelectedFile().getName();
         }
         return "";
-
     }
 
     /**
@@ -524,7 +520,8 @@ public class GraphicalView implements View {
      * Creates the initial window.
      */
     @Override
-    public void start() {
+    public void start() 
+    {
         makeWindow();
         refresh();
     }
