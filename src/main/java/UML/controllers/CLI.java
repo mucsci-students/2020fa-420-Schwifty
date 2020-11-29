@@ -13,6 +13,7 @@ import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal;
+import org.jline.utils.AttributedStyle;
 import java.util.ArrayList;
 import UML.model.*;
 import UML.model.Store;
@@ -20,6 +21,12 @@ import UML.views.GraphicalView;
 import UML.views.View;
 import org.jline.builtins.Completers.TreeCompleter;
 import static org.jline.builtins.Completers.TreeCompleter.node;
+
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.LineReaderImpl;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.AttributedStringBuilder;
 
 import org.jline.reader.impl.history.DefaultHistory;
 import java.util.Set;
@@ -82,8 +89,7 @@ public class CLI {
         boolean go = true;
         while (go) {
             try {
-                // Reads the line from the user
-                String readLine = reader.readLine(">", "", (MaskingCallback) null, null);
+                String readLine = reader.readLine(String.format("%sSCHWIFTY>%s ", "\u001B[36m", "\u001B[36m"), "", (MaskingCallback) null, null);
                 readLine = readLine.trim();
                 // Writer back completions to console.
                 terminal.writer().println(readLine);

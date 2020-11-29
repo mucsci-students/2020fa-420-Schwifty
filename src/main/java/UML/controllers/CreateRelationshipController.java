@@ -4,6 +4,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
+import javax.swing.JTextField;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import UML.views.*;

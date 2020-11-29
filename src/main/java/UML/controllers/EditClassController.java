@@ -6,6 +6,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
+import javax.swing.JTextField;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -39,7 +42,7 @@ public class EditClassController implements ActionListener
             panel.setLayout(new FlowLayout());
 
             //Create the text area.
-            JTextArea nameArea = new JTextArea(1, 12);
+            JTextField nameArea = new JTextField(12);
             nameArea.setText(className);
             panel.add(nameArea);
 
@@ -58,7 +61,7 @@ public class EditClassController implements ActionListener
             //Rename class.
             else if (result == 0) {
                 //Get name String.
-                name = (String) ((JTextArea) panel.getComponent(0)).getText();
+                name = (String) ((JTextField) panel.getComponent(0)).getText();
             }
             //Handle canceling out.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)

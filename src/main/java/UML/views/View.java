@@ -8,6 +8,7 @@ package UML.views;
 import java.awt.event.*;
 import java.util.ArrayList;
 import UML.controllers.MouseClickAndDragController;
+
 import java.awt.Dimension;
 import java.util.Map;
 import javax.swing.JFrame;
@@ -45,4 +46,5 @@ public interface View
 	Map<String, JPanel> getPanels();
 	void setGUIInvisible();
 	void setGUIVisible();
+	void changeBackground();
 }

@@ -760,7 +760,6 @@ public void setStateController(StateController sc)
         view.addListener(new InterfaceChoiceClickController(store, view, this));
     }
 
-
     /**
      * Changes the state of the model and view
      */

@@ -6,6 +6,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
+import javax.swing.JTextField;
+
 
 import UML.views.*;
 import UML.model.*;

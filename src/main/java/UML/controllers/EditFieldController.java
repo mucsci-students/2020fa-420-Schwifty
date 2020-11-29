@@ -8,6 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import javax.swing.JTextField;
 
 import UML.model.Store;
 import UML.views.*;
@@ -76,11 +77,11 @@ public class EditFieldController implements ActionListener
             accessBox.setSelectedItem(accessString);
             panel.add(accessBox);
             
-            JTextArea typeArea = new JTextArea(1, 12);
+            JTextField typeArea = new JTextField(12);
             typeArea.setText(fieldSplit[1]);
             panel.add(typeArea);
 
-            JTextArea nameArea = new JTextArea(1, 12);
+            JTextField nameArea = new JTextField(12);
             nameArea.setText(fieldSplit[2]);
             panel.add(nameArea);
             
@@ -97,10 +98,10 @@ public class EditFieldController implements ActionListener
                 access = (String) ((JComboBox)panel.getComponent(0)).getSelectedItem();
 
                 //Get type String.
-                type = (String) ((JTextArea) panel.getComponent(1)).getText();
+                type = (String) ((JTextField) panel.getComponent(1)).getText();
 
                 //Get name String.
-                name = (String) ((JTextArea) panel.getComponent(2)).getText();
+                name = (String) ((JTextField) panel.getComponent(2)).getText();
 
             }
             //Delete field
