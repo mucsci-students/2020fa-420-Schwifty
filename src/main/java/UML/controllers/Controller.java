@@ -158,10 +158,9 @@ public void setStateController(StateController sc)
             try
             {
                 stateChange();
-                store.deleteClass(name);  
-                
-                String oldString = aClass.toString();
-                view.deleteClass(oldString);
+                store.deleteClass(name);
+                prepGUI();
+                rebuild();
             }
             catch (Exception e)
             {
@@ -849,10 +848,10 @@ public void setStateController(StateController sc)
           //If there are panels on the GUI, get red of them to prep for the new load.
           if(view.getPanels() != null)
           {
-              for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
-              {
-                  view.deleteClass(entry.getKey());
-              }
+                for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
+                {
+                    view.deleteClass(entry.getKey());
+                }
           }
       }
 }
