@@ -27,6 +27,7 @@ public class DrawPanel extends JPanel
 
     public void paintComponent(Graphics g)
     {
+        super.paintComponent(g);
         g.setColor(Color.BLACK);
         for(Map.Entry<ArrayList<String>, String> relationship : view.getRelationships().entrySet())
         {
