@@ -53,12 +53,6 @@ public class TestGraphicalView
     @Test
     public void testDeleteClass()
     {
-        c.createClass("Test");
-        UML.model.Class dasClass = new UML.model.Class("Test");
-        verify(gv).createClass(dasClass.toString(),0,0);
-        verify(gv, atLeastOnce()).getPanels();
-        c.deleteClass("Test");
-        verify(gv).deleteClass(dasClass.toString());
     }
     @Test
     public void testSaveAndLoad()
