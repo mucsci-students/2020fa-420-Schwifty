@@ -237,11 +237,6 @@ public class SaveAndLoad
         //Attempt to write the json data to passed in file name. IOExcetion on failure. 
         //Append the .json format to name
         //ensures we are not adding it if we don't need to
-        if(!fileName.contains(".json"))
-        {
-            fileName += ".json";
-        }
-
         File jsonFile = new File(fileName);
         FileWriter fw = new FileWriter(jsonFile);
         fw.write(toBeSaved.toJSONString());

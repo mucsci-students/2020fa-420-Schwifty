@@ -158,9 +158,12 @@ public void setStateController(StateController sc)
             try
             {
                 stateChange();
-                store.deleteClass(name);
-                prepGUI();
-                rebuild();
+                boolean temp = store.deleteClass(name);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
             }
             catch (Exception e)
             {

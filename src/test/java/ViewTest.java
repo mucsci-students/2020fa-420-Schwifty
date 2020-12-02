@@ -135,8 +135,8 @@ public class ViewTest
         result += "deleter [classFrom] [classTo]:                                                                              Delete a relationship\n";
         result += "save [fileName]:                                                                                            Saves to passed in file name\n";
         result += "load [fileName]:                                                                                            Loads the passed in file name\n";
-        result += "display [(Optional) className]:                                                                             Displays all classes\n";
-        result += "display [className]:                                                                                        Displays a class\n";
+        result += "display [(Optional) className]:                                                                             Displays all classes or a single class\n";
+        result += "displayr:                                                                                                   Displays all relationships\n";
         result += "undo:                                                                                                       Reverts to a previous state\n";
         result += "redo:                                                                                                       Restores the latest undo\n";
         view.showHelp();
