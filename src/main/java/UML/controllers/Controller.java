@@ -691,7 +691,7 @@ public void setStateController(StateController sc)
         try
         {
             stateChange();
-            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
+            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName()) || store.deleteRelationship(toOld.getName(), fromOld.getName());
             //If the relationship could not be deleted, give the user and error and do not change the state.
             if(!temp || fromOld == null || toOld == null)
                 view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");

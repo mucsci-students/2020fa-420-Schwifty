@@ -43,8 +43,13 @@ public class DeleteRelationshipController implements ActionListener {
             JPanel panel = new JPanel();
             panel.setLayout(new FlowLayout());
 
-            //Allow deleting of relationships that this class has to thers.
-            JComboBox toBox = new JComboBox(theClass.getRelationshipsToOther().keySet().toArray());
+            //Allow deleting of relationships that this class has with others.
+            Object[] to = theClass.getRelationshipsToOther().keySet().toArray();
+            Object[] from = theClass.getRelationshipsFromOther().keySet().toArray();
+            Object[] relationships = new String[to.length + from.length];
+            System.arraycopy(to, 0, relationships, 0, to.length);
+            System.arraycopy(from, 0, relationships, to.length, from.length);
+            JComboBox toBox = new JComboBox(relationships);
             panel.add(toBox);
             
             int result = JOptionPane.showConfirmDialog(null, panel,
