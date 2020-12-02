@@ -741,7 +741,7 @@ public class StoreTest {
         Controller c = new Controller(s, v);
         try
         {
-            c.save("test");
+            c.save("test.json");
         }
         catch(Exception e)
         {
@@ -749,7 +749,7 @@ public class StoreTest {
         }
         try
         {
-            c.load("test");
+            c.load("test.json");
         }
         catch(Exception e)
         {

@@ -147,9 +147,9 @@ public class CommandlineView implements View {
         System.out.println(
                 "load [fileName]:                                                                                            Loads the passed in file name");
         System.out.println(
-                "display [(Optional) className]:                                                                             Displays all classes");
+                "display [(Optional) className]:                                                                             Displays all classes or a single class");
         System.out.println(
-                "display [className]:                                                                                        Displays a class");
+                "displayr:                                                                                                   Displays all relationships");
         System.out.println(
                 "undo:                                                                                                       Reverts to a previous state");
         System.out.println(

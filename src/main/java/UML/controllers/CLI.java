@@ -15,6 +15,7 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedStyle;
 import java.util.ArrayList;
+
 import UML.model.*;
 import UML.model.Store;
 import UML.views.GraphicalView;
@@ -31,17 +32,39 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.reader.impl.history.DefaultHistory;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map;
 
 public class CLI {
-
+    
+    //The store
     private Store store;
+    
+    //The view
     private View view;
+
+    //The controller
     private Controller controller;
+
+    //Terminal for the CLI
     private Terminal terminal;
+    
+    //Reads input from the user
     private LineReader reader;
+    
+    //handles tab completion
     private Completer completer;
+    
+    //JLine's object to store the history from the CLI.
     private History history;
+    
+    //The parser to parse input.
     private Parser parser;
+
+    //The acccess types that are defined.
+    private ArrayList<String> theAccesses;
+
+    //The developer and user defined types.
+    private ArrayList<String> theTypes;
 
     public CLI(Store s, View v, Controller c) {
         store = new Store();
@@ -49,6 +72,43 @@ public class CLI {
         this.view = v;
         this.controller = c;
         v.start();
+
+        //Initialize theAccesses.
+        theAccesses = new ArrayList<String>();
+        theAccesses.add("public");
+        theAccesses.add("private");
+        theAccesses.add("protected");
+
+        //Initialize theTypes.
+        theTypes = new ArrayList<String>();
+        theTypes.add("String");
+        theTypes.add("boolean");
+        theTypes.add("char");
+        theTypes.add("double");
+        theTypes.add("float");
+        theTypes.add("int");
+        theTypes.add("short");
+        theTypes.add("size_t");
+        theTypes.add("unsigned");
+
+        for(UML.model.Class theClass : store.getClassStore())
+        {
+            for(Method m : theClass.getMethods())
+            {
+                if(!theTypes.contains(m.getType()))
+                {
+                    theTypes.add(m.getType());
+                }
+            }
+            
+            for(Field f : theClass.getFields())
+            {
+                if(!theTypes.contains(f.getType()))
+                {
+                    theTypes.add(f.getType());
+                }
+            }
+        }
 
         try {
             terminal = TerminalBuilder.builder().system(true).build();
@@ -69,7 +129,7 @@ public class CLI {
         // The parser
         parser = new DefaultParser();
 
-        completer = new TreeCompleter(node("addc", "exit", "help", "showgui", "load"));
+        completer = new TreeCompleter(node("addc", "exit", "help", "showgui", "load", "displayr"));
 
         // Build the reader and it's options
         reader = LineReaderBuilder.builder().terminal(terminal).history(history).completer(completer).parser(parser)
@@ -94,6 +154,10 @@ public class CLI {
                 // Writer back completions to console.
                 terminal.writer().println(readLine);
                 terminal.flush();
+                //Prevents errors caused by the user adding commas and spaces in params.
+                readLine = readLine.replaceAll(",", " ");
+                readLine = readLine.replaceAll("  ", " ");
+                readLine = readLine.replaceAll("  ", " ");
                 String[] line = readLine.split(" ");
                 if (line[0].equals("showgui"))
                     go = false;
@@ -163,6 +227,8 @@ public class CLI {
             undo();
         } else if (line[0].equals(("redo"))) {
             redo();
+        } else if (line[0].equals(("displayr"))) {
+            displayRelationships();
         } else {
             System.out.println("That is not a valid command.");
         }
@@ -269,6 +335,13 @@ public class CLI {
     private void addField(String[] args) {
         if (args.length == 5 && store.findClass(args[1]) != null) {
             controller.createField(args[1], args[3], args[4], args[2]);
+
+            //Add type if new user-defined.
+            if(!theTypes.contains(args[3]))
+            {
+                theTypes.add(args[3]);
+            }
+
             makeReader();
         } else {
             view.showError("Invalid arguments for adding a field, please refer to help.");
@@ -293,6 +366,13 @@ public class CLI {
     private void changeFieldType(String args[]) {
         if (args.length == 4 && store.findClass(args[1]) != null) {
             controller.changeFieldType(args[1], args[2], args[3]);
+
+            //Add type if new user-defined.
+            if(!theTypes.contains(args[3]))
+            {
+                theTypes.add(args[3]);
+            }
+
             makeReader();
         } else {
             view.showError("Invalid arguments for renaming a field, please refer to help.");
@@ -336,6 +416,13 @@ public class CLI {
                 params.add(args[counter] + " " + args[counter + 1]);
 
             controller.createMethod(args[1], args[3], args[4], params, args[2]);
+
+            //Add type if new user-defined.
+            if(!theTypes.contains(args[3]))
+            {
+                theTypes.add(args[3]);
+            }
+
             makeReader();
         }
     }
@@ -382,6 +469,13 @@ public class CLI {
             params.add(args[counter] + " " + args[counter + 1]);
         }
         controller.changeMethodType(args[1], args[3], args[4], params, args[2], args[args.length - 1]);
+
+        //Add type if new user-defined.
+        if(!theTypes.contains(args[args.length - 1]))
+        {
+            theTypes.add(args[args.length - 1]);
+        }
+
         makeReader();
     }
 
@@ -463,12 +557,19 @@ public class CLI {
      */
     private void save(String[] args) {
         try {
-            controller.save(args[1]);
+            if(!args[1].contains(".json"))
+            {
+                view.showError("Must save as .json file");
+            }
+            else
+            {
+                controller.save(args[1]);
+                view.save();
+            }
 
         } catch (Exception e) {
             System.out.println("Invalid arguments");
         }
-        view.save();
     }
 
     /**
@@ -476,9 +577,16 @@ public class CLI {
      */
     private void load(String[] args) {
         try {
-            controller.load(args[1]);
-            view.load();
-            makeReader();
+            if(!args[1].contains(".json"))
+            {
+                view.showError("Must load a .json file");
+            }
+            else
+            {
+                controller.load(args[1]);
+                view.load();
+                makeReader();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             view.showError("Invalid file name");
@@ -599,6 +707,22 @@ public class CLI {
     }
 
     /**
+     * Displays the current relationships between classes.
+     */
+    private void displayRelationships()
+    {
+        String relationships = "";
+        for (UML.model.Class c : store.getClassStore()) 
+        {
+            for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
+            {
+                relationships += c.getName() + " ==" + entry.getValue() + "==> " + entry.getKey() + "\n";
+            }
+        }
+        view.display(relationships);
+    }
+
+    /**
      * Makes a new completer and reader based on state of the model.
      */
     private void makeReader() {
@@ -626,11 +750,11 @@ public class CLI {
                     hasMethods = true;
             }
 
+            
             // Make String completers for access and type.
-            StringsCompleter accesses = new StringsCompleter("public", "private", "protected");
+            StringsCompleter accesses = new StringsCompleter(this.theAccesses);
 
-            StringsCompleter types = new StringsCompleter("boolean", "char", "double", "float", "int", "short",
-                    "size_t", "String", "unsigned");
+            StringsCompleter types = new StringsCompleter(this.theTypes);
 
             if (str[0].equals("load") || (!hasFields && !hasMethods)) {
                 completer = new TreeCompleter(node("addc"), node("renamec", node(classes)),
@@ -665,7 +789,7 @@ public class CLI {
                                                 node(new StringsCompleter("Aggregation", "Composition",
                                                         "Generalization", "Realization"))))),
                         node("deleter", node(classes, node(classes))),
-                        node("help", "exit", "showgui", "save", "load", "undo", "redo"),
+                        node("help", "exit", "showgui", "save", "load", "undo", "redo", "displayr"),
                         node("display", node(classes)));
             } else if (!hasMethods) {
                 completer = new TreeCompleter(node("addc"), node("renamec", node(classes)),
@@ -682,7 +806,7 @@ public class CLI {
                                                 node(new StringsCompleter("Aggregation", "Composition",
                                                         "Generalization", "Realization"))))),
                         node("deleter", node(classes, node(classes))),
-                        node("help", "exit", "showgui", "save", "load", "undo", "redo"),
+                        node("help", "exit", "showgui", "save", "load", "undo", "redo", "displayr"),
                         node("display", node(classes)));
             } else {
                 completer = new TreeCompleter(node("addc"), node("renamec", node(classes)),
@@ -710,7 +834,7 @@ public class CLI {
                                                 node(new StringsCompleter("Aggregation", "Composition",
                                                         "Generalization", "Realization"))))),
                         node("deleter", node(classes, node(classes))),
-                        node("help", "exit", "showgui", "save", "load", "undo", "redo"),
+                        node("help", "exit", "showgui", "save", "load", "undo", "redo", "displayr"),
                         node("display", node(classes)));
             }
         }
