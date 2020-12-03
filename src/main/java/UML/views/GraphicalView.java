@@ -34,7 +34,8 @@ import UML.controllers.DeleteRelationshipController;
 import UML.controllers.EditFieldController;
 import UML.controllers.EditMethodController;
 import UML.controllers.MouseClickAndDragController;
-
+import UML.controllers.ScrollWheelController;
+import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.Scanner;
@@ -42,29 +43,65 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GraphicalView implements View {
 
-    // Holds menu bar used to navigate program.
+    //Holds menu bar used to navigate program.
     private JMenuBar mb;
 
-    // Displays each individual class.
+    //Displays each individual class.
     private Map<String, JPanel> classPanels;
 
-    // The window for the GUI.
+    //The window for the GUI.
     private JFrame window;
+
+    //The file menu used to save and load.
     private JMenu fileMenu;
+
+    //The menu used to create a class.
     private JMenu classMenu;
+
+    //The menu used to adjust the state.
     private JMenu stateMenu;
+
+    //The base of the GUI view.
     private DrawPanel dp;
-    JScrollPane jsp;
+
+    //The pane that allows scrolling.
+    private JScrollPane jsp;
+
+    //A map containing the relationships in the view.
     private ConcurrentHashMap<ArrayList<String>, String> relationships;
+
+    //The current font size for the class panels.
+    private int fontSize;
+
 
     public GraphicalView() {
         this.classPanels = new ConcurrentHashMap<String, JPanel>();
         this.relationships = new ConcurrentHashMap<ArrayList<String>, String>();
+        fontSize = 10;
+    }
+
+    
+    // ================================================================================================================================================
+    // Setters
+    // ================================================================================================================================================
+        
+    /**
+     * Sets the current font size.
+     */
+    public void setFontSize(int font)
+    {
+        fontSize = font;
     }
 
     // ================================================================================================================================================
     // Getters
     // ================================================================================================================================================
+    
+    //Returns the font size.
+    public int getFontSize()
+    {
+        return fontSize;
+    }
 
     /**
      * Returns the map containing the class panels.
@@ -418,7 +455,7 @@ public class GraphicalView implements View {
     }
 
     /**
-     * Resizes panels to adjust to text of panel
+     * Resizes panels to adjust to text of panel.
      */
     public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
@@ -435,20 +472,33 @@ public class GraphicalView implements View {
         int[] methodSize = getSizes("Methods: ","Relationships To Others: ", classToString);
 
         panel.setLocation(x, y);
-        JPanel innerPanel = (JPanel)panel.getComponent(4);
+        JPanel innerPanel = (JPanel)panel.getComponent(1);
         JLabel name = (JLabel) innerPanel.getComponent(0);
         JLabel fields = (JLabel) innerPanel.getComponent(1);
         JLabel methods = (JLabel) innerPanel.getComponent(2);
 
-        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) + 10) * 5;
+        name.setFont(new Font("Ariel", 0, fontSize + 4));
+        fields.setFont(new Font("Ariel", 0, fontSize));
+        methods.setFont(new Font("Ariel", 0, fontSize));
 
-        panel.setBounds(x, y, width, (fieldSize[1] + 4) * 12 + (methodSize[1] + 3) * 12 + 30);
-        
-        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
+        int nameHeight = (int)name.getPreferredSize().getHeight() * 2;
+        int fieldHeight = (int)fields.getPreferredSize().getHeight() * 3;
+        int methodHeight = (int)methods.getPreferredSize().getHeight() * 3;
 
-        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 12);
+        int height = nameHeight + fieldHeight + methodHeight;
 
-        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 12 + 20, width, (methodSize[1] + 3) * 12);
+        int width = Math.max((int)name.getPreferredSize().getWidth(), Math.max((int)fields.getPreferredSize().getWidth(), (int)methods.getPreferredSize().getWidth())) * 3;
+
+        //panel.setBounds(x, y, width, (fieldSize[1] + 4) * 12 + (methodSize[1] + 3) * 12 + (15 * fontSize));
+        //JPanel top = (JPanel)panel.getComponent(0);
+        //int border = (int)top.getPreferredSize().getHeight();
+        panel.setBounds(x, y, width, height);
+        //name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 5 * fontSize);
+        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, nameHeight);
+        //fields.setBounds(innerPanel.getX(), innerPanel.getY() + (5 * fontSize), width, (fieldSize[1] + 3) * 12);
+        fields.setBounds(innerPanel.getX(), innerPanel.getY() + nameHeight, width, fieldHeight);
+        //methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 12 + (5 * fontSize), width, (methodSize[1] + 3) * 12);
+        methods.setBounds(innerPanel.getX(), innerPanel.getY() + nameHeight + fieldHeight, width, methodHeight);
 
         refresh();
     }
@@ -568,6 +618,12 @@ public class GraphicalView implements View {
         JPanel panel = classPanels.get(classText);
         panel.addMouseListener(mouseListener);
         panel.addMouseMotionListener(mouseListener);
+    }
+
+    @Override
+    public void addListener(ScrollWheelController mouseWheelListener) 
+    {
+        dp.addMouseWheelListener(mouseWheelListener);        
     }
 
     /**

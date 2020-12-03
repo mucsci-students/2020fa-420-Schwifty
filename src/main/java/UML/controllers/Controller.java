@@ -40,6 +40,7 @@ public class Controller implements IController
 
         //get the initial state of the UML editor.
         stateController = new StateController(this.store);
+
     }
 
 
@@ -831,6 +832,7 @@ public void setStateController(StateController sc)
           {
               view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
               view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
+              view.addListener(new ScrollWheelController (store, view, this, view.getPanels()));
               for(int count = 0; count < 7; count++)
               {
                   view.addPanelListener(listeners[count], c.toString());

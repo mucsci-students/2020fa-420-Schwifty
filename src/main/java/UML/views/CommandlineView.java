@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import UML.controllers.MouseClickAndDragController;
+import UML.controllers.ScrollWheelController;
 import java.awt.Dimension;
 import UML.model.Store;
 
@@ -360,6 +361,11 @@ public class CommandlineView implements View {
 
     @Override
     public void addListener(MouseClickAndDragController mouseListener, String classText) {
+        // Do nothing.
+    }
+
+    @Override
+    public void addListener(ScrollWheelController mousWheelListener) {
         // Do nothing.
     }
 

@@ -149,15 +149,12 @@ public class ClassPanelBuilder implements PanelBuilder
     public JPanel makeNewClassPanel() 
     {
         JLabel name = new JLabel(getClassName(classData));
-        name.setFont(new Font("Ariel", 0, 14));
 
         name.setHorizontalAlignment(JLabel.CENTER);
 
         JLabel fields = new JLabel("<html>" + getClassFields(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
-        fields.setFont(new Font("Ariel", 0, 10));
 
         JLabel methods = new JLabel("<html>" + getClassMethods(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
-        methods.setFont(new Font("Ariel", 0, 10));
 
         //Concat used to know which class is being changed in listeners.
         String concat = name.getText().trim();
@@ -179,10 +176,10 @@ public class ClassPanelBuilder implements PanelBuilder
         panel.setBackground(Color.PINK);
 
         //Adds panels + menu bar to main panel.
-        panel.add(left, BorderLayout.WEST);
+        //panel.add(left, BorderLayout.WEST);
         panel.add(miniBar, BorderLayout.EAST);
-        panel.add(top, BorderLayout.NORTH);
-        panel.add(bottom, BorderLayout.SOUTH);
+        //panel.add(top, BorderLayout.NORTH);
+        //panel.add(bottom, BorderLayout.SOUTH);
 
         //Add necessary text areas to the center panel.
         centerPanel.add(name);
@@ -194,6 +191,7 @@ public class ClassPanelBuilder implements PanelBuilder
         centerPanel.setLayout(null);
         
         //Finishes panel construction.
+        panel.setBorder(BorderFactory.createBevelBorder(0));
         panel.setVisible(true);
         return panel;
     }
