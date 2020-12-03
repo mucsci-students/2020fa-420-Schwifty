@@ -27,39 +27,29 @@ public class ScrollWheelController implements MouseWheelListener
     public Map<String, JPanel> classPanels;
     public int numOfNotches;
 
-    public ScrollWheelController(Store s, View v, Controller c, Map<String, JPanel> panels)
+    public ScrollWheelController(Store s, View v, Controller c)
     {
         this.store = s;
         this.view = v;
         this.controller = c;
-        classPanels = panels;
         numOfNotches = 0;
+        classPanels = view.getPanels();
     }
+
 
     @Override
     public void mouseWheelMoved (MouseWheelEvent e)
     {
         int notches = e.getWheelRotation();
+        GraphicalView v = (GraphicalView) view;
+        int fontSize = v.getFontSize();
+        v.setFontSize(fontSize + notches);
         for(JPanel panel : classPanels.values())
         {
-            if(true)
-            {
-                numOfNotches += notches;
-                Dimension size = panel.getSize();
-                double height = size.getHeight();
-                double width = size.getWidth();  
+            JPanel p = (JPanel) panel.getComponent(1);
+            JLabel label = (JLabel) p.getComponent(0);
 
-                GraphicalView v = (GraphicalView) view;
-                int fontSize = v.getFontSize();
-                v.setFontSize(fontSize + notches);
-
-                JPanel p = (JPanel) panel.getComponent(1);
-                JLabel label = (JLabel) p.getComponent(0);
-
-                v.resizePanel(store.findClass(label.getText()).toString(), panel.getX(), panel.getY());
-                
-            }
-            
+            v.resizePanel(store.findClass(label.getText()).toString(), panel.getX(), panel.getY());            
         }
     }
 }

@@ -35,6 +35,7 @@ import UML.controllers.EditFieldController;
 import UML.controllers.EditMethodController;
 import UML.controllers.MouseClickAndDragController;
 import UML.controllers.ScrollWheelController;
+import java.awt.event.MouseWheelListener;
 import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -78,6 +79,7 @@ public class GraphicalView implements View {
         this.classPanels = new ConcurrentHashMap<String, JPanel>();
         this.relationships = new ConcurrentHashMap<ArrayList<String>, String>();
         fontSize = 10;
+        
     }
 
     
@@ -460,17 +462,6 @@ public class GraphicalView implements View {
     public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
 
-        //Get class name length.
-        int start = classToString.indexOf("name: ") + 6;
-        int stop = classToString.indexOf("Field ");
-        int nameLength = stop - 32 - start;
-
-        //Get field length and height.
-        int[] fieldSize = getSizes("Field Names: ","Methods: ", classToString);
-
-        //Get method length and height.
-        int[] methodSize = getSizes("Methods: ","Relationships To Others: ", classToString);
-
         panel.setLocation(x, y);
         JPanel innerPanel = (JPanel)panel.getComponent(1);
         JLabel name = (JLabel) innerPanel.getComponent(0);
@@ -620,10 +611,18 @@ public class GraphicalView implements View {
         panel.addMouseMotionListener(mouseListener);
     }
 
+    /**
+     * Adds ScrollWheelController to the panel.
+     */
     @Override
     public void addListener(ScrollWheelController mouseWheelListener) 
     {
-        dp.addMouseWheelListener(mouseWheelListener);        
+        MouseWheelListener[] mwl = dp.getMouseWheelListeners();
+        for(MouseWheelListener listener : mwl)
+        {
+            dp.removeMouseWheelListener(listener);
+        }
+        dp.addMouseWheelListener(mouseWheelListener);       
     }
 
     /**

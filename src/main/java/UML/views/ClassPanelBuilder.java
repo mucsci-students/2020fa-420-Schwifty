@@ -186,6 +186,7 @@ public class ClassPanelBuilder implements PanelBuilder
         centerPanel.add(fields);
         centerPanel.add(methods);
         centerPanel.setVisible(true);
+        centerPanel.setBackground(Color.CYAN);
         panel.add(centerPanel, BorderLayout.CENTER);
 
         centerPanel.setLayout(null);

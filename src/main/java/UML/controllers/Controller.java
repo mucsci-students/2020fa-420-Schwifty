@@ -27,6 +27,8 @@ public class Controller implements IController
     private View view;
     //The state controller that handles undo and redo
     private StateController stateController;
+    //The scroll wheel controller
+    private ScrollWheelController scrollController;
     // True if a GUI exists already, false otherwise.
     private boolean GUIExists;
     /**
@@ -38,7 +40,7 @@ public class Controller implements IController
         this.view = view;
         GUIExists = false;
 
-        //get the initial state of the UML editor.
+        //Get the initial state of the UML editor.
         stateController = new StateController(this.store);
 
     }
@@ -785,7 +787,6 @@ public void setStateController(StateController sc)
         else
         {
             stateController.addStateToUndo((Store)this.store.clone());
-            //stateChange();
             this.store = stateController.Redo();
             prepGUI();
             rebuild();
@@ -809,19 +810,17 @@ public void setStateController(StateController sc)
             rebuild();
         }
       }
-
-      public void rebuildHelper()
-      {
-          rebuild();
-      }
       
-      private void rebuild()
+      /**
+       * Rebuild the GUI with the new data.
+       */
+      public void rebuild()
       {
           ActionListener[] listeners = new ActionListener[7];
           //Create Listeners
           listeners[0] = new CreateFieldController(store, view, this);
           listeners[1] = new EditFieldController(store, view, this);
-          listeners[2]= new CreateMethodController(store, view, this);
+          listeners[2]=  new CreateMethodController(store, view, this);
           listeners[3] = new EditMethodController(store, view, this);
           listeners[4] = new CreateRelationshipController(store, view, this);
           listeners[5] = new DeleteRelationshipController(store,view, this);
@@ -832,12 +831,13 @@ public void setStateController(StateController sc)
           {
               view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
               view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
-              view.addListener(new ScrollWheelController (store, view, this, view.getPanels()));
               for(int count = 0; count < 7; count++)
               {
                   view.addPanelListener(listeners[count], c.toString());
               }
             }
+
+            view.addListener(new ScrollWheelController (store, view, this));
             //Add relationships to the view.
             for(Class c : store.getClassStore())
             {
@@ -848,6 +848,9 @@ public void setStateController(StateController sc)
             }
       }
 
+      /**
+       * Prep the GUI new state.
+       */
       private void prepGUI()
       {
           //If there are panels on the GUI, get red of them to prep for the new load.
@@ -858,5 +861,10 @@ public void setStateController(StateController sc)
                     view.deleteClass(entry.getKey());
                 }
           }
+      }
+
+      public void addZoom()
+      {
+        view.addListener(new ScrollWheelController (store, view, this));
       }
 }
