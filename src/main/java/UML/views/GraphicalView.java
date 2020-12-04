@@ -1,44 +1,36 @@
 package UML.views;
 
-/*
-    Author: Chris, Cory, Dominic, Drew, Tyler. 
-    Date: 10/06/2020
-    Purpose: Provides an implementation of the GUI view.
- */
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JMenuBar;
-import javax.swing.JFrame;
-import javax.swing.JFileChooser;
-import javax.swing.JColorChooser;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Map;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JScrollBar;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import javax.swing.border.Border;
-import javax.swing.BorderFactory;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import UML.controllers.CreateFieldController;
 import UML.controllers.CreateMethodController;
-import UML.controllers.EditClassController;
 import UML.controllers.CreateRelationshipController;
 import UML.controllers.DeleteRelationshipController;
+import UML.controllers.EditClassController;
 import UML.controllers.EditFieldController;
 import UML.controllers.EditMethodController;
 import UML.controllers.MouseClickAndDragController;
-
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class GraphicalView implements View {
 
@@ -188,10 +180,19 @@ public class GraphicalView implements View {
      * Saves a JSON representation of the UML diagram.
      */
     @Override
-    public String save() {
-        JFileChooser fc = new JFileChooser();
-        // If there is a currently loaded file.
+    public String save() 
+    {
+        //Gets the directory this application was run from...also where the .json files will be saved.
+        String userDir = System.getProperty("user.dir");
 
+        //build the file chooser passing in the userDir. 
+        JFileChooser fc = new JFileChooser(userDir);
+        
+        //Filter to only show .json files. 
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON files","json");
+        
+        //set the filechooser to use the created filter.
+        fc.setFileFilter(filter);
         // Bring up file panel for the user to save as(automatically will choose file
         // type though in saveandload).
         int returnValue = fc.showSaveDialog(dp);
@@ -199,6 +200,10 @@ public class GraphicalView implements View {
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             return fc.getSelectedFile().getName();
+        }
+        else if(returnValue == JFileChooser.CANCEL_OPTION)
+        {
+            return "No file selected.";
         }
         // if no filename is found, retrun an empty string
         return "";
@@ -208,14 +213,29 @@ public class GraphicalView implements View {
      * Loads a JSON representation of the UML diagram.
      */
     @Override
-    public String load() {
+    public String load() 
+    {
+        //Gets the directory this application was run from...also where the .json files will be saved.
+        String userDir = System.getProperty("user.dir");
+
         // Make a filechooser
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser(userDir);
+            
+        //Filter to only show .json files. 
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON files","json");
+        
+        //set the filechooser to use the created filter.
+        fc.setFileFilter(filter);
+
         int returnValue = fc.showOpenDialog(dp);
         // If the user selected to open this file, open it.
         // Consider filtering this information to only inlcude JSON filetypes
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             return fc.getSelectedFile().getName();
+        } 
+        else if(returnValue == JFileChooser.CANCEL_OPTION)
+        {
+            return "No file selected.";
         }
         return "";
     }
