@@ -102,9 +102,18 @@ public class GraphicalView implements View {
     //Returns the font size.
     public int getFontSize()
     {
-        return fontSize;
+        return this.fontSize;
     }
 
+    /**
+     * Returns the JScrollPane. 
+     * 
+     */
+    public JScrollPane getScrollPane()
+    {
+        return this.jsp;
+    }
+    
     /**
      * Returns the map containing the class panels.
      */
@@ -472,23 +481,22 @@ public class GraphicalView implements View {
         fields.setFont(new Font("Ariel", 0, fontSize));
         methods.setFont(new Font("Ariel", 0, fontSize));
 
-        int nameHeight = (int)name.getPreferredSize().getHeight() * 2;
-        int fieldHeight = (int)fields.getPreferredSize().getHeight() * 3;
-        int methodHeight = (int)methods.getPreferredSize().getHeight() * 3;
+        int nameHeight = (int) (name.getPreferredSize().getHeight() + 9);
+        int fieldHeight = (int) (fields.getPreferredSize().getHeight() + 10);
+        int methodHeight = (int) (methods.getPreferredSize().getHeight() + 10);
 
         int height = nameHeight + fieldHeight + methodHeight;
 
-        int width = Math.max((int)name.getPreferredSize().getWidth(), Math.max((int)fields.getPreferredSize().getWidth(), (int)methods.getPreferredSize().getWidth())) * 3;
+        int width = (Math.max((int)name.getPreferredSize().getWidth(), Math.max((int)fields.getPreferredSize().getWidth(), (int)methods.getPreferredSize().getWidth())) + 35);
 
-        //panel.setBounds(x, y, width, (fieldSize[1] + 4) * 12 + (methodSize[1] + 3) * 12 + (15 * fontSize));
-        //JPanel top = (JPanel)panel.getComponent(0);
-        //int border = (int)top.getPreferredSize().getHeight();
+        panel.setMinimumSize(new Dimension(50, 50));
+
         panel.setBounds(x, y, width, height);
-        //name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 5 * fontSize);
+
         name.setBounds(innerPanel.getX(), innerPanel.getY(), width, nameHeight);
-        //fields.setBounds(innerPanel.getX(), innerPanel.getY() + (5 * fontSize), width, (fieldSize[1] + 3) * 12);
+
         fields.setBounds(innerPanel.getX(), innerPanel.getY() + nameHeight, width, fieldHeight);
-        //methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 12 + (5 * fontSize), width, (methodSize[1] + 3) * 12);
+
         methods.setBounds(innerPanel.getX(), innerPanel.getY() + nameHeight + fieldHeight, width, methodHeight);
 
         refresh();

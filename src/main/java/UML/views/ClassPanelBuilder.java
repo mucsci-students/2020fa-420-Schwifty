@@ -173,7 +173,7 @@ public class ClassPanelBuilder implements PanelBuilder
         left.setBackground(Color.darkGray);
         top.setBackground(Color.darkGray);
         bottom.setBackground(Color.darkGray);
-        panel.setBackground(Color.PINK);
+        panel.setBackground(Color.WHITE);
 
         //Adds panels + menu bar to main panel.
         //panel.add(left, BorderLayout.WEST);
@@ -186,7 +186,7 @@ public class ClassPanelBuilder implements PanelBuilder
         centerPanel.add(fields);
         centerPanel.add(methods);
         centerPanel.setVisible(true);
-        centerPanel.setBackground(Color.CYAN);
+        centerPanel.setBackground(Color.LIGHT_GRAY);
         panel.add(centerPanel, BorderLayout.CENTER);
 
         centerPanel.setLayout(null);
