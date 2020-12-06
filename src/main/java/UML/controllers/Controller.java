@@ -21,14 +21,12 @@ import org.json.simple.parser.ParseException;
 
 public class Controller implements IController
 {
-    // Store the model
+    // Store the model.
     private Store store;
-    // Store the view
+    // Store the view.
     private View view;
-    //The state controller that handles undo and redo
+    //The state controller that handles undo and redo.
     private StateController stateController;
-    //The scroll wheel controller
-    private ScrollWheelController scrollController;
     // True if a GUI exists already, false otherwise.
     private boolean GUIExists;
     /**
@@ -50,74 +48,82 @@ public class Controller implements IController
 //Getters
 //================================================================================================================================================
 
+    /**
+     * Returns the value of GUIExists.
+     */
+    public boolean getGUIExists()
+    {
+        return GUIExists;
+    }
 
-/**
- * Returns the value of GUIExists.
- */
-public boolean getGUIExists()
-{
-    return GUIExists;
-}
+    /**
+     * Returns the current view.
+     */
+    public View getCurrentView()
+    {
+        return this.view;
+    }
 
-public View getCurrentView()
-{
-    return this.view;
-}
-/**
- * Returns the current store.
- */
-public Store getStore()
-{
-    return this.store;
-}
+    /**
+     * Returns the current store.
+     */
+    public Store getStore()
+    {
+        return this.store;
+    }
+
+
 //================================================================================================================================================
 //Setters
 //================================================================================================================================================
 
-public void setStore(Store newStore)
-{
-    this.store = newStore;
-}
 
-/**
- * Sets the value of GUIExists to true.
- */
-public void setGUIExists()
-{
-    GUIExists = true;
-}
+    public void setStore(Store newStore)
+    {
+        this.store = newStore;
+    }
 
-/**
- * Sets GUI to be invisible.
- */
-public void setGUIInvisible()
-{
-    view.setGUIInvisible();
-}
+    /**
+     * Sets the value of GUIExists to true.
+     */
+    public void setGUIExists()
+    {
+        GUIExists = true;
+    }
 
-/**
- * Sets GUI to be invisible.
- */
-public void setGUIVisible()
-{
-    view.setGUIVisible();
-}
+    /**
+     * Sets GUI to be invisible.
+     */
+    public void setGUIInvisible()
+    {
+        view.setGUIInvisible();
+    }
 
-/**
- * Gets the state controller
- */
-public StateController getStateController()
-{
-    return this.stateController;
-}
+    /**
+     * Sets GUI to be invisible.
+     */
+    public void setGUIVisible()
+    {
+        view.setGUIVisible();
+    }
 
-/**
- * Sets the state controller
- */
-public void setStateController(StateController sc)
-{
-    this.stateController = sc;
-}
+    /**
+     * Gets the state controller
+     */
+    public StateController getStateController()
+    {
+        return this.stateController;
+    }
+
+    /**
+     * Sets the state controller
+     */
+    public void setStateController(StateController sc)
+    {
+        this.stateController = sc;
+    }
+
+
 //================================================================================================================================================
 //Class methods
 //================================================================================================================================================
@@ -793,11 +799,11 @@ public void setStateController(StateController sc)
         }
     }
 
-     /**
-      * Does an undo.
-      */
-      public void undo()
-      {
+    /**
+    * Does an undo.
+    */
+    public void undo()
+    {
         Stack<Store> undoStack = stateController.getUndoStack();
         //If the undo stack is empty, tell the user they cannot perform a undo.
         if(undoStack.isEmpty())
@@ -809,62 +815,57 @@ public void setStateController(StateController sc)
             prepGUI();
             rebuild();
         }
-      }
+    }
       
-      /**
-       * Rebuild the GUI with the new data.
-       */
-      public void rebuild()
-      {
-          ActionListener[] listeners = new ActionListener[7];
-          //Create Listeners
-          listeners[0] = new CreateFieldController(store, view, this);
-          listeners[1] = new EditFieldController(store, view, this);
-          listeners[2]=  new CreateMethodController(store, view, this);
-          listeners[3] = new EditMethodController(store, view, this);
-          listeners[4] = new CreateRelationshipController(store, view, this);
-          listeners[5] = new DeleteRelationshipController(store,view, this);
-          listeners[6] = new EditClassController(store, view, this);
+    /**
+    * Rebuild the GUI with the new data.
+    */
+    public void rebuild()
+    {
+        ActionListener[] listeners = new ActionListener[7];
+        //Create Listeners
+        listeners[0] = new CreateFieldController(store, view, this);
+        listeners[1] = new EditFieldController(store, view, this);
+        listeners[2]=  new CreateMethodController(store, view, this);
+        listeners[3] = new EditMethodController(store, view, this);
+        listeners[4] = new CreateRelationshipController(store, view, this);
+        listeners[5] = new DeleteRelationshipController(store,view, this);
+        listeners[6] = new EditClassController(store, view, this);
 
-          //Add the approprate panels and listeners to the view.
-          for(Class c : store.getClassStore())
-          {
-              view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
-              view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
-              for(int count = 0; count < 7; count++)
-              {
-                  view.addPanelListener(listeners[count], c.toString());
-              }
-            }
-
-            view.addListener(new ScrollWheelController (store, view, this));
-            //Add relationships to the view.
-            for(Class c : store.getClassStore())
+        //Add the approprate panels and listeners to the view.
+        for(Class c : store.getClassStore())
+        {
+            view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
+            view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
+            for(int count = 0; count < 7; count++)
             {
-                for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
-                {
-                    view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
-                }
+                view.addPanelListener(listeners[count], c.toString());
             }
-      }
+        }
 
-      /**
-       * Prep the GUI new state.
-       */
-      private void prepGUI()
-      {
-          //If there are panels on the GUI, get red of them to prep for the new load.
-          if(view.getPanels() != null)
-          {
-                for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
-                {
-                    view.deleteClass(entry.getKey());
-                }
-          }
-      }
-
-      public void addZoom()
-      {
         view.addListener(new ScrollWheelController (store, view, this));
-      }
+        //Add relationships to the view.
+        for(Class c : store.getClassStore())
+        {
+            for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
+            {
+                view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
+            }
+        }
+    }
+
+    /**
+    * Prep the GUI new state.
+    */
+    private void prepGUI()
+    {
+        //If there are panels on the GUI, get red of them to prep for the new load.
+        if(view.getPanels() != null)
+        {
+            for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
+            {
+                view.deleteClass(entry.getKey());
+            }
+        }
+    }
 }

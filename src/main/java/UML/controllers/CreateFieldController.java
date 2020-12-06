@@ -8,20 +8,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
-import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
 
-public class CreateFieldController implements ActionListener {
-
-    //TODO:
-        //-Manange layout
-        //Handle Exceptions (loop)
-        //Do the same thing for all the other ClickControllers
-        //Size Estimate: 5??
-
-
-
+public class CreateFieldController implements ActionListener 
+{
     private Store store;
     private View view;
     private Controller controller;

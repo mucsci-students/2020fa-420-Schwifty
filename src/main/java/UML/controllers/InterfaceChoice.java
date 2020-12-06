@@ -56,7 +56,7 @@ public class InterfaceChoice
 
     private void windowSetup()
     {
-        //add the action commands where needed.
+        //Add the action commands where needed.
         okButton.setActionCommand("OK");
         okButton.addActionListener(new ButtonClickListener());
         closeButton.setActionCommand("Close");
@@ -72,7 +72,7 @@ public class InterfaceChoice
             String cmd = e.getActionCommand();
             if(cmd.equals("OK"))
             {
-                //if the choice is cli, load it. otherwise, load the gui. 
+                //If the choice is cli, load it. otherwise, load the gui. 
                 if(cliChoice.isSelected())
                 {
 
@@ -90,7 +90,6 @@ public class InterfaceChoice
                     window.setVisible(false);
                     v.start();
                     c.addListeners();
-                    //c.addZoom();
                 }
             }
             else 

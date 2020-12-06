@@ -176,10 +176,7 @@ public class ClassPanelBuilder implements PanelBuilder
         panel.setBackground(Color.WHITE);
 
         //Adds panels + menu bar to main panel.
-        //panel.add(left, BorderLayout.WEST);
         panel.add(miniBar, BorderLayout.EAST);
-        //panel.add(top, BorderLayout.NORTH);
-        //panel.add(bottom, BorderLayout.SOUTH);
 
         //Add necessary text areas to the center panel.
         centerPanel.add(name);

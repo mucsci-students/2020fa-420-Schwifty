@@ -13,7 +13,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.RenderingHints;
 
 public class DrawPanel extends JPanel
@@ -85,25 +84,21 @@ public class DrawPanel extends JPanel
         //Open diamond.
         if(relationship.equals("AGGREGATION"))
         {
-            g.setColor(Color.BLACK);
             drawDiamond(g, x, y, r, s, false);
         }
         //Filled diamond.
         else if(relationship.equals("COMPOSITION"))
         {
-            g.setColor(Color.BLACK);
             drawDiamond(g, x, y, r, s, true);
         }
         //Open arrow.
         else if(relationship.equals("GENERALIZATION"))
         {
-            g.setColor(Color.BLACK);
             drawTriangle(g, x, y, r, s);
         }
         //Filled arrow.
         else if(relationship.equals("REALIZATION"))
         {
-            g.setColor(Color.BLACK);
             drawTriangle(g, x, y, r, s);
         }
     }
@@ -142,8 +137,16 @@ public class DrawPanel extends JPanel
             resultMatrix[0][count] += x;
             resultMatrix[1][count] += y;
         }
+
+        GraphicalView v = (GraphicalView)view;
+        Color c = v.getDrawPanel().getBackground();
+        g2d.setColor(c);
+        g2d.fillPolygon(resultMatrix[0], resultMatrix[1], 3);
+        //Draw the border.
+        g2d.setColor(Color.BLACK);
         g2d.drawPolygon(resultMatrix[0], resultMatrix[1], 3);
     }
+
     /**
      * Draws a diamond attached to the class panel.
      */
@@ -182,15 +185,22 @@ public class DrawPanel extends JPanel
         //Fill the shape for composition, and leave it open for aggregation.
         if(fill)
         {
+            g2d.setColor(Color.BLACK);
             g2d.fillPolygon(resultMatrix[0], resultMatrix[1], 4);
         }
         else
         {
+            GraphicalView v = (GraphicalView) view;
+            Color c = v.getDrawPanel().getBackground();
+            g2d.setColor(c);
+            g2d.fillPolygon(resultMatrix[0], resultMatrix[1], 4);
+            //Draw border.
+            g2d.setColor(Color.BLACK);
             g2d.drawPolygon(resultMatrix[0], resultMatrix[1], 4);
         }
     }
 
-/**
+    /**
      * Get's shortest line points between two class panels.
      */
     public int[] getClosest(int fromLeft, int fromRight, int fromUp, int fromDown, int toLeft, int toRight, int toUp, int toDown)

@@ -6,29 +6,20 @@ package UML.controllers;
     Purpose: Controls the actions taken when commands are used in the CLI.
  */
 import java.io.IOException;
-
 import org.jline.reader.*;
 
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.Terminal;
-import org.jline.utils.AttributedStyle;
 import java.util.ArrayList;
-
 import UML.model.*;
 import UML.model.Store;
 import UML.views.GraphicalView;
 import UML.views.View;
 import org.jline.builtins.Completers.TreeCompleter;
 import static org.jline.builtins.Completers.TreeCompleter.node;
-
 import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.impl.LineReaderImpl;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-import org.jline.utils.AttributedStringBuilder;
-
 import org.jline.reader.impl.history.DefaultHistory;
 import java.util.Set;
 import java.util.Stack;
@@ -293,6 +284,12 @@ public class CLI {
         }
     }
 
+    
+//================================================================================================================================================
+//Class Methods
+//================================================================================================================================================
+
+
     /**
      * Adds a class to the store.
      */
@@ -328,6 +325,12 @@ public class CLI {
             view.showError("Invalid arguments for deleting a class, please refer to help.");
         }
     }
+
+
+//================================================================================================================================================
+//Field Methods
+//================================================================================================================================================
+
 
     /**
      * Adds a field to a class in the store.
@@ -402,6 +405,12 @@ public class CLI {
             view.showError("Invalid arguments for changing field access, please refer to help.");
         }
     }
+
+
+//================================================================================================================================================
+//Method Methods
+//================================================================================================================================================
+
 
     /**
      * Adds a method to a class in the store.
@@ -494,6 +503,12 @@ public class CLI {
         makeReader();
     }
 
+
+//================================================================================================================================================
+//Parameter Methods
+//================================================================================================================================================
+
+
     /**
      * Adds a parameter to a given method.
      */
@@ -527,6 +542,12 @@ public class CLI {
         makeReader();
     }
 
+
+//================================================================================================================================================
+//Relationship Methods
+//================================================================================================================================================
+
+
     /**
      * Creates a relationship between two classes Adds a relationship bewteen two
      * classees in the store.
@@ -551,6 +572,12 @@ public class CLI {
             view.showError("Invalid arguments for removing a class, please refer to help.");
         }
     }
+
+
+//================================================================================================================================================
+//Save and Load
+//================================================================================================================================================
+
 
     /**
      * Saves work into a json fileSaves a current diagram to a JSON file.
@@ -616,6 +643,11 @@ public class CLI {
         controller.redo();
     }
 
+
+//================================================================================================================================================
+//Getters
+//================================================================================================================================================
+
     /**
      * Gets a list of field names.
      */
@@ -676,6 +708,11 @@ public class CLI {
         return toReturn;
     }
 
+
+//================================================================================================================================================
+//
+//================================================================================================================================================
+ 
     /**
      * Displays a specified class.
      */

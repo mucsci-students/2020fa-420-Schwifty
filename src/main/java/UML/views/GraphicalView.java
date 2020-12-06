@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.JColorChooser;
@@ -34,10 +33,6 @@ import UML.controllers.MouseClickAndDragController;
 import UML.controllers.ScrollWheelController;
 import java.awt.event.MouseWheelListener;
 import java.awt.Font;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class GraphicalView implements View {
 
@@ -96,7 +91,9 @@ public class GraphicalView implements View {
     // Getters
     // ================================================================================================================================================
     
-    //Returns the font size.
+    /**
+     * Returns the font size.
+     */
     public int getFontSize()
     {
         return this.fontSize;
@@ -104,11 +101,18 @@ public class GraphicalView implements View {
 
     /**
      * Returns the JScrollPane. 
-     * 
      */
     public JScrollPane getScrollPane()
     {
         return this.jsp;
+    }
+
+    /**
+     * Returns the DrawPanel.
+     */
+    public DrawPanel getDrawPanel()
+    {
+        return this.dp;
     }
     
     /**
@@ -495,23 +499,28 @@ public class GraphicalView implements View {
      */
     public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
-
         panel.setLocation(x, y);
+
+        //Get the JLabels.
         JPanel innerPanel = (JPanel)panel.getComponent(1);
         JLabel name = (JLabel) innerPanel.getComponent(0);
         JLabel fields = (JLabel) innerPanel.getComponent(1);
         JLabel methods = (JLabel) innerPanel.getComponent(2);
 
+        //Set the font size based on the field.
         name.setFont(new Font("Ariel", 0, fontSize + 4));
         fields.setFont(new Font("Ariel", 0, fontSize));
         methods.setFont(new Font("Ariel", 0, fontSize));
 
+        //Get the preferred height for each JLabel.
         int nameHeight = (int) (name.getPreferredSize().getHeight() + 9);
         int fieldHeight = (int) (fields.getPreferredSize().getHeight() + 10);
         int methodHeight = (int) (methods.getPreferredSize().getHeight() + 10);
 
+        //Calculate total height needed.
         int height = nameHeight + fieldHeight + methodHeight;
 
+        //Calculate total width needed for panel.
         int width = (Math.max((int)name.getPreferredSize().getWidth(), Math.max((int)fields.getPreferredSize().getWidth(), (int)methods.getPreferredSize().getWidth())) + 35);
 
         panel.setMinimumSize(new Dimension(50, 50));
@@ -526,38 +535,6 @@ public class GraphicalView implements View {
 
         refresh();
     }
-
-    /**
-     * Returns the max length and the height of a blcok of text.
-     */
-    private int[] getSizes(String begin, String end, String classToString)
-    {
-        //Specify the block we care about by giving beginning and end substrings.
-        int start = classToString.indexOf(begin);
-        int stop = classToString.indexOf(end);
-        String scan = classToString.substring(start, stop - 32);
-        Scanner scanner = new Scanner(scan);
-
-        int longest = 0;
-        int height = 0;
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            Scanner lineScanner = new Scanner(line);
-            int localBest = 0;
-            while (lineScanner.hasNext()) {
-                localBest += lineScanner.next().length();
-                localBest++;
-            }
-            lineScanner.close();
-            ++height;
-            if (localBest > longest)
-                longest = localBest;
-        }
-        scanner.close();
-        int[] toReturn = {longest, height};
-        return toReturn;
-    }
-
 
     /**
      * Refreshes the window.
