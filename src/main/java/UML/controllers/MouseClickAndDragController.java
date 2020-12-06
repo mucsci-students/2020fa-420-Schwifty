@@ -58,10 +58,6 @@ public class MouseClickAndDragController implements MouseListener, MouseMotionLi
             //Set the location of the panel.
             found.setLocation(newX, newY);
             view.getMainWindow().repaint();
-            DrawPanel dp = new DrawPanel(view);
-
-            //Paint the panel.
-            dp.paintComponent(view.getMainWindow().getGraphics());
         }
     }
     @Override
