@@ -14,7 +14,7 @@ import java.awt.Graphics;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-
+import java.awt.RenderingHints;
 
 public class DrawPanel extends JPanel
 {
@@ -53,6 +53,9 @@ public class DrawPanel extends JPanel
 
                 //Must use Graphics2D to make line dashed.
                 Graphics2D g2d = (Graphics2D)g;
+                
+                //Antialiasing ON
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
                 //To make line dashed, need to set stroke.
                 BasicStroke defaultStroke = (BasicStroke) g2d.getStroke();
@@ -187,15 +190,79 @@ public class DrawPanel extends JPanel
         }
     }
 
-    /**
+/**
      * Get's shortest line points between two class panels.
      */
     public int[] getClosest(int fromLeft, int fromRight, int fromUp, int fromDown, int toLeft, int toRight, int toUp, int toDown)
     {
         //fromX, fromY, toX, toY.
         int[] x = new int[4];
+        //Smaller from on top or bottom.
+        if(fromLeft > toLeft && fromRight < toRight)
+        {
+            x[0] = ((fromRight - fromLeft) / 2) + fromLeft;
+            x[2] = x[0];
+            if(fromDown < toUp)
+            {
+                x[1] = fromDown;
+                x[3] = toUp;
+            }
+            else
+            {
+                x[1] = fromUp;
+                x[3] = toDown;
+            }
+        }
+        //Larger from on top or bottom.
+        else if(toLeft > fromLeft && toRight < fromRight)
+        {
+            x[0] = ((toRight - toLeft) / 2) + toLeft;
+            x[2] = x[0];
+            if(fromDown < toUp)
+            {
+                x[1] = fromDown;
+                x[3] = toUp;
+            }
+            else
+            {
+                x[1] = fromUp;
+                x[3] = toDown;
+            }
+        }
+        //Smaller from on the side.
+        else if(fromUp > toUp && fromDown < toDown)
+        {
+            x[1] = ((fromDown - fromUp) / 2) + fromUp;
+            x[3] = x[1];
+            if(fromLeft > toRight)
+            {
+                x[0] = fromLeft;
+                x[2] = toRight;
+            }
+            else
+            {
+                x[0] = fromRight;
+                x[2] = toLeft;
+            }
+        }
+        //Larger from on the side.
+        else if(toUp > fromUp && toDown < fromDown)
+        {
+            x[1] = ((toDown - toUp) / 2) + toUp;
+            x[3] = x[1];
+            if(fromLeft > toRight)
+            {
+                x[0] = fromLeft;
+                x[2] = toRight;
+            }
+            else
+            {
+                x[0] = fromRight;
+                x[2] = toLeft;
+            }
+        }
         //From is to the right.
-        if(fromLeft > toRight)
+        else if(fromLeft > toRight)
         {   
             x[0] = fromLeft;
             x[2] = toRight;
