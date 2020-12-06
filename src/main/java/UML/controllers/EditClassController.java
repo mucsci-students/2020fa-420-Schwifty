@@ -4,9 +4,7 @@ import UML.views.*;
 import UML.model.*;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;

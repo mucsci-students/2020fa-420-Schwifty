@@ -15,7 +15,6 @@ import java.util.Map;
 import java.awt.FlowLayout;
 import UML.controllers.*;
 import java.awt.Dimension;
-import UML.model.Store;
 
 public class InterfaceChoiceView implements View {
 

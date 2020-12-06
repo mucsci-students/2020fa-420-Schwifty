@@ -5,7 +5,6 @@ package UML.views;
     Purpose: Provides an interface for the views.
  */
 
-import java.awt.event.*;
 import java.util.ArrayList;
 import UML.controllers.MouseClickAndDragController;
 import UML.controllers.ScrollWheelController;
@@ -15,7 +14,6 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
-import UML.model.Store;
 
 public interface View
 {

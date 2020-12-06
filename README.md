@@ -2,7 +2,7 @@
 # UML Editor
 
 ## Description
-UML Editor is an open-source tool with a simple user interface. It allows users to interactively create and edit class diagrams. Currently supports creation of fields, methods, and relationships. Diagrams can currently be saved in JSON.
+UML Editor is an open-source tool with a simple user interface. It allows users to interactively create and edit class diagrams. Supports creation of classes, fields, methods, and relationships. Relationships include: **AGGREGATION, COMPOSITION, GENERALIZATION, and REALIZATION.** UML Editor also includes a command line version (cli). Diagrams can currently be saved in JSON (Ex. File.JSON). GUI now enables a zoom/scroll feature and the abilty to change background color.
 
 ## License
 UML Editor is available under the [MIT License.](https://github.com/mucsci-students/2020fa-420-Schwifty/blob/develop/LICENSE)

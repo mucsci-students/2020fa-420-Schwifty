@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
-import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import javax.swing.JTextField;
@@ -52,7 +51,7 @@ public class EditFieldController implements ActionListener
         //Get field to delete.
         //Has the form of (access char) (type) (name).
        
-        String field = view.getChoiceFromUser("Edit this class", "Edit class", fieldList);
+        String field = view.getChoiceFromUser("Edit this field", "Edit field", fieldList);
 
         //Handle cancelling.
         if(field == null)

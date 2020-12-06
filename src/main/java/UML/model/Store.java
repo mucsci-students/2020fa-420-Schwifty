@@ -11,14 +11,16 @@ import java.util.Set;
 
 import java.util.Map;
 
-public class Store implements Cloneable, IStore {
+public class Store implements Cloneable, IStore 
+{
 
 	// An array list to store the current classes.
 	private ArrayList<Class> classStore;
 	// The currently loaded file. Null if there is none.
 	private File currentLoadedFile;
 
-	public Store() {
+	public Store() 
+	{
 		classStore = new ArrayList<Class>();
 		currentLoadedFile = null;
 	}
@@ -26,18 +28,21 @@ public class Store implements Cloneable, IStore {
 	/**
 	 * Returns the currently loaded file, if there is one.
 	 */
-	public File getCurrentLoadedFile() {
+	public File getCurrentLoadedFile() 
+	{
 		return this.currentLoadedFile;
 	}
 
 	/**
 	 * Setter for the current loaded file.
 	 */
-	public void setCurrentLoadedFile(File fileToSet) {
+	public void setCurrentLoadedFile(File fileToSet) 
+	{
 		this.currentLoadedFile = fileToSet;
 	}
 
-	public void setClassStore(ArrayList<Class> newStore) {
+	public void setClassStore(ArrayList<Class> newStore) 
+	{
 		this.classStore = newStore;
 	}
 
@@ -48,7 +53,8 @@ public class Store implements Cloneable, IStore {
 	/**
 	 * Returns ArrayList of classes in the store.
 	 */
-	public ArrayList<Class> getClassStore() {
+	public ArrayList<Class> getClassStore() 
+	{
 		return this.classStore;
 	}
 
@@ -56,7 +62,8 @@ public class Store implements Cloneable, IStore {
 	 * Makes and returns a combo box fill with the created classes.
 	 */
 	// Chnage name to say that it returns array of strings not classes.
-	public ArrayList<String> getClassList() {
+	public ArrayList<String> getClassList() 
+	{
 		ArrayList<String> names = new ArrayList<String>();
 
 		for (Class aClass : classStore) {

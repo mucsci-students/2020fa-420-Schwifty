@@ -1,7 +1,6 @@
 package UML.model;
 
 import java.util.ArrayList;
-import UML.model.RelationshipType;
 
 public interface IStore 
 {
