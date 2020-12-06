@@ -281,7 +281,7 @@ public class CLI {
         c.setStateController(state);
         v.start();
         c.addListeners();
-        c.rebuildHelper();
+        c.rebuild();
          try 
         {
             terminal.close();

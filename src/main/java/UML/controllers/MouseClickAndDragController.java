@@ -43,7 +43,7 @@ public class MouseClickAndDragController implements MouseListener, MouseMotionLi
         if(source instanceof JPanel)
         {
             JPanel found = (JPanel)source;
-            JPanel panel = (JPanel)found.getComponent(4);
+            JPanel panel = (JPanel)found.getComponent(1);
             JLabel text = (JLabel)panel.getComponent(0);
             //Get the class name from the test on the top panel.
             String className = text.getText().trim();

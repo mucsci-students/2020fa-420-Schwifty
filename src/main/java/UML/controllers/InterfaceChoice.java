@@ -63,7 +63,6 @@ public class InterfaceChoice
         cliChoice.setSelected(true);
         buttonGroup.add(cliChoice);
         buttonGroup.add(guiChoice);
-
     }
 
     private class ButtonClickListener implements ActionListener
@@ -91,6 +90,7 @@ public class InterfaceChoice
                     window.setVisible(false);
                     v.start();
                     c.addListeners();
+                    //c.addZoom();
                 }
             }
             else 
