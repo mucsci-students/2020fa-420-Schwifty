@@ -13,6 +13,17 @@ import javax.swing.JPanel;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import java.awt.LayoutManager;
+import java.awt.FlowLayout;
+
 import UML.model.Store;
 import UML.views.View;
 
