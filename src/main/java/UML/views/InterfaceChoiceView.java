@@ -69,6 +69,11 @@ public class InterfaceChoiceView implements View {
     }
 
     @Override
+    public void addListener(ScrollWheelController mousWheelListener) {
+        // Do nothing.  
+    }
+
+    @Override
     public void createClass(String name, int x, int y) {
         // Do nothing.
     }
@@ -187,4 +192,11 @@ public class InterfaceChoiceView implements View {
     {
         //Do nothing.
     }
+
+    @Override
+    public void changeBackground()
+    {
+        //Do nothing.
+    }
+
 }

@@ -1,18 +1,13 @@
 package UML.controllers;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import java.awt.LayoutManager;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import javax.swing.JTextField;
 
 import UML.views.*;
 import UML.model.*;
@@ -48,8 +43,7 @@ public class EditMethodController implements ActionListener {
 
         //Get field to delete.
         //Has the form of (access char) (type) (name).
-       
-        String firstString = view.getChoiceFromUser("Edit this class", "Edit class", methodList).replace("( ", "");
+        String firstString = view.getChoiceFromUser("Edit this method", "Edit method", methodList).replace("( ", "");
 
         //Handle cancel.
         if(firstString == null)
@@ -97,17 +91,17 @@ public class EditMethodController implements ActionListener {
             panel.add(accessBox);
             
             //Get the type String.
-            JTextArea typeArea = new JTextArea(1, 12);
+            JTextField typeArea = new JTextField(12);
             typeArea.setText(methodSplit[1]);
             panel.add(typeArea);
             
             //Get the name Stirng.
-            JTextArea nameArea = new JTextArea(1, 12);
+            JTextField nameArea = new JTextField(12);
             nameArea.setText(methodSplit[2]);
             panel.add(nameArea);
 
             //Get the parameters.
-            JTextArea paramArea = new JTextArea(1, 15);
+            JTextField paramArea = new JTextField(15);
             //The string to add to the text area.
             String allParams = "";
             panel.add(paramArea);
@@ -139,12 +133,12 @@ public class EditMethodController implements ActionListener {
                 access = (String) ((JComboBox)panel.getComponent(0)).getSelectedItem();
             
                 //Get type String.
-                type = (String) ((JTextArea) panel.getComponent(1)).getText();
+                type = (String) ((JTextField) panel.getComponent(1)).getText();
 
                 //Get name String.
-                name = (String) ((JTextArea) panel.getComponent(2)).getText();
+                name = (String) ((JTextField) panel.getComponent(2)).getText();
 
-                param = (String) ((JTextArea) panel.getComponent(3)).getText();
+                param = (String) ((JTextField) panel.getComponent(3)).getText();
 
             }
             else if(result == 1)

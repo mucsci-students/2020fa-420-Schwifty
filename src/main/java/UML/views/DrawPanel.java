@@ -13,9 +13,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
-
-public class DrawPanel extends JPanel 
+public class DrawPanel extends JPanel
 {
     private View view;
 
@@ -26,6 +26,7 @@ public class DrawPanel extends JPanel
 
     public void paintComponent(Graphics g)
     {
+        super.paintComponent(g);
         g.setColor(Color.BLACK);
         for(Map.Entry<ArrayList<String>, String> relationship : view.getRelationships().entrySet())
         {
@@ -42,7 +43,8 @@ public class DrawPanel extends JPanel
             int[] line = getClosest((int)fromLoc.getWidth(), (int)(fromLoc.getWidth() + fromSize.getWidth()), 
                                                 (int)fromLoc.getHeight(), (int)(fromLoc.getHeight() + fromSize.getHeight()), 
                                                 (int)toLoc.getWidth(), (int)(toLoc.getWidth() + toSize.getWidth()),
-                                                (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));                            
+                                                (int)toLoc.getHeight(), (int)(toLoc.getHeight() + toSize.getHeight()));                
+
             if(relationship.getValue().equals("REALIZATION"))
             {
                 //Do a dotted line for realizatioon.
@@ -50,6 +52,9 @@ public class DrawPanel extends JPanel
 
                 //Must use Graphics2D to make line dashed.
                 Graphics2D g2d = (Graphics2D)g;
+                
+                //Antialiasing ON
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
                 //To make line dashed, need to set stroke.
                 BasicStroke defaultStroke = (BasicStroke) g2d.getStroke();
@@ -79,25 +84,21 @@ public class DrawPanel extends JPanel
         //Open diamond.
         if(relationship.equals("AGGREGATION"))
         {
-            g.setColor(Color.BLACK);
             drawDiamond(g, x, y, r, s, false);
         }
         //Filled diamond.
         else if(relationship.equals("COMPOSITION"))
         {
-            g.setColor(Color.BLACK);
             drawDiamond(g, x, y, r, s, true);
         }
         //Open arrow.
         else if(relationship.equals("GENERALIZATION"))
         {
-            g.setColor(Color.BLACK);
             drawTriangle(g, x, y, r, s);
         }
         //Filled arrow.
         else if(relationship.equals("REALIZATION"))
         {
-            g.setColor(Color.BLACK);
             drawTriangle(g, x, y, r, s);
         }
     }
@@ -136,8 +137,16 @@ public class DrawPanel extends JPanel
             resultMatrix[0][count] += x;
             resultMatrix[1][count] += y;
         }
+
+        GraphicalView v = (GraphicalView)view;
+        Color c = v.getDrawPanel().getBackground();
+        g2d.setColor(c);
+        g2d.fillPolygon(resultMatrix[0], resultMatrix[1], 3);
+        //Draw the border.
+        g2d.setColor(Color.BLACK);
         g2d.drawPolygon(resultMatrix[0], resultMatrix[1], 3);
     }
+
     /**
      * Draws a diamond attached to the class panel.
      */
@@ -176,10 +185,17 @@ public class DrawPanel extends JPanel
         //Fill the shape for composition, and leave it open for aggregation.
         if(fill)
         {
+            g2d.setColor(Color.BLACK);
             g2d.fillPolygon(resultMatrix[0], resultMatrix[1], 4);
         }
         else
         {
+            GraphicalView v = (GraphicalView) view;
+            Color c = v.getDrawPanel().getBackground();
+            g2d.setColor(c);
+            g2d.fillPolygon(resultMatrix[0], resultMatrix[1], 4);
+            //Draw border.
+            g2d.setColor(Color.BLACK);
             g2d.drawPolygon(resultMatrix[0], resultMatrix[1], 4);
         }
     }
@@ -191,8 +207,72 @@ public class DrawPanel extends JPanel
     {
         //fromX, fromY, toX, toY.
         int[] x = new int[4];
+        //Smaller from on top or bottom.
+        if(fromLeft > toLeft && fromRight < toRight)
+        {
+            x[0] = ((fromRight - fromLeft) / 2) + fromLeft;
+            x[2] = x[0];
+            if(fromDown < toUp)
+            {
+                x[1] = fromDown;
+                x[3] = toUp;
+            }
+            else
+            {
+                x[1] = fromUp;
+                x[3] = toDown;
+            }
+        }
+        //Larger from on top or bottom.
+        else if(toLeft > fromLeft && toRight < fromRight)
+        {
+            x[0] = ((toRight - toLeft) / 2) + toLeft;
+            x[2] = x[0];
+            if(fromDown < toUp)
+            {
+                x[1] = fromDown;
+                x[3] = toUp;
+            }
+            else
+            {
+                x[1] = fromUp;
+                x[3] = toDown;
+            }
+        }
+        //Smaller from on the side.
+        else if(fromUp > toUp && fromDown < toDown)
+        {
+            x[1] = ((fromDown - fromUp) / 2) + fromUp;
+            x[3] = x[1];
+            if(fromLeft > toRight)
+            {
+                x[0] = fromLeft;
+                x[2] = toRight;
+            }
+            else
+            {
+                x[0] = fromRight;
+                x[2] = toLeft;
+            }
+        }
+        //Larger from on the side.
+        else if(toUp > fromUp && toDown < fromDown)
+        {
+            x[1] = ((toDown - toUp) / 2) + toUp;
+            x[3] = x[1];
+            if(fromLeft > toRight)
+            {
+                x[0] = fromLeft;
+                x[2] = toRight;
+            }
+            else
+            {
+                x[0] = fromRight;
+                x[2] = toLeft;
+            }
+        }
         //From is to the right.
-        if(fromLeft > toRight)
+        else if(fromLeft > toRight)
         {   
             x[0] = fromLeft;
             x[2] = toRight;

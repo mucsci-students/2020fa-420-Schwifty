@@ -5,9 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import org.junit.Before;
 import static org.junit.Assert.assertNotNull;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -555,5 +552,14 @@ public class ControllerTest
         catch (Exception e) {
             //TODO: handle exception
         }
+    }
+
+    @Test
+    public void testSetStateController()
+    {
+        StateController sc = new StateController(store);
+        controller.setStateController(sc);
+        assertNotNull(controller.getStateController());
+        assertEquals(sc,controller.getStateController());
     }
 }

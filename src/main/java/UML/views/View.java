@@ -5,9 +5,10 @@ package UML.views;
     Purpose: Provides an interface for the views.
  */
 
-import java.awt.event.*;
 import java.util.ArrayList;
 import UML.controllers.MouseClickAndDragController;
+import UML.controllers.ScrollWheelController;
+
 import java.awt.Dimension;
 import java.util.Map;
 import javax.swing.JFrame;
@@ -29,6 +30,7 @@ public interface View
 	void addListeners(ActionListener fileListener, ActionListener classListener, ActionListener stateListener);
 	void addListener(ActionListener listener);
 	void addListener(MouseClickAndDragController mouseListener, String className);
+	void addListener(ScrollWheelController mousWheelListener);
 	void addPanelListener(ActionListener controller, String classText);
 
 	void display(String str);
@@ -44,4 +46,5 @@ public interface View
 	Map<String, JPanel> getPanels();
 	void setGUIInvisible();
 	void setGUIVisible();
+	void changeBackground();
 }

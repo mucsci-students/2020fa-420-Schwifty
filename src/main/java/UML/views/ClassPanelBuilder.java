@@ -5,7 +5,6 @@ package UML.views;
     Purpose: Helper class to build class panels as needed.
  */
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
@@ -14,6 +13,8 @@ import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Scanner;
+import java.awt.Font;
+
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -150,16 +151,11 @@ public class ClassPanelBuilder implements PanelBuilder
     {
         JLabel name = new JLabel(getClassName(classData));
 
+        name.setHorizontalAlignment(JLabel.CENTER);
+
         JLabel fields = new JLabel("<html>" + getClassFields(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
 
         JLabel methods = new JLabel("<html>" + getClassMethods(classData).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "<html>");
-
-        /**
-        //Make borders for the text areas visible.
-        className.setBorder(blackline);
-        fields.setBorder(blackline);
-        methods.setBorder(blackline);
-        */
 
         //Concat used to know which class is being changed in listeners.
         String concat = name.getText().trim();
@@ -178,24 +174,23 @@ public class ClassPanelBuilder implements PanelBuilder
         left.setBackground(Color.darkGray);
         top.setBackground(Color.darkGray);
         bottom.setBackground(Color.darkGray);
-        panel.setBackground(Color.PINK);
+        panel.setBackground(Color.WHITE);
 
         //Adds panels + menu bar to main panel.
-        panel.add(left, BorderLayout.WEST);
         panel.add(miniBar, BorderLayout.EAST);
-        panel.add(top, BorderLayout.NORTH);
-        panel.add(bottom, BorderLayout.SOUTH);
 
         //Add necessary text areas to the center panel.
         centerPanel.add(name);
         centerPanel.add(fields);
         centerPanel.add(methods);
         centerPanel.setVisible(true);
+        centerPanel.setBackground(Color.LIGHT_GRAY);
         panel.add(centerPanel, BorderLayout.CENTER);
 
         centerPanel.setLayout(null);
         
         //Finishes panel construction.
+        panel.setBorder(BorderFactory.createBevelBorder(0));
         panel.setVisible(true);
         return panel;
     }

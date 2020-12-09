@@ -10,7 +10,6 @@ package UML.controllers;
 
 import UML.model.*;
 import UML.views.*;
-import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
@@ -57,14 +56,13 @@ public class InterfaceChoice
 
     private void windowSetup()
     {
-        //add the action commands where needed.
+        //Add the action commands where needed.
         okButton.setActionCommand("OK");
         okButton.addActionListener(new ButtonClickListener());
         closeButton.setActionCommand("Close");
         cliChoice.setSelected(true);
         buttonGroup.add(cliChoice);
         buttonGroup.add(guiChoice);
-
     }
 
     private class ButtonClickListener implements ActionListener
@@ -74,7 +72,7 @@ public class InterfaceChoice
             String cmd = e.getActionCommand();
             if(cmd.equals("OK"))
             {
-                //if the choice is cli, load it. otherwise, load the gui. 
+                //If the choice is cli, load it. otherwise, load the gui. 
                 if(cliChoice.isSelected())
                 {
 

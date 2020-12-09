@@ -1,14 +1,10 @@
 import UML.views.*;
 import UML.controllers.*;
 import UML.model.*;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertNotNull;
 
 public class PanelTest 

@@ -5,29 +5,14 @@ import UML.model.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import java.awt.LayoutManager;
 import java.awt.FlowLayout;
+import javax.swing.JTextField;
 
-public class CreateFieldController implements ActionListener {
-
-    //TODO:
-        //-Manange layout
-        //Handle Exceptions (loop)
-        //Do the same thing for all the other ClickControllers
-        //Size Estimate: 5??
-
-
-
+public class CreateFieldController implements ActionListener 
+{
     private Store store;
     private View view;
     private Controller controller;
@@ -67,10 +52,10 @@ public class CreateFieldController implements ActionListener {
             JComboBox accessBox = new JComboBox(accessTypes);
             panel.add(accessBox);
             
-            JTextArea typeArea = new JTextArea(1, 12);
+            JTextField typeArea = new JTextField(12);
             panel.add(typeArea);
 
-            JTextArea nameArea = new JTextArea(1, 12);
+            JTextField nameArea = new JTextField(12);
             panel.add(nameArea);
             
 
@@ -83,10 +68,10 @@ public class CreateFieldController implements ActionListener {
                 access = (String) ((JComboBox)panel.getComponent(0)).getSelectedItem();
 
                 //Get type String.
-                type = (String) ((JTextArea) panel.getComponent(1)).getText();
+                type = (String) ((JTextField) panel.getComponent(1)).getText();
 
                 //Get name String.
-                name = (String) ((JTextArea) panel.getComponent(2)).getText();
+                name = (String) ((JTextField) panel.getComponent(2)).getText();
 
             }
             //Cancel.

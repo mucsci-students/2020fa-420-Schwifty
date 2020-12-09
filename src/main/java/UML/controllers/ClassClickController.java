@@ -4,10 +4,14 @@ package UML.controllers;
     Date: 10/06/2020
     Purpose: Creates the action listeners for the class buttons.
  */
-import java.util.ArrayList;
+
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.awt.FlowLayout;
+import javax.swing.JTextField;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -48,7 +52,7 @@ public class ClassClickController implements ActionListener
         	{
 				JPanel panel = new JPanel();
 				panel.setLayout(new FlowLayout());
-				JTextArea nameArea = new JTextArea(1, 12);
+				JTextField nameArea = new JTextField(12);
 				panel.add(nameArea);
 				
 				int result = JOptionPane.showConfirmDialog(null, panel,
@@ -57,7 +61,7 @@ public class ClassClickController implements ActionListener
 
 				if (result == JOptionPane.OK_OPTION) {
 					//Get name String.
-					name = (String) ((JTextArea) panel.getComponent(0)).getText();
+					name = (String) ((JTextField) panel.getComponent(0)).getText();
 				}
 				//Cancel.
 				else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)

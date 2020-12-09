@@ -1,68 +1,120 @@
 package UML.views;
 
-/*
-    Author: Chris, Cory, Dominic, Drew, Tyler. 
-    Date: 10/06/2020
-    Purpose: Provides an implementation of the GUI view.
- */
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JMenuBar;
-import javax.swing.JFrame;
-import javax.swing.JFileChooser;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import javax.swing.JPanel;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import javax.swing.border.Border;
-import javax.swing.BorderFactory;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import UML.controllers.CreateFieldController;
 import UML.controllers.CreateMethodController;
-import UML.controllers.EditClassController;
 import UML.controllers.CreateRelationshipController;
 import UML.controllers.DeleteRelationshipController;
+import UML.controllers.EditClassController;
 import UML.controllers.EditFieldController;
 import UML.controllers.EditMethodController;
 import UML.controllers.MouseClickAndDragController;
-
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
+import UML.controllers.ScrollWheelController;
+import java.awt.event.MouseWheelListener;
+import java.awt.Font;
 
 public class GraphicalView implements View {
 
-    // Holds menu bar used to navigate program.
+    //Holds menu bar used to navigate program.
     private JMenuBar mb;
 
-    // Displays each individual class.
+    //Displays each individual class.
     private Map<String, JPanel> classPanels;
 
-    // The window for the GUI.
+    //The window for the GUI.
     private JFrame window;
+
+    //The file menu used to save and load.
     private JMenu fileMenu;
+
+    //The menu used to create a class.
     private JMenu classMenu;
+
+    //The menu used to adjust the state.
     private JMenu stateMenu;
-    private Graphics graphics;
+
+    //The base of the GUI view.
     private DrawPanel dp;
+
+    //The pane that allows scrolling.
+    private JScrollPane jsp;
+
+    //A map containing the relationships in the view.
     private ConcurrentHashMap<ArrayList<String>, String> relationships;
+
+    //The current font size for the class panels.
+    private int fontSize;
+
 
     public GraphicalView() {
         this.classPanels = new ConcurrentHashMap<String, JPanel>();
         this.relationships = new ConcurrentHashMap<ArrayList<String>, String>();
+        fontSize = 10;
+        
+    }
+
+    
+    // ================================================================================================================================================
+    // Setters
+    // ================================================================================================================================================
+        
+    /**
+     * Sets the current font size.
+     */
+    public void setFontSize(int font)
+    {
+        fontSize = font;
     }
 
     // ================================================================================================================================================
     // Getters
     // ================================================================================================================================================
+    
+    /**
+     * Returns the font size.
+     */
+    public int getFontSize()
+    {
+        return this.fontSize;
+    }
 
+    /**
+     * Returns the JScrollPane. 
+     */
+    public JScrollPane getScrollPane()
+    {
+        return this.jsp;
+    }
+
+    /**
+     * Returns the DrawPanel.
+     */
+    public DrawPanel getDrawPanel()
+    {
+        return this.dp;
+    }
+    
     /**
      * Returns the map containing the class panels.
      */
@@ -185,10 +237,19 @@ public class GraphicalView implements View {
      * Saves a JSON representation of the UML diagram.
      */
     @Override
-    public String save() {
-        JFileChooser fc = new JFileChooser();
-        // If there is a currently loaded file.
+    public String save() 
+    {
+        //Gets the directory this application was run from...also where the .json files will be saved.
+        String userDir = System.getProperty("user.dir");
 
+        //build the file chooser passing in the userDir. 
+        JFileChooser fc = new JFileChooser(userDir);
+        
+        //Filter to only show .json files. 
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON files","json");
+        
+        //set the filechooser to use the created filter.
+        fc.setFileFilter(filter);
         // Bring up file panel for the user to save as(automatically will choose file
         // type though in saveandload).
         int returnValue = fc.showSaveDialog(dp);
@@ -196,6 +257,10 @@ public class GraphicalView implements View {
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             return fc.getSelectedFile().getName();
+        }
+        else if(returnValue == JFileChooser.CANCEL_OPTION)
+        {
+            return "No file selected.";
         }
         // if no filename is found, retrun an empty string
         return "";
@@ -205,17 +270,31 @@ public class GraphicalView implements View {
      * Loads a JSON representation of the UML diagram.
      */
     @Override
-    public String load() {
+    public String load() 
+    {
+        //Gets the directory this application was run from...also where the .json files will be saved.
+        String userDir = System.getProperty("user.dir");
+
         // Make a filechooser
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser(userDir);
+            
+        //Filter to only show .json files. 
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON files","json");
+        
+        //set the filechooser to use the created filter.
+        fc.setFileFilter(filter);
+
         int returnValue = fc.showOpenDialog(dp);
         // If the user selected to open this file, open it.
         // Consider filtering this information to only inlcude JSON filetypes
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             return fc.getSelectedFile().getName();
+        } 
+        else if(returnValue == JFileChooser.CANCEL_OPTION)
+        {
+            return "No file selected.";
         }
         return "";
-
     }
 
     /**
@@ -249,6 +328,20 @@ public class GraphicalView implements View {
     {
 		window.setVisible(true);
     }
+
+    /**
+     * Changes the background color of the gui.
+     */
+    @Override
+    public void changeBackground()
+    {
+        JColorChooser cc = new JColorChooser();
+        
+        Color color = cc.showDialog(window,"Choose a background color", Color.PINK);
+        
+        dp.setBackground(color);
+        jsp.setBackground(color);
+    }
     
 
     // ================================================================================================================================================
@@ -260,6 +353,8 @@ public class GraphicalView implements View {
      */
     public void makeWindow() {
         window = new JFrame("UML");
+        window.setLayout(new BorderLayout());
+        
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(800, 800);
         window.setPreferredSize(new Dimension(800, 800));
@@ -270,10 +365,30 @@ public class GraphicalView implements View {
         window.add(dp);
         window.setVisible(true);
         dp.setVisible(true);
-        dp.setPreferredSize(new Dimension(800, 800));
-        graphics = dp.getGraphics();
-        graphics.setColor(Color.WHITE);
+        dp.setPreferredSize(new Dimension(10000, 10000));
         dp.setLayout(null);
+
+        //Initialize the scroll pane.
+        jsp = new JScrollPane(dp);
+
+        JPanel newPanel = new JPanel(new BorderLayout());
+        window.add(newPanel, BorderLayout.CENTER);
+        newPanel.add(jsp, BorderLayout.CENTER);
+
+        //Repaint and revalidate.
+        dp.repaint();;
+        jsp.repaint();
+        window.repaint();
+        dp.revalidate();
+        jsp.revalidate();
+        window.revalidate();
+
+        dp.setBackground(Color.PINK);
+        jsp.setBackground(Color.PINK);
+
+        //Make the scroll bar scroll faster.
+        JScrollBar jBar = (JScrollBar) jsp.getVerticalScrollBar();
+        jBar.setUnitIncrement(10);
     }
 
     /**
@@ -285,7 +400,7 @@ public class GraphicalView implements View {
         createFileMenu(mb);
         createClassMenu(mb);
         createStateMenu(mb);
-        mb.setVisible(true);
+        mb.setVisible(true);  
     }
 
     /**
@@ -351,12 +466,13 @@ public class GraphicalView implements View {
         JMenuItem undo = new JMenuItem("Undo");
         JMenuItem redo = new JMenuItem("Redo");
         JMenuItem CLI = new JMenuItem("CLI");
+        JMenuItem color = new JMenuItem("Color");
 
-        JMenuItem[] arr = {undo, redo, CLI};
-        String[] text = { "Undo", "Redo", "Show CLI"};
-        String[] command = { "Undo", "Redo", "CLI"};
+        JMenuItem[] arr = {undo, redo, CLI, color};
+        String[] text = { "Undo", "Redo", "Show CLI", "Change Color"};
+        String[] command = { "Undo", "Redo", "CLI", "Color"};
 
-        for (int count = 0; count < 3; ++count) {
+        for (int count = 0; count < 4; ++count) {
             stateMenu.add(arr[count]);
             arr[count].setToolTipText(text[count]);
             arr[count].setActionCommand(command[count]);
@@ -369,23 +485,6 @@ public class GraphicalView implements View {
     // ================================================================================================================================================
 
     /**
-     * Creates a panel on the window to display information about a class.
-     * TODO: Discuss removal of this method, appears to no longer be needed. 
-     */
-    public void makeNewClassPanel(String aClass) {
-        JPanel classPanel = new JPanel();
-        JTextArea classText = new JTextArea(aClass);
-        classText.setEditable(false);
-        classPanel.add(classText);
-        classPanels.put(aClass, classPanel);
-        classPanel.setSize(classText.getSize());
-        Border blackline = BorderFactory.createLineBorder(Color.black);
-        classText.setBorder(blackline);
-        classPanel.setVisible(true);
-        dp.add(classPanel);
-    }
-
-    /**
      * Deletes a class panel from the window.
      */
     public void deleteClassPanel(String aClass) {
@@ -396,70 +495,45 @@ public class GraphicalView implements View {
     }
 
     /**
-     * Resizes panels to adjust to text of panel
+     * Resizes panels to adjust to text of panel.
      */
     public void resizePanel(String classToString, int x, int y) {
         JPanel panel = classPanels.get(classToString);
-
-        //Get class name length.
-        int start = classToString.indexOf("name: ") + 6;
-        int stop = classToString.indexOf("Field ");
-        int nameLength = stop - 32 - start;
-
-        //Get field length and height.
-        int[] fieldSize = getSizes("Field Names: ","Methods: ", classToString);
-
-        //Get method length and height.
-        int[] methodSize = getSizes("Methods: ","Relationships To Others: ", classToString);
-
         panel.setLocation(x, y);
-        JPanel innerPanel = (JPanel)panel.getComponent(4);
+
+        //Get the JLabels.
+        JPanel innerPanel = (JPanel)panel.getComponent(1);
         JLabel name = (JLabel) innerPanel.getComponent(0);
         JLabel fields = (JLabel) innerPanel.getComponent(1);
         JLabel methods = (JLabel) innerPanel.getComponent(2);
 
-        int width = (Math.max(nameLength, Math.max(fieldSize[0], methodSize[0])) + 10) * 7;
+        //Set the font size based on the field.
+        name.setFont(new Font("Ariel", 0, fontSize + 4));
+        fields.setFont(new Font("Ariel", 0, fontSize));
+        methods.setFont(new Font("Ariel", 0, fontSize));
 
-        panel.setBounds(x, y, width, (fieldSize[1] + 4) * 15 + (methodSize[1] + 3) * 15 + 30);
-        
-        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, 20);
+        //Get the preferred height for each JLabel.
+        int nameHeight = (int) (name.getPreferredSize().getHeight() + 9);
+        int fieldHeight = (int) (fields.getPreferredSize().getHeight() + 10);
+        int methodHeight = (int) (methods.getPreferredSize().getHeight() + 10);
 
-        fields.setBounds(innerPanel.getX(), innerPanel.getY() + 20, width, (fieldSize[1] + 3) * 15);
+        //Calculate total height needed.
+        int height = nameHeight + fieldHeight + methodHeight;
 
-        methods.setBounds(innerPanel.getX(), innerPanel.getY() + (fieldSize[1] + 3) * 15 + 20, width, (methodSize[1] + 3) * 15);
+        //Calculate total width needed for panel.
+        int width = (Math.max((int)name.getPreferredSize().getWidth(), Math.max((int)fields.getPreferredSize().getWidth(), (int)methods.getPreferredSize().getWidth())) + 35);
+
+        panel.setMinimumSize(new Dimension(50, 50));
+
+        panel.setBounds(x, y, width, height);
+
+        name.setBounds(innerPanel.getX(), innerPanel.getY(), width, nameHeight);
+
+        fields.setBounds(innerPanel.getX(), innerPanel.getY() + nameHeight, width, fieldHeight);
+
+        methods.setBounds(innerPanel.getX(), innerPanel.getY() + nameHeight + fieldHeight, width, methodHeight);
 
         refresh();
-    }
-
-    /**
-     * Returns the max length and the height of a blcok of text.
-     */
-    private int[] getSizes(String begin, String end, String classToString)
-    {
-        //Specify the block we care about by giving beginning and end substrings.
-        int start = classToString.indexOf(begin);
-        int stop = classToString.indexOf(end);
-        String scan = classToString.substring(start, stop - 32);
-        Scanner scanner = new Scanner(scan);
-
-        int longest = 0;
-        int height = 0;
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            Scanner lineScanner = new Scanner(line);
-            int localBest = 0;
-            while (lineScanner.hasNext()) {
-                localBest += lineScanner.next().length();
-                localBest++;
-            }
-            lineScanner.close();
-            ++height;
-            if (localBest > longest)
-                longest = localBest;
-        }
-        scanner.close();
-        int[] toReturn = {longest, height};
-        return toReturn;
     }
 
 
@@ -498,7 +572,8 @@ public class GraphicalView implements View {
      * Creates the initial window.
      */
     @Override
-    public void start() {
+    public void start() 
+    {
         makeWindow();
         refresh();
     }
@@ -545,6 +620,20 @@ public class GraphicalView implements View {
         JPanel panel = classPanels.get(classText);
         panel.addMouseListener(mouseListener);
         panel.addMouseMotionListener(mouseListener);
+    }
+
+    /**
+     * Adds ScrollWheelController to the panel.
+     */
+    @Override
+    public void addListener(ScrollWheelController mouseWheelListener) 
+    {
+        MouseWheelListener[] mwl = dp.getMouseWheelListeners();
+        for(MouseWheelListener listener : mwl)
+        {
+            dp.removeMouseWheelListener(listener);
+        }
+        dp.addMouseWheelListener(mouseWheelListener);       
     }
 
     /**

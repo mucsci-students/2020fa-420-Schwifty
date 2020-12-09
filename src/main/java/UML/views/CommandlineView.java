@@ -5,15 +5,14 @@ package UML.views;
     Purpose: Provides an implementation of the CLI view.
  */
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import UML.controllers.MouseClickAndDragController;
+import UML.controllers.ScrollWheelController;
 import java.awt.Dimension;
+import UML.model.Store;
 
 public class CommandlineView implements View {
 
@@ -149,9 +148,9 @@ public class CommandlineView implements View {
         System.out.println(
                 "load [fileName]:                                                                                            Loads the passed in file name");
         System.out.println(
-                "display [(Optional) className]:                                                                             Displays all classes");
+                "display [(Optional) className]:                                                                             Displays all classes or a single class");
         System.out.println(
-                "display [className]:                                                                                        Displays a class");
+                "displayr:                                                                                                   Displays all relationships");
         System.out.println(
                 "undo:                                                                                                       Reverts to a previous state");
         System.out.println(
@@ -201,9 +200,14 @@ public class CommandlineView implements View {
      */
     public void setGUIVisible() 
     {
-        System.out.println("THICCC BOY");
+        System.out.println("\u001B[5  ___________.__    .__    \u001B[5");          
+        System.out.println("\u001B[5m\\__    ___/|  |__ |__| ____  ____  \u001B[5m");
+        System.out.println("\u001B[5m  |    |   |  |  \\|  |/ ___\\/ ___\\ \u001B[5m");
+        System.out.println("\u001B[5m  |    |   |   Y  \\  \\  \\__\\  \\___ \u001B[5m");
+        System.out.println("\u001B[5m  |____|   |___|  /__|\\___  >___  >\u001B[5m");
+        System.out.println("\u001B[5m                \\/        \\/    \\/ \u001B[5m");
                                                                                                                                                           
-        System.out.println("                                         ,z,              ,z,             ");   
+        System.out.println("\033[31m\u001B[5m                                         ,z,              ,z,             \u001B[5m\033[31m");   
         System.out.println("                                         ,+i              *xi             ");                     
         System.out.println("                                         :MW:             #n+             ");                     
         System.out.println("                                         `Mxx`           `nnz`            ");                     
@@ -215,12 +219,12 @@ public class CommandlineView implements View {
         System.out.println("                                        `xxnzxM;        ixn++#`           ");                     
         System.out.println("                                        `nnnn#x#,      `#nn+in,           ");                     
         System.out.println("                                        `xnnxixx:      .nnni;x:           ");                     
-        System.out.println("                                        `xnnx;zM;`     :xnni:x:          ");                      
+        System.out.println("                                     `xnnx;zM;`     :xnni:x:          ");                      
         System.out.println("                                        ,xnnxi+x#,     +nnn;:n;             ");                   
         System.out.println("                                        iMnnxiixx:    `nnnn::zi           ");                     
         System.out.println("                                        ;Mnnxi;nx:    ,nnnn::##             ");                   
         System.out.println("                                        iMnnn*:zx:    :xnnn;:+z            ");                    
-        System.out.println("                                        ixnnn*:#xi    *nnnn::+z`        ");                       
+        System.out.println("\u001B[33m\u001B[5m                                        ixnnn*:#xi    *nnnn::+z`        \u001B[33m\u001B[5m");                       
         System.out.println("                                       ixnnn*:+x#`   #nnnz::*n.           ");                    
         System.out.println("                                       *xnnn*:inn`  `nnnnz::ix.          ");                     
         System.out.println("                                       ixnnn*:;nx`  .xnnnn::ix,         ");                      
@@ -238,11 +242,11 @@ public class CommandlineView implements View {
         System.out.println("                                       `znnnn::;nx. `xnnn*:;nn.      ");                         
         System.out.println("                                        *xnnn;:;nx. `xnnn*:ixz      ");                          
         System.out.println("                                        :xnnni,;nx` `xnzni,+x+       ");                         
-        System.out.println("                                        .nnzn*,:nx` `xnnni,#xi     ");                           
+        System.out.println("\u001B[32m\u001B[6m                                        .nnzn*,:nx` `xnnni,#xi     \u001B[32m\u001B[6m");                           
         System.out.println("                                          #nnn#,;nx. `nnnn::zx,    ");                            
         System.out.println("                                         ixnnn:;nx. .zxnn:;xn,     ");                           
         System.out.println("                                          :xnnn;inx. `#xnz:*xn`   ");                             
-        System.out.println("                                          `nnnn#*nx:`;#xnz:#x#`   ");                             
+        System.out.println("                                         `nnnn#*nx:`;#xnz:#x#`   ");                             
         System.out.println("                                           ixnnnznx;;zzxnn:nMi`   ");                             
         System.out.println("                                          .xnnnxnx+#MnMxnznx:    ");                             
         System.out.println("                                          `nnnnnnx#xMxxnnnxn;   ");                              
@@ -254,7 +258,7 @@ public class CommandlineView implements View {
         System.out.println("                                           ixnnnnxMnnnnnnznnnnx#.        ");                     
         System.out.println("                                            znnnnnnxnnnnnnnnnnnnz.          ");                   
         System.out.println("                                          .nnnnnnnnnnnnnznnnnnnM:          ");                   
-        System.out.println("                                          ,xnnnnnnnnxnnnnnnnnnxx#`                 ");           
+        System.out.println("\u001B[34m\u001B[5m                                          ,xnnnnnnnnxnnnnnnnnnxx#`                 \u001B[34m\u001B[5m");           
         System.out.println("                                         ,xnnnnznnnxxxnnnnznnxnn.                    ");        
         System.out.println("                                          ,xnnnnnnnnxnnxnnzznnnnx;`                  ");         
         System.out.println("                                         ,xnznnnnnnxnzznnznnnz+x+.                     ");      
@@ -263,10 +267,10 @@ public class CommandlineView implements View {
         System.out.println("                                          ,xznnzzzzzn+x*;nnnznnni:+#+:                  ");      
         System.out.println("                                         ;nz#i;::::*#+::nnzznn#,,;#M+                    ");    
         System.out.println("                                          ;n*:,.,.,,;;,i+nnnnn#;:ii:n*`                ");       
-        System.out.println("                                          *n;.,.,,,,,i*;;;;znz*:*ii;+:                   ");     
+        System.out.println("                                         *n;.,.,,,,,i*;;;;znz*:*ii;+:                   ");     
         System.out.println("                                         ##,..,..,,;;;i*i::z#:,+*ii+*`                  ");     
         System.out.println("                                        .z:......,,,::;+#*,:i.;;,,.*i                   ");     
-        System.out.println("                                         .#:,..,,,,:*nxxM#:;*ii*,.,,*;                   ");     
+        System.out.println("\u001B[35m\u001B[6m                                         .#:,..,,,,:*nxxM#:;*ii*,.,,*;                   \u001B[35m\u001B[6m");     
         System.out.println("                                        :zi..,.,,.,:,nxxx#:,,.;...:#;                   ");     
         System.out.println("                                         ;n+;,....,,.,+xxx*`,,,;...:ii                   ");     
         System.out.println("                                         ;n#+:......,.;zzz#*+ii,....;*                   ");     
@@ -281,7 +285,7 @@ public class CommandlineView implements View {
         System.out.println("                                .znzzzzzzzz#,,,.,,,.....,;i;;,.....,;zn*.                 ");    
         System.out.println("                              `;nnzzzzzzzzz+,,.....,,.,......,....,,,zzn*`               ");     
         System.out.println("                             .+nnzzzzzzzzzzi.,....,,..............,,.+zzni`              ");     
-        System.out.println("                            ,znnzzzzzzzzzzz:,..,....,.......,....,..,;zzzn;               ");    
+        System.out.println("\033[31m\u001B[5m                             ,znnzzzzzzzzzzz:,..,....,.......,....,..,;zzzn;               \033[31m\u001B[5m");    
         System.out.println("                          `innzzzznnzzzzzz+,,...,.,.........,...,.,..,#zzzx;`             ");    
         System.out.println("                          ;nnzzzzzzzzzzzzz:................,......,,,.;zzzzn:              ");   
         System.out.println("                        ;nzzzzzzzzzzzzzz+,,.......,..................,+zzznn:             ");   
@@ -289,7 +293,7 @@ public class CommandlineView implements View {
         System.out.println("                       :nzzzzzzzzznznnnn*.,......,......,.,.,...,...,.,,+zzzzn#.            ");  
         System.out.println("                      .nnzzzznzzzznnnxn+,,.,...........................,,zzzzzn+`            "); 
         System.out.println("                      `#nnzzzzzzzznxzzz#:,,............................,.,*zzzzzn;           ");  
-        System.out.println("                     inzzzzzzzzznnzzzz;,.................,.........,....,:zzzzzzn:           "); 
+        System.out.println("\u001B[33m\u001B[5m                     inzzzzzzzzznnzzzz;,.................,.........,....,:zzzzzzn:           \u001B[33m\u001B[5m"); 
         System.out.println("                    ,nnzzzzzzzznnzzzz;..,..................`............,.+zzzzzn#`           ");
         System.out.println("                   `+nzzzzzzzznnzzzz*,.....,.,............................:zzzzznni           ");
         System.out.println("                   ,nzzzzzzzznnzzzz+,..............,,...................,..#zzzzzzz:          ");
@@ -302,7 +306,7 @@ public class CommandlineView implements View {
         System.out.println("                  `;*i.;:.```+zz*,.........,........,.....................;:,**:``,:i:zi       ");
         System.out.println("                  .*.i`::.```.+z;.........,..............................;,,:,````,:i.*i`      ");
         System.out.println("                  :i`;`:,``````:;i,...................,..........,.......;`.``````:::,;*,      ");
-        System.out.println("                 `i.`:`,.````````.:.......................,..............;`.``````,``:,ii      ");
+        System.out.println("\u001B[32m\u001B[6m                 `i.`:`,.````````.:.......................,..............;`.``````,``:,ii      \u001B[32m\u001B[6m");
         System.out.println("                 `i.`:```````````::.....,................................,i.`,,``````:`;i      ");
         System.out.println("                `i``.```````.+:;:.................................`.......:;i:````````i*      ");
         System.out.println("                 `i``````````.*,.............................................;.````````z;      ");
@@ -313,11 +317,11 @@ public class CommandlineView implements View {
         System.out.println("                  .i`````.:,``;,.............................,...........,.i,;,`,:`*z.      ");  
         System.out.println("                   ,i.`.```:``.:........................`,..,..............;i*,i;:zx;        "); 
         System.out.println("                  `+#.,,` `:``;...............,...........,,..,.......,....:+nn##M*      ");    
-        System.out.println("                   `#zziii.`*;i,.........................,................,.i;.,           ");   
+        System.out.println("                  `#zziii.`*;i,.........................,................,.i;.,           ");   
         System.out.println("                    +zzznzzz*,...........,.................,.,..`.....,....,*.          ");      
         System.out.println("                   izzzzzzz*..............................,...............,*            ");     
-        System.out.println("                   ,nzzzzzz*..........................................,.,,i,         ");        
-        System.out.println("                   `#zzzzzz#,.................,.....................,.....*`        ");         
+        System.out.println("                  ,nzzzzzz*..........................................,.,,i,         ");        
+        System.out.println("\u001B[34m\u001B[5m                   `#zzzzzz#,.................,.....................,.....*`        \u001B[34m\u001B[5m");         
         System.out.println("                    inzzzzz#,.,..`........................,.....,..,..,..;;       ");           
         System.out.println("                   .nzzzzzz;...........................................,*`       ");           
         System.out.println("                    +zzzzzz+..............,............................:*         ");          
@@ -330,7 +334,7 @@ public class CommandlineView implements View {
         System.out.println("                         `#zzzzzz+,................................:*i:,...,*:.   ");            
         System.out.println("                           .zzzzzzz+,.............................:ii,,,:i,..,+,   ");            
         System.out.println("                           .#nzzzzz+,........................,:i*;.....,.i:.,;;    ");           
-        System.out.println("                  `      ``,+zzzzzz#;..,.................,,i**:,.........i.,:i   " );            
+        System.out.println("\u001B[35m\u001B[6m                 `      ``,+zzzzzz#;..,.................,,i**:,.........i.,:i   \u001B[35m\u001B[6m" );            
         System.out.println("              `:iiiii#nzzz##+nnnzzzz#*:..........,,:,:;iii;,..........,.,i,:+,    ");            
         System.out.println("             ,*:....,.*nzzzzzzznnzzzzzz+;,,;ii+##+**i;:.,.....,.....,,,,:+i*.    ");             
         System.out.println("             `*,,::;;.,.inzzzzzzzzzzzzzzzz++i...:;iiii;:::,::,,,,,,,,,:ii*,`   ");                
@@ -357,6 +361,11 @@ public class CommandlineView implements View {
 
     @Override
     public void addListener(MouseClickAndDragController mouseListener, String classText) {
+        // Do nothing.
+    }
+
+    @Override
+    public void addListener(ScrollWheelController mousWheelListener) {
         // Do nothing.
     }
 
@@ -412,6 +421,12 @@ public class CommandlineView implements View {
 
     @Override
     public void setGUIInvisible()
+    {
+        //Do nothing.
+    }
+
+    @Override
+    public void changeBackground()
     {
         //Do nothing.
     }

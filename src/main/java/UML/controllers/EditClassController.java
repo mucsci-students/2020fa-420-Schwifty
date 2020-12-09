@@ -2,29 +2,23 @@ package UML.controllers;
 
 import UML.views.*;
 import UML.model.*;
-
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import java.awt.LayoutManager;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
+import javax.swing.JTextField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EditClassController implements ActionListener {
+public class EditClassController implements ActionListener 
+{
 
     private Store store;
     private View view;
     private Controller controller;
 
-    public EditClassController(Store s, View v, Controller c) {
+    public EditClassController(Store s, View v, Controller c) 
+    {
         this.view = v;
         this.store = s;
         this.controller = c;
@@ -46,7 +40,7 @@ public class EditClassController implements ActionListener {
             panel.setLayout(new FlowLayout());
 
             //Create the text area.
-            JTextArea nameArea = new JTextArea(1, 12);
+            JTextField nameArea = new JTextField(12);
             nameArea.setText(className);
             panel.add(nameArea);
 
@@ -65,7 +59,7 @@ public class EditClassController implements ActionListener {
             //Rename class.
             else if (result == 0) {
                 //Get name String.
-                name = (String) ((JTextArea) panel.getComponent(0)).getText();
+                name = (String) ((JTextField) panel.getComponent(0)).getText();
             }
             //Handle canceling out.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)

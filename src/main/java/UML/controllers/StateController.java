@@ -5,7 +5,6 @@ package UML.controllers;
     Purpose: Manages the state to allow the user to redo/undo
  */
 import java.util.Stack;
-import UML.model.Class;
 import UML.model.Store;
 
  public class StateController

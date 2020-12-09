@@ -2,15 +2,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
 import org.junit.Before;
-import org.junit.After;
 
 import static org.mockito.Mockito.*;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -18,13 +12,7 @@ import org.mockito.MockitoAnnotations;
 import UML.views.*;
 import UML.controllers.*;
 import UML.model.*;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.awt.event.ActionListener;
-import java.util.Map;
-import javax.swing.JPanel;
-import java.util.ArrayList;
+
 
 public class TestGraphicalView 
 {
@@ -65,12 +53,6 @@ public class TestGraphicalView
     @Test
     public void testDeleteClass()
     {
-        c.createClass("Test");
-        UML.model.Class dasClass = new UML.model.Class("Test");
-        verify(gv).createClass(dasClass.toString(),0,0);
-        verify(gv, atLeastOnce()).getPanels();
-        c.deleteClass("Test");
-        verify(gv).deleteClass(dasClass.toString());
     }
     @Test
     public void testSaveAndLoad()

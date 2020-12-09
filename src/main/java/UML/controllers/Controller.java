@@ -18,18 +18,14 @@ import java.awt.event.ActionListener;
 
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
-import UML.controllers.MouseClickAndDragController;
-import UML.controllers.StateController;
-
-import java.awt.Dimension;
 
 public class Controller implements IController
 {
-    // Store the model
+    // Store the model.
     private Store store;
-    // Store the view
+    // Store the view.
     private View view;
-    //The state controller that handles undo and redo
+    //The state controller that handles undo and redo.
     private StateController stateController;
     // True if a GUI exists already, false otherwise.
     private boolean GUIExists;
@@ -42,8 +38,9 @@ public class Controller implements IController
         this.view = view;
         GUIExists = false;
 
-        //get the initial state of the UML editor.
+        //Get the initial state of the UML editor.
         stateController = new StateController(this.store);
+
     }
 
 
@@ -51,66 +48,82 @@ public class Controller implements IController
 //Getters
 //================================================================================================================================================
 
+    /**
+     * Returns the value of GUIExists.
+     */
+    public boolean getGUIExists()
+    {
+        return GUIExists;
+    }
 
-/**
- * Returns the value of GUIExists.
- */
-public boolean getGUIExists()
-{
-    return GUIExists;
-}
+    /**
+     * Returns the current view.
+     */
+    public View getCurrentView()
+    {
+        return this.view;
+    }
 
-public View getCurrentView()
-{
-    return this.view;
-}
-/**
- * Returns the current store.
- */
-public Store getStore()
-{
-    return this.store;
-}
+    /**
+     * Returns the current store.
+     */
+    public Store getStore()
+    {
+        return this.store;
+    }
+
+
 //================================================================================================================================================
 //Setters
 //================================================================================================================================================
 
-public void setStore(Store newStore)
-{
-    this.store = newStore;
-}
 
-/**
- * Sets the value of GUIExists to true.
- */
-public void setGUIExists()
-{
-    GUIExists = true;
-}
+    public void setStore(Store newStore)
+    {
+        this.store = newStore;
+    }
 
-/**
- * Sets GUI to be invisible.
- */
-public void setGUIInvisible()
-{
-    view.setGUIInvisible();
-}
+    /**
+     * Sets the value of GUIExists to true.
+     */
+    public void setGUIExists()
+    {
+        GUIExists = true;
+    }
 
-/**
- * Sets GUI to be invisible.
- */
-public void setGUIVisible()
-{
-    view.setGUIVisible();
-}
+    /**
+     * Sets GUI to be invisible.
+     */
+    public void setGUIInvisible()
+    {
+        view.setGUIInvisible();
+    }
 
-/**
- * Gets the state controller
- */
-public StateController getStateController()
-{
-    return this.stateController;
-}
+    /**
+     * Sets GUI to be invisible.
+     */
+    public void setGUIVisible()
+    {
+        view.setGUIVisible();
+    }
+
+    /**
+     * Gets the state controller
+     */
+    public StateController getStateController()
+    {
+        return this.stateController;
+    }
+
+    /**
+     * Sets the state controller
+     */
+    public void setStateController(StateController sc)
+    {
+        this.stateController = sc;
+    }
+
+
 //================================================================================================================================================
 //Class methods
 //================================================================================================================================================
@@ -154,10 +167,12 @@ public StateController getStateController()
             try
             {
                 stateChange();
-                store.deleteClass(name);  
-                
-                String oldString = aClass.toString();
-                view.deleteClass(oldString);
+                boolean temp = store.deleteClass(name);
+                if(temp)
+                {
+                    prepGUI();
+                    rebuild();
+                }
             }
             catch (Exception e)
             {
@@ -685,7 +700,7 @@ public StateController getStateController()
         try
         {
             stateChange();
-            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName());
+            boolean temp = store.deleteRelationship(fromOld.getName(), toOld.getName()) || store.deleteRelationship(toOld.getName(), fromOld.getName());
             //If the relationship could not be deleted, give the user and error and do not change the state.
             if(!temp || fromOld == null || toOld == null)
                 view.showError("Relationship could not be deleted.  Make sure both classes exist or check that there is an existing relationships between those classes.");
@@ -756,7 +771,6 @@ public StateController getStateController()
         view.addListener(new InterfaceChoiceClickController(store, view, this));
     }
 
-
     /**
      * Changes the state of the model and view
      */
@@ -779,18 +793,17 @@ public StateController getStateController()
         else
         {
             stateController.addStateToUndo((Store)this.store.clone());
-            //stateChange();
             this.store = stateController.Redo();
             prepGUI();
             rebuild();
         }
     }
 
-     /**
-      * Does an undo.
-      */
-      public void undo()
-      {
+    /**
+    * Does an undo.
+    */
+    public void undo()
+    {
         Stack<Store> undoStack = stateController.getUndoStack();
         //If the undo stack is empty, tell the user they cannot perform a undo.
         if(undoStack.isEmpty())
@@ -802,49 +815,57 @@ public StateController getStateController()
             prepGUI();
             rebuild();
         }
-      }
+    }
+      
+    /**
+    * Rebuild the GUI with the new data.
+    */
+    public void rebuild()
+    {
+        ActionListener[] listeners = new ActionListener[7];
+        //Create Listeners
+        listeners[0] = new CreateFieldController(store, view, this);
+        listeners[1] = new EditFieldController(store, view, this);
+        listeners[2]=  new CreateMethodController(store, view, this);
+        listeners[3] = new EditMethodController(store, view, this);
+        listeners[4] = new CreateRelationshipController(store, view, this);
+        listeners[5] = new DeleteRelationshipController(store,view, this);
+        listeners[6] = new EditClassController(store, view, this);
 
-      private void rebuild()
-      {
-          ActionListener[] listeners = new ActionListener[7];
-          //Create Listeners
-          listeners[0] = new CreateFieldController(store, view, this);
-          listeners[1] = new EditFieldController(store, view, this);
-          listeners[2]= new CreateMethodController(store, view, this);
-          listeners[3] = new EditMethodController(store, view, this);
-          listeners[4] = new CreateRelationshipController(store, view, this);
-          listeners[5] = new DeleteRelationshipController(store,view, this);
-          listeners[6] = new EditClassController(store, view, this);
-
-          //Add the approprate panels and listeners to the view.
-          for(Class c : store.getClassStore())
-          {
-              view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
-              view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
-              for(int count = 0; count < 7; count++)
-              {
-                  view.addPanelListener(listeners[count], c.toString());
-              }
-            }
-            //Add relationships to the view.
-            for(Class c : store.getClassStore())
+        //Add the approprate panels and listeners to the view.
+        for(Class c : store.getClassStore())
+        {
+            view.createClass(c.toString(), (int)c.getLocation().getWidth(), (int)c.getLocation().getHeight());
+            view.addListener(new MouseClickAndDragController(store, view, this), c.toString());
+            for(int count = 0; count < 7; count++)
             {
-                for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
-                {
-                    view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
-                }
+                view.addPanelListener(listeners[count], c.toString());
             }
-      }
+        }
 
-      private void prepGUI()
-      {
-          //If there are panels on the GUI, get red of them to prep for the new load.
-          if(view.getPanels() != null)
-          {
-              for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
-              {
-                  view.deleteClass(entry.getKey());
-              }
-          }
-      }
+        view.addListener(new ScrollWheelController (store, view, this));
+        //Add relationships to the view.
+        for(Class c : store.getClassStore())
+        {
+            for(Map.Entry<String, RelationshipType> entry : c.getRelationshipsToOther().entrySet())
+            {
+                view.addRelationship(c.toString(), store.findClass(entry.getKey()).toString(), entry.getValue().toString());
+            }
+        }
+    }
+
+    /**
+    * Prep the GUI new state.
+    */
+    private void prepGUI()
+    {
+        //If there are panels on the GUI, get red of them to prep for the new load.
+        if(view.getPanels() != null)
+        {
+            for(Map.Entry<String, JPanel> entry : view.getPanels().entrySet())
+            {
+                view.deleteClass(entry.getKey());
+            }
+        }
+    }
 }

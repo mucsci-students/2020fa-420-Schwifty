@@ -2,18 +2,12 @@ package UML.controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import java.awt.LayoutManager;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import javax.swing.JTextField;
 
 import UML.model.Store;
 import UML.views.*;
@@ -57,7 +51,7 @@ public class EditFieldController implements ActionListener
         //Get field to delete.
         //Has the form of (access char) (type) (name).
        
-        String field = view.getChoiceFromUser("Edit this class", "Edit class", fieldList);
+        String field = view.getChoiceFromUser("Edit this field", "Edit field", fieldList);
 
         //Handle cancelling.
         if(field == null)
@@ -82,11 +76,11 @@ public class EditFieldController implements ActionListener
             accessBox.setSelectedItem(accessString);
             panel.add(accessBox);
             
-            JTextArea typeArea = new JTextArea(1, 12);
+            JTextField typeArea = new JTextField(12);
             typeArea.setText(fieldSplit[1]);
             panel.add(typeArea);
 
-            JTextArea nameArea = new JTextArea(1, 12);
+            JTextField nameArea = new JTextField(12);
             nameArea.setText(fieldSplit[2]);
             panel.add(nameArea);
             
@@ -103,10 +97,10 @@ public class EditFieldController implements ActionListener
                 access = (String) ((JComboBox)panel.getComponent(0)).getSelectedItem();
 
                 //Get type String.
-                type = (String) ((JTextArea) panel.getComponent(1)).getText();
+                type = (String) ((JTextField) panel.getComponent(1)).getText();
 
                 //Get name String.
-                name = (String) ((JTextArea) panel.getComponent(2)).getText();
+                name = (String) ((JTextField) panel.getComponent(2)).getText();
 
             }
             //Delete field

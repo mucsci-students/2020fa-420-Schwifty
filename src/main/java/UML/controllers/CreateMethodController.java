@@ -3,15 +3,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import java.awt.LayoutManager;
+import javax.swing.JTextField;
+
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 
@@ -63,13 +58,13 @@ public class CreateMethodController implements ActionListener  {
             JComboBox accessBox = new JComboBox(accessTypes);
             panel.add(accessBox);
             
-            JTextArea typeArea = new JTextArea(1, 12);
+            JTextField typeArea = new JTextField(12);
             panel.add(typeArea);
 
-            JTextArea nameArea = new JTextArea(1, 12);
+            JTextField nameArea = new JTextField(12);
             panel.add(nameArea);
 
-            JTextArea paramArea = new JTextArea(1, 15);
+            JTextField paramArea = new JTextField(15);
             panel.add(paramArea);
             
 
@@ -82,13 +77,13 @@ public class CreateMethodController implements ActionListener  {
                 access = (String) ((JComboBox)panel.getComponent(0)).getSelectedItem();
 
                 //Get type String.
-                type = (String) ((JTextArea) panel.getComponent(1)).getText();
+                type = (String) ((JTextField) panel.getComponent(1)).getText();
 
                 //Get name String.
-                name = (String) ((JTextArea) panel.getComponent(2)).getText();
+                name = (String) ((JTextField) panel.getComponent(2)).getText();
 
                 //Get param String.
-                param = (String) ((JTextArea) panel.getComponent(3)).getText();
+                param = (String) ((JTextField) panel.getComponent(3)).getText();
             }
             //Cancel.
             else if(result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION)
